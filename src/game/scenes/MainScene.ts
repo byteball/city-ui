@@ -13,10 +13,7 @@ const CHUNK_SIZE = 100;
 const CHUNK_PIXEL_SIZE = CHUNK_SIZE * TILE_SIZE;
 
 // Насколько чанков подгружаем вокруг текущего экрана
-const VIEW_RADIUS = 2;
-
-// Порог зума для переключения LOD (уровня детализации)
-const LOD_THRESHOLD = 0.5;
+const VIEW_RADIUS = 3;
 
 // Тип, описывающий данные о чанке
 type ChunkObject = {
@@ -28,16 +25,29 @@ export default class MainScene extends Phaser.Scene {
     // В этом объекте будем хранить все подгруженные чанки
     private chunks: Record<string, ChunkObject> = {};
 
+    /**
+ * Вспомогательные пороги для гистерезиса:
+ *  - ниже 0.45 → используем Low-LOD
+ *  - выше 0.55 → используем High-LOD
+ *  - между этими значениями оставляем прежнее состояние (не переключаемся).
+ */
+    private LOD_LOW_THRESHOLD: number = 0.25;
+    private LOD_HIGH_THRESHOLD: number = 0.75;
+    private lastGlobalDetail: boolean = false;
+
     constructor() {
         super({ key: 'MainScene' });
     }
 
     preload(): void {
         // Загрузим тайл 50×50, чтобы рисовать детальный вид
-        this.load.svg('tile', '../assets/tile.svg');
+        this.load.svg('tile', '../assets/tile.svg', { width: 50, height: 50 });
     }
 
     create(): void {
+        // Разрешаем много касаний:
+        this.input.addPointer(2); // или больше, но нужно минимум 2 для pinch
+
         // Установим границы камеры (в пикселях) на всю карту
         this.cameras.main.setBounds(0, 0, GRID_WIDTH * TILE_SIZE, GRID_HEIGHT * TILE_SIZE);
 
@@ -66,17 +76,106 @@ export default class MainScene extends Phaser.Scene {
                 this.cameras.main.setScroll(newScrollX, newScrollY);
             }
         });
-
-        // Зум колесом мыши
-        this.input.on('wheel', (pointer: Phaser.Input.Pointer,
-            gameObjects: any,
-            deltaX: number,
-            deltaY: number,
-            deltaZ: number) => {
-            let newZoom = this.cameras.main.zoom - (deltaY * 0.001);
-            newZoom = Phaser.Math.Clamp(newZoom, 0.1, 2);
-            this.cameras.main.setZoom(newZoom);
+        this.input.on('pointermove', pointer => {
+            console.log('pointer.x/y=', pointer.x, pointer.y);
         });
+        this.input.on(
+            'wheel',
+            (pointer: Phaser.Input.Pointer, gameObjects: any, deltaX: number, deltaY: number, deltaZ: number, event: any) => {
+
+                // Остановим стандартный скролл страницы:
+                const domEvent = pointer.event as WheelEvent | undefined;
+                if (domEvent) {
+                    domEvent.preventDefault();
+                    domEvent.stopPropagation();
+                }
+
+                // let newZoom = this.cameras.main.zoom - (deltaY * 0.001);
+                // newZoom = Phaser.Math.Clamp(newZoom, 0.1, 2);
+                // this.cameras.main.setZoom(newZoom);
+
+                // if (!domEvent?.ctrlKey) return;
+
+                // New:
+                // if (Math.abs(deltaY) < 0.5) {
+                //     // Игнорируем очень мелкие изменения, чтоб не дрожало
+                //     return;
+                // }
+
+                // let newZoom = this.cameras.main.zoom - (deltaY * 0.005);
+                // newZoom = Phaser.Math.Clamp(newZoom, 0.1, 1);
+                // this.cameras.main.setZoom(newZoom);
+
+                // // Поджимаем scrollX, scrollY:
+                // const cam = this.cameras.main;
+                // const maxScrollX = (GRID_WIDTH * TILE_SIZE) - (cam.width / cam.zoom);
+                // const maxScrollY = (GRID_HEIGHT * TILE_SIZE) - (cam.height / cam.zoom);
+
+                // cam.scrollX = Phaser.Math.Clamp(cam.scrollX, 0, maxScrollX);
+                // cam.scrollY = Phaser.Math.Clamp(cam.scrollY, 0, maxScrollY);
+
+
+
+
+                const camera = this.cameras.main;
+                const oldZoom = camera.zoom;
+                const screenCenterX = camera.width / 2;
+                const screenCenterY = camera.height / 2;
+
+                const oldWorldCenterX = (camera.scrollX + screenCenterX) / oldZoom;
+                const oldWorldCenterY = (camera.scrollY + screenCenterY) / oldZoom;
+
+                // const oldWorldX = pointer.worldX;
+                // const oldWorldY = pointer.worldY;
+
+                const oldWorldX = (pointer.x + camera.scrollX) / oldZoom;
+                const oldWorldY = (pointer.y + camera.scrollY) / oldZoom;
+
+                // 2. Считаем новый зум
+                let newZoom = camera.zoom - (deltaY * 0.003);
+                newZoom = Phaser.Math.Clamp(newZoom, 0.1, 2);
+                camera.setZoom(newZoom);
+
+                // 3. После изменения зума смотрим, куда теперь «указал» курсор
+                // const newWorldX = pointer.worldX;
+                // const newWorldY = pointer.worldY;
+
+
+                // const newWorldX = (pointer.x + camera.scrollX) / camera.zoom;
+                // const newWorldY = (pointer.y + camera.scrollY) / camera.zoom;
+
+                // // 4. Считаем разницу (как сильно «уехала» точка под курсором)
+                // const dx = newWorldX - oldWorldX;
+                // const dy = newWorldY - oldWorldY;
+                // console.log('dx/dy=', dx, dy);
+                // // console.log('camera.scrollX, camera.scrollY', camera.scrollX, camera.scrollY);
+
+                // // 5. Сдвигаем камеру так, чтобы точка под курсором осталась на месте
+                // camera.scrollX -= dx;
+                // camera.scrollY -= dy;
+                // // console.log('After minus:', camera.scrollX, camera.scrollY);
+                // // 6. Кламп, чтобы не выйти за карту
+                // const maxScrollX = (GRID_WIDTH * TILE_SIZE) - (camera.width / camera.zoom);
+                // const maxScrollY = (GRID_HEIGHT * TILE_SIZE) - (camera.height / camera.zoom);
+                // camera.scrollX = Phaser.Math.Clamp(camera.scrollX, 0, maxScrollX);
+                // camera.scrollY = Phaser.Math.Clamp(camera.scrollY, 0, maxScrollY);
+                // console.log('pointer.worldX/Y', camera.scrollX, camera.scrollY);
+                // console.log('pointer.worldX / pointer.worldY ', pointer.worldX / pointer.worldY );
+
+                // Считаем "новые" мировые координаты центра
+                const newWorldCenterX = (camera.scrollX + screenCenterX) / camera.zoom;
+                const newWorldCenterY = (camera.scrollY + screenCenterY) / camera.zoom;
+
+                // Сдвигаем камеру
+                const dx = newWorldCenterX - oldWorldCenterX;
+                const dy = newWorldCenterY - oldWorldCenterY;
+                camera.scrollX -= dx;
+                camera.scrollY -= dy;
+
+                // camera.scrollX = Phaser.Math.Linear(camera.scrollX, newWorldCenterX, 0.2);
+                // camera.scrollY = Phaser.Math.Linear(camera.scrollY, newWorldCenterY, 0.2);
+            }
+        );
 
         // При старте подгружаем чанки в зоне видимости
         this.loadVisibleChunks();
@@ -126,15 +225,42 @@ export default class MainScene extends Phaser.Scene {
     private updateChunkLOD(cx: number, cy: number, zoom: number): void {
         const chunkKey = `${cx}_${cy}`;
         const chunk = this.chunks[chunkKey];
-        const wantDetail = (zoom >= LOD_THRESHOLD);
 
-        // Если чанка ещё нет — создаём
+        // 1. Определяем, хотим ли мы "High LOD" или "Low LOD" при таком зуме,
+        //    используя правила гистерезиса.
+        let wantDetail: boolean;
+
+        if (this.lastGlobalDetail) {
+            // Если мы *уже* в High, то опустимся в Low только если zoom < LOD_LOW_THRESHOLD
+            if (zoom < this.LOD_LOW_THRESHOLD) {
+                wantDetail = false;
+                this.lastGlobalDetail = false;
+            } else {
+                wantDetail = true;
+            }
+        } else {
+            // Если мы *уже* в Low, то поднимемся в High только если zoom > LOD_HIGH_THRESHOLD
+            if (zoom > this.LOD_HIGH_THRESHOLD) {
+                wantDetail = true;
+                this.lastGlobalDetail = true;
+            } else {
+                wantDetail = false;
+            }
+        }
+
+        // Если у вас не нужно общесценовое состояние, можете хранить "старый" LOD
+        // для этого чанка, но тогда придётся усложнить код, следя за каждым чанком.
+        // Проще один раз определить wantDetail глобально, а чанк пересоздавать,
+        // если у него isDetail != wantDetail.
+
+        // 2. Дальше логика, как и была:
         if (!chunk) {
+            // чанк не существует — создаём
             this.chunks[chunkKey] = this.createChunk(cx, cy, wantDetail);
             return;
         }
 
-        // Если есть, но уровень детализации не совпадает — пересоздаём
+        // Если есть, но LOD не совпадает — удаляем и пересоздаём
         if (chunk.isDetail !== wantDetail) {
             chunk.container.destroy(true);
             this.chunks[chunkKey] = this.createChunk(cx, cy, wantDetail);
@@ -156,6 +282,7 @@ export default class MainScene extends Phaser.Scene {
             // Рисуем просто один большой квадрат, обозначающий чанк
             const g = this.add.graphics({ x: worldX, y: worldY });
             g.fillStyle(0x999999, 1);
+
             g.fillRect(0, 0, CHUNK_PIXEL_SIZE, CHUNK_PIXEL_SIZE);
 
             // (Дополнительно) можно обозначить рамку чанка для отладки
