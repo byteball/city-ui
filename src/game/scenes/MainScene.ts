@@ -41,6 +41,10 @@ export default class MainScene extends Phaser.Scene {
         // Установим границы камеры (в пикселях) на всю карту
         this.cameras.main.setBounds(0, 0, GRID_WIDTH * TILE_SIZE, GRID_HEIGHT * TILE_SIZE);
 
+        if (this.input.mouse) {
+            this.input.mouse.disableContextMenu();
+        }
+
         // Перетаскиваем камеру зажатой левой кнопкой мыши
         this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
             if (pointer.isDown) {
