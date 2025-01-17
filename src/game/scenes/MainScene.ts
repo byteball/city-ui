@@ -44,8 +44,22 @@ export default class MainScene extends Phaser.Scene {
         // Перетаскиваем камеру зажатой левой кнопкой мыши
         this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
             if (pointer.isDown) {
-                this.cameras.main.scrollX -= (pointer.x - pointer.prevPosition.x);
-                this.cameras.main.scrollY -= (pointer.y - pointer.prevPosition.y);
+                let newScrollX = this.cameras.main.scrollX - (pointer.x - pointer.prevPosition.x);
+                let newScrollY = this.cameras.main.scrollY - (pointer.y - pointer.prevPosition.y);
+
+                // Получим текущий zoom
+                const z = this.cameras.main.zoom;
+
+                // Максимально допустимые scrollX/scrollY, чтобы не выйти за карту
+                const maxScrollX = (GRID_WIDTH * TILE_SIZE) - (this.cameras.main.width / z);
+                const maxScrollY = (GRID_HEIGHT * TILE_SIZE) - (this.cameras.main.height / z);
+
+                // Обрежем координаты
+                newScrollX = Phaser.Math.Clamp(newScrollX, 0, maxScrollX);
+                newScrollY = Phaser.Math.Clamp(newScrollY, 0, maxScrollY);
+
+                // Установим результат
+                this.cameras.main.setScroll(newScrollX, newScrollY);
             }
         });
 
