@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { IRefPhaserGame, PhaserGame } from './game/PhaserGame';
-import { MainMenu } from './game/scenes/MainMenu';
+import MainScene from './game/scenes/MainScene';
 
 function App()
 {
@@ -15,7 +15,7 @@ function App()
 
         if(phaserRef.current)
         {     
-            const scene = phaserRef.current.scene as MainMenu;
+            const scene = phaserRef.current.scene as MainScene;
             
             if (scene)
             {
@@ -29,9 +29,9 @@ function App()
         if(phaserRef.current)
         {
 
-            const scene = phaserRef.current.scene as MainMenu;
+            const scene = phaserRef.current.scene as MainScene;
 
-            if (scene && scene.scene.key === 'MainMenu')
+            if (scene && scene.scene.key === 'MainScene')
             {
                 // Get the update logo position
                 scene.moveLogo(({ x, y }) => {
@@ -76,27 +76,13 @@ function App()
     // Event emitted from the PhaserGame component
     const currentScene = (scene: Phaser.Scene) => {
 
-        setCanMoveSprite(scene.scene.key !== 'MainMenu');
+        setCanMoveSprite(scene.scene.key !== 'MainScene');
         
     }
 
     return (
         <div id="app">
             <PhaserGame ref={phaserRef} currentActiveScene={currentScene} />
-            <div>
-                <div>
-                    <button className="button" onClick={changeScene}>Change Scene</button>
-                </div>
-                <div>
-                    <button disabled={canMoveSprite} className="button" onClick={moveSprite}>Toggle Movement</button>
-                </div>
-                <div className="spritePosition">Sprite Position:
-                    <pre>{`{\n  x: ${spritePosition.x}\n  y: ${spritePosition.y}\n}`}</pre>
-                </div>
-                <div>
-                    <button className="button" onClick={addSprite}>Add New Sprite</button>
-                </div>
-            </div>
         </div>
     )
 }
