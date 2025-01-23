@@ -3,7 +3,7 @@ import Phaser from 'phaser';
 
 import { RoadData } from '../objects/Road';
 import { Map } from '../objects/Map';
-import { Plot, HouseData } from '../objects/Plot';
+import { HouseData } from '../objects/Plot';
 
 import CameraController from '../controllers/CameraController';
 
@@ -11,7 +11,6 @@ export default class MapScene extends Phaser.Scene {
     private housesData: HouseData[] = [
         { city: 'City A', amount: 2.5, x: 1324, y: 6557, ts: 1734023072 },
         { city: 'City B', amount: 3.0, x: 5000, y: 8000, ts: 1734023073 },
-
 
         { city: 'City С', amount: 2.5, x: 2324, y: 6557, ts: 1734023072 },
         { city: 'City D', amount: 3.0, x: 500, y: 800, ts: 1734023073 },
@@ -47,12 +46,11 @@ export default class MapScene extends Phaser.Scene {
         { city: 'City 8', amount: 8, x: 4000, y: 3000, ts: 1734023073 },
         { city: 'City 9', amount: 9, x: 3324, y: 9557, ts: 1734023072 },
         { city: 'City 10', amount: 10, x: 1000, y: 10000, ts: 1734023073 }
-
     ];
 
     private roadsData: RoadData[] = [
-        { x1: 2000, y1: 2000, x2: 2000, y2: 5000, name: "Tonych Avenue", avenue: true },
-        { x1: 2000, y1: 8000, x2: 7000, y2: 8000, name: "Taump Street", avenue: false },
+        { coordinate: 5000, name: "Tonych Avenue", avenue: true, orientation: 'vertical' },
+        { coordinate: 2000, name: "Taump Street", avenue: false, orientation: 'horizontal' },
     ];
 
     constructor() {
