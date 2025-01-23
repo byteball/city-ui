@@ -8,6 +8,12 @@ export default class CameraController {
         this.scene = scene;
         this.camera = camera;
 
+        // Устанавливаем границы камеры
+        this.camera.setBounds(0, 0, 10_000, 10_000);
+
+        // Центрируем камеру на центре карты
+        this.camera.centerOn(10_000 / 2, 10_000 / 2);
+
         this.initDrag();
         this.initZoom();
     }

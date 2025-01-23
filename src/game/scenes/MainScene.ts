@@ -107,12 +107,6 @@ export default class MapScene extends Phaser.Scene {
             });
         });
 
-        // Устанавливаем границы камеры
-        this.cameras.main.setBounds(0, 0, MAP_WIDTH, MAP_HEIGHT);
-
-        // Центрируем камеру на центре карты
-        this.cameras.main.centerOn(MAP_WIDTH / 2, MAP_HEIGHT / 2);
-
         // Инициализируем контроллер камеры
         new CameraController(this, this.cameras.main);
     }
