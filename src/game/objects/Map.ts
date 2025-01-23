@@ -61,6 +61,14 @@ export class Map {
                 const { city, amount } = plot.getData();
                 console.log(`Selected House: ${city} Cost: ${amount}`);
             });
+
+            plotGraphics.on('pointerover', () => {
+                this.scene.input.setDefaultCursor('pointer');
+            });
+            
+            plotGraphics.on('pointerout', () => {
+                this.scene.input.setDefaultCursor('default');
+            });
         });
     }
 }
