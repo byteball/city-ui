@@ -3,6 +3,8 @@ import Phaser from 'phaser';
 import { Road, RoadData } from '../objects/Road';
 import { Plot, HouseData } from '../objects/Plot';
 
+import CameraController from '../controllers/CameraController';
+
 export default class MapScene extends Phaser.Scene {
     private housesData: HouseData[] = [
         { city: 'City A', amount: 2.5, x: 1324, y: 6557, ts: 1734023072 },
@@ -108,41 +110,10 @@ export default class MapScene extends Phaser.Scene {
         // Устанавливаем границы камеры
         this.cameras.main.setBounds(0, 0, MAP_WIDTH, MAP_HEIGHT);
 
-        // Устанавливаем масштаб камеры, чтобы вся карта была видна
-        const zoomX = this.cameras.main.width / MAP_WIDTH;
-        const zoomY = this.cameras.main.height / MAP_HEIGHT;
-        const zoom = Math.min(zoomX, zoomY);
-        this.cameras.main.setZoom(zoom);
-
         // Центрируем камеру на центре карты
         this.cameras.main.centerOn(MAP_WIDTH / 2, MAP_HEIGHT / 2);
 
-        // Включаем возможность перетаскивания карты
-        this.input.on(
-            'pointermove',
-            (pointer) => {
-                if (pointer.isDown) {
-                    this.cameras.main.scrollX -= (pointer.x - pointer.prevPosition.x) / this.cameras.main.zoom;
-                    this.cameras.main.scrollY -= (pointer.y - pointer.prevPosition.y) / this.cameras.main.zoom;
-                }
-            },
-            this
-        );
-
-        // Включаем масштабирование колесиком мыши
-        this.input.on(
-            'wheel',
-            (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
-                const zoomFactor = 0.001;
-                this.cameras.main.zoom -= deltaY * zoomFactor;
-
-                const zoomX = this.cameras.main.width / MAP_WIDTH;
-                const zoomY = this.cameras.main.height / MAP_HEIGHT;
-                const minZoom = Math.min(zoomX, zoomY);
-
-                this.cameras.main.zoom = Phaser.Math.Clamp(this.cameras.main.zoom, minZoom, 1.5);
-            },
-            this
-        );
+        // Инициализируем контроллер камеры
+        new CameraController(this, this.cameras.main);
     }
 }
