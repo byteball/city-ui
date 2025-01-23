@@ -33,7 +33,7 @@ export class Map {
         const MAP_HEIGHT = 10000;
 
         this.housesData.forEach((houseData) => {
-            const { x, y, amount } = houseData;
+            const { amount } = houseData;
 
             // Вычисляем долю площади участка
             const plotFraction = (1 / this.allCitySupply) * amount * 0.1;
