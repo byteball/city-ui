@@ -1,29 +1,7 @@
 // src/scenes/MapScene.ts
 import Phaser from 'phaser';
-
-interface HouseData {
-    city: string;
-    amount: number; // Стоимость участка
-    x: number; // Координата x (диапазон 0 - 10000)
-    y: number; // Координата y (диапазон 0 - 10000)
-    ts: number; // Временная метка
-}
-
-interface RoadData {
-    x1: number;
-    y1: number;
-    x2: number;
-    y2: number;
-    name: string;
-    avenue: boolean;
-}
-
-const roads: RoadData[] = [
-    { x1: 2000, y1: 2000, x2: 2000, y2: 5000, name: "Tonych Avenue", avenue: true },
-    { x1: 2000, y1: 8000, x2: 7000, y2: 8000, name: "Taump Street", avenue: false },
-];
-
-
+import { Road, RoadData } from '../objects/Road';
+import { Plot, HouseData } from '../objects/Plot';
 
 export default class MapScene extends Phaser.Scene {
     private housesData: HouseData[] = [
@@ -68,6 +46,13 @@ export default class MapScene extends Phaser.Scene {
 
     ];
 
+    private roadsData: RoadData[] = [
+        { x1: 2000, y1: 2000, x2: 2000, y2: 5000, name: "Tonych Avenue", avenue: true },
+        { x1: 2000, y1: 8000, x2: 7000, y2: 8000, name: "Taump Street", avenue: false },
+    ];
+
+    private selectedPlot: Plot | null = null;
+
     constructor() {
         super('MapScene');
     }
@@ -83,68 +68,14 @@ export default class MapScene extends Phaser.Scene {
         // Общая стоимость всех домов
         const ALL_CITY_SUPPLY = this.housesData.reduce((sum, house) => sum + house.amount, 0);
 
-        // Создаем контейнер для всей карты
-        const map = this.add.container(0, 0);
-
-        // Создаем группу для хранения графики участков
-        const plotsGroup = this.add.group();
-
-        // Функция проверки, находится ли точка в пределах дороги
-        const isPointOnRoad = (x: number, y: number) => {
-            return roads.some(({ x1, y1, x2, y2, avenue }) => {
-                const thickness = avenue ? 40 : 20;
-                if (x1 === x2) {
-                    // Вертикальная дорога
-                    return Math.abs(x - x1) <= thickness / 2 && y >= y1 && y <= y2;
-                } else {
-                    // Горизонтальная дорога
-                    return Math.abs(y - y1) <= thickness / 2 && x >= x1 && x <= x2;
-                }
-            });
-        };
-
-        // Создаем дороги и авеню
-        roads.forEach((road) => {
-            const { x1, y1, x2, y2, name, avenue } = road;
-            const thickness = avenue ? 80 : 40;
-            const roadColor = avenue ? 0xff0000 : 0x0000ff; // Красный для авеню, синий для улиц
-
-            // Создаем графику для дороги
-            const roadGraphics = this.add.graphics();
-            roadGraphics.fillStyle(roadColor, 1);
-            if (x1 === x2) {
-                // Вертикальная линия (авеню)
-                roadGraphics.fillRect(x1 - thickness / 2, y1, thickness, y2 - y1);
-            } else {
-                // Горизонтальная линия (дорога)
-                roadGraphics.fillRect(x1, y1 - thickness / 2, x2 - x1, thickness);
-            }
-
-            map.add(roadGraphics);
-
-            // Отображаем название дороги
-            const roadText = this.add.text(
-                (x1 + x2) / 2,
-                (y1 + y2) / 2,
-                name,
-                { fontSize: '12px', color: '#ffffff', align: 'center' }
-            );
-
-            roadText.setOrigin(0.5);
-
-            map.add(roadText);
+        // Создаем дороги
+        this.roadsData.forEach((roadData) => {
+            new Road(this, roadData);
         });
 
-        let selectedPlot: { plot: Phaser.GameObjects.Graphics; x: number; y: number; size: number } | null = null;
-
-        this.housesData.forEach((house) => {
-            let { x, y, amount, city } = house;
-
-            // Проверяем, чтобы участок не находился на дороге
-            while (isPointOnRoad(x, y)) {
-                x += 50; // Сдвигаем участок вправо, если он пересекается с дорогой
-                y += 50; // Сдвигаем участок вниз, если он пересекается с дорогой
-            }
+        // Создаем участки
+        this.housesData.forEach((houseData) => {
+            const { x, y, amount } = houseData;
 
             // Вычисляем долю площади участка
             const plotFraction = (1 / ALL_CITY_SUPPLY) * amount * 0.1;
@@ -155,64 +86,31 @@ export default class MapScene extends Phaser.Scene {
             // Предположим, что участки квадратные
             const plotSize = Math.sqrt(plotArea);
 
-            // Создаем графику для участка
-            const plot = this.add.graphics();
-            plot.fillStyle(0x228b22, 1); // Цвет участка (зелёный)
-            plot.fillRect(x - plotSize / 2, y - plotSize / 2, plotSize, plotSize);
-            plot.setInteractive(new Phaser.Geom.Rectangle(x - plotSize / 2, y - plotSize / 2, plotSize, plotSize), Phaser.Geom.Rectangle.Contains);
-
-            // Создаем графику для дома в центре участка
-            const houseGraphics = this.add.graphics();
-            houseGraphics.fillStyle(0x8b4513, 1); // Цвет дома (коричневый)
-            const houseSize = plotSize / 4; // Размер дома относительно участка
-            houseGraphics.fillRect(x - houseSize / 2, y - houseSize / 2, houseSize, houseSize);
-
-            // Добавляем участок в группу
-            plotsGroup.add(plot);
-            // // Добавляем участок и дом в контейнер карты
-            // map.add(plot);
-            // map.add(houseGraphics);
-
-            // Добавляем участок и дом в сцену
-            this.add.existing(plot);
-            this.add.existing(houseGraphics);
+            const plot = new Plot(this, houseData, plotSize);
 
             // Обработка клика по участку
-            plot.on('pointerdown', (p: Phaser.Input.Pointer) => {
+            plot.getPlotGraphics().on('pointerdown', () => {
                 // Сбрасываем состояние предыдущего участка
-                if (selectedPlot) {
-                    const { plot, x, y, size } = selectedPlot;
-                    plot.clear();
-                    plot.fillStyle(0x228b22, 1); // Зеленый цвет для участков
-                    plot.fillRect(x - size / 2, y - size / 2, size, size);
+                if (this.selectedPlot) {
+                    this.selectedPlot.setSelected(false);
                 }
 
                 // Запоминаем текущий выбранный участок
-                selectedPlot = {
-                    plot,
-                    x,
-                    y,
-                    size: plotSize,
-                };
-
-                // Выделяем выбранный участок
-                plot.clear();
-                plot.fillStyle(0xffff00, 1); // Желтый цвет для выделения
-                plot.fillRect(x - plotSize / 2, y - plotSize / 2, plotSize, plotSize);
+                this.selectedPlot = plot;
+                plot.setSelected(true);
 
                 // Отображаем информацию о доме
+                const { city, amount } = plot.getData();
                 console.log(`Selected House: ${city} Cost: ${amount}`);
             });
         });
 
         // Устанавливаем границы камеры
         this.cameras.main.setBounds(0, 0, MAP_WIDTH, MAP_HEIGHT);
-        // this.cameras.main.centerOn(MAP_WIDTH / 2, MAP_HEIGHT / 2);
 
         // Устанавливаем масштаб камеры, чтобы вся карта была видна
         const zoomX = this.cameras.main.width / MAP_WIDTH;
         const zoomY = this.cameras.main.height / MAP_HEIGHT;
-
         const zoom = Math.min(zoomX, zoomY);
         this.cameras.main.setZoom(zoom);
 
@@ -240,12 +138,11 @@ export default class MapScene extends Phaser.Scene {
 
                 const zoomX = this.cameras.main.width / MAP_WIDTH;
                 const zoomY = this.cameras.main.height / MAP_HEIGHT;
-                const zoom = Math.min(zoomX, zoomY);
+                const minZoom = Math.min(zoomX, zoomY);
 
-                this.cameras.main.zoom = Phaser.Math.Clamp(this.cameras.main.zoom, zoom, 1.5);
+                this.cameras.main.zoom = Phaser.Math.Clamp(this.cameras.main.zoom, minZoom, 1.5);
             },
             this
         );
-
     }
 }
