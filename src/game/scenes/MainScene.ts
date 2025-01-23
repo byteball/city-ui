@@ -1,6 +1,8 @@
 // src/scenes/MapScene.ts
 import Phaser from 'phaser';
-import { Road, RoadData } from '../objects/Road';
+
+import { RoadData } from '../objects/Road';
+import { Map } from '../objects/Map';
 import { Plot, HouseData } from '../objects/Plot';
 
 import CameraController from '../controllers/CameraController';
@@ -53,8 +55,6 @@ export default class MapScene extends Phaser.Scene {
         { x1: 2000, y1: 8000, x2: 7000, y2: 8000, name: "Taump Street", avenue: false },
     ];
 
-    private selectedPlot: Plot | null = null;
-
     constructor() {
         super('MapScene');
     }
@@ -64,48 +64,9 @@ export default class MapScene extends Phaser.Scene {
     }
 
     create() {
-        const MAP_WIDTH = 10000;
-        const MAP_HEIGHT = 10000;
-
-        // Общая стоимость всех домов
-        const ALL_CITY_SUPPLY = this.housesData.reduce((sum, house) => sum + house.amount, 0);
-
-        // Создаем дороги
-        this.roadsData.forEach((roadData) => {
-            new Road(this, roadData);
-        });
-
-        // Создаем участки
-        this.housesData.forEach((houseData) => {
-            const { x, y, amount } = houseData;
-
-            // Вычисляем долю площади участка
-            const plotFraction = (1 / ALL_CITY_SUPPLY) * amount * 0.1;
-
-            // Вычисляем площадь участка
-            const plotArea = plotFraction * MAP_WIDTH * MAP_HEIGHT;
-
-            // Предположим, что участки квадратные
-            const plotSize = Math.sqrt(plotArea);
-
-            const plot = new Plot(this, houseData, plotSize);
-
-            // Обработка клика по участку
-            plot.getPlotGraphics().on('pointerdown', () => {
-                // Сбрасываем состояние предыдущего участка
-                if (this.selectedPlot) {
-                    this.selectedPlot.setSelected(false);
-                }
-
-                // Запоминаем текущий выбранный участок
-                this.selectedPlot = plot;
-                plot.setSelected(true);
-
-                // Отображаем информацию о доме
-                const { city, amount } = plot.getData();
-                console.log(`Selected House: ${city} Cost: ${amount}`);
-            });
-        });
+        // Создаем карту
+        const map = new Map(this, this.roadsData, this.housesData);
+        map.createMap();
 
         // Инициализируем контроллер камеры
         new CameraController(this, this.cameras.main);
