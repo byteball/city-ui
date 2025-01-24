@@ -16,7 +16,7 @@ export class Road {
     private labels: Phaser.GameObjects.Text[] = [];
     private previousZoom: number = 0;
 
-    constructor(scene: Phaser.Scene, data: RoadData) {
+    constructor(scene: Phaser.Scene, data: RoadData, private mapWidth: number, private mapHeight: number) {
         this.scene = scene;
         this.data = data;
 
@@ -33,10 +33,10 @@ export class Road {
         roadGraphics.fillStyle(roadColor, 1);
 
         if (orientation === 'vertical') {
-            roadGraphics.fillRect(coordinate, 0, thickness, 10_000);
+            roadGraphics.fillRect(coordinate, 0, thickness, this.mapHeight);
 
             // Добавляем название дороги вдоль вертикальной линии
-            for (let y = 0; y < 10_000; y += BASE_LABEL_STEP) {
+            for (let y = 0; y < this.mapHeight; y += BASE_LABEL_STEP) {
                 const roadText = this.scene.add.text(coordinate + thickness / 2, y, name, {
                     fontSize: avenue ? '32px' : '20px',
                     color: '#ffffff',
@@ -48,10 +48,10 @@ export class Road {
                 this.labels.push(roadText);
             }
         } else if (orientation === 'horizontal') {
-            roadGraphics.fillRect(0, coordinate, 10_000, thickness);
+            roadGraphics.fillRect(0, coordinate, this.mapWidth, thickness);
 
             // Добавляем название дороги вдоль горизонтальной линии
-            for (let x = 0; x < 10_000; x += BASE_LABEL_STEP) {
+            for (let x = 0; x < this.mapWidth; x += BASE_LABEL_STEP) {
                 const roadText = this.scene.add.text(x, coordinate + thickness / 2, name, {
                     fontSize: avenue ? '32px' : '20px',
                     color: '#ffffff',
