@@ -14,7 +14,7 @@ export class Road {
     private scene: Phaser.Scene;
     private data: RoadData;
     private labels: Phaser.GameObjects.Text[] = [];
-    private previousZoom: number;
+    private previousZoom: number = 0;
 
     constructor(scene: Phaser.Scene, data: RoadData) {
         this.scene = scene;

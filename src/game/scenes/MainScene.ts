@@ -24,6 +24,7 @@ export default class MapScene extends Phaser.Scene {
     preload() {
         // Загрузка ресурсов, если необходимо
 
+        // TODO: Uncomment and configure properly if the bitmap font will be used.
         // this.load.bitmapFont('bitmapFont', 'path/to/font.png', 'path/to/font.fnt');
     }
 
