@@ -47,7 +47,11 @@ export class Map {
             const plot = new Plot(this.scene, houseData, plotSize);
 
             // Обработка клика по участку
-            plot.getPlotGraphics().on('pointerdown', () => {
+            const plotGraphics = plot.getPlotGraphics();
+
+            plotGraphics.setInteractive({ cursor: 'pointer' }); // Меняем курсор на "указатель"
+
+            plotGraphics.on('pointerdown', () => {
                 // Сбрасываем состояние предыдущего участка
                 if (this.selectedPlot) {
                     this.selectedPlot.setSelected(false);
@@ -60,6 +64,14 @@ export class Map {
                 // Отображаем информацию о доме
                 const { city, amount } = plot.getData();
                 console.log(`Selected House: ${city} Cost: ${amount}`);
+            });
+
+            plotGraphics.on('pointerover', () => {
+                this.scene.input.setDefaultCursor('pointer');
+            });
+
+            plotGraphics.on('pointerout', () => {
+                this.scene.input.setDefaultCursor('default');
             });
         });
     }

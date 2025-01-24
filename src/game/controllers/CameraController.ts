@@ -7,7 +7,7 @@ export default class CameraController {
     constructor(scene: Phaser.Scene, camera: Phaser.Cameras.Scene2D.Camera) {
         this.scene = scene;
         this.camera = camera;
-
+        
         // Устанавливаем границы камеры
         this.camera.setBounds(0, 0, 10_000, 10_000);
 
