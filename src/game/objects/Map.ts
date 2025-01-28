@@ -1,7 +1,7 @@
 // src/objects/Map.ts
-import Phaser from 'phaser';
-import { Road, RoadData } from './Road';
-import { Plot, HouseData } from './Plot';
+import Phaser from "phaser";
+import { HouseData, Plot } from "./Plot";
+import { Road, RoadData } from "./Road";
 
 export const AVENUE_THICKNESS = 120;
 export const STREET_THICKNESS = 60;
@@ -27,7 +27,7 @@ export class Map {
 
         this.roadsData.forEach((road) => {
             const thickness = road.avenue ? AVENUE_THICKNESS : STREET_THICKNESS;
-            if (road.orientation === 'vertical') {
+            if (road.orientation === "vertical") {
                 totalVerticalThickness += thickness;
             } else {
                 totalHorizontalThickness += thickness;
@@ -52,7 +52,6 @@ export class Map {
     }
 
     private createPlots(MAP_WIDTH: number, MAP_HEIGHT: number) {
-
         this.housesData.forEach((houseData) => {
             // 1) Размер участка: та же доля, но умножаем уже на новую площадь
             const { amount, x, y } = houseData;
@@ -86,7 +85,7 @@ export class Map {
                     const roadStart = road.coordinate;
                     const roadEnd = road.coordinate + thickness;
 
-                    if (road.orientation === 'vertical') {
+                    if (road.orientation === "vertical") {
                         // если есть пересечение по оси X
                         if (rightEdge >= roadStart && leftEdge < roadEnd) {
                             // смещаем участок вправо
@@ -109,18 +108,14 @@ export class Map {
             } // конец while
 
             // Создаём участок с новой позицией и размерами
-            const plot = new Plot(
-                this.scene,
-                { ...houseData, x: finalX, y: finalY },
-                plotSize
-            );
+            const plot = new Plot(this.scene, { ...houseData, x: finalX, y: finalY }, plotSize);
 
             // Обработка клика по участку
             const plotGraphics = plot.getPlotGraphics();
 
-            plotGraphics.setInteractive({ cursor: 'pointer' }); // Меняем курсор на "указатель"
+            plotGraphics.setInteractive({ cursor: "pointer" }); // Меняем курсор на "указатель"
 
-            plotGraphics.on('pointerdown', () => {
+            plotGraphics.on("pointerdown", () => {
                 // Сбрасываем состояние предыдущего участка
                 if (this.selectedPlot) {
                     this.selectedPlot.setSelected(false);
@@ -135,12 +130,12 @@ export class Map {
                 console.log(`Selected House: ${city} Cost: ${amount}`);
             });
 
-            plotGraphics.on('pointerover', () => {
-                this.scene.input.setDefaultCursor('pointer');
+            plotGraphics.on("pointerover", () => {
+                this.scene.input.setDefaultCursor("pointer");
             });
 
-            plotGraphics.on('pointerout', () => {
-                this.scene.input.setDefaultCursor('default');
+            plotGraphics.on("pointerout", () => {
+                this.scene.input.setDefaultCursor("default");
             });
         });
     }

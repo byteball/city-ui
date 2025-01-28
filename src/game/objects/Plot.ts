@@ -1,5 +1,5 @@
 // src/objects/Plot.ts
-import Phaser from 'phaser';
+import Phaser from "phaser";
 
 export interface HouseData {
     city: string;
@@ -61,3 +61,4 @@ export class Plot {
         return this.plotGraphics;
     }
 }
+
