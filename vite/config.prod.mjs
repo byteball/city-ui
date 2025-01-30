@@ -9,7 +9,7 @@ const phasermsg = () => {
         },
         buildEnd() {
             const line = "---------------------------------------------------------";
-            const msg = `❤️❤️❤️ Tell us about your game! - games@phaser.io ❤️❤️❤️`;
+            const msg = `Project assembly completed`;
             process.stdout.write(`${line}\n${msg}\n${line}\n`);
 
             process.stdout.write(`✨ Done ✨\n`);
