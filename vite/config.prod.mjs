@@ -1,4 +1,3 @@
-import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -27,8 +26,7 @@ export default defineConfig({
   base: './',
   plugins: [
     react(),
-    phasermsg(),
-    tailwindcss()
+    phasermsg()
   ],
   resolve: {
     alias: {
