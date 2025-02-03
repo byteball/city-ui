@@ -1,7 +1,6 @@
 import obyte from "obyte";
 
-// import appConfig from "@/appConfig";
-// import { bootstrap } from "../bootstrap";
+import { bootstrap } from "@/bootstrap";
 
 const client = new obyte.Client(`wss://obyte.org/bb${true ? "-test" : ""}`, {
     testnet: true,
@@ -21,8 +20,7 @@ client.onConnect(() => {
     });
 
     try {
-        // bootstrap(() => {
-        // });
+        bootstrap();
     } catch (error) {
         console.error("Bootstrap failed:", error);
     }
