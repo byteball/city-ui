@@ -51,9 +51,23 @@ interface IAaStateVars {
   [key: string]: object | string | NonNegativeNumber | undefined;
 }
 
+/**
+ * Represents the current state of a city.
+ */
 interface ICityState {
+  /**
+   * Last assigned house number.
+   */
   last_house_num: NonNegativeNumber;
+
+  /**
+   * Last assigned plot number.
+   */
   last_plot_num: NonNegativeNumber;
+
+  /**
+   * Total land area.
+   */
   total_land: NonNegativeNumber;
 }
 
