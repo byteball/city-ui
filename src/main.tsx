@@ -2,10 +2,15 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router";
 
+import { AppRouter } from "./AppRouter";
+
+import checkAppConfig from "./lib/checkAppConfig";
+
+import "./services/obyteWsClient"; // obyte client
+
 import "./globals.css";
 
-import { AppRouter } from "./AppRouter";
-import "./services/obyteWsClient"; // obyte client
+checkAppConfig();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
