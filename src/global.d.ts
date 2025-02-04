@@ -1,5 +1,10 @@
 type NonNegativeNumber = number & { __brand: "NonNegativeNumber" };
 
+interface ICoordinates {
+  x: NonNegativeNumber;
+  y: NonNegativeNumber;
+}
+
 interface IAaParams {
   matching_probability: NonNegativeNumber;
   plot_price: NonNegativeNumber;
@@ -23,29 +28,28 @@ interface ICityState {
   total_land: NonNegativeNumber;
 }
 
-export interface IPlot {
+export interface IPlot extends ICoordinates {
   amount: NonNegativeNumber;
   city: string;
   owner: string;
   status: "pending" | "land";
   ts: NonNegativeNumber;
+  plot_num: NonNegativeNumber; // add from key ex.: [`plot_${plot_num}`]
   username: string;
-  x: NonNegativeNumber;
-  y: NonNegativeNumber;
 }
 
-export interface IHouse {
+export interface IHouse extends ICoordinates {
   amount: NonNegativeNumber;
   city: string;
   info: string;
   plot_num: NonNegativeNumber;
   plot_ts: NonNegativeNumber;
   ts: NonNegativeNumber;
-  x: NonNegativeNumber;
-  y: NonNegativeNumber;
 }
 
 export interface ICity {
+  city_name: string; // from key
+
   count_houses: NonNegativeNumber;
   count_plots: NonNegativeNumber;
   mayor: string;
