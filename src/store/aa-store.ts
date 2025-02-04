@@ -49,5 +49,5 @@ export const useAaStore = create<AaStoreState>()(devtools(storeCreator, { name: 
 
 export const initializeStore = () => useAaStore.getState().initStore();
 
-export const getAaParams = (): IAaParams => useAaStore((state) => (state.state?.variables as IAaParams) ?? defaultAaParams);
+export const useAaParams = (): IAaParams => useAaStore((state) => (state.state?.variables as IAaParams) ?? defaultAaParams);
 
