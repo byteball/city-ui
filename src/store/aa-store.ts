@@ -1,7 +1,10 @@
-import appConfig from "@/appConfig";
-import client from "@/services/obyteWsClient";
 import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
+
+import { IAaParams, IAaStateVars, ICityState } from "@/global";
+import client from "@/services/obyteWsClient";
+
+import appConfig from "@/appConfig";
 
 const defaultAaParams: IAaParams = {
   matching_probability: 0.05,
@@ -16,8 +19,17 @@ const defaultAaParams: IAaParams = {
   attestors: "",
 };
 
+interface ICityAaState extends IAaStateVars {
+  variables?: IAaParams;
+  constants?: {
+    asset?: string;
+    governance_aa?: string;
+  };
+  state?: ICityState;
+}
+
 interface AaStoreState {
-  state: IAaStateVars;
+  state: ICityAaState;
   loading: boolean;
   error: string | null;
   initStore: () => Promise<void>;
@@ -33,7 +45,7 @@ const storeCreator: StateCreator<AaStoreState> = (set, _get) => ({
     console.log("log: loading AA store, for address", appConfig.AA_ADDRESS);
 
     try {
-      const aaState = (await client.api.getAaStateVars({ address: appConfig.AA_ADDRESS })) as AaState;
+      const aaState = (await client.api.getAaStateVars({ address: appConfig.AA_ADDRESS })) as ICityAaState;
 
       set({ state: aaState, loading: false, error: null });
 
@@ -49,5 +61,5 @@ export const useAaStore = create<AaStoreState>()(devtools(storeCreator, { name: 
 
 export const initializeStore = () => useAaStore.getState().initStore();
 
-export const useAaParams = (): IAaParams => useAaStore((state) => (state.state?.variables as IAaParams) ?? defaultAaParams);
+export const useAaParams = () => useAaStore((state) => state.state?.variables ?? defaultAaParams);
 
