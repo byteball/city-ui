@@ -21,14 +21,14 @@ const storeCreator: StateCreator<AaStoreState> = (set, _get) => ({
   initStore: async () => {
     set({ loading: true, error: null });
 
-    console.log("log: loading AA store");
+    console.log("log: loading AA store, for address", appConfig.AA_ADDRESS);
 
     try {
-      const aaState = (await client.api.getAaStateVars({ address: appConfig.AA_ADDRESS! })) as AaState;
+      const aaState = (await client.api.getAaStateVars({ address: appConfig.AA_ADDRESS })) as AaState;
 
       set({ state: aaState, loading: false, error: null });
 
-      console.log("log: loaded AA store");
+      console.log("log: loaded AA store", import.meta.env.DEV ? aaState : "");
     } catch (err) {
       console.log("log: error loading AA store", err);
       set({ error: (err as Error).message, loading: false });
