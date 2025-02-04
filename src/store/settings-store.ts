@@ -25,10 +25,21 @@ export const useSettingsStore = create<SettingsState>()(
     persist(storeCreator, {
       name: LOCAL_STORAGE_KEY,
       version: STORAGE_VERSION,
+      migrate: (persistedState, version) => {
+        if (version < STORAGE_VERSION) {
+          // Handle migration or reset state
+          return { inited: false };
+        }
+
+        return persistedState as SettingsState;
+      },
+      onRehydrateStorage: () => (state) => {
+        if (!state) console.error("Failed to rehydrate settings store");
+      },
     }),
     { name: LOCAL_STORAGE_KEY }
   )
 );
 
-export const initializeSettings = () => useSettingsStore.getState().firstInit();
+export const initializeSettings = (): void => useSettingsStore.getState().firstInit();
 
