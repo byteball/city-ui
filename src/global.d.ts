@@ -33,7 +33,7 @@ export interface IPlot {
 }
 
 export interface IHouse {
-  amount: 0;
+  amount: number;
   city: string;
   info: string;
   plot_num: number;
