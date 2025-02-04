@@ -3,12 +3,21 @@ import client from "@/services/obyteWsClient";
 import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
 
-interface AaState {
-  [key: string]: object | string | number | boolean;
-}
+const defaultAaParams: IAaParams = {
+  matching_probability: 0.05,
+  plot_price: 1000e9,
+  referral_boost: 0.1,
+  randomness_aa: "",
+  randomness_price: 0.001,
+  p2p_sale_fee: 0.01,
+  shortcode_sale_fee: 0.01,
+  rental_surcharge_factor: 1,
+  followup_reward_share: 0.1,
+  attestors: "",
+};
 
 interface AaStoreState {
-  state: AaState;
+  state: IAaStateVars;
   loading: boolean;
   error: string | null;
   initStore: () => Promise<void>;
@@ -39,4 +48,6 @@ const storeCreator: StateCreator<AaStoreState> = (set, _get) => ({
 export const useAaStore = create<AaStoreState>()(devtools(storeCreator, { name: "aa-store" }));
 
 export const initializeStore = () => useAaStore.getState().initStore();
+
+export const getAaParams = (): IAaParams => useAaStore((state) => (state.state?.variables as IAaParams) ?? defaultAaParams);
 
