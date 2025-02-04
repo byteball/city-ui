@@ -41,6 +41,9 @@ export default class MapScene extends Phaser.Scene {
     // TODO: Uncomment and configure properly if the bitmap font will be used.
     // this.load.bitmapFont('bitmapFont', 'path/to/font.png', 'path/to/font.fnt');
     this.load.svg("plot", "assets/plot.svg");
+
+    this.load.svg("road-vertical", "assets/road-vertical.svg");
+    this.load.svg("road-horizontal", "assets/road-horizontal.svg");
   }
 
   create() {

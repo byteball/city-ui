@@ -8,7 +8,6 @@ export interface RoadData {
 }
 
 const BASE_LABEL_STEP = 600;
-const BASE_ROAD_LINE_WIDTH = 60;
 
 export class Road {
   private scene: Phaser.Scene;
@@ -25,16 +24,11 @@ export class Road {
 
   private createRoad() {
     const { coordinate, name, avenue, orientation } = this.data;
-    const thickness = BASE_ROAD_LINE_WIDTH;
-
-    const roadColor = avenue ? 0xff0000 : 0x0000ff; // Красный для авеню, синий для улиц
-
-    // Создаем графику для дороги
-    const roadGraphics = this.scene.add.graphics();
-    roadGraphics.fillStyle(roadColor, 1);
+    const thickness = 30;
 
     if (orientation === "vertical") {
-      roadGraphics.fillRect(coordinate, 0, thickness, this.mapHeight);
+      // Создаем спрайт, который повторяется по вертикали
+      this.scene.add.tileSprite(coordinate, 0, thickness, this.mapHeight, "road-vertical").setOrigin(0, 0);
 
       // Добавляем название дороги вдоль вертикальной линии
       for (let y = 0; y < this.mapHeight; y += BASE_LABEL_STEP) {
@@ -49,7 +43,7 @@ export class Road {
         this.labels.push(roadText);
       }
     } else if (orientation === "horizontal") {
-      roadGraphics.fillRect(0, coordinate, this.mapWidth, thickness);
+      this.scene.add.tileSprite(0, coordinate, this.mapWidth, thickness, "road-horizontal").setOrigin(0, 0);
 
       // Добавляем название дороги вдоль горизонтальной линии
       for (let x = 0; x < this.mapWidth; x += BASE_LABEL_STEP) {
