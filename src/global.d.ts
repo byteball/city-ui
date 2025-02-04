@@ -126,7 +126,7 @@ export interface IPlot extends ICoordinates {
  *   info: "House with beautiful garden",
  *   plot_num: 5,
  *   plot_ts: 1678901234,
- *   ts: 1678901234б
+ *   ts: 1678901234
  *   x: 1,
  *   y: 2
  * };
