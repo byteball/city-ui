@@ -4,5 +4,5 @@
 </mask>
 <path d="M50 0L50 30L-1.31134e-06 30L0 -2.18557e-06L50 0Z" fill="#373535"/>
 <path d="M50 29L-1.26763e-06 29L-1.35505e-06 31L50 31L50 29ZM-4.37114e-08 0.999998L50 1L50 -1L4.37114e-08 -1L-4.37114e-08 0.999998Z" fill="#212121" mask="url(#path-1-inside-1_1227_20)"/>
-<path d="M46 15L3 15" stroke="#A2A2A2" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 5"/>
+<path d="M46 15L3 15" stroke="#A2A2A2" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 7"/>
 </svg>
