@@ -1,55 +1,61 @@
+type NonNegativeNumber = number & { __brand: "NonNegativeNumber" };
+
 interface IAaParams {
-  matching_probability: number;
-  plot_price: number;
-  referral_boost: number;
+  matching_probability: NonNegativeNumber;
+  plot_price: NonNegativeNumber;
+  referral_boost: NonNegativeNumber;
   randomness_aa: string;
-  randomness_price: number;
-  p2p_sale_fee: number;
-  shortcode_sale_fee: number;
-  rental_surcharge_factor: number;
-  followup_reward_share: number;
+  randomness_price: NonNegativeNumber;
+  p2p_sale_fee: NonNegativeNumber;
+  shortcode_sale_fee: NonNegativeNumber;
+  rental_surcharge_factor: NonNegativeNumber;
+  followup_reward_share: NonNegativeNumber;
   attestors: string;
 }
 
 interface IAaStateVars {
-  [key: string]: object | string | number | undefined;
+  [key: string]: object | string | NonNegativeNumber | undefined;
 }
 
 interface ICityState {
-  last_house_num: number;
-  last_plot_num: number;
-  total_land: number;
+  last_house_num: NonNegativeNumber;
+  last_plot_num: NonNegativeNumber;
+  total_land: NonNegativeNumber;
 }
 
 export interface IPlot {
-  amount: number;
+  amount: NonNegativeNumber;
   city: string;
   owner: string;
   status: "pending" | "land";
-  ts: number;
+  ts: NonNegativeNumber;
   username: string;
-  x: number;
-  y: number;
+  x: NonNegativeNumber;
+  y: NonNegativeNumber;
 }
 
 export interface IHouse {
-  amount: number;
+  amount: NonNegativeNumber;
   city: string;
   info: string;
-  plot_num: number;
-  plot_ts: number;
-  ts: number;
-  x: number;
-  y: number;
+  plot_num: NonNegativeNumber;
+  plot_ts: NonNegativeNumber;
+  ts: NonNegativeNumber;
+  x: NonNegativeNumber;
+  y: NonNegativeNumber;
 }
 
 export interface ICity {
-  count_houses: number;
-  count_plots: number;
+  count_houses: NonNegativeNumber;
+  count_plots: NonNegativeNumber;
   mayor: string;
-  start_ts: number;
-  total_bought: number;
-  total_land: number;
-  total_rented: number;
+  start_ts: NonNegativeNumber;
+  total_bought: NonNegativeNumber;
+  total_land: NonNegativeNumber;
+  total_rented: NonNegativeNumber;
+
+  matching_probability?: NonNegativeNumber;
+  plot_price?: NonNegativeNumber;
+  referral_boost?: NonNegativeNumber;
 }
 
