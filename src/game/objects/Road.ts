@@ -23,7 +23,7 @@ export class Road {
   }
 
   private createRoad() {
-    const { coordinate, name, avenue, orientation } = this.data;
+    const { coordinate, name, orientation } = this.data;
     const thickness = 30;
 
     if (orientation === "vertical") {
@@ -33,7 +33,7 @@ export class Road {
       // Добавляем название дороги вдоль вертикальной линии
       for (let y = 0; y < this.mapHeight; y += BASE_LABEL_STEP) {
         const roadText = this.scene.add.text(coordinate + thickness / 2, y, name, {
-          fontSize: avenue ? "32px" : "20px",
+          fontSize: "32px",
           color: "#ffffff",
         });
 
@@ -48,7 +48,7 @@ export class Road {
       // Добавляем название дороги вдоль горизонтальной линии
       for (let x = 0; x < this.mapWidth; x += BASE_LABEL_STEP) {
         const roadText = this.scene.add.text(x, coordinate + thickness / 2, name, {
-          fontSize: "18px",
+          fontSize: "24px",
           color: "#ffffff",
         });
 
@@ -71,7 +71,7 @@ export class Road {
       const dynamicStep = BASE_LABEL_STEP / currentZoom;
 
       this.labels.forEach((label, index) => {
-        const baseFontSize = this.data.avenue ? 10 : 10; // Базовый размер шрифта
+        const baseFontSize = 16; // Базовый размер шрифта
         const newFontSize = baseFontSize / currentZoom; // Увеличиваем текст при уменьшении масштаба
 
         label.setFontSize(newFontSize);
