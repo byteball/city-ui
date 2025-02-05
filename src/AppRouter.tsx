@@ -1,8 +1,8 @@
 import { FC, ReactElement } from "react";
 import { Route, Routes } from "react-router";
 
-import App from "./App";
 import { Layout } from "./components/layout/layout";
+import MainPage from "./pages/MainPage";
 
 interface IAppRouterProps {
   children?: ReactElement;
@@ -11,7 +11,7 @@ interface IAppRouterProps {
 export const AppRouter: FC<IAppRouterProps> = () => (
   <Routes>
     <Route element={<Layout />}>
-      <Route path="/" element={<App />} />
+      <Route path="/" element={<MainPage />} />
     </Route>
   </Routes>
 );
