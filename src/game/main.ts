@@ -1,4 +1,5 @@
 // import { Boot } from './scenes/Boot';
+import appConfig from "@/appConfig";
 import { Game } from "phaser";
 import MapScene from "./scenes/MainScene";
 
@@ -6,8 +7,9 @@ import MapScene from "./scenes/MainScene";
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
-  width: 600, // Ширина видимой области
-  height: 600, // Высота видимой области
+  width: 1800,
+  height: 1800,
+  banner: appConfig.TESTNET,
   backgroundColor: "#030711",
   scene: [MapScene],
   scale: {

@@ -57,3 +57,8 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 }
+
+#game-container canvas {
+  width: 600px;
+  height: 600px;
+}
