@@ -10,7 +10,12 @@ const config: Phaser.Types.Core.GameConfig = {
   width: 1800,
   height: 1800,
   banner: appConfig.TESTNET,
-  backgroundColor: "#030711",
+  backgroundColor: "hsl(224 71% 4%)",
+  resizeInterval: 1,
+  render: {
+    antialias: true,
+    transparent: true,
+  },
   scene: [MapScene],
   scale: {
     mode: Phaser.Scale.FIT,
