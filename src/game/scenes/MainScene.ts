@@ -42,8 +42,8 @@ export default class MapScene extends Phaser.Scene {
     // this.load.bitmapFont('bitmapFont', 'path/to/font.png', 'path/to/font.fnt');
     this.load.svg("plot", "assets/plot.svg");
 
-    this.load.svg("road-vertical", "assets/road-vertical.svg");
-    this.load.svg("road-horizontal", "assets/road-horizontal.svg");
+    this.load.svg("road-vertical", "assets/road-vertical.svg", { width: 30, height: 50 });
+    this.load.svg("road-horizontal", "assets/road-horizontal.svg", { width: 50, height: 30 });
   }
 
   create() {
