@@ -111,11 +111,11 @@ export class Map {
       const plot = new Plot(this.scene, { ...houseData, x: finalX, y: finalY }, plotSize);
 
       // Обработка клика по участку
-      const plotGraphics = plot.getPlotImage();
+      const plotImage = plot.getPlotImage();
 
-      plotGraphics.setInteractive({ cursor: "pointer" }); // Меняем курсор на "указатель"
+      plotImage.setInteractive({ cursor: "pointer" }); // Меняем курсор на "указатель"
 
-      plotGraphics.on("pointerdown", () => {
+      plotImage.on("pointerdown", () => {
         // Сбрасываем состояние предыдущего участка
         if (this.selectedPlot) {
           this.selectedPlot.setSelected(false);
@@ -130,11 +130,11 @@ export class Map {
         console.log(`Selected House: ${city} Cost: ${amount}`);
       });
 
-      plotGraphics.on("pointerover", () => {
+      plotImage.on("pointerover", () => {
         this.scene.input.setDefaultCursor("pointer");
       });
 
-      plotGraphics.on("pointerout", () => {
+      plotImage.on("pointerout", () => {
         this.scene.input.setDefaultCursor("default");
       });
     });
