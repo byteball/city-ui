@@ -5,6 +5,7 @@ import { Map } from "../objects/Map";
 import { HouseData } from "../objects/Plot";
 import { RoadData } from "../objects/Road";
 
+import { plotSelector, useAaStore } from "@/store/aa-store";
 import CameraController from "../controllers/CameraController";
 import { houses } from "./houses";
 

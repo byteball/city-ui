@@ -1,4 +1,8 @@
 // src/objects/Map.ts
+import { IHouse, IPlot } from "@/global";
+import { asNonNegativeNumber } from "@/lib/asNonNegativeNumber";
+
+import { useSettingsStore } from "@/store/settings-store";
 import Phaser from "phaser";
 import { HouseData, Plot } from "./Plot";
 import { Road, RoadData } from "./Road";
@@ -125,9 +129,12 @@ export class Map {
         this.selectedPlot = plot;
         plot.setSelected(true);
 
-        // Отображаем информацию о доме
-        const { city, amount } = plot.getData();
-        console.log(`Selected House: ${city} Cost: ${amount}`);
+        let { x, y } = plot.getData();
+
+        const positiveX = asNonNegativeNumber(x);
+        const positiveY = asNonNegativeNumber(y);
+
+        useSettingsStore.getState().setSelectedPlot({ x: positiveX, y: positiveY });
       });
 
       plotImage.on("pointerover", () => {

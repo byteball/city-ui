@@ -2,9 +2,11 @@ import { useRef } from "react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { IRefPhaserGame, PhaserGame } from "@/game/PhaserGame";
+import { useSettingsStore } from "@/store/settings-store";
 
 export default () => {
   const phaserRef = useRef<IRefPhaserGame | null>(null);
+  const selectedPlot = useSettingsStore((state) => state.selectedPlot);
 
   return (
     <div className="grid grid-cols-3 gap-8 md:grid-cols-5">
@@ -25,11 +27,16 @@ export default () => {
             <CardDescription>Click on the house to see all the information about it.</CardDescription>
           </CardHeader>
 
-          <CardContent>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi maiores similique vero vel placeat dolor laborum ratione.
-          </CardContent>
+          {selectedPlot ? (
+            <CardContent>
+              {selectedPlot.x} - {selectedPlot.y}
+            </CardContent>
+          ) : (
+            <CardContent className="text-primary">No plot selected</CardContent>
+          )}
         </Card>
       </div>
     </div>
   );
 };
+

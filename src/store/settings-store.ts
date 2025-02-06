@@ -1,3 +1,4 @@
+import { ICoordinates, NonNegativeNumber } from "@/global";
 import { create, StateCreator } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
@@ -7,6 +8,9 @@ const STORAGE_VERSION = 2; // change this to invalidate old persisted data
 interface SettingsState {
   firstInit: () => void;
   inited: boolean;
+
+  selectedPlot?: { x: NonNegativeNumber; y: NonNegativeNumber };
+  setSelectedPlot: (coordinates?: ICoordinates | null) => void;
 }
 
 const storeCreator: StateCreator<SettingsState> = (set, get) => ({
@@ -18,6 +22,11 @@ const storeCreator: StateCreator<SettingsState> = (set, get) => ({
     console.log("log: initialized settings store");
   },
   inited: false,
+  selectedPlot: undefined,
+  setSelectedPlot: (coordinates) => {
+    if (!coordinates) return set({ selectedPlot: undefined });
+    set({ selectedPlot: { x: coordinates.x, y: coordinates.y } });
+  },
 });
 
 export const useSettingsStore = create<SettingsState>()(
@@ -42,4 +51,6 @@ export const useSettingsStore = create<SettingsState>()(
 );
 
 export const initializeSettings = (): void => useSettingsStore.getState().firstInit();
+
+export const setSelectedPlot = (coordinates?: ICoordinates | null): void => useSettingsStore.getState().setSelectedPlot(coordinates);
 
