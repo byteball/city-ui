@@ -111,7 +111,7 @@ export class Map {
       const plot = new Plot(this.scene, { ...houseData, x: finalX, y: finalY }, plotSize);
 
       // Обработка клика по участку
-      const plotGraphics = plot.getPlotGraphics();
+      const plotGraphics = plot.getPlotImage();
 
       plotGraphics.setInteractive({ cursor: "pointer" }); // Меняем курсор на "указатель"
 

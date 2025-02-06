@@ -30,7 +30,7 @@ export class Plot {
   private createPlot() {
     const { x, y } = this.data;
 
-    // Используем загруженный svg-ассет "plot" для участка
+    // Use the loaded "plot" SVG asset for the plot
     this.plotImage = this.scene.add.image(x, y, "plot");
     this.plotImage.setDisplaySize(this.plotSize, this.plotSize);
     this.plotImage.setInteractive();
@@ -75,7 +75,7 @@ export class Plot {
     return this.data;
   }
 
-  public getPlotGraphics() {
+  public getPlotImage() {
     return this.plotImage;
   }
 }
