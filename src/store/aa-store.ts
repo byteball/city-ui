@@ -116,15 +116,25 @@ export const mapUnitsSelector = (state: AaStoreState): IMapUnit[] => {
       const [type, idStr] = key.split("_");
       const id = asNonNegativeNumber(Number(idStr));
 
+      const mapUnit = unit as IMapUnit;
+      const unitInfo = mapUnit.info;
+
+      if (unitInfo && typeof unitInfo === "string") {
+        try {
+          const infoJSON = JSON.parse(unitInfo);
+          mapUnit.info = { ...mapUnit, info: infoJSON };
+        } catch {}
+      }
+
       if (type === "plot") {
-        const plotUnit = unit as IPlot;
+        const plotUnit = mapUnit as IPlot;
         return {
           ...plotUnit,
           type,
           plot_num: id,
         } as IPlot;
       } else if (type === "house") {
-        const houseUnit = unit as IHouse;
+        const houseUnit = mapUnit as IHouse;
 
         return {
           ...houseUnit,
