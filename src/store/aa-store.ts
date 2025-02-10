@@ -122,7 +122,7 @@ export const mapUnitsSelector = (state: AaStoreState): IMapUnit[] => {
       if (unitInfo && typeof unitInfo === "string") {
         try {
           const infoJSON = JSON.parse(unitInfo);
-          mapUnit.info = { ...mapUnit, info: infoJSON };
+          mapUnit.info = infoJSON;
         } catch {}
       }
 
