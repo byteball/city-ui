@@ -17,11 +17,11 @@ export class Map {
   private allCitySupply: number;
   private selectedPlot: Plot | null = null;
 
-  constructor(scene: Phaser.Scene, roadsData: RoadData[], housesData: HouseData[]) {
+  constructor(scene: Phaser.Scene, roadsData: RoadData[], unitsData: IMapUnit[]) {
     this.scene = scene;
     this.roadsData = roadsData;
-    this.housesData = housesData;
-    this.allCitySupply = this.housesData.reduce((sum, house) => sum + house.amount, 0);
+    this.unitsData = unitsData;
+    this.allCitySupply = this.unitsData.reduce((sum, house) => sum + house.amount, 0);
   }
 
   public createMap() {
@@ -56,7 +56,7 @@ export class Map {
   }
 
   private createPlots(MAP_WIDTH: number, MAP_HEIGHT: number) {
-    this.housesData.forEach((houseData) => {
+    this.unitData.forEach((houseData) => {
       // 1) Размер участка: та же доля, но умножаем уже на новую площадь
       const { amount, x, y } = houseData;
       const plotFraction = (amount / this.allCitySupply) * 0.1;
@@ -64,8 +64,8 @@ export class Map {
       const plotSize = Math.sqrt(plotArea);
 
       // 2) Учитываем смещение
-      let finalX = x;
-      let finalY = y;
+      let finalX = asNonNegativeNumber(x);
+      let finalY = asNonNegativeNumber(y);
 
       // while (overlapping) — пока мы не убедились, что участок не пересекается ни с одной дорогой, мы снова крутим цикл.
       // for (const road of this.roadsData) — обходим все дороги:
@@ -85,7 +85,7 @@ export class Map {
 
         // Проходим по всем дорогам
         for (const road of this.roadsData) {
-          const thickness = road.avenue ? AVENUE_THICKNESS : STREET_THICKNESS;
+          const thickness = asNonNegativeNumber(road.avenue ? AVENUE_THICKNESS : STREET_THICKNESS);
           const roadStart = road.coordinate;
           const roadEnd = road.coordinate + thickness;
 
@@ -93,7 +93,7 @@ export class Map {
             // если есть пересечение по оси X
             if (rightEdge >= roadStart && leftEdge < roadEnd) {
               // смещаем участок вправо
-              finalX += thickness;
+              finalX = asNonNegativeNumber(finalX + thickness);
               // помечаем, что надо заново проверить
               overlapping = true;
               // прерываем цикл for, чтобы начать заново с новой координатой
@@ -103,7 +103,7 @@ export class Map {
             // горизонтальная дорога
             if (bottomEdge >= roadStart && topEdge < roadEnd) {
               // смещаем участок вниз
-              finalY += thickness;
+              finalY = asNonNegativeNumber(finalY + thickness);
               overlapping = true;
               break;
             }
@@ -112,7 +112,7 @@ export class Map {
       } // конец while
 
       // Создаём участок с новой позицией и размерами
-      const plot = new Plot(this.scene, { ...houseData, x: finalX, y: finalY }, plotSize);
+      const plot = new Plot(this.scene, { ...unitData, x: finalX, y: finalY }, plotSize);
 
       // Обработка клика по участку
       const plotImage = plot.getPlotImage();
