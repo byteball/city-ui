@@ -102,8 +102,18 @@ export interface IPlot extends ICoordinates {
   city: string;
   owner: string;
   status: "pending" | "land";
+  type: "plot";
+  info: string;
   ts: NonNegativeNumber;
   plot_num: NonNegativeNumber; // add from key ex.: [`plot_${plot_num}`]
+
+  last_transfer_ts?: NonNegativeNumber;
+  last_rental_ts?: NonNegativeNumber;
+  ref_plot_num?: NonNegativeNumber;
+  rented_amount?: NonNegativeNumber;
+  rental_expiry_ts?: NonNegativeNumber;
+  sale_price?: NonNegativeNumber;
+
   username: string;
 }
 
@@ -134,9 +144,13 @@ export interface IPlot extends ICoordinates {
 export interface IHouse extends ICoordinates {
   amount: NonNegativeNumber;
   city: string;
+  type: "house";
+  house_num: NonNegativeNumber; // add from key ex.: [`house_${house_num}`]
   info: string;
   plot_num: NonNegativeNumber;
   plot_ts: NonNegativeNumber;
+  shortcode?: string;
+  shortcode_price?: NonNegativeNumber;
   ts: NonNegativeNumber;
 }
 
@@ -183,4 +197,11 @@ export interface ICity {
   plot_price?: NonNegativeNumber;
   referral_boost?: NonNegativeNumber;
 }
+
+/**
+ * Represents a map unit which can either be a plot or a house.
+ *
+ * This type is useful when a function or component needs to work with either entity.
+ */
+export type IMapUnit = IPlot | IHouse;
 
