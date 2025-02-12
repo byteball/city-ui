@@ -1,7 +1,7 @@
 import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
 
-import { IAaParams, IAaStateVars, ICity, ICityState, IHouse, IMapUnit, IPlot } from "@/global";
+import { IAaParams, IAaStateVars, ICity, ICityState } from "@/global";
 import client from "@/services/obyteWsClient";
 
 import { asNonNegativeNumber } from "@/lib/asNonNegativeNumber";
@@ -21,7 +21,7 @@ const defaultAaParams: IAaParams = {
   attestors: "",
 };
 
-interface ICityAaState extends IAaStateVars {
+export interface ICityAaState extends IAaStateVars {
   variables?: IAaParams;
   constants?: {
     asset?: string;
@@ -30,7 +30,7 @@ interface ICityAaState extends IAaStateVars {
   state?: ICityState;
 }
 
-interface AaStoreState {
+export interface AaStoreState {
   state: ICityAaState;
   loading: boolean;
   error: string | null;
@@ -103,47 +103,3 @@ export const useAaParams = () =>
       attestors,
     };
   });
-
-// uniq -> type + x + y
-export const mapUnitsSelector = (state: AaStoreState): IMapUnit[] => {
-  const aaState = state.state;
-
-  if (!aaState) return [];
-
-  return Object.entries(aaState)
-    .filter(([key, unit]) => key.startsWith("plot_") || (key.startsWith("house_") && typeof unit === "object"))
-    .map(([key, unit]) => {
-      const [type, idStr] = key.split("_");
-      const id = asNonNegativeNumber(Number(idStr));
-
-      const mapUnit = unit as IMapUnit;
-      const unitInfo = mapUnit.info;
-
-      if (unitInfo && typeof unitInfo === "string") {
-        try {
-          const infoJSON = JSON.parse(unitInfo);
-          mapUnit.info = infoJSON;
-        } catch {}
-      }
-
-      if (type === "plot") {
-        const plotUnit = mapUnit as IPlot;
-        return {
-          ...plotUnit,
-          type,
-          plot_num: id,
-        } as IPlot;
-      } else if (type === "house") {
-        const houseUnit = mapUnit as IHouse;
-
-        return {
-          ...houseUnit,
-          type,
-          house_num: id,
-        } as IHouse;
-      }
-
-      throw new Error(`Unexpected map unit type: ${type}`);
-    });
-};
-
