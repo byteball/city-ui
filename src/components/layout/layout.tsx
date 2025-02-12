@@ -3,6 +3,7 @@ import { Outlet } from "react-router";
 
 import { Footer } from "../footer/footer";
 import { Header } from "../header/header";
+import { Toaster } from "../ui/toaster";
 
 interface ILayoutProps {
   children?: React.ReactNode;
@@ -10,6 +11,7 @@ interface ILayoutProps {
 
 export const Layout: FC<ILayoutProps> = () => (
   <div className="min-w-full min-h-full bg-background-dark">
+    <Toaster />
     <div className="mb-8">
       <Header />
     </div>
