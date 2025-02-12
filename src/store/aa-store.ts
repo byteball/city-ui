@@ -33,6 +33,7 @@ export interface ICityAaState extends IAaStateVars {
 export interface AaStoreState {
   state: ICityAaState;
   loading: boolean;
+  loaded: boolean;
   error: string | null;
   initStore: () => Promise<void>;
 }
@@ -40,21 +41,22 @@ export interface AaStoreState {
 const storeCreator: StateCreator<AaStoreState> = (set, _get) => ({
   state: {},
   loading: false,
+  loaded: false,
   error: null,
   initStore: async () => {
-    set({ loading: true, error: null });
+    set({ loading: true, loaded: false, error: null });
 
     console.log("log: loading AA store, for address", appConfig.AA_ADDRESS);
 
     try {
       const aaState = (await client.api.getAaStateVars({ address: appConfig.AA_ADDRESS })) as ICityAaState;
 
-      set({ state: aaState, loading: false, error: null });
+      set({ state: aaState, loading: false, loaded: true, error: null });
 
       console.log("log: loaded AA store", import.meta.env.DEV ? aaState : "");
     } catch (err) {
       console.log("log: error loading AA store", err);
-      set({ error: (err as Error).message, loading: false });
+      set({ error: (err as Error).message, loading: false, loaded: true });
     }
   },
 });
@@ -103,3 +105,4 @@ export const useAaParams = () =>
       attestors,
     };
   });
+
