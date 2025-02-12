@@ -1,3 +1,4 @@
+import { NuqsAdapter } from "nuqs/adapters/react";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router";
@@ -15,7 +16,9 @@ checkAppConfig();
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
-      <AppRouter />
+      <NuqsAdapter>
+        <AppRouter />
+      </NuqsAdapter>
     </BrowserRouter>
   </React.StrictMode>
 );
