@@ -7,8 +7,7 @@ import Phaser from "phaser";
 import { Plot } from "./Plot";
 import { Road } from "./Road";
 
-export const AVENUE_THICKNESS = 120;
-export const STREET_THICKNESS = 60;
+export const ROAD_THICKNESS = 30;
 
 export class Map {
   private scene: Phaser.Scene;
@@ -30,11 +29,10 @@ export class Map {
     let totalHorizontalThickness = 0;
 
     this.roadsData.forEach((road) => {
-      const thickness = road.avenue ? AVENUE_THICKNESS : STREET_THICKNESS;
       if (road.orientation === "vertical") {
-        totalVerticalThickness += thickness;
+        totalVerticalThickness += ROAD_THICKNESS;
       } else {
-        totalHorizontalThickness += thickness;
+        totalHorizontalThickness += ROAD_THICKNESS;
       }
     });
 
@@ -85,7 +83,7 @@ export class Map {
 
         // Проходим по всем дорогам
         for (const road of this.roadsData) {
-          const thickness = asNonNegativeNumber(road.avenue ? AVENUE_THICKNESS : STREET_THICKNESS);
+          const thickness = asNonNegativeNumber(ROAD_THICKNESS);
           const roadStart = road.coordinate;
           const roadEnd = road.coordinate + thickness;
 
