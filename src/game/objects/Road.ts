@@ -1,5 +1,6 @@
 import { IRoad } from "@/global";
 import Phaser from "phaser";
+import { ROAD_THICKNESS } from "./Map";
 
 const BASE_LABEL_STEP = 600;
 
@@ -19,7 +20,7 @@ export class Road {
   private createRoad() {
     const { x, y, name, orientation } = this.data;
 
-    const thickness = 30;
+    const thickness = ROAD_THICKNESS;
 
     if (orientation === "vertical") {
       // Создаем спрайт, который повторяется по вертикали
