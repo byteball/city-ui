@@ -1,23 +1,23 @@
 // src/objects/Map.ts
-import { IHouse, IPlot } from "@/global";
+import { IMapUnit, IRoad } from "@/global";
 import { asNonNegativeNumber } from "@/lib/asNonNegativeNumber";
 
 import { useSettingsStore } from "@/store/settings-store";
 import Phaser from "phaser";
-import { HouseData, Plot } from "./Plot";
-import { Road, RoadData } from "./Road";
+import { Plot } from "./Plot";
+import { Road } from "./Road";
 
 export const AVENUE_THICKNESS = 120;
 export const STREET_THICKNESS = 60;
 
 export class Map {
   private scene: Phaser.Scene;
-  private roadsData: RoadData[];
-  private housesData: HouseData[];
+  private roadsData: IRoad[];
+  private unitsData: IMapUnit[];
   private allCitySupply: number;
-  private selectedPlot: Plot | null = null;
+  private selectedMapUnit: Plot | null = null;
 
-  constructor(scene: Phaser.Scene, roadsData: RoadData[], unitsData: IMapUnit[]) {
+  constructor(scene: Phaser.Scene, roadsData: IRoad[], unitsData: IMapUnit[]) {
     this.scene = scene;
     this.roadsData = roadsData;
     this.unitsData = unitsData;
@@ -56,9 +56,9 @@ export class Map {
   }
 
   private createPlots(MAP_WIDTH: number, MAP_HEIGHT: number) {
-    this.unitData.forEach((houseData) => {
+    this.unitsData.forEach((unitData) => {
       // 1) Размер участка: та же доля, но умножаем уже на новую площадь
-      const { amount, x, y } = houseData;
+      const { amount, x, y } = unitData;
       const plotFraction = (amount / this.allCitySupply) * 0.1;
       const plotArea = plotFraction * MAP_WIDTH * MAP_HEIGHT;
       const plotSize = Math.sqrt(plotArea);
@@ -121,12 +121,12 @@ export class Map {
 
       plotImage.on("pointerdown", () => {
         // Сбрасываем состояние предыдущего участка
-        if (this.selectedPlot) {
-          this.selectedPlot.setSelected(false);
+        if (this.selectedMapUnit) {
+          this.selectedMapUnit.setSelected(false);
         }
 
         // Запоминаем текущий выбранный участок
-        this.selectedPlot = plot;
+        this.selectedMapUnit = plot;
         plot.setSelected(true);
 
         let { x, y } = plot.getData();
@@ -134,7 +134,8 @@ export class Map {
         const positiveX = asNonNegativeNumber(x);
         const positiveY = asNonNegativeNumber(y);
 
-        useSettingsStore.getState().setSelectedPlot({ x: positiveX, y: positiveY });
+        // updateSelectedMapUnit(positiveX, positiveY); // TODO: For real data
+        useSettingsStore.getState().setSelectedMapUnit({ x: positiveX, y: positiveY });
       });
 
       plotImage.on("pointerover", () => {
