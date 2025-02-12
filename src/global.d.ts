@@ -5,6 +5,11 @@ interface ICoordinates {
   y: NonNegativeNumber;
 }
 
+interface IMapUnitInfo {
+  [key: string]: any;
+  name: string;
+}
+
 /**
  * @interface IAaParams
  * @description Parameters for AA functionality
@@ -103,7 +108,8 @@ export interface IPlot extends ICoordinates {
   owner: string;
   status: "pending" | "land";
   type: "plot";
-  info: string;
+  info: string | IMapUnitInfo;
+  owner?: string; // if empty - mayor plot
   ts: NonNegativeNumber;
   plot_num: NonNegativeNumber; // add from key ex.: [`plot_${plot_num}`]
 
@@ -146,7 +152,8 @@ export interface IHouse extends ICoordinates {
   city: string;
   type: "house";
   house_num: NonNegativeNumber; // add from key ex.: [`house_${house_num}`]
-  info: string;
+  info: string | IMapUnitInfo;
+  owner?: string; // if empty - mayor house
   plot_num: NonNegativeNumber;
   plot_ts: NonNegativeNumber;
   shortcode?: string;
@@ -196,6 +203,11 @@ export interface ICity {
   matching_probability?: NonNegativeNumber;
   plot_price?: NonNegativeNumber;
   referral_boost?: NonNegativeNumber;
+}
+
+export interface IRoad extends ICoordinates {
+  name: string;
+  orientation: "vertical" | "horizontal";
 }
 
 /**
