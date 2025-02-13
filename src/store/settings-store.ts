@@ -1,18 +1,24 @@
 import { create, StateCreator } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
-import { ICoordinates, NonNegativeNumber } from "@/global";
+import appConfig from "@/appConfig";
+import { ICoordinates, IRefData, NonNegativeNumber } from "@/global";
 import { toast } from "@/hooks/use-toast";
-import { useAaStore } from "./aa-store";
-import { mapUnitsSelector } from "./selectors/mapUnitsSelector";
+import client from "@/services/obyteWsClient";
+import { ICityAaState } from "./aa-store";
 
 const LOCAL_STORAGE_KEY = "settings-store";
-const STORAGE_VERSION = 2; // change this to invalidate old persisted data
+const STORAGE_VERSION = 4; // change this to invalidate old persisted data
 
 interface SettingsState {
   firstInit: () => void;
   inited: boolean;
-
+  asset: string | null;
+  symbol: string | null;
+  decimals: number | null;
+  governanceAa: string | null;
+  refData: IRefData | null;
+  setRefData: (refData: IRefData) => void;
   selectedMapUnit?: { x: NonNegativeNumber; y: NonNegativeNumber };
   setSelectedMapUnit: (coordinates?: ICoordinates | null) => void;
 }
@@ -20,17 +26,36 @@ interface SettingsState {
 const storeCreator: StateCreator<SettingsState> = (set, get) => ({
   firstInit: async () => {
     if (get().inited) return console.log("log: already initialized settings store");
+    const constantsState = (await client.api.getAaStateVars({ address: appConfig.AA_ADDRESS, var_prefix: "constants" })) as ICityAaState;
+
+    const asset = constantsState.constants?.asset;
+    const governanceAa = constantsState.constants?.governance_aa;
+
+    if (!asset || !governanceAa) {
+      toast({ variant: "destructive", title: "Failed to initialize settings store" });
+      throw new Error("Failed to initialize settings store");
+    }
+
+    const tokenRegistry = client.api.getOfficialTokenRegistryAddress();
+    const decimals = await client.api.getDecimalsBySymbolOrAsset(tokenRegistry, asset);
+    const symbol = await client.api.getSymbolByAsset(tokenRegistry, asset);
 
     console.log("log: init settings store");
-    set({ inited: true });
+    set({ inited: true, asset, governanceAa, decimals: decimals || 0, symbol });
     console.log("log: initialized settings store");
   },
   inited: false,
+  asset: null,
+  symbol: null,
+  decimals: null,
+  governanceAa: null,
+  refData: null,
   selectedMapUnit: undefined,
   setSelectedMapUnit: (coordinates) => {
     if (!coordinates) return set({ selectedMapUnit: undefined });
     set({ selectedMapUnit: { x: coordinates.x, y: coordinates.y } });
   },
+  setRefData: (refData: IRefData) => set({ refData }),
 });
 
 export const useSettingsStore = create<SettingsState>()(
@@ -57,35 +82,4 @@ export const useSettingsStore = create<SettingsState>()(
 export const initializeSettings = (): void => useSettingsStore.getState().firstInit();
 
 export const setSelectedMapUnit = (coordinates?: ICoordinates | null): void => useSettingsStore.getState().setSelectedMapUnit(coordinates);
-
-export const updateSelectedMapUnit = (x: NonNegativeNumber, y: NonNegativeNumber) => {
-  const mapUnits = mapUnitsSelector(useAaStore.getState());
-
-  if (x !== null && y !== null) {
-    const selectedUnits = mapUnits.filter((unit) => {
-      return Number(unit.x) === Number(x) && Number(unit.y) === Number(y);
-    });
-
-    if (selectedUnits.length >= 2) {
-      // house and plot: select house
-      const house = selectedUnits.find((unit) => unit.type === "house");
-
-      if (house) {
-        setSelectedMapUnit(house);
-      } else {
-        throw new Error("It's impossible to have more than one plot in the same place");
-      }
-    } else if (selectedUnits.length === 1) {
-      // select plot or house
-      setSelectedMapUnit(selectedUnits[0]);
-    } else {
-      toast({ title: "No units found" });
-      setSelectedMapUnit(null);
-      console.log("log(init coordinates): No units found");
-    }
-  } else {
-    toast({ title: "Invalid coordinates" });
-    console.log("log(init coordinates): Invalid coordinates");
-  }
-};
 

@@ -6,10 +6,13 @@ import { BuyNewPlotForm } from "@/forms/BuyNewPlotForm";
 import { IRefPhaserGame, PhaserGame } from "@/game/PhaserGame";
 import { useMapUnitSelection } from "@/hooks/useMapUnitSelection";
 import { useAaStore } from "@/store/aa-store";
+import { useSettingsStore } from "@/store/settings-store";
 
 export default () => {
   const phaserRef = useRef<IRefPhaserGame | null>(null);
   const { loading, error } = useAaStore((state) => state);
+  const settingsInited = useSettingsStore((state) => state.inited);
+
   const [selectedMapUnit] = useMapUnitSelection();
 
   return (
@@ -20,7 +23,7 @@ export default () => {
             <CardTitle>City map</CardTitle>
           </CardHeader>
           <CardContent>
-            {!loading && !error ? (
+            {!loading && !error && settingsInited ? (
               <PhaserGame ref={phaserRef} />
             ) : (
               <div className="game-container-placeholder">

@@ -72,7 +72,7 @@ export class Map {
     this.unitsData.forEach((unitData) => {
       // 1) Вычисляем размер участка
       const { amount, x, y } = unitData;
-      const plotFraction = (amount / this.allCitySupply) * 0.1;
+      const plotFraction = (amount / this.allCitySupply) * 0.1; // TODO: Учитывать referral_boost
       const plotArea = plotFraction * MAP_WIDTH * MAP_HEIGHT;
       const plotSize = Math.sqrt(plotArea);
 

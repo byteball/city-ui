@@ -3,7 +3,8 @@ import { useEffect } from "react";
 
 import { NonNegativeNumber } from "@/global";
 import { useAaStore } from "@/store/aa-store";
-import { updateSelectedMapUnit, useSettingsStore } from "@/store/settings-store";
+import { updateSelectedMapUnit } from "@/store/actions/updateSelectedMapUnit";
+import { useSettingsStore } from "@/store/settings-store";
 
 export const useMapUnitSelection = () => {
   const selectedMapUnit = useSettingsStore((state) => state.selectedMapUnit); // selected house or plots

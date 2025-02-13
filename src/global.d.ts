@@ -218,3 +218,7 @@ export interface IRoad extends ICoordinates {
  */
 export type IMapUnit = IPlot | IHouse;
 
+export interface IRefData {
+  ref?: string;
+  ref_plot_num?: string;
+}
