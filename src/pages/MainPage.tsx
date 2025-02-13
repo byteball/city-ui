@@ -10,10 +10,11 @@ import { useSettingsStore } from "@/store/settings-store";
 
 export default () => {
   const phaserRef = useRef<IRefPhaserGame | null>(null);
-  const { loading, error } = useAaStore((state) => state);
+  const { loading, error, loaded } = useAaStore((state) => state);
   const settingsInited = useSettingsStore((state) => state.inited);
-
   const [selectedMapUnit] = useMapUnitSelection();
+
+  const shownSkeleton = loading || !!error || !settingsInited || !loaded;
 
   return (
     <div className="grid grid-cols-3 gap-8 md:grid-cols-5">
@@ -23,7 +24,7 @@ export default () => {
             <CardTitle>City map</CardTitle>
           </CardHeader>
           <CardContent>
-            {!loading && !error && settingsInited ? (
+            {!shownSkeleton ? (
               <PhaserGame ref={phaserRef} />
             ) : (
               <div className="game-container-placeholder">
