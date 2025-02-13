@@ -1,5 +1,5 @@
 import { QrCode } from "lucide-react";
-import * as QRCode from "qrcode.react";
+import { QRCodeSVG } from "qrcode.react";
 import { forwardRef } from "react";
 
 import cn from "classnames";
@@ -37,7 +37,7 @@ export const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(({ classNa
         </DialogHeader>
         <div className="mx-auto">
           <a href={href}>
-            <QRCode size={240} className="qr" bgColor="#24292e" fgColor="#fff" renderAs="svg" value={href} />
+            <QRCodeSVG size={240} className="qr" bgColor="#24292e" fgColor="#fff" renderAs="svg" value={href} />
           </a>
         </div>
 
@@ -63,7 +63,7 @@ export const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(({ classNa
             asChild
             ref={ref}
             className={cn("pl-2 rounded-tl-none rounded-bl-none cursor-pointer", {
-              "text-primary-foreground pointer-events-none opacity-50 bg-primary select-none": disabled,
+              "pointer-events-none opacity-50 select-none": disabled,
             })}
           >
             <a href={href}>{children}</a>
