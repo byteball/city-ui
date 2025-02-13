@@ -1,11 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ICoordinates } from "@/global";
-import { useMapUnitSelection } from "@/hooks/useMapUnitSelection";
 import { useAaStore } from "@/store/aa-store";
 import { mapUnitsByCoordinatesSelector } from "@/store/selectors/mapUnitsSelector";
+import { useSettingsStore } from "@/store/settings-store";
 
 export const SelectedUnitMapCard = () => {
-  const [selectedMapUnitCoordinates] = useMapUnitSelection();
+  const selectedMapUnitCoordinates = useSettingsStore((state) => state.selectedMapUnit);
 
   const selectedMapUnit = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates as ICoordinates | null));
 

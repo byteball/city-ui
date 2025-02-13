@@ -51,8 +51,7 @@ export const mapUnitsSelector = createSelector([getAaState], (aaState: ICityAaSt
 export const mapUnitsByCoordinatesSelector = createSelector(
   [mapUnitsSelector, (_state: AaStoreState, coordinates: ICoordinates | null) => coordinates],
   (units: IMapUnit[], coordinates) => {
-    if (coordinates === null) return [];
-
+    if (coordinates === null || !coordinates) return [];
     return units.filter((unit) => unit.x === coordinates.x && unit.y === coordinates.y);
   }
 );

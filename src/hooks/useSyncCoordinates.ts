@@ -3,10 +3,9 @@ import { useEffect } from "react";
 
 import { NonNegativeNumber } from "@/global";
 import { useAaStore } from "@/store/aa-store";
-import { updateSelectedMapUnit } from "@/store/actions/updateSelectedMapUnit";
 import { useSettingsStore } from "@/store/settings-store";
 
-export const useMapUnitSelection = () => {
+export const useSyncCoordinates = () => {
   const selectedMapUnit = useSettingsStore((state) => state.selectedMapUnit); // selected house or plots
   const loaded = useAaStore((state) => state.loaded);
 
@@ -23,7 +22,5 @@ export const useMapUnitSelection = () => {
       setSelectedCoordinate([selectedMapUnit.x, selectedMapUnit.y]);
     }
   }, [selectedMapUnit, setSelectedCoordinate, loaded]);
-
-  return [selectedMapUnit, updateSelectedMapUnit] as const;
 };
 
