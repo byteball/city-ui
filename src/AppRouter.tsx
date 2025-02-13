@@ -2,7 +2,7 @@ import { FC, ReactElement } from "react";
 import { Route, Routes } from "react-router";
 
 import { Layout } from "./components/layout/layout";
-import MainPage from "./pages/MainPage";
+import { MainPage } from "./pages";
 
 interface IAppRouterProps {
   children?: ReactElement;

@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 
-import { IHouse, IMapUnit, IPlot } from "@/global";
+import { ICoordinates, IHouse, IMapUnit, IPlot } from "@/global";
 import { asNonNegativeNumber } from "@/lib/asNonNegativeNumber";
 import { AaStoreState, ICityAaState } from "../aa-store";
 
@@ -47,4 +47,13 @@ export const mapUnitsSelector = createSelector([getAaState], (aaState: ICityAaSt
       throw new Error(`Unexpected map unit type: ${type}`);
     });
 });
+
+export const mapUnitsByCoordinatesSelector = createSelector(
+  [mapUnitsSelector, (_state: AaStoreState, coordinates: ICoordinates | null) => coordinates],
+  (units: IMapUnit[], coordinates) => {
+    if (coordinates === null) return [];
+
+    return units.filter((unit) => unit.x === coordinates.x && unit.y === coordinates.y);
+  }
+);
 
