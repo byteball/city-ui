@@ -112,6 +112,7 @@ export interface IPlot extends ICoordinates {
   owner?: string; // if empty - mayor plot
   ts: NonNegativeNumber;
   plot_num: NonNegativeNumber; // add from key ex.: [`plot_${plot_num}`]
+  ref_plot_num: NonNegativeNumber; //TODO: what is it?
 
   last_transfer_ts?: NonNegativeNumber;
   last_rental_ts?: NonNegativeNumber;
