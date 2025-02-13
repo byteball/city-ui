@@ -1,11 +1,16 @@
 // src/objects/Map.ts
+
+import { Decimal } from "decimal.js";
+import Phaser from "phaser";
+
 import { IMapUnit, IRoad } from "@/global";
 import { asNonNegativeNumber } from "@/lib/asNonNegativeNumber";
-
 import { useSettingsStore } from "@/store/settings-store";
-import Phaser from "phaser";
+
 import { Plot } from "./Plot";
 import { Road } from "./Road";
+
+import appConfig from "@/appConfig";
 
 export const ROAD_THICKNESS = 30;
 
@@ -36,9 +41,11 @@ export class Map {
       }
     });
 
-    // 2) Базовые размеры 10 000 х 10 000
-    const MAP_WIDTH = 10000 + totalVerticalThickness;
-    const MAP_HEIGHT = 10000 + totalHorizontalThickness;
+    const BASE_MAP_SIZE = Decimal(1_000_000).mul(appConfig.MAP_SCALE);
+
+    // 2) Базовые размеры 1 000 000 х 1 000 000
+    const MAP_WIDTH = BASE_MAP_SIZE.plus(totalVerticalThickness).toNumber();
+    const MAP_HEIGHT = BASE_MAP_SIZE.plus(totalHorizontalThickness).toNumber();
 
     this.scene.cameras.main.setBounds(0, 0, MAP_WIDTH, MAP_HEIGHT);
 
@@ -49,58 +56,57 @@ export class Map {
 
   private createRoads(mapWidth: number, mapHeight: number) {
     this.roadsData.forEach((roadData) => {
-      new Road(this.scene, roadData, mapWidth, mapHeight);
+      const scaledData = {
+        ...roadData,
+        x: asNonNegativeNumber(Decimal(roadData.x).mul(appConfig.MAP_SCALE).toNumber()),
+        y: asNonNegativeNumber(Decimal(roadData.y).mul(appConfig.MAP_SCALE).toNumber()),
+      };
+
+      new Road(this.scene, scaledData, mapWidth, mapHeight);
     });
   }
 
   private createPlots(MAP_WIDTH: number, MAP_HEIGHT: number) {
+    const thickness = asNonNegativeNumber(ROAD_THICKNESS);
+
     this.unitsData.forEach((unitData) => {
-      // 1) Размер участка: та же доля, но умножаем уже на новую площадь
+      // 1) Вычисляем размер участка
       const { amount, x, y } = unitData;
       const plotFraction = (amount / this.allCitySupply) * 0.1;
       const plotArea = plotFraction * MAP_WIDTH * MAP_HEIGHT;
       const plotSize = Math.sqrt(plotArea);
 
-      // 2) Учитываем смещение
-      let finalX = asNonNegativeNumber(x);
-      let finalY = asNonNegativeNumber(y);
-
-      // while (overlapping) — пока мы не убедились, что участок не пересекается ни с одной дорогой, мы снова крутим цикл.
-      // for (const road of this.roadsData) — обходим все дороги:
-      // •	Считаем, что дорога тянется от coordinate до coordinate + thickness.
-      // •	Сверяемся, пересекаются ли эти диапазоны с краями участка (leftEdge / rightEdge или topEdge / bottomEdge).
-      // Если пересечение есть — сдвигаем участок на thickness и ставим overlapping = true, чтобы при выходе из цикла дорог вернуться к while и снова проверить все дороги на новой позиции.
-
+      // 2) Начальная позиция
+      let finalX = asNonNegativeNumber(Decimal(x).mul(appConfig.MAP_SCALE).toNumber());
+      let finalY = asNonNegativeNumber(Decimal(y).mul(appConfig.MAP_SCALE).toNumber());
       let overlapping = true;
-      while (overlapping) {
-        overlapping = false; // предположим, что пересечений нет
 
-        // каждый раз после смещения нужно пересчитать границы участка
-        let leftEdge = finalX - plotSize / 2;
-        let rightEdge = finalX + plotSize / 2;
-        let topEdge = finalY - plotSize / 2;
-        let bottomEdge = finalY + plotSize / 2;
+      // Цикл для поиска не пересекающейся позиции
+      while (overlapping) {
+        overlapping = false;
+        const leftEdge = finalX - plotSize / 2;
+        const rightEdge = finalX + plotSize / 2;
+        const topEdge = finalY - plotSize / 2;
+        const bottomEdge = finalY + plotSize / 2;
 
         // Проходим по всем дорогам
         for (const road of this.roadsData) {
-          const thickness = asNonNegativeNumber(ROAD_THICKNESS);
-          const roadStart = road.coordinate;
-          const roadEnd = road.coordinate + thickness;
-
           if (road.orientation === "vertical") {
-            // если есть пересечение по оси X
+            // Используем координату x дороги
+            const roadStart = road.x;
+            const roadEnd = road.x + thickness;
+
             if (rightEdge >= roadStart && leftEdge < roadEnd) {
-              // смещаем участок вправо
               finalX = asNonNegativeNumber(finalX + thickness);
-              // помечаем, что надо заново проверить
               overlapping = true;
-              // прерываем цикл for, чтобы начать заново с новой координатой
               break;
             }
           } else {
-            // горизонтальная дорога
+            // Горизонтальная дорога: используем координату y дороги
+            const roadStart = road.y;
+            const roadEnd = road.y + thickness;
+
             if (bottomEdge >= roadStart && topEdge < roadEnd) {
-              // смещаем участок вниз
               finalY = asNonNegativeNumber(finalY + thickness);
               overlapping = true;
               break;
@@ -109,38 +115,34 @@ export class Map {
         }
       } // конец while
 
-      // Создаём участок с новой позицией и размерами
-      const plot = new Plot(this.scene, { ...unitData, x: finalX, y: finalY }, plotSize);
+      // Создаем новый участок (unit)
+      const unit = new Plot(this.scene, { ...unitData, x: finalX, y: finalY }, plotSize);
 
-      // Обработка клика по участку
-      const plotImage = plot.getPlotImage();
+      // Настраиваем интерактивность
+      const unitImage = unit.getPlotImage();
+      unitImage.setInteractive({ cursor: "pointer" });
 
-      plotImage.setInteractive({ cursor: "pointer" }); // Меняем курсор на "указатель"
-
-      plotImage.on("pointerdown", () => {
-        // Сбрасываем состояние предыдущего участка
+      unitImage.on("pointerdown", () => {
+        // Сбрасываем выбранный участок, если он уже был выбран
         if (this.selectedMapUnit) {
           this.selectedMapUnit.setSelected(false);
         }
 
-        // Запоминаем текущий выбранный участок
-        this.selectedMapUnit = plot;
-        plot.setSelected(true);
+        this.selectedMapUnit = unit;
+        unit.setSelected(true);
 
-        let { x, y } = plot.getData();
-
-        const positiveX = asNonNegativeNumber(x);
-        const positiveY = asNonNegativeNumber(y);
-
-        // updateSelectedMapUnit(positiveX, positiveY); // TODO: For real data
-        useSettingsStore.getState().setSelectedMapUnit({ x: positiveX, y: positiveY });
+        const { x, y } = unit.getData();
+        useSettingsStore.getState().setSelectedMapUnit({
+          x: asNonNegativeNumber(x),
+          y: asNonNegativeNumber(y),
+        });
       });
 
-      plotImage.on("pointerover", () => {
+      unitImage.on("pointerover", () => {
         this.scene.input.setDefaultCursor("pointer");
       });
 
-      plotImage.on("pointerout", () => {
+      unitImage.on("pointerout", () => {
         this.scene.input.setDefaultCursor("default");
       });
     });

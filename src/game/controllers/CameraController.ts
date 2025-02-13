@@ -1,58 +1,57 @@
+import appConfig from "@/appConfig";
+import { Decimal } from "decimal.js";
 import Phaser from "phaser";
 
 export default class CameraController {
-    private scene: Phaser.Scene;
-    private camera: Phaser.Cameras.Scene2D.Camera;
+  private scene: Phaser.Scene;
+  private camera: Phaser.Cameras.Scene2D.Camera;
+  private BASE_MAP_SIZE: Decimal;
 
-    constructor(scene: Phaser.Scene, camera: Phaser.Cameras.Scene2D.Camera) {
-        this.scene = scene;
-        this.camera = camera;
+  constructor(scene: Phaser.Scene, camera: Phaser.Cameras.Scene2D.Camera) {
+    this.scene = scene;
+    this.camera = camera;
 
-        // Устанавливаем границы камеры
-        this.camera.setBounds(0, 0, 10_000, 10_000);
+    this.BASE_MAP_SIZE = Decimal(1_000_000).mul(appConfig.MAP_SCALE);
 
-        // Центрируем камеру на центре карты
-        this.camera.centerOn(10_000 / 2, 10_000 / 2);
+    // Устанавливаем границы камеры
+    this.camera.setBounds(0, 0, this.BASE_MAP_SIZE.toNumber(), this.BASE_MAP_SIZE.toNumber());
 
-        this.initDrag();
-        this.initZoom();
-    }
+    // Центрируем камеру на центре карты
+    this.camera.centerOn(this.BASE_MAP_SIZE.div(2).toNumber(), this.BASE_MAP_SIZE.div(2).toNumber());
 
-    private initDrag(): void {
-        this.scene.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
-            if (pointer.isDown) {
-                this.camera.scrollX -= (pointer.x - pointer.prevPosition.x) / this.camera.zoom;
-                this.camera.scrollY -= (pointer.y - pointer.prevPosition.y) / this.camera.zoom;
-            }
-        });
-    }
+    this.initDrag();
+    this.initZoom();
+  }
 
-    private initZoom(): void {
-        const zoomX = this.camera.width / 10_000;
-        const zoomY = this.camera.height / 10_000;
-        const zoom = Math.min(zoomX, zoomY);
-        this.camera.setZoom(zoom);
+  private initDrag(): void {
+    this.scene.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
+      if (pointer.isDown) {
+        this.camera.scrollX -= (pointer.x - pointer.prevPosition.x) / this.camera.zoom;
+        this.camera.scrollY -= (pointer.y - pointer.prevPosition.y) / this.camera.zoom;
+      }
+    });
+  }
 
-        this.scene.input.on(
-            "wheel",
-            (
-                pointer: Phaser.Input.Pointer,
-                currentlyOver: Phaser.GameObjects.GameObject[],
-                deltaX: number,
-                deltaY: number,
-                deltaZ: number
-            ) => {
-                const zoomFactor = 0.001;
-                this.camera.zoom -= deltaY * zoomFactor;
+  private initZoom(): void {
+    const zoomX = this.camera.width / this.BASE_MAP_SIZE;
+    const zoomY = this.camera.height / this.BASE_MAP_SIZE;
+    const zoom = Math.min(zoomX, zoomY);
+    this.camera.setZoom(zoom);
 
-                const zoomX = (this.scene.cameras.main.width / 10_000) as number;
-                const zoomY = (this.scene.cameras.main.height / 10_000) as number;
+    this.scene.input.on(
+      "wheel",
+      (pointer: Phaser.Input.Pointer, currentlyOver: Phaser.GameObjects.GameObject[], deltaX: number, deltaY: number, deltaZ: number) => {
+        const zoomFactor = 0.001;
+        this.camera.zoom -= deltaY * zoomFactor;
 
-                const minZoom = Math.min(zoomX, zoomY);
+        const zoomX = (this.scene.cameras.main.width / this.BASE_MAP_SIZE) as number;
+        const zoomY = (this.scene.cameras.main.height / this.BASE_MAP_SIZE) as number;
 
-                this.camera.zoom = Phaser.Math.Clamp(this.camera.zoom, minZoom, 1.5);
-            }
-        );
-    }
+        const minZoom = Math.min(zoomX, zoomY);
+
+        this.camera.zoom = Phaser.Math.Clamp(this.camera.zoom, minZoom, 1.5);
+      }
+    );
+  }
 }
 

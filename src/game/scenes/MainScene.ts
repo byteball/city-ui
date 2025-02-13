@@ -1,37 +1,13 @@
-// src/scenes/MapScene.ts
 import Phaser from "phaser";
 
-import { Map } from "../objects/Map";
-import { HouseData } from "../objects/Plot";
-import { RoadData } from "../objects/Road";
-
-import { plotSelector, useAaStore } from "@/store/aa-store";
+import { ICity } from "@/global";
+import { useAaStore } from "@/store/aa-store";
+import { mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import CameraController from "../controllers/CameraController";
-import { houses } from "./houses";
-
+import { Map } from "../objects/Map";
+import { getRoads } from "../utils/getRoads";
 export default class MapScene extends Phaser.Scene {
-  private housesData: HouseData[] = houses;
-
-  private roadsData: RoadData[] = [
-    {
-      coordinate: 5000,
-      name: "Tonych Avenue",
-      avenue: true,
-      orientation: "vertical",
-    },
-    {
-      coordinate: 9000,
-      name: "Obyte Avenue",
-      avenue: true,
-      orientation: "horizontal",
-    },
-    {
-      coordinate: 2000,
-      name: "Taump Street",
-      avenue: false,
-      orientation: "horizontal",
-    },
-  ];
+  private map!: Map;
 
   constructor() {
     super("MapScene");
@@ -45,9 +21,32 @@ export default class MapScene extends Phaser.Scene {
   }
 
   create() {
-    // Создаем карту
-    const map = new Map(this, this.roadsData, this.housesData);
-    map.createMap();
+    const state = useAaStore.getState();
+    const mapUnits = mapUnitsSelector(state);
+    const cityStats = state.state.city_city as ICity;
+
+    if (!cityStats || !cityStats.mayor) throw new Error("City mayor not found");
+
+    const roads = getRoads(mapUnits, String(cityStats.mayor));
+
+    this.map = new Map(this, roads, mapUnits);
+
+    this.map.createMap();
+
+    const unsubscribe = useAaStore.subscribe((newState) => {
+      const mapUnits = mapUnitsSelector(newState);
+
+      const cityStats = newState.state.city_city as ICity;
+
+      if (!cityStats || !cityStats.mayor) throw new Error("City mayor not found");
+
+      const roads = getRoads(mapUnits, String(cityStats.mayor));
+
+      this.map.updateMapUnits(mapUnits);
+      this.map.updateRoads(roads);
+    });
+
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => unsubscribe());
 
     // Инициализируем контроллер камеры
     new CameraController(this, this.cameras.main);
