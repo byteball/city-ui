@@ -33,8 +33,8 @@ export default class CameraController {
   }
 
   private initZoom(): void {
-    const zoomX = this.camera.width / this.BASE_MAP_SIZE;
-    const zoomY = this.camera.height / this.BASE_MAP_SIZE;
+    const zoomX = this.camera.width / this.BASE_MAP_SIZE.toNumber();
+    const zoomY = this.camera.height / this.BASE_MAP_SIZE.toNumber();
     const zoom = Math.min(zoomX, zoomY);
     this.camera.setZoom(zoom);
 
@@ -44,8 +44,8 @@ export default class CameraController {
         const zoomFactor = 0.001;
         this.camera.zoom -= deltaY * zoomFactor;
 
-        const zoomX = (this.scene.cameras.main.width / this.BASE_MAP_SIZE) as number;
-        const zoomY = (this.scene.cameras.main.height / this.BASE_MAP_SIZE) as number;
+        const zoomX = (this.scene.cameras.main.width / this.BASE_MAP_SIZE.toNumber()) as number;
+        const zoomY = (this.scene.cameras.main.height / this.BASE_MAP_SIZE.toNumber()) as number;
 
         const minZoom = Math.min(zoomX, zoomY);
 
