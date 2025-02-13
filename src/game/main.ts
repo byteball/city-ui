@@ -1,7 +1,8 @@
-// import { Boot } from './scenes/Boot';
-import appConfig from "@/appConfig";
 import { Game } from "phaser";
+
 import MapScene from "./scenes/MainScene";
+
+import appConfig from "@/appConfig";
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig

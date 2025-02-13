@@ -1,21 +1,16 @@
+import { IRoad } from "@/global";
 import Phaser from "phaser";
-
-export interface RoadData {
-  coordinate: number;
-  name: string;
-  avenue: boolean;
-  orientation: "vertical" | "horizontal";
-}
+import { ROAD_THICKNESS } from "./Map";
 
 const BASE_LABEL_STEP = 600;
 
 export class Road {
   private scene: Phaser.Scene;
-  private data: RoadData;
+  private data: IRoad;
   private labels: Phaser.GameObjects.Text[] = [];
   private previousZoom: number = 0;
 
-  constructor(scene: Phaser.Scene, data: RoadData, private mapWidth: number, private mapHeight: number) {
+  constructor(scene: Phaser.Scene, data: IRoad, private mapWidth: number, private mapHeight: number) {
     this.scene = scene;
     this.data = data;
 
@@ -23,16 +18,17 @@ export class Road {
   }
 
   private createRoad() {
-    const { coordinate, name, orientation } = this.data;
-    const thickness = 30;
+    const { x, y, name, orientation } = this.data;
+
+    const thickness = ROAD_THICKNESS;
 
     if (orientation === "vertical") {
       // Создаем спрайт, который повторяется по вертикали
-      this.scene.add.tileSprite(coordinate, 0, thickness, this.mapHeight, "road-vertical").setOrigin(0, 0);
+      this.scene.add.tileSprite(x, 0, thickness, this.mapHeight, "road-vertical").setOrigin(0, 0);
 
       // Добавляем название дороги вдоль вертикальной линии
-      for (let y = 0; y < this.mapHeight; y += BASE_LABEL_STEP) {
-        const roadText = this.scene.add.text(coordinate + thickness / 2, y, name, {
+      for (let posY = 0; posY < this.mapHeight; posY += BASE_LABEL_STEP) {
+        const roadText = this.scene.add.text(x + thickness / 2, posY, name, {
           fontSize: "32px",
           color: "#ffffff",
         });
@@ -43,11 +39,11 @@ export class Road {
         this.labels.push(roadText);
       }
     } else if (orientation === "horizontal") {
-      this.scene.add.tileSprite(0, coordinate, this.mapWidth, thickness, "road-horizontal").setOrigin(0, 0);
+      this.scene.add.tileSprite(0, y, this.mapWidth, thickness, "road-horizontal").setOrigin(0, 0);
 
       // Добавляем название дороги вдоль горизонтальной линии
-      for (let x = 0; x < this.mapWidth; x += BASE_LABEL_STEP) {
-        const roadText = this.scene.add.text(x, coordinate + thickness / 2, name, {
+      for (let posX = 0; posX < this.mapWidth; posX += BASE_LABEL_STEP) {
+        const roadText = this.scene.add.text(posX, y + thickness / 2, name, {
           fontSize: "24px",
           color: "#ffffff",
         });
