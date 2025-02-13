@@ -4,10 +4,10 @@ import { ICity } from "@/global";
 import { useAaStore } from "@/store/aa-store";
 import { mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import CameraController from "../controllers/CameraController";
-import { Map } from "../objects/Map";
+import { Map as GameMap } from "../objects/Map";
 import { getRoads } from "../utils/getRoads";
 export default class MapScene extends Phaser.Scene {
-  private map!: Map;
+  private map!: GameMap;
 
   constructor() {
     super("MapScene");

@@ -147,5 +147,13 @@ export class Map {
       });
     });
   }
+
+  updateRoads(roads: IRoad[]) {
+    // TODO implement
+  }
+
+  updateMapUnits(unitData: IMapUnit[]) {
+    // TODO implement
+  }
 }
 

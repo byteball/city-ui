@@ -37,6 +37,6 @@ export const useApplyRefData = () => {
     if (needClean) {
       navigate({ ...location, search: searchParams.toString() }, { replace: true });
     }
-  }, [location.search, existedRefData, setRefData, inited]);
+  }, [location.search, existedRefData, setRefData, inited, navigate]);
 };
 

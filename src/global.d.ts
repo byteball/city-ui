@@ -6,7 +6,7 @@ interface ICoordinates {
 }
 
 interface IMapUnitInfo {
-  [key: string]: any;
+  [key: string]: string | number | boolean | null | undefined;
   name: string;
 }
 
@@ -112,7 +112,6 @@ export interface IPlot extends ICoordinates {
   owner?: string; // if empty - mayor plot
   ts: NonNegativeNumber;
   plot_num: NonNegativeNumber; // add from key ex.: [`plot_${plot_num}`]
-  ref_plot_num: NonNegativeNumber; //TODO: what is it?
 
   last_transfer_ts?: NonNegativeNumber;
   last_rental_ts?: NonNegativeNumber;
@@ -222,3 +221,4 @@ export interface IRefData {
   ref?: string;
   ref_plot_num?: string;
 }
+
