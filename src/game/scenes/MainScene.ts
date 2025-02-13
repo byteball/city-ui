@@ -29,7 +29,7 @@ export default class MapScene extends Phaser.Scene {
 
     const roads = getRoads(mapUnits, String(cityStats.mayor));
 
-    this.map = new Map(this, roads, mapUnits);
+    this.map = new GameMap(this, roads, mapUnits);
 
     this.map.createMap();
 
