@@ -26,6 +26,8 @@
         "build-nolog": "vite build --config vite/config.prod.mjs"
     },
     "dependencies": {
+        "@hookform/resolvers": "^4.0.0",
+        "@radix-ui/react-label": "^2.1.2",
         "@radix-ui/react-slot": "^1.1.1",
         "@radix-ui/react-toast": "^1.2.6",
         "autoprefixer": "^10.4.20",
@@ -39,11 +41,13 @@
         "postcss": "^8.5.1",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
+        "react-hook-form": "^7.54.2",
         "react-resizable-panels": "^2.1.7",
         "react-router": "^7.1.5",
         "reselect": "^5.1.1",
         "tailwind-merge": "^3.0.1",
         "tailwindcss-animate": "^1.0.7",
+        "zod": "^3.24.2",
         "zustand": "^5.0.3"
     },
     "devDependencies": {
