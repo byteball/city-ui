@@ -11,6 +11,7 @@ import { Plot } from "./Plot";
 import { Road } from "./Road";
 
 import appConfig from "@/appConfig";
+import { toast } from "@/hooks/use-toast";
 
 export const ROAD_THICKNESS = 30;
 
@@ -20,6 +21,7 @@ export class Map {
   private unitsData: IMapUnit[];
   private allCitySupply: number;
   private selectedMapUnit: Plot | null = null;
+  private MapUnits: Plot[] = [];
 
   constructor(scene: Phaser.Scene, roadsData: IRoad[], unitsData: IMapUnit[]) {
     this.scene = scene;
@@ -51,7 +53,9 @@ export class Map {
 
     // 3) Передаём их в функции, создающие дороги и участки
     this.createRoads(MAP_WIDTH, MAP_HEIGHT);
-    this.createPlots(MAP_WIDTH, MAP_HEIGHT);
+    this.createMapUnits(MAP_WIDTH, MAP_HEIGHT);
+
+    this.updatePlotSelection();
   }
 
   private createRoads(mapWidth: number, mapHeight: number) {
@@ -66,7 +70,7 @@ export class Map {
     });
   }
 
-  private createPlots(MAP_WIDTH: number, MAP_HEIGHT: number) {
+  private createMapUnits(MAP_WIDTH: number, MAP_HEIGHT: number) {
     const thickness = asNonNegativeNumber(ROAD_THICKNESS);
 
     this.unitsData.forEach((unitData) => {
@@ -117,6 +121,7 @@ export class Map {
 
       // Создаем новый участок (unit)
       const unit = new Plot(this.scene, { ...unitData, x: finalX, y: finalY }, plotSize);
+      this.MapUnits.push(unit);
 
       // Настраиваем интерактивность
       const unitImage = unit.getPlotImage();
@@ -132,6 +137,7 @@ export class Map {
         unit.setSelected(true);
 
         const { x, y } = unit.getData();
+
         useSettingsStore.getState().setSelectedMapUnit({
           x: asNonNegativeNumber(Decimal(x).div(appConfig.MAP_SCALE).toNumber()),
           y: asNonNegativeNumber(Decimal(y).div(appConfig.MAP_SCALE).toNumber()),
@@ -146,6 +152,42 @@ export class Map {
         this.scene.input.setDefaultCursor("default");
       });
     });
+  }
+
+  // Метод для обновления выделения на основе состояния из SettingsState
+  public updatePlotSelection() {
+    const storeSelected = useSettingsStore.getState().selectedMapUnit;
+
+    if (!storeSelected) {
+      // Сбрасываем выделение, если ничего не выбрано
+      if (this.selectedMapUnit) {
+        this.selectedMapUnit.setSelected(false);
+        this.selectedMapUnit = null;
+      }
+      return;
+    }
+
+    // Ищем среди созданных участков тот, у которого координаты совпадают со значениями из стора
+    const foundPlot = this.MapUnits.find((plot) => {
+      const data = plot.getData();
+      return (
+        Decimal(data.x).div(appConfig.MAP_SCALE).toNumber() === Number(storeSelected.x) &&
+        Decimal(data.y).div(appConfig.MAP_SCALE).toNumber() === Number(storeSelected.y)
+      );
+    });
+
+    if (foundPlot) {
+      // Сбрасываем выделение предыдущего участка, если он есть
+      if (this.selectedMapUnit && this.selectedMapUnit !== foundPlot) {
+        this.selectedMapUnit.setSelected(false);
+      }
+
+      this.selectedMapUnit = foundPlot;
+      foundPlot.setSelected(true);
+    } else {
+      toast({ title: "Selected map unit not found", variant: "destructive" });
+      console.log("log(Map): Selected map unit not found", storeSelected);
+    }
   }
 
   updateRoads(roads: IRoad[]) {
