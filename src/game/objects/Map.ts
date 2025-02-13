@@ -133,8 +133,8 @@ export class Map {
 
         const { x, y } = unit.getData();
         useSettingsStore.getState().setSelectedMapUnit({
-          x: asNonNegativeNumber(x),
-          y: asNonNegativeNumber(y),
+          x: asNonNegativeNumber(Decimal(x).div(appConfig.MAP_SCALE).toNumber()),
+          y: asNonNegativeNumber(Decimal(y).div(appConfig.MAP_SCALE).toNumber()),
         });
       });
 
