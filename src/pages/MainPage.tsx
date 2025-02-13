@@ -2,6 +2,7 @@ import { useRef } from "react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { BuyNewPlotForm } from "@/forms/BuyNewPlotForm";
 import { IRefPhaserGame, PhaserGame } from "@/game/PhaserGame";
 import { useMapUnitSelection } from "@/hooks/useMapUnitSelection";
 import { useAaStore } from "@/store/aa-store";
@@ -30,20 +31,33 @@ export default () => {
         </Card>
       </div>
       <div className="col-span-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Selected plot</CardTitle>
-            <CardDescription>Click on the house to see all the information about it.</CardDescription>
-          </CardHeader>
+        <div className="grid grid-cols-1 gap-8">
+          <Card>
+            <CardHeader>
+              <CardTitle>Selected plot</CardTitle>
+              <CardDescription>Click on the house to see all the information about it.</CardDescription>
+            </CardHeader>
 
-          {selectedMapUnit ? (
+            {selectedMapUnit ? (
+              <CardContent>
+                {selectedMapUnit.x} - {selectedMapUnit.y}
+              </CardContent>
+            ) : (
+              <CardContent className="text-primary">No plot selected</CardContent>
+            )}
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Buy new plot</CardTitle>
+              <CardDescription>When you buy a plot, it is created in a random location.</CardDescription>
+            </CardHeader>
+
             <CardContent>
-              {selectedMapUnit.x} - {selectedMapUnit.y}
+              <BuyNewPlotForm />
             </CardContent>
-          ) : (
-            <CardContent className="text-primary">No plot selected</CardContent>
-          )}
-        </Card>
+          </Card>
+        </div>
       </div>
     </div>
   );
