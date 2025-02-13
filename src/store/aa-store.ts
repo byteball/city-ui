@@ -1,5 +1,6 @@
 import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
+import { useShallow } from "zustand/react/shallow";
 
 import { IAaParams, IAaStateVars, ICity, ICityState } from "@/global";
 import client from "@/services/obyteWsClient";
@@ -68,41 +69,43 @@ export const initializeStore = () => useAaStore.getState().initStore();
 const CITY_NAME = "city";
 
 export const useAaParams = () =>
-  useAaStore((state) => {
-    const city = state.state?.[`city_${CITY_NAME}`] as ICity;
-    const variables = state.state?.variables;
+  useAaStore(
+    useShallow((state) => {
+      const city = state.state?.[`city_${CITY_NAME}`] as ICity;
+      const variables = state.state?.variables;
 
-    const matching_probability = city?.matching_probability ?? variables?.matching_probability ?? defaultAaParams.matching_probability;
+      const matching_probability = city?.matching_probability ?? variables?.matching_probability ?? defaultAaParams.matching_probability;
 
-    const plot_price = city?.plot_price ?? variables?.plot_price ?? defaultAaParams.plot_price;
+      const plot_price = city?.plot_price ?? variables?.plot_price ?? defaultAaParams.plot_price;
 
-    const referral_boost = city?.referral_boost ?? variables?.referral_boost ?? defaultAaParams.referral_boost;
+      const referral_boost = city?.referral_boost ?? variables?.referral_boost ?? defaultAaParams.referral_boost;
 
-    const randomness_aa = variables?.randomness_aa ?? defaultAaParams.randomness_aa;
+      const randomness_aa = variables?.randomness_aa ?? defaultAaParams.randomness_aa;
 
-    const randomness_price = variables?.randomness_price ?? defaultAaParams.randomness_price;
+      const randomness_price = variables?.randomness_price ?? defaultAaParams.randomness_price;
 
-    const p2p_sale_fee = variables?.p2p_sale_fee ?? defaultAaParams.p2p_sale_fee;
+      const p2p_sale_fee = variables?.p2p_sale_fee ?? defaultAaParams.p2p_sale_fee;
 
-    const shortcode_sale_fee = variables?.shortcode_sale_fee ?? defaultAaParams.shortcode_sale_fee;
+      const shortcode_sale_fee = variables?.shortcode_sale_fee ?? defaultAaParams.shortcode_sale_fee;
 
-    const rental_surcharge_factor = variables?.rental_surcharge_factor ?? defaultAaParams.rental_surcharge_factor;
+      const rental_surcharge_factor = variables?.rental_surcharge_factor ?? defaultAaParams.rental_surcharge_factor;
 
-    const followup_reward_share = variables?.followup_reward_share ?? defaultAaParams.followup_reward_share;
+      const followup_reward_share = variables?.followup_reward_share ?? defaultAaParams.followup_reward_share;
 
-    const attestors = variables?.attestors ?? defaultAaParams.attestors;
+      const attestors = variables?.attestors ?? defaultAaParams.attestors;
 
-    return {
-      matching_probability,
-      plot_price,
-      referral_boost,
-      randomness_aa,
-      randomness_price,
-      p2p_sale_fee,
-      shortcode_sale_fee,
-      rental_surcharge_factor,
-      followup_reward_share,
-      attestors,
-    };
-  });
+      return {
+        matching_probability,
+        plot_price,
+        referral_boost,
+        randomness_aa,
+        randomness_price,
+        p2p_sale_fee,
+        shortcode_sale_fee,
+        rental_surcharge_factor,
+        followup_reward_share,
+        attestors,
+      };
+    })
+  );
 
