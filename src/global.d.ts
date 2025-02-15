@@ -110,6 +110,7 @@ export interface IPlot extends ICoordinates {
   type: "plot";
   info: string | IMapUnitInfo;
   owner?: string; // if empty - mayor plot
+  username?: string;
   ts: NonNegativeNumber;
   plot_num: NonNegativeNumber; // add from key ex.: [`plot_${plot_num}`]
 
@@ -119,8 +120,6 @@ export interface IPlot extends ICoordinates {
   rented_amount?: NonNegativeNumber;
   rental_expiry_ts?: NonNegativeNumber;
   sale_price?: NonNegativeNumber;
-
-  username: string;
 }
 
 /**
@@ -154,6 +153,7 @@ export interface IHouse extends ICoordinates {
   house_num: NonNegativeNumber; // add from key ex.: [`house_${house_num}`]
   info: string | IMapUnitInfo;
   owner?: string; // if empty - mayor house
+  username?: string;
   plot_num: NonNegativeNumber;
   plot_ts: NonNegativeNumber;
   shortcode?: string;

@@ -12,6 +12,7 @@ import { Road } from "./Road";
 
 import appConfig from "@/appConfig";
 import { toast } from "@/hooks/use-toast";
+import { House } from "./House";
 
 export const ROAD_THICKNESS = 30;
 
@@ -20,8 +21,8 @@ export class Map {
   private roadsData: IRoad[];
   private unitsData: IMapUnit[];
   private allCitySupply: number;
-  private selectedMapUnit: Plot | null = null;
-  private MapUnits: Plot[] = [];
+  private selectedMapUnit: Plot | House | null = null;
+  private MapUnits: (Plot | House)[] = [];
 
   constructor(scene: Phaser.Scene, roadsData: IRoad[], unitsData: IMapUnit[]) {
     this.scene = scene;
@@ -75,7 +76,7 @@ export class Map {
 
     this.unitsData.forEach((unitData) => {
       // 1) Вычисляем размер участка
-      const { amount, x, y } = unitData;
+      const { amount, x, y, type } = unitData;
       const plotFraction = (amount / this.allCitySupply) * 0.1; // TODO: Учитывать referral_boost
       const plotArea = plotFraction * MAP_WIDTH * MAP_HEIGHT;
       const plotSize = Math.sqrt(plotArea);
@@ -120,11 +121,21 @@ export class Map {
       } // конец while
 
       // Создаем новый участок (unit)
-      const unit = new Plot(this.scene, { ...unitData, x: finalX, y: finalY }, plotSize);
+      let unit: Plot | House;
+
+      if (type === "house") {
+        unit = new House(this.scene, { ...unitData, x: finalX, y: finalY }, plotSize);
+      } else if (type === "plot") {
+        unit = new Plot(this.scene, { ...unitData, x: finalX, y: finalY }, plotSize);
+      } else {
+        throw new Error(`Unknown unit type: ${type}`);
+      }
+
+      // const
       this.MapUnits.push(unit);
 
       // Настраиваем интерактивность
-      const unitImage = unit.getPlotImage();
+      const unitImage = unit.getMapUnitImage();
       unitImage.setInteractive({ cursor: "pointer" });
 
       unitImage.on("pointerdown", () => {
