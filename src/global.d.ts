@@ -120,8 +120,6 @@ export interface IPlot extends ICoordinates {
   rented_amount?: NonNegativeNumber;
   rental_expiry_ts?: NonNegativeNumber;
   sale_price?: NonNegativeNumber;
-
-  username: string;
 }
 
 /**
