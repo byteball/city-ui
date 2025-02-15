@@ -34,11 +34,6 @@ export class Plot {
     this.plotImage = this.scene.add.image(x, y, "plot");
     this.plotImage.setDisplaySize(this.plotSize, this.plotSize);
     this.plotImage.setInteractive();
-
-    // Создаем графику для дома в центре участка
-    const houseSize = this.plotSize / 4; // Размер дома относительно участка
-    this.houseGraphics.fillStyle(0x8b4513, 1); // Цвет дома (коричневый)
-    this.houseGraphics.fillRect(x - houseSize / 2, y - houseSize / 2, houseSize, houseSize);
   }
 
   public setSelected(selected: boolean) {
@@ -75,7 +70,7 @@ export class Plot {
     return this.data;
   }
 
-  public getPlotImage() {
+  public getMapUnitImage() {
     return this.plotImage;
   }
 }
