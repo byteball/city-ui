@@ -104,6 +104,7 @@ interface ICityState {
  */
 export interface IPlot extends ICoordinates {
   amount: NonNegativeNumber;
+  rented_amount?: NonNegativeNumber;
   city: string;
   owner: string;
   status: "pending" | "land";

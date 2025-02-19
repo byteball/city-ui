@@ -10,6 +10,7 @@ import { useSettingsStore } from "@/store/settings-store";
 import { Plot } from "./Plot";
 import { Road } from "./Road";
 
+import { getMapUnitSize } from "@/aaLogic/getMapUnitSize";
 import appConfig from "@/appConfig";
 import { toast } from "@/hooks/use-toast";
 import { House } from "./House";
@@ -20,7 +21,7 @@ export class Map {
   private scene: Phaser.Scene;
   private roadsData: IRoad[];
   private unitsData: IMapUnit[];
-  private allCitySupply: number;
+  private totalSize: number;
   private selectedMapUnit: Plot | House | null = null;
   private MapUnits: (Plot | House)[] = [];
 
@@ -28,7 +29,7 @@ export class Map {
     this.scene = scene;
     this.roadsData = roadsData;
     this.unitsData = unitsData;
-    this.allCitySupply = this.unitsData.reduce((sum, house) => sum + house.amount, 0);
+    this.totalSize = this.unitsData.reduce((sum, unit) => sum + getMapUnitSize(unit), 0);
   }
 
   public createMap() {
@@ -77,7 +78,7 @@ export class Map {
     this.unitsData.forEach((unitData) => {
       // 1) Вычисляем размер участка
       const { amount, x, y, type } = unitData;
-      const plotFraction = (amount / this.allCitySupply) * 0.1; // TODO: Учитывать referral_boost
+      const plotFraction = (amount / this.totalSize) * 0.1; // TODO: Учитывать referral_boost
       const plotArea = plotFraction * MAP_WIDTH * MAP_HEIGHT;
       const plotSize = Math.sqrt(plotArea);
 
