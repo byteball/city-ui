@@ -8,8 +8,7 @@ import { toLocalString } from "@/lib";
 import { useAaStore } from "@/store/aa-store";
 import { mapUnitsByCoordinatesSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
-
-import appConfig from "@/appConfig";
+import { Link } from "react-router";
 
 export const SelectedUnitMapCard = () => {
   const selectedMapUnitCoordinates = useSettingsStore((state) => state.selectedMapUnit);
@@ -66,12 +65,9 @@ export const SelectedUnitMapCard = () => {
 
             {owner && (
               <InfoPanel.Item label="Owner" loading={loading || !owner}>
-                <a
-                  className="text-blue-400 block truncate max-w-[150px]"
-                  href={`https://${appConfig.TESTNET ? "testnet" : ""}explorer.obyte.org/address/${owner}`}
-                >
+                <Link to={`/user/${owner}`} className="text-blue-400 block truncate max-w-[150px]">
                   {owner}
-                </a>
+                </Link>
               </InfoPanel.Item>
             )}
           </InfoPanel>
