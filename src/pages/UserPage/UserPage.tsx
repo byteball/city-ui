@@ -2,6 +2,7 @@ import obyte from "obyte";
 import { Navigate, useParams } from "react-router";
 
 import { PageLayout } from "@/components/layout/page-layout";
+import { InfoPanel } from "@/components/ui/_info-panel";
 import { useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
@@ -17,7 +18,13 @@ export default () => {
 
   return (
     <PageLayout title="User page" loading={loading}>
-      UserPage - {address}
+      <InfoPanel>
+        <InfoPanel.Item label="Address" loading={loading}>
+          <a className="text-link" target="_blank" href={`https://testnetexplorer.obyte.org/address/${address}`}>
+            {address}
+          </a>
+        </InfoPanel.Item>
+      </InfoPanel>
     </PageLayout>
   );
 };

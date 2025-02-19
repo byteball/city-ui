@@ -7,6 +7,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        link: "hsl(213.1 93.9% 67.8%)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
