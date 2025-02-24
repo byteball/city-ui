@@ -79,6 +79,7 @@ export class Map {
       // 1) Вычисляем размер участка
       const { amount, x, y, type } = unitData;
       const plotFraction = (amount / this.totalSize) * 0.1; // TODO: Учитывать referral_boost
+
       const plotArea = plotFraction * MAP_WIDTH * MAP_HEIGHT;
       const plotSize = Math.sqrt(plotArea);
 
