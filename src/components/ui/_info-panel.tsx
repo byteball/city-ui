@@ -19,7 +19,8 @@ interface InfoPanelItemProps {
 const InfoPanelItem: FC<InfoPanelItemProps> = ({ label, children, loading = false }) => {
   return (
     <div className="flex items-center space-x-2">
-      <div>{label}:</div> {loading ? <Skeleton className="h-[1.125rem] w-[150px]" /> : <div>{children}</div>}
+      <div>{label}: </div>
+      {loading ? <Skeleton className="h-[1.125rem] w-[150px]" /> : <div>{children}</div>}
     </div>
   );
 };
