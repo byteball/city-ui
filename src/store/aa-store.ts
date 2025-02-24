@@ -29,6 +29,7 @@ export interface ICityAaState extends IAaStateVars {
     governance_aa?: string;
   };
   state?: ICityState;
+  city_city?: ICity;
 }
 
 export interface AaStoreState {
