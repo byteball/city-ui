@@ -3,6 +3,7 @@ import moment from "moment";
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ICoordinates } from "@/global";
 import { toLocalString } from "@/lib";
 import { useAaStore } from "@/store/aa-store";
@@ -48,9 +49,20 @@ export const SelectedUnitMapCard = () => {
             </InfoPanel.Item>
 
             <InfoPanel.Item label="Coordinates" loading={loading}>
-              <div className="font-mono">
-                ({selectedMapUnit?.x},{selectedMapUnit?.y})
-              </div>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger className="cursor-text">
+                    <div className="font-mono">
+                      ({selectedMapUnit?.x},{selectedMapUnit?.y})
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <div>
+                      X: {selectedMapUnit?.x}, Y: {selectedMapUnit?.y}
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </InfoPanel.Item>
 
             <InfoPanel.Item label="Created at" loading={loading}>
