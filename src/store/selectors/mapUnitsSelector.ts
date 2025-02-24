@@ -1,3 +1,4 @@
+import obyte from "obyte";
 import { createSelector } from "reselect";
 
 import { ICoordinates, IHouse, IMapUnit, IPlot } from "@/global";
@@ -41,7 +42,7 @@ export const mapUnitsSelector = createSelector([getAaState], (aaState: ICityAaSt
           ...houseUnit,
           type,
           house_num: id,
-          amount: houseUnit.amount === 0 ? 10000000000 : houseUnit.amount, // TODO: fix it mayor created houses have 0 amount
+          amount: houseUnit.amount, // === 0 ? 10000000000 : houseUnit.amount, // TODO: fix it mayor created houses have 0 amount
         } as IHouse;
       }
 
@@ -54,6 +55,17 @@ export const mapUnitsByCoordinatesSelector = createSelector(
   (units: IMapUnit[], coordinates) => {
     if (coordinates === null || !coordinates) return [];
     return units.filter((unit) => unit.x === coordinates.x && unit.y === coordinates.y);
+  }
+);
+
+export const mapUnitsByOwnerAddressSelector = createSelector(
+  [mapUnitsSelector, (_state: AaStoreState, ownerAddress: string | null) => ownerAddress],
+  (units: IMapUnit[], ownerAddress: string | null) => {
+    if (!ownerAddress) return [];
+
+    if (!obyte.utils.isValidAddress(ownerAddress)) throw new Error("Invalid address");
+
+    return units.filter((unit) => unit.owner === ownerAddress);
   }
 );
 
