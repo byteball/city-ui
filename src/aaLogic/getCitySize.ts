@@ -2,8 +2,12 @@ import Decimal from "decimal.js";
 
 import { ICity } from "@/global";
 
-export const getCitySize = (city: ICity) => {
-  return Decimal(city.total_land)
-    .plus(city.total_rented || 0)
-    .toNumber();
-};
+export function getCitySize(city: ICity): number;
+export function getCitySize(city: ICity, isDecimalResult: true): Decimal;
+export function getCitySize(city: ICity, isDecimalResult: false): number;
+export function getCitySize(city: ICity, isDecimalResult: boolean = false) {
+  const citySize = Decimal(city.total_land).plus(city.total_rented || 0);
+
+  return isDecimalResult ? citySize : citySize.toNumber();
+}
+
