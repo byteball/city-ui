@@ -33,7 +33,7 @@ export const SelectedUnitMapCard = () => {
     <Card>
       <CardHeader>
         <CardTitle>Selected</CardTitle>
-        <CardDescription>Click on the house to see all the information about it.</CardDescription>
+        <CardDescription>Click on the house or plot to see all the information about it.</CardDescription>
       </CardHeader>
 
       {selectedMapUnitCoordinates ? (
@@ -47,26 +47,22 @@ export const SelectedUnitMapCard = () => {
               {formattedTotalAmount} {symbol}
             </InfoPanel.Item>
 
-            <InfoPanel.Item label="Plot number" loading={loading}>
-              {selectedMapUnit?.plot_num}
+            <InfoPanel.Item label="Coordinates" loading={loading}>
+              <div className="font-mono">
+                ({selectedMapUnit?.x},{selectedMapUnit?.y})
+              </div>
             </InfoPanel.Item>
 
             <InfoPanel.Item label="Created at" loading={loading}>
               {moment.unix(selectedMapUnit?.ts).format("YYYY-MM-DD HH:mm")}
             </InfoPanel.Item>
 
-            {selectedMapUnit?.username && (
-              <InfoPanel.Item label="Username" loading={loading}>
-                {selectedMapUnit?.username}
-              </InfoPanel.Item>
-            )}
-
             {loading && <Skeleton className="w-full h-[50px]" />}
 
             {owner && (
               <InfoPanel.Item label="Owner" loading={loading || !owner}>
-                <Link to={`/user/${owner}`} className="text-blue-400 block truncate max-w-[150px]">
-                  {owner}
+                <Link to={`/user/${owner}`} className="text-blue-400 block truncate max-w-[200px]">
+                  {selectedMapUnit?.username} - {owner}
                 </Link>
               </InfoPanel.Item>
             )}
