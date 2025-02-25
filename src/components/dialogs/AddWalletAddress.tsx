@@ -1,3 +1,4 @@
+import cn from "classnames";
 import obyte from "obyte";
 import { FC, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -70,7 +71,14 @@ export const AddWalletAddress: FC<IAddWalletAddressProps> = ({ children }) => {
         <div className="grid gap-4 py-4">
           <div className="flex flex-col space-y-2">
             <Label htmlFor="address">Wallet address</Label>
-            <Input id="address" autoComplete="false" onKeyDown={handleKeyDawn} onChange={handleChange} value={address || ""} />
+            <Input
+              id="address"
+              className={cn({ "border-red-800": address && !validAddress })}
+              autoComplete="false"
+              onKeyDown={handleKeyDawn}
+              onChange={handleChange}
+              value={address || ""}
+            />
           </div>
         </div>
         <DialogFooter>
