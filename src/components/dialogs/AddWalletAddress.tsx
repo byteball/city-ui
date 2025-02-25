@@ -43,9 +43,11 @@ export const AddWalletAddress: FC<IAddWalletAddressProps> = ({ children }) => {
     [saveBtnRef.current]
   );
 
-  useEffect(() => {
-    setAddress(walletAddressFromStore);
-  }, [walletAddressFromStore]);
+  const handleOpenChange = useCallback(() => {
+    setTimeout(() => {
+      setAddress(walletAddressFromStore);
+    }, 500);
+  }, [walletAddressFromStore, setAddress]);
 
   const save = useCallback(() => {
     if (address && !disabled) {
@@ -53,8 +55,12 @@ export const AddWalletAddress: FC<IAddWalletAddressProps> = ({ children }) => {
     }
   }, [address, disabled]);
 
+  useEffect(() => {
+    setAddress(walletAddressFromStore);
+  }, [walletAddressFromStore]);
+
   return (
-    <Dialog>
+    <Dialog onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         {walletAddressFromStore ? <Button variant="default">{walletAddressFromStore.slice(0, 6)}...</Button> : children}
       </DialogTrigger>
