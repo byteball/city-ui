@@ -2,6 +2,7 @@ import cn from "classnames";
 import obyte from "obyte";
 import { FC, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { toast } from "@/hooks/use-toast";
 import { setWalletAddress, useSettingsStore } from "@/store/settings-store";
 import { Button } from "../ui/button";
 import {
@@ -52,6 +53,7 @@ export const AddWalletAddress: FC<IAddWalletAddressProps> = ({ children }) => {
   const save = useCallback(() => {
     if (address && !disabled) {
       setWalletAddress(address);
+      toast({ title: "Wallet address saved" });
     }
   }, [address, disabled]);
 
