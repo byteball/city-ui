@@ -82,22 +82,38 @@ interface ICityState {
  * @description Interface representing a plot in the city AA.
  *
  * @property {NonNegativeNumber} amount - The numerical amount associated with the plot (must be a non-negative number).
+ * @property {NonNegativeNumber} sale_price - The sale price of the plot (must be a non-negative number).
+ * @property {NonNegativeNumber} rented_amount - The amount for which the plot is rented (optional, must be a non-negative number).
  * @property {string} city - The identifier of the city where the plot is located.
- * @property {string} owner - The address of the plot's owner.
+ * @property {string} owner - The address of the plot's owner. If empty, it indicates a mayor plot.
  * @property {"pending" | "land"} status - The current status of the plot; either "pending" or "land".
+ * @property {string} type - The type of the plot, which is "plot".
+ * @property {string | IMapUnitInfo} info - Additional information about the plot.
+ * @property {string} username - The username associated with the plot owner (optional).
  * @property {NonNegativeNumber} ts - The timestamp when the plot was registered (must be a non-negative number).
  * @property {NonNegativeNumber} plot_num - The plot number, used to derive the key (e.g. [`plot_${plot_num}`]) (must be a non-negative number).
- * @property {string} username - The username associated with the plot owner.
+ * @property {NonNegativeNumber} last_transfer_ts - The timestamp of the last transfer (optional, must be a non-negative number).
+ * @property {NonNegativeNumber} last_rental_ts - The timestamp of the last rental (optional, must be a non-negative number).
+ * @property {NonNegativeNumber} ref_plot_num - The reference plot number (optional, must be a non-negative number).
+ * @property {NonNegativeNumber} rental_expiry_ts - The timestamp when the rental expires (optional, must be a non-negative number).
  *
  * @example
  * const plot: IPlot = {
  *   amount: 100,
+ *   sale_price: 150,
+ *   rented_amount: 50,
  *   city: "CityName",
  *   owner: "AFDSMFKDS...",
  *   status: "land",
+ *   type: "plot",
+ *   info: "Plot with a great view",
+ *   username: "user123",
  *   ts: 1678901234,
  *   plot_num: 1,
- *   username: "user123",
+ *   last_transfer_ts: 1678901235,
+ *   last_rental_ts: 1678901236,
+ *   ref_plot_num: 2,
+ *   rental_expiry_ts: 1678901237,
  *   x: 1,
  *   y: 2
  * };
