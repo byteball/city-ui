@@ -46,7 +46,7 @@ export const AddWalletAddress: FC<IAddWalletAddressProps> = ({ children }) => {
   const handleOpenChange = useCallback(() => {
     setTimeout(() => {
       setAddress(walletAddressFromStore);
-    }, 500);
+    }, 700);
   }, [walletAddressFromStore, setAddress]);
 
   const save = useCallback(() => {
