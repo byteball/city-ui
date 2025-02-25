@@ -43,7 +43,7 @@ export const Header: FC<IHeaderProps> = () => {
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <AddWalletAddress>
-            <Button variant="link">Add wallet</Button>
+            <Button variant="default">Add wallet</Button>
           </AddWalletAddress>
         </div>
       </nav>

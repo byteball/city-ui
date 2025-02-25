@@ -55,7 +55,7 @@ export const AddWalletAddress: FC<IAddWalletAddressProps> = ({ children }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        {walletAddressFromStore ? <Button variant="link">{walletAddressFromStore.slice(0, 6)}...</Button> : children}
+        {walletAddressFromStore ? <Button variant="default">{walletAddressFromStore.slice(0, 6)}...</Button> : children}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
