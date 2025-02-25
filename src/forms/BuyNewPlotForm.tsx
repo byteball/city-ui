@@ -13,24 +13,26 @@ import { generateLink, toLocalString } from "@/lib";
 import appConfig from "@/appConfig";
 
 export const BuyNewPlotForm: FC = memo(() => {
+  // Get AA parameters and calculate plot price details
   const params = useAaParams();
   const { price, fee, totalPrice } = getPlotPrice(params);
 
-  const stateLoaded = useAaStore((state) => state.loaded);
-  const symbol = useSettingsStore((state) => state.symbol);
-  const asset = useSettingsStore((state) => state.asset);
-  const decimals = useSettingsStore((state) => state.decimals);
-  const inited = useSettingsStore((state) => state.inited);
-  const refData = useSettingsStore((state) => state.refData);
+  // Get required state from stores
+  const { loaded: stateLoaded } = useAaStore();
+  const { symbol, asset, decimals, inited, refData } = useSettingsStore();
 
-  const loading = !inited || !stateLoaded || !asset || decimals === null;
+  // Check if data is still loading
+  const isLoading = !inited || !stateLoaded || !asset || decimals === null;
 
+  // Format price values
   const decimalsPow = 10 ** (decimals ?? 0);
+  const formattedValues = {
+    price: toLocalString(price / decimalsPow),
+    fee: toLocalString((fee * 100).toFixed(2)),
+    total: toLocalString(totalPrice / decimalsPow),
+  };
 
-  const formattedPrice = toLocalString(price / decimalsPow);
-  const formattedFee = toLocalString((fee * 100).toFixed(2));
-  const formattedTotalPrice = toLocalString(totalPrice / decimalsPow);
-
+  // Generate payment link
   const buyUrl = generateLink({
     amount: totalPrice,
     asset: asset ?? "",
@@ -41,20 +43,20 @@ export const BuyNewPlotForm: FC = memo(() => {
   return (
     <div className="text-sm">
       <InfoPanel>
-        <InfoPanel.Item label="Price" loading={loading}>
-          {formattedPrice} {symbol}
+        <InfoPanel.Item label="Price" loading={isLoading}>
+          {formattedValues.price} {symbol}
         </InfoPanel.Item>
 
-        <InfoPanel.Item label="Fee" loading={loading}>
-          {formattedFee}%
+        <InfoPanel.Item label="Fee" loading={isLoading}>
+          {formattedValues.fee}%
         </InfoPanel.Item>
 
-        <InfoPanel.Item label="Total price" loading={loading}>
-          {formattedTotalPrice} {symbol}
+        <InfoPanel.Item label="Total price" loading={isLoading}>
+          {formattedValues.total} {symbol}
         </InfoPanel.Item>
       </InfoPanel>
 
-      <QRButton href={buyUrl} disabled={loading} variant="secondary">
+      <QRButton href={buyUrl} disabled={isLoading} variant="secondary">
         Buy
       </QRButton>
     </div>
