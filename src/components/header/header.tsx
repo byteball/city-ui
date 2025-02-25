@@ -1,6 +1,9 @@
 import { FC } from "react";
 import { NavLink } from "react-router";
 
+import { AddWalletAddress } from "../dialogs/AddWalletAddress";
+import { Button } from "../ui/button";
+
 interface IHeaderProps {}
 
 const navigation = [
@@ -39,9 +42,9 @@ export const Header: FC<IHeaderProps> = () => {
           ))}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="#" className="font-semibold text-white text-sm/6">
-            Log in <span aria-hidden="true">&rarr;</span>
-          </a>
+          <AddWalletAddress>
+            <Button variant="link">Add wallet</Button>
+          </AddWalletAddress>
         </div>
       </nav>
     </header>
