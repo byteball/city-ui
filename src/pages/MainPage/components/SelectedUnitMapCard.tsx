@@ -79,10 +79,12 @@ export const SelectedUnitMapCard = () => {
           </InfoPanel>
 
           <div className="grid gap-2">
-            {owner === walletAddress ? (
-              <Button variant="secondary" className="w-full">
-                Sell {selectedMapUnit?.type}
-              </Button>
+            {owner === walletAddress && selectedMapUnit.type === "plot" ? (
+              <SellPlotDialog>
+                <Button variant="secondary" className="w-full">
+                  Sell plot
+                </Button>
+              </SellPlotDialog>
             ) : null}
 
             {owner === walletAddress ? (
