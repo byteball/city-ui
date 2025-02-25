@@ -1,6 +1,7 @@
 import moment from "moment";
 
 import { InfoPanel } from "@/components/ui/_info-panel";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -21,6 +22,7 @@ export const SelectedUnitMapCard = () => {
   const asset = useSettingsStore((state) => state.asset);
   const decimals = useSettingsStore((state) => state.decimals);
   const inited = useSettingsStore((state) => state.inited);
+  const walletAddress = useSettingsStore((state) => state.walletAddress);
 
   const loading = !inited || !stateLoaded || !asset || decimals === null;
 
@@ -33,17 +35,13 @@ export const SelectedUnitMapCard = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Selected</CardTitle>
+        <CardTitle>Selected {selectedMapUnit?.type}</CardTitle>
         <CardDescription>Click on the house or plot to see all the information about it.</CardDescription>
       </CardHeader>
 
       {selectedMapUnitCoordinates ? (
         <CardContent>
           <InfoPanel>
-            <InfoPanel.Item label="Type" loading={loading}>
-              {selectedMapUnit?.type}
-            </InfoPanel.Item>
-
             <InfoPanel.Item label="Amount" loading={loading}>
               {formattedTotalAmount} {symbol}
             </InfoPanel.Item>
@@ -79,6 +77,26 @@ export const SelectedUnitMapCard = () => {
               </InfoPanel.Item>
             )}
           </InfoPanel>
+
+          <div className="grid gap-2">
+            {owner === walletAddress ? (
+              <Button variant="secondary" className="w-full">
+                Sell {selectedMapUnit?.type}
+              </Button>
+            ) : null}
+
+            {owner === walletAddress ? (
+              <Button variant="secondary" className="w-full">
+                Sell {selectedMapUnit?.type}
+              </Button>
+            ) : null}
+
+            {owner === walletAddress ? (
+              <Button variant="secondary" className="w-full">
+                Sell {selectedMapUnit?.type}
+              </Button>
+            ) : null}
+          </div>
         </CardContent>
       ) : (
         <CardContent className="text-primary">No plot selected</CardContent>
