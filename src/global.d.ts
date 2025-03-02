@@ -123,7 +123,6 @@ export interface IPlot extends ICoordinates {
   sale_price: NonNegativeNumber;
   rented_amount?: NonNegativeNumber;
   city: string;
-  owner: string;
   status: "pending" | "land";
   type: "plot";
   info: string | IMapUnitInfo;
@@ -158,6 +157,7 @@ export interface IPlot extends ICoordinates {
  *   info: "House with beautiful garden",
  *   plot_num: 5,
  *   plot_ts: 1678901234,
+ *   house_num: 1,
  *   ts: 1678901234
  *   x: 1,
  *   y: 2
