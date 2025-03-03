@@ -153,16 +153,14 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
         </InfoPanel>
 
         <DialogFooter>
-          <DialogClose asChild>
-            <div className="w-full">
-              <QRButton ref={putBtnRef} disabled={!inited || !!error || !amount} className="w-full" href={url}>
-                Send {toLocalString(required_fee / 10 ** decimals!)} {symbol}
-              </QRButton>
-              <div className="mt-2 text-gray-400 text-foreground">
-                <small>We added 1% to reduce the risk of a debounce. It will be back.</small>
-              </div>
+          <div className="w-full">
+            <QRButton ref={putBtnRef} disabled={!inited || !!error || !amount} className="w-full" href={url}>
+              Send {toLocalString(required_fee / 10 ** decimals!)} {symbol}
+            </QRButton>
+            <div className="mt-2 text-gray-400 text-foreground">
+              <small>We added 1% to reduce the risk of a debounce. It will be back.</small>
             </div>
-          </DialogClose>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

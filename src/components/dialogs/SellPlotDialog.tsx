@@ -32,10 +32,10 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value ?? "";
 
-      if (!value || (decimals && getCountOfDecimals(value) <= decimals) && Number(value) <= 100000000) {
+      if (!value || (decimals && getCountOfDecimals(value) <= decimals && Number(value) <= 100000000)) {
         if (value === "." || value === ",") {
           setAmount("0.");
-        } else if(!isNaN(Number(value))) {
+        } else if (!isNaN(Number(value))) {
           setAmount(value);
         } else {
           console.error("Invalid input");
@@ -45,13 +45,16 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
     [setAmount, decimals]
   );
 
-  const handleKeyDawn = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      putBtnRef.current?.click();
-    }
-  }, [putBtnRef.current]);
-  
+  const handleKeyDawn = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        putBtnRef.current?.click();
+      }
+    },
+    [putBtnRef.current]
+  );
+
   const url = generateLink({
     amount: 10000,
     data: { sell: 1, plot_num: 8, sale_price: Number(amount) * 10 ** (decimals ?? 0) },
@@ -65,7 +68,7 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
     if (Number(amount) && Number(amount) * 10 ** decimals! < selectedMapUnit.amount) {
       return `Amount should be greater than ${toLocalString(selectedMapUnit.amount / 10 ** decimals!)}`;
     }
-    
+
     return false;
   }, [amount]);
 
@@ -85,22 +88,13 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
         <div className="grid gap-4 py-4">
           <div className="flex flex-col space-y-2">
             <Label htmlFor="amount">Amount</Label>
-            <Input
-              id="amount"
-              error={error}
-              onKeyDown={handleKeyDawn}
-              suffix={symbol}
-              onChange={handleChange}
-              value={amount}
-            />
+            <Input id="amount" error={error} onKeyDown={handleKeyDawn} suffix={symbol} onChange={handleChange} value={amount} />
           </div>
         </div>
         <DialogFooter>
-          <DialogClose asChild>
-            <QRButton ref={putBtnRef} disabled={!inited || !!error || !amount} className="w-full" href={url}>
-              Put up
-            </QRButton>
-          </DialogClose>
+          <QRButton ref={putBtnRef} disabled={!inited || !!error || !amount} className="w-full" href={url}>
+            Put up
+          </QRButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>
