@@ -31,6 +31,7 @@ export const SelectedUnitMapCard = () => {
   const decimalsPow = 10 ** (decimals ?? 0);
   const rented_amount = selectedMapUnit?.type === "plot" ? selectedMapUnit.rented_amount ?? 0 : 0;
   const formattedTotalAmount = toLocalString((selectedMapUnit?.amount + rented_amount) / decimalsPow);
+  const formattedRentedAmount = toLocalString(rented_amount / decimalsPow);
 
   const owner = selectedMapUnit?.owner;
 
@@ -45,7 +46,7 @@ export const SelectedUnitMapCard = () => {
         <CardContent>
           <InfoPanel>
             <InfoPanel.Item label="Amount" loading={loading}>
-              {formattedTotalAmount} {symbol}
+              {formattedTotalAmount} {symbol} (included {formattedRentedAmount} {symbol} rented)
             </InfoPanel.Item>
 
             <InfoPanel.Item label="Coordinates" loading={loading}>
