@@ -26,6 +26,7 @@
         "build-nolog": "vite build --config vite/config.prod.mjs"
     },
     "dependencies": {
+        "@heroicons/react": "^2.2.0",
         "@hookform/resolvers": "^4.0.0",
         "@radix-ui/react-accordion": "^1.2.3",
         "@radix-ui/react-dialog": "^1.1.6",

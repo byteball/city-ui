@@ -1,5 +1,7 @@
 import moment from "moment";
+import { Link } from "react-router";
 
+import { SellPlotDialog } from "@/components/dialogs/SellPlotDialog";
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +12,7 @@ import { toLocalString } from "@/lib";
 import { useAaStore } from "@/store/aa-store";
 import { mapUnitsByCoordinatesSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
-import { Link } from "react-router";
+import { RentPlotDialog } from "@/components/dialogs/RentPlotDialog";
 
 export const SelectedUnitMapCard = () => {
   const selectedMapUnitCoordinates = useSettingsStore((state) => state.selectedMapUnit);
@@ -27,8 +29,8 @@ export const SelectedUnitMapCard = () => {
   const loading = !inited || !stateLoaded || !asset || decimals === null;
 
   const decimalsPow = 10 ** (decimals ?? 0);
-
-  const formattedTotalAmount = toLocalString(selectedMapUnit?.amount / decimalsPow);
+  const rented_amount = selectedMapUnit?.type === "plot" ? selectedMapUnit.rented_amount ?? 0 : 0;
+  const formattedTotalAmount = toLocalString((selectedMapUnit?.amount + rented_amount) / decimalsPow);
 
   const owner = selectedMapUnit?.owner;
 
@@ -88,15 +90,11 @@ export const SelectedUnitMapCard = () => {
             ) : null}
 
             {owner === walletAddress ? (
-              <Button variant="secondary" className="w-full">
-                Sell {selectedMapUnit?.type}
-              </Button>
-            ) : null}
-
-            {owner === walletAddress ? (
-              <Button variant="secondary" className="w-full">
-                Sell {selectedMapUnit?.type}
-              </Button>
+              <RentPlotDialog>
+                <Button variant="secondary" className="w-full">
+                  Rent additional land
+                </Button>
+              </RentPlotDialog>
             ) : null}
           </div>
         </CardContent>
