@@ -57,7 +57,7 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
 
   const url = generateLink({
     amount: 10000,
-    data: { sell: 1, plot_num: 8, sale_price: Number(amount) * 10 ** (decimals ?? 0) },
+    data: { sell: 1, plot_num: selectedMapUnit.plot_num, sale_price: Number(amount) * 10 ** (decimals ?? 0) },
     from_address: walletAddressFromStore!,
     aa: appConfig.AA_ADDRESS,
     asset: "base",
