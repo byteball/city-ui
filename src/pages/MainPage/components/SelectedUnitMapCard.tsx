@@ -46,7 +46,7 @@ export const SelectedUnitMapCard = () => {
         <CardContent>
           <InfoPanel>
             <InfoPanel.Item label="Amount" loading={loading}>
-              {formattedTotalAmount} {symbol} (included {formattedRentedAmount} {symbol} rented)
+              {formattedTotalAmount} {symbol} (including {formattedRentedAmount} rented {symbol})
             </InfoPanel.Item>
 
             <InfoPanel.Item label="Coordinates" loading={loading}>

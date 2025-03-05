@@ -75,7 +75,7 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Put your land up for sale</DialogTitle>
           {/* <DialogDescription>
