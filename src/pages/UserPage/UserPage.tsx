@@ -6,6 +6,7 @@ import { InfoPanel } from "@/components/ui/_info-panel";
 import { useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 import { UserStats } from "./UserStats";
+import { UserPlots } from "./UserPlots";
 
 export default () => {
   const { address } = useParams<{ address: string }>();
@@ -28,6 +29,8 @@ export default () => {
       </InfoPanel>
 
       <UserStats address={address} />
+
+      <UserPlots address={address} />
     </PageLayout>
   );
 };
