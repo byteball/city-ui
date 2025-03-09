@@ -38,15 +38,12 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
     [setAmount, decimals, amount]
   );
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        putBtnRef.current?.click();
-      }
-    },
-    []
-  );
+  const handleKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      putBtnRef.current?.click();
+    }
+  }, []);
 
   let error = useMemo(() => {
     if (amount !== "" && Number(amount) <= 0) {
@@ -56,13 +53,14 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
     return false;
   }, [amount]);
 
-  const { plot_price, matching_probability, rental_surcharge_factor } = useAaParams();
+  const { plot_price, matching_probability, rental_surcharge_factor, referral_boost } = useAaParams();
   const state = useAaStore((state) => state.state);
   const city = state.city_city!;
   const countBought = city.total_bought / plot_price;
-  const rentedAmount = selectedMapUnit.type === "plot" ? selectedMapUnit?.rented_amount ?? 0 : 0; 
+  const rentedAmount = selectedMapUnit.type === "plot" ? selectedMapUnit?.rented_amount ?? 0 : 0;
   const amountInSmallestUnit = Number(amount) * 10 ** decimals!;
-  const totalWorking = city.total_land + city.total_rented + amountInSmallestUnit - (selectedMapUnit.type === "plot" ? selectedMapUnit.rented_amount ?? 0 : 0);
+  const totalWorking =
+    city.total_land + city.total_rented + amountInSmallestUnit - (selectedMapUnit.type === "plot" ? selectedMapUnit.rented_amount ?? 0 : 0);
   const timestamp = moment.utc().unix();
   const elapsed = timestamp - city.start_ts;
   const year = 365 * 24 * 3600;
@@ -72,18 +70,66 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   const yearIncome = incomeFromOneBuy * countBuysNextYear;
   const rental_fee = Math.ceil(rental_surcharge_factor * yearIncome);
   let unusedRent = 0;
+  let rentalExpiryFormatted = "";
 
   if (selectedMapUnit.type === "plot") {
     const rentalExpiryTs = selectedMapUnit.rental_expiry_ts ?? 0;
     if (timestamp < rentalExpiryTs) {
       unusedRent = Math.floor((rentedAmount * (rentalExpiryTs - timestamp)) / year);
-      if (amountInSmallestUnit && (amountInSmallestUnit < (selectedMapUnit.rented_amount ?? 0))) {
-        error =  `Rental amount cannot be decreased. Min value is ${toLocalString(rentedAmount / 10 ** decimals!)} ${symbol}`;
+      rentalExpiryFormatted = moment.unix(rentalExpiryTs).format("YYYY-MM-DD HH:mm");
+
+      if (amountInSmallestUnit && amountInSmallestUnit < (selectedMapUnit.rented_amount ?? 0)) {
+        error = `Rental amount cannot be decreased. Min value is ${toLocalString(rentedAmount / 10 ** decimals!)} ${symbol}`;
       }
     }
   }
 
-  const requiredFee = (rental_fee * 1.01 - unusedRent);
+  const rentalFeeWithMargin = rental_fee * 1.01;
+  const isCoveredByUnusedRent = unusedRent >= rentalFeeWithMargin - 0.01;
+  
+  const minPositiveAmount = 1;
+  
+  const requiredFee = isCoveredByUnusedRent 
+    ? minPositiveAmount 
+    : Math.max(minPositiveAmount, rentalFeeWithMargin - unusedRent);
+
+  // Проверяем, не продлевает ли пользователь аренду на ту же сумму
+  const isSameAmount = Math.abs(Number(amount) - rentedAmount / 10 ** decimals!) < 0.001;
+
+  // Рассчитываем дату окончания новой аренды
+  const newRentalExpiryTs = timestamp + year;
+  const newRentalExpiryFormatted = moment.unix(newRentalExpiryTs).format("YYYY-MM-DD HH:mm");
+  
+  // Рассчитываем увеличение площади для поиска соседей
+  const currentPlotArea = selectedMapUnit.amount + rentedAmount;
+  const newPlotArea = selectedMapUnit.amount + amountInSmallestUnit;
+  
+  // Расчет доли участка от общей площади
+  const oldShare = currentPlotArea / (city.total_land + city.total_rented);
+  const newShare = newPlotArea / (city.total_land + city.total_rented - rentedAmount + amountInSmallestUnit);
+  
+  // Расчет дистанции по формуле из контракта
+  const isReferrerMatch = "ref_plot_num" in selectedMapUnit ? 1 : 0; // Предполагаем, что нет реферальной связи для простоты
+  const oldDistance = Math.sqrt(1e12 * matching_probability * (oldShare + isReferrerMatch * referral_boost)) / 2;
+  const newDistance = Math.sqrt(1e12 * matching_probability * (newShare + isReferrerMatch * referral_boost)) / 2;
+  
+  // Процентное увеличение дистанции
+  const areaIncrease = (newPlotArea / currentPlotArea - 1) * 100;
+  const matchingRangeIncrease = (newDistance / oldDistance - 1) * 100;
+
+  // Форматирование текста в зависимости от значения
+  const areaChangeText = areaIncrease > 0 
+    ? `~${Math.round(areaIncrease)}% larger` 
+    : areaIncrease < 0 
+      ? `~${Math.round(Math.abs(areaIncrease))}% smaller` 
+      : "unchanged";
+      
+  const rangeChangeText = matchingRangeIncrease > 0 
+    ? `~${Math.round(matchingRangeIncrease)}% farther` 
+    : matchingRangeIncrease < 0 
+      ? `~${Math.round(Math.abs(matchingRangeIncrease))}% closer` 
+      : "unchanged";
+
   if (requiredFee > amountInSmallestUnit) {
     error = "Not enough paid for rental fee";
   }
@@ -104,44 +150,78 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Rent additional land around your plot</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="flex flex-col space-y-2">
-            <Label htmlFor="amount">Amount</Label>
-            <Input id="amount" error={error} onKeyDown={handleKeyDown} suffix={symbol} onChange={handleChange} value={amount} />
-          </div>
+
+        {unusedRent > 0 && (
+          <InfoPanel className="mb-2 text-sm text-gray-300">
+            <InfoPanel.Item label="Unused rental">
+              {toLocalString(unusedRent / 10 ** (decimals || 0))} {symbol}
+            </InfoPanel.Item>
+            <InfoPanel.Item label="Unused rental expires">{rentalExpiryFormatted}</InfoPanel.Item>
+          </InfoPanel>
+        )}
+
+        <div className="flex flex-col space-y-2">
+          <Label htmlFor="amount">New rent amount</Label>
+          <Input id="amount" error={error} onKeyDown={handleKeyDown} suffix={symbol} onChange={handleChange} value={amount} />
         </div>
 
         <InfoPanel>
-          <InfoPanel.Item label="Rented amount">
-            {toLocalString(Number(amount || '0') + rentedAmount / 10 ** decimals!)} {symbol}
+          <InfoPanel.Item label="Expires on">{newRentalExpiryFormatted}</InfoPanel.Item>
+          <InfoPanel.Item label="Rental fee">
+            {isCoveredByUnusedRent ? "Covered by unused credit" : `${toLocalString(requiredFee / 10 ** decimals!)} ${symbol}`}
           </InfoPanel.Item>
-          <InfoPanel.Item label="Total amount">
-            {toLocalString(selectedMapUnit.amount / 10 ** decimals! + Number(amount || '0'))} {symbol}
+          <InfoPanel.Item label="Total rented">
+            {toLocalString(Number(amount || "0"))} {symbol}
           </InfoPanel.Item>
-          {unusedRent > 0 && (
-            <InfoPanel.Item label="Unused rental credit">
-              {toLocalString(unusedRent / 10 ** (decimals || 0))} {symbol}
-            </InfoPanel.Item>
+          <InfoPanel.Item label="Total owned (inc. rented)">
+            {toLocalString((selectedMapUnit.amount + +amount ) / 10 ** decimals!)} {symbol}
+          </InfoPanel.Item>
+          {amount && Number(amount) > 0 && (
+            <>
+              <InfoPanel.Item label="Area change">
+                {areaChangeText}
+              </InfoPanel.Item>
+              <InfoPanel.Item label="Matching range">
+                {rangeChangeText}
+              </InfoPanel.Item>
+            </>
           )}
-          <InfoPanel.Item label="Rental period">
-            1 year
-          </InfoPanel.Item>
-          <InfoPanel.Item label="Total fee">
-            {toLocalString(requiredFee / 10 ** decimals!)} {symbol}
-          </InfoPanel.Item>
         </InfoPanel>
+
+        <div className="my-1 text-sm text-gray-400">
+          <p>Renting land increases your plot's effective area, extending the range for finding neighboring plots to build houses.</p>
+        </div>
+
+        {isSameAmount && (
+          <div className="mb-2 text-sm text-amber-500">
+            <p>
+              You're renewing the same rental amount. This will extend your rental period by 1 year from today. 
+              The rental fee is calculated based on current game conditions and may differ from your previous payment.
+            </p>
+          </div>
+        )}
 
         <DialogFooter>
           <div className="w-full">
             <QRButton ref={putBtnRef} disabled={!inited || !!error || !amount} className="w-full" href={url}>
-              Send {requiredFee > 0 ? toLocalString(requiredFee / 10 ** decimals!) : ''} {symbol}
+              {isCoveredByUnusedRent 
+                ? `Rent with unused credit` 
+                : isSameAmount 
+                  ? `Renew rental for 1 year` 
+                  : `Send ${toLocalString(requiredFee / 10 ** decimals!)} ${symbol}`}
             </QRButton>
             <div className="mt-2 text-gray-400 text-foreground">
-              <small>The fee might slightly change. We added 1%, the excess will be returned to you.</small>
+              {isCoveredByUnusedRent ? (
+                <small>Your unused rental credit covers most of this rental. A minimal transaction amount is still required.</small>
+              ) : isSameAmount ? (
+                <small>Rental fee may be lower than before. Any excess will be returned to you.</small>
+              ) : (
+                <small>The fee might slightly change. We added 1%, the excess will be returned to you.</small>
+              )}
             </div>
           </div>
         </DialogFooter>
