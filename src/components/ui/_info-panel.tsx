@@ -1,12 +1,15 @@
 import { FC, ReactNode } from "react";
+import cn from "classnames";
+
 import { Skeleton } from "./skeleton";
 
 interface InfoPanelProps {
   children: ReactNode;
+  className?: string;
 }
 
-const InfoPanel: FC<InfoPanelProps> & { Item: typeof InfoPanelItem } = ({ children }) => {
-  return <div className="grid gap-1 mb-4">{children}</div>;
+const InfoPanel: FC<InfoPanelProps> & { Item: typeof InfoPanelItem } = ({ children, className = "" }) => {
+  return <div className={cn("grid gap-1 mb-4", className)}>{children}</div>;
 };
 
 interface InfoPanelItemProps {
