@@ -78,7 +78,7 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
     if (timestamp < rentalExpiryTs) {
       unusedRent = Math.floor((rentedAmount * (rentalExpiryTs - timestamp)) / year);
       if (amountInSmallestUnit && (amountInSmallestUnit < (selectedMapUnit.rented_amount ?? 0))) {
-        error =  `Rental amount cannot be decreased. Min value is ${toLocalString((selectedMapUnit.amount ?? 0) / 10 ** decimals!)} ${symbol}`;
+        error =  `Rental amount cannot be decreased. Min value is ${toLocalString(rentedAmount / 10 ** decimals!)} ${symbol}`;
       }
     }
   }
@@ -90,7 +90,11 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   
   const url = generateLink({
     amount: requiredFee,
-    data: { rent: 1, plot_num: selectedMapUnit.plot_num, rented_amount: amountInSmallestUnit },
+    data: { 
+      rent: 1, 
+      plot_num: selectedMapUnit.plot_num, 
+      rented_amount: amountInSmallestUnit
+    },
     from_address: walletAddressFromStore!,
     aa: appConfig.AA_ADDRESS,
     asset: asset!,
@@ -113,16 +117,19 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
 
         <InfoPanel>
           <InfoPanel.Item label="Rented amount">
-            {toLocalString(amount + rentedAmount / 10 ** decimals!)} {symbol}
+            {toLocalString(Number(amount || '0') + rentedAmount / 10 ** decimals!)} {symbol}
           </InfoPanel.Item>
           <InfoPanel.Item label="Total amount">
-            {toLocalString(selectedMapUnit.amount / 10 ** decimals! + Number(amount))} {symbol}
+            {toLocalString(selectedMapUnit.amount / 10 ** decimals! + Number(amount || '0'))} {symbol}
           </InfoPanel.Item>
-            {unusedRent > 0 && (
-            <InfoPanel.Item label="Previous rental">
+          {unusedRent > 0 && (
+            <InfoPanel.Item label="Unused rental credit">
               {toLocalString(unusedRent / 10 ** (decimals || 0))} {symbol}
             </InfoPanel.Item>
-            )}
+          )}
+          <InfoPanel.Item label="Rental period">
+            1 year
+          </InfoPanel.Item>
           <InfoPanel.Item label="Total fee">
             {toLocalString(requiredFee / 10 ** decimals!)} {symbol}
           </InfoPanel.Item>
