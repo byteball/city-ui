@@ -2,7 +2,7 @@ import cn from "classnames";
 import { FC, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { generateLink, toLocalString } from "@/lib";
-import { setWalletAddress, useSettingsStore } from "@/store/settings-store";
+import { useSettingsStore } from "@/store/settings-store";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -13,7 +13,7 @@ import { mapUnitsByCoordinatesSelector } from "@/store/selectors/mapUnitsSelecto
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { ICoordinates } from "@/global";
 import { InfoPanel } from "../ui/_info-panel";
-import { use } from "matter";
+
 import moment from "moment";
 
 interface IRentPlotDialogProps {
@@ -55,7 +55,7 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
         putBtnRef.current?.click();
       }
     },
-    [putBtnRef.current]
+    []
   );
 
   let error = useMemo(() => {
@@ -70,13 +70,14 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   const state = useAaStore((state) => state.state);
   const city = state.city_city!;
 
-  const count_bought = city.total_bought / plot_price;
-  const rented_amount = selectedMapUnit.type === "plot" ? selectedMapUnit?.rented_amount ?? 0 : 0;
+  const countBought = city.total_bought / plot_price;
+  const rentedAmount = selectedMapUnit.type === "plot" ? selectedMapUnit?.rented_amount ?? 0 : 0; 
+  const amountInSmallestUnit = Number(amount) * 10 ** decimals!;
 
   const total_working =
     city.total_land +
     city.total_rented +
-    Number(amount) * 10 ** decimals! -
+    amountInSmallestUnit -
     (selectedMapUnit.type === "plot" ? selectedMapUnit.rented_amount ?? 0 : 0);
 
   const timestamp = moment.utc().unix();
@@ -84,33 +85,42 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
 
   const year = 365 * 24 * 3600;
 
-  const count_buys_next_year = (year / elapsed) * count_bought;
+  const countBuysNextYear = (year / elapsed) * countBought;
 
   // income is overestimated if rental amount is large while $plot.amount is small, then the $plot.amount would be used in full before the year expires
-  const income_from_one_buy = (2 * plot_price * matching_probability * Number(amount) * 10 ** decimals!) / total_working;
+  const incomeFromOneBuy = (2 * plot_price * matching_probability * amountInSmallestUnit) / total_working;
 
-  const year_income = income_from_one_buy * count_buys_next_year;
+  const yearIncome = incomeFromOneBuy * countBuysNextYear;
 
-  const rental_fee = Math.ceil(rental_surcharge_factor * year_income);
+  const rental_fee = Math.ceil(rental_surcharge_factor * yearIncome);
 
   let unused_rent = 0;
 
   if (selectedMapUnit.type === "plot") {
-    const rented_amount = selectedMapUnit.rented_amount ?? 0;
     const rental_expiry_ts = selectedMapUnit.rental_expiry_ts ?? 0;
 
-    if (Number(amount) * 10 ** decimals! < (selectedMapUnit.rented_amount ?? 0)) {
-      error = "Rental amount cannot be decreased";
-    } else if (timestamp < rental_expiry_ts) {
-      unused_rent = Math.floor((rented_amount * (rental_expiry_ts - timestamp)) / year);
+    if (timestamp < rental_expiry_ts) {
+      unused_rent = Math.floor((rentedAmount * (rental_expiry_ts - timestamp)) / year);
+
+      if (amountInSmallestUnit && (amountInSmallestUnit < (selectedMapUnit.rented_amount ?? 0))) {
+        error =
+          "Rental amount cannot be decreased. Min value is " +
+          toLocalString((selectedMapUnit.amount ?? 0) / 10 ** decimals!) +
+          " " +
+          symbol;
+      }
     }
   }
 
-  const required_fee = (rental_fee - unused_rent) * 1.01;
+  const required_fee = (rental_fee * 1.01 - unused_rent);
 
+  if(required_fee > amountInSmallestUnit) {
+    error = "Not enough paid for rental fee";
+  }
+  
   const url = generateLink({
     amount: required_fee,
-    data: { rent: 1, plot_num: 8, rented_amount: Number(amount) * 10 ** (decimals ?? 0) },
+    data: { rent: 1, plot_num: selectedMapUnit.plot_num, rented_amount: amountInSmallestUnit },
     from_address: walletAddressFromStore!,
     aa: appConfig.AA_ADDRESS,
     asset: asset!,
@@ -120,15 +130,9 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Rent additional land around your plot</DialogTitle>
-          {/* <DialogDescription>
-            <a href="https://obyte.org/#download" target="_blank" className="text-link">
-              Install Obyte wallet
-            </a>{" "}
-            if you don't have one yet, and copy/paste your address here.{" "}
-          </DialogDescription> */}
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="flex flex-col space-y-2">
@@ -139,7 +143,7 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
 
         <InfoPanel>
           <InfoPanel.Item label="Rented amount">
-            {toLocalString(amount + rented_amount / 10 ** decimals!)} {symbol}
+            {toLocalString(amount + rentedAmount / 10 ** decimals!)} {symbol}
           </InfoPanel.Item>
           <InfoPanel.Item label="Total amount">
             {toLocalString(selectedMapUnit.amount / 10 ** decimals! + Number(amount))} {symbol}
@@ -155,10 +159,10 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
         <DialogFooter>
           <div className="w-full">
             <QRButton ref={putBtnRef} disabled={!inited || !!error || !amount} className="w-full" href={url}>
-              Send {toLocalString(required_fee / 10 ** decimals!)} {symbol}
+              Send {required_fee > 0 ? toLocalString(required_fee / 10 ** decimals!) : ''} {symbol}
             </QRButton>
             <div className="mt-2 text-gray-400 text-foreground">
-              <small>We added 1% to reduce the risk of a debounce. It will be back.</small>
+              <small>The fee might slightly change. We added 1%, the excess will be returned to you.</small>
             </div>
           </div>
         </DialogFooter>
