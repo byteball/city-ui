@@ -157,6 +157,9 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
 
         {unusedRent > 0 && (
           <InfoPanel className="mb-2 text-sm text-gray-300">
+            {selectedMapUnit.type === "plot" && selectedMapUnit?.rented_amount && <InfoPanel.Item label="Previous rental">
+              {toLocalString((selectedMapUnit.type === "plot" ? selectedMapUnit?.rented_amount ?? 0 : 0 ) / 10 ** (decimals || 0))} {symbol}
+            </InfoPanel.Item>}
             <InfoPanel.Item label="Unused rental">
               {toLocalString(unusedRent / 10 ** (decimals || 0))} {symbol}
             </InfoPanel.Item>
@@ -178,7 +181,7 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
             {toLocalString(Number(amount || "0"))} {symbol}
           </InfoPanel.Item>
           <InfoPanel.Item label="Total owned (inc. rented)">
-            {toLocalString((selectedMapUnit.amount + +amount ) / 10 ** decimals!)} {symbol}
+            {toLocalString(((selectedMapUnit.amount ) / 10 ** decimals!) + Number(amount))} {symbol}
           </InfoPanel.Item>
           {amount && Number(amount) > 0 && (
             <>
