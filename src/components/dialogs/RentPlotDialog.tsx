@@ -87,13 +87,13 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   if (requiredFee > amountInSmallestUnit) {
     error = "Not enough paid for rental fee";
   }
-  
+
   const url = generateLink({
     amount: requiredFee,
-    data: { 
-      rent: 1, 
-      plot_num: selectedMapUnit.plot_num, 
-      rented_amount: amountInSmallestUnit
+    data: {
+      rent: 1,
+      plot_num: selectedMapUnit.plot_num,
+      rented_amount: amountInSmallestUnit,
     },
     from_address: walletAddressFromStore!,
     aa: appConfig.AA_ADDRESS,
