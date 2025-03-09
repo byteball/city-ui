@@ -62,4 +62,3 @@ export const BuyNewPlotForm: FC = memo(() => {
     </div>
   );
 });
-

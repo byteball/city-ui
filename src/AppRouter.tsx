@@ -19,4 +19,3 @@ export const AppRouter: FC<IAppRouterProps> = () => (
     </Route>
   </Routes>
 );
-
