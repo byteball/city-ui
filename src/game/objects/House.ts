@@ -65,4 +65,3 @@ export class House {
     return this.houseImage;
   }
 }
-
