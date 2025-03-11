@@ -42,7 +42,7 @@ export const UserHouses: FC<IUserHousesProps> = ({ address }) => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <InfoPanel>
+                <InfoPanel labelAnimated>
                   <InfoPanel.Item label="Amount">
                     <TextScramble className="inline">{toLocalString(amount / 10 ** decimals!)}</TextScramble>{" "}
                     <small>

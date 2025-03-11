@@ -1,15 +1,25 @@
-import { FC, ReactNode } from "react";
+import { Children, cloneElement, FC, isValidElement, ReactNode } from "react";
 import cn from "classnames";
 
 import { Skeleton } from "./skeleton";
+import { TextScramble } from "./text-scramble";
 
 interface InfoPanelProps {
   children: ReactNode;
   className?: string;
+  labelAnimated?: boolean;
 }
 
-const InfoPanel: FC<InfoPanelProps> & { Item: typeof InfoPanelItem } = ({ children, className = "" }) => {
-  return <div className={cn("grid gap-1 mb-4", className)}>{children}</div>;
+const InfoPanel: FC<InfoPanelProps> & { Item: typeof InfoPanelItem } = ({ children, className = "", labelAnimated = false }) => {
+  const enhancedChildren = Children.map(children, (child) => {
+    if (isValidElement<{ labelAnimated?: boolean }>(child)) {
+      return cloneElement(child, { labelAnimated });
+    }
+
+    return child;
+  });
+
+  return <div className={cn("grid gap-1 mb-4", className)}>{enhancedChildren}</div>;
 };
 
 interface InfoPanelItemProps {
@@ -17,12 +27,15 @@ interface InfoPanelItemProps {
   children: ReactNode;
   tooltip?: ReactNode;
   loading?: boolean;
+  labelAnimated?: boolean;
 }
 
-const InfoPanelItem: FC<InfoPanelItemProps> = ({ label, children, loading = false }) => {
+const InfoPanelItem: FC<InfoPanelItemProps> = ({ label, children, labelAnimated = false, loading = false }) => {
+  const LabelWrapper = labelAnimated ? TextScramble : "div";
+
   return (
     <div className="flex items-center space-x-2">
-      <div>{label}: </div>
+      <LabelWrapper>{`${label}: `}</LabelWrapper>
       {loading ? <Skeleton className="h-[1.125rem] w-[150px]" /> : <div>{children}</div>}
     </div>
   );

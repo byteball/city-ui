@@ -40,7 +40,7 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <InfoPanel>
+                <InfoPanel labelAnimated>
                   <InfoPanel.Item label="Total amount">
                     <TextScramble className="inline">{toLocalString((amount + rented_amount) / 10 ** decimals!)}</TextScramble> {" "}
                     <small><TextScramble className="inline">{symbol!}</TextScramble>{" "}</small>
