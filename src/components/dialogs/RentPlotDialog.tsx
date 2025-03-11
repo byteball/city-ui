@@ -95,10 +95,6 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
 
   // Проверяем, не продлевает ли пользователь аренду на ту же сумму
   const isSameAmount = Math.abs(Number(amount) - rentedAmount / 10 ** decimals!) < 0.001;
-
-  // Рассчитываем дату окончания новой аренды
-  const newRentalExpiryTs = timestamp + year;
-  const newRentalExpiryFormatted = moment.unix(newRentalExpiryTs).format("YYYY-MM-DD HH:mm");
   
   // Рассчитываем увеличение площади для поиска соседей
   const currentPlotArea = selectedMapUnit.amount + rentedAmount;
