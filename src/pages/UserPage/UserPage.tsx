@@ -7,6 +7,7 @@ import { useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 import { UserStats } from "./UserStats";
 import { UserPlots } from "./UserPlots";
+import appConfig from "@/appConfig";
 
 export default () => {
   const { address } = useParams<{ address: string }>();
@@ -22,7 +23,7 @@ export default () => {
     <PageLayout title="User page" loading={loading}>
       <InfoPanel>
         <InfoPanel.Item label="Address" loading={loading}>
-          <a className="text-link" target="_blank" href={`https://testnetexplorer.obyte.org/address/${address}`}>
+          <a className="text-link" target="_blank" href={`https://${appConfig.TESTNET ? 'testnet' : ''}explorer.obyte.org/address/${address}`}>
             {address}
           </a>
         </InfoPanel.Item>
