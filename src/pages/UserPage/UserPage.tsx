@@ -8,6 +8,7 @@ import { useSettingsStore } from "@/store/settings-store";
 import { UserStats } from "./UserStats";
 import { UserPlots } from "./UserPlots";
 import appConfig from "@/appConfig";
+import { UserHouses } from "./UserHouses";
 
 export default () => {
   const { address } = useParams<{ address: string }>();
@@ -32,6 +33,8 @@ export default () => {
       <UserStats address={address} />
 
       <UserPlots address={address} />
+
+      <UserHouses address={address} />
     </PageLayout>
   );
 };
