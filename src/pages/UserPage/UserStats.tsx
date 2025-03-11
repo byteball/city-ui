@@ -36,8 +36,8 @@ export const UserStats: FC<IUserStatsProps> = ({ address }) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <TextScramble className="text-2xl font-bold">{balanceInUSDView}</TextScramble>
-          <TextScramble className="text-xs text-muted-foreground">{`${balanceView} ${symbol}`}</TextScramble>
+          <TextScramble className="text-2xl font-bold">{`${balanceView} ${symbol}`}</TextScramble>
+          <TextScramble className="text-xs text-muted-foreground">{balanceInUSDView}</TextScramble>
         </CardContent>
       </Card>
 
