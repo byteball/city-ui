@@ -18,20 +18,15 @@ export const SelectedUnitMapCard = () => {
   const selectedMapUnitCoordinates = useSettingsStore((state) => state.selectedMapUnit);
 
   const [selectedMapUnit] = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates as ICoordinates | null));
-
   const stateLoaded = useAaStore((state) => state.loaded);
-  const symbol = useSettingsStore((state) => state.symbol);
-  const asset = useSettingsStore((state) => state.asset);
-  const decimals = useSettingsStore((state) => state.decimals);
-  const inited = useSettingsStore((state) => state.inited);
-  const walletAddress = useSettingsStore((state) => state.walletAddress);
+  const { symbol, asset, decimals, inited, walletAddress } = useSettingsStore((state) => state);
 
   const loading = !inited || !stateLoaded || !asset || decimals === null;
 
   const decimalsPow = 10 ** (decimals ?? 0);
   const rented_amount = selectedMapUnit?.type === "plot" ? selectedMapUnit.rented_amount ?? 0 : 0;
   const formattedTotalAmount = toLocalString((selectedMapUnit?.amount + rented_amount) / decimalsPow);
-  const formattedRentedAmount = rented_amount ? toLocalString(rented_amount / decimalsPow) : '';
+  const formattedRentedAmount = rented_amount ? toLocalString(rented_amount / decimalsPow) : "";
 
   const owner = selectedMapUnit?.owner;
 
@@ -46,7 +41,7 @@ export const SelectedUnitMapCard = () => {
         <CardContent>
           <InfoPanel>
             <InfoPanel.Item label="Amount" loading={loading}>
-              {formattedTotalAmount} {symbol} {rented_amount ? `(inc. ${formattedRentedAmount} rented ${symbol})` : ''}
+              {formattedTotalAmount} {symbol} {rented_amount ? `(inc. ${formattedRentedAmount} rented ${symbol})` : ""}
             </InfoPanel.Item>
 
             <InfoPanel.Item label="Coordinates" loading={loading}>
