@@ -105,7 +105,7 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   const newShare = newPlotArea / (city.total_land + city.total_rented - rentedAmount + amountInSmallestUnit);
   
   // Расчет дистанции по формуле из контракта
-  const isReferrerMatch = "ref_plot_num" in selectedMapUnit ? 1 : 0; // Предполагаем, что нет реферальной связи для простоты
+  const isReferrerMatch = "ref_plot_num" in selectedMapUnit ? 1 : 0;
   const oldDistance = Math.sqrt(1e12 * matching_probability * (oldShare + isReferrerMatch * referral_boost)) / 2;
   const newDistance = Math.sqrt(1e12 * matching_probability * (newShare + isReferrerMatch * referral_boost)) / 2;
   
