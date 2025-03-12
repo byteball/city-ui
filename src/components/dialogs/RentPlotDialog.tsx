@@ -1,4 +1,5 @@
 import { FC, KeyboardEvent, useCallback, useMemo, useRef, useState } from "react";
+import moment from "moment";
 
 import { generateLink, toLocalString } from "@/lib";
 import { useSettingsStore } from "@/store/settings-store";
@@ -6,14 +7,13 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { QRButton } from "../ui/_qr-button";
-import appConfig from "@/appConfig";
 import { getCountOfDecimals } from "@/lib/getCountOfDecimals";
 import { mapUnitsByCoordinatesSelector } from "@/store/selectors/mapUnitsSelector";
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { ICoordinates } from "@/global";
 import { InfoPanel } from "../ui/_info-panel";
 
-import moment from "moment";
+import appConfig from "@/appConfig";
 
 interface IRentPlotDialogProps {
   children: React.ReactNode;
@@ -173,9 +173,6 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
           <InfoPanel.Item label="Rental fee">
             {isCoveredByUnusedRent ? "Covered by unused credit" : `${toLocalString(requiredFee / 10 ** decimals!)} ${symbol}`}
           </InfoPanel.Item>
-          {/* <InfoPanel.Item label="Total rented">
-            {toLocalString(Number(amount || "0"))} {symbol}
-          </InfoPanel.Item> */}
           <InfoPanel.Item label="Total balance (inc. rented)">
             {toLocalString(((selectedMapUnit.amount ) / 10 ** decimals!) + Number(amount))} {symbol}
           </InfoPanel.Item>
@@ -194,15 +191,6 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
         <div className="my-1 text-sm text-gray-400">
           <p>Renting land increases your plot's effective area, extending the range for finding neighboring plots to build houses.</p>
         </div>
-
-        {isSameAmount && (
-          <div className="mb-2 text-sm text-amber-500">
-            <p>
-              You're renewing the same rental amount. This will extend your rental period by 1 year from today. 
-              The rental fee is calculated based on current game conditions and may differ from your previous payment.
-            </p>
-          </div>
-        )}
 
         <DialogFooter>
           <div className="w-full">
