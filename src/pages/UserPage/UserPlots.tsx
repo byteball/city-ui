@@ -26,6 +26,8 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
   const changePlot = useCallback(({ x, y }: { x: number; y: number }) => {
     useSettingsStore.getState().setSelectedMapUnit({ x: asNonNegativeNumber(x), y: asNonNegativeNumber(y) });
   }, []);
+  
+  const decimalsFactor = 10 ** decimals!;
 
   return (
     <div className="mt-8">
@@ -42,14 +44,14 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
               <CardContent>
                 <InfoPanel labelAnimated>
                   <InfoPanel.Item label="Total amount">
-                    <TextScramble className="inline">{toLocalString((amount + rented_amount) / 10 ** decimals!)}</TextScramble> {" "}
+                    <TextScramble className="inline">{toLocalString((amount + rented_amount) / decimalsFactor)}</TextScramble> {" "}
                     <small><TextScramble className="inline">{symbol!}</TextScramble>{" "}</small>
                   </InfoPanel.Item>
                   <InfoPanel.Item label="Rented">
-                  <TextScramble className="inline">{toLocalString((rented_amount) / 10 ** decimals!)}</TextScramble> {" "}
+                  <TextScramble className="inline">{toLocalString((rented_amount) / decimalsFactor)}</TextScramble> {" "}
                     <small><TextScramble className="inline">{symbol!}</TextScramble>{" "}</small>
                   </InfoPanel.Item>
-                  <InfoPanel.Item label="Created at"><TextScramble className="inline">{moment(ts * 1000).format("ll")}</TextScramble></InfoPanel.Item>
+                  <InfoPanel.Item label="Created on"><TextScramble className="inline">{moment(ts * 1000).format("ll")}</TextScramble></InfoPanel.Item>
                 </InfoPanel>
               </CardContent>
             </Card>

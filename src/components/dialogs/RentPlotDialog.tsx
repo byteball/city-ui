@@ -171,7 +171,7 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
         </div>
 
         <InfoPanel>
-          <InfoPanel.Item label="Expires">1 year</InfoPanel.Item>
+          <InfoPanel.Item label="Expires in">1 year</InfoPanel.Item>
           <InfoPanel.Item label="Rental fee">
             {isCoveredByUnusedRent ? "Covered by unused credit" : `${toLocalString(requiredFee / decimalsFactor)} ${symbol}`}
           </InfoPanel.Item>

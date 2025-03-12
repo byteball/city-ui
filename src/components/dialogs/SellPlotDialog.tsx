@@ -1,9 +1,8 @@
-import cn from "classnames";
-import { FC, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FC, KeyboardEvent, useCallback, useMemo, useRef, useState } from "react";
 
 import { generateLink, toLocalString } from "@/lib";
-import { setWalletAddress, useSettingsStore } from "@/store/settings-store";
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { useSettingsStore } from "@/store/settings-store";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { QRButton } from "../ui/_qr-button";
@@ -22,6 +21,8 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
   const putBtnRef = useRef<HTMLButtonElement>(null);
 
   const { symbol, decimals, inited } = useSettingsStore();
+
+  const decimalsFactor = 10 ** decimals!;
 
   const walletAddressFromStore = useSettingsStore((state) => state.walletAddress);
   const selectedMapUnitCoordinates = useSettingsStore((state) => state.selectedMapUnit);
@@ -65,8 +66,8 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
   });
 
   const error = useMemo(() => {
-    if (Number(amount) && Number(amount) * 10 ** decimals! < selectedMapUnit.amount) {
-      return `Amount should be greater than ${toLocalString(selectedMapUnit.amount / 10 ** decimals!)}`;
+    if (Number(amount) && Number(amount) * decimalsFactor < selectedMapUnit.amount) {
+      return `Amount should be greater than ${toLocalString(selectedMapUnit.amount / decimalsFactor)}`;
     }
 
     return false;

@@ -49,7 +49,7 @@ export const UserHouses: FC<IUserHousesProps> = ({ address }) => {
                       <TextScramble className="inline">{symbol!}</TextScramble>{" "}
                     </small>
                   </InfoPanel.Item>
-                  <InfoPanel.Item label="Created at">
+                  <InfoPanel.Item label="Created on">
                     <TextScramble className="inline">{moment(ts * 1000).format("ll")}</TextScramble>
                   </InfoPanel.Item>
                 </InfoPanel>
