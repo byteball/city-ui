@@ -65,34 +65,32 @@ export const SelectedUnitMapCard = () => {
               {moment.unix(selectedMapUnit?.ts).format("YYYY-MM-DD HH:mm")}
             </InfoPanel.Item>
 
-            {loading && <Skeleton className="w-full h-[50px]" />}
-
-            {owner && (
-              <InfoPanel.Item label="Owner" loading={loading || !owner}>
-                <Link to={`/user/${owner}`} className="text-blue-400 block truncate max-w-[200px]">
-                  {selectedMapUnit?.username} - {owner}
-                </Link>
-              </InfoPanel.Item>
-            )}
+            <InfoPanel.Item label="Owner" loading={loading || !owner}>
+              <Link to={`/user/${owner}`} className="text-blue-400 block truncate max-w-[200px]">
+                {selectedMapUnit?.username} - {owner}
+              </Link>
+            </InfoPanel.Item>
           </InfoPanel>
 
-          <div className="grid gap-2">
-            {owner === walletAddress && selectedMapUnit.type === "plot" ? (
-              <SellPlotDialog>
-                <Button variant="secondary" className="w-full">
-                  Sell plot
-                </Button>
-              </SellPlotDialog>
-            ) : null}
+          {loading ? <Skeleton className="w-full h-[80px] mt-2" /> : null}
 
-            {owner === walletAddress ? (
+          {(owner === walletAddress && !loading) && (
+            <div className="grid gap-2">
+              {selectedMapUnit.type === "plot" ? (
+                <SellPlotDialog>
+                  <Button variant="secondary" className="w-full">
+                    Sell plot
+                  </Button>
+                </SellPlotDialog>
+              ) : null}
+
               <RentPlotDialog>
                 <Button variant="secondary" className="w-full">
                   Rent additional land
                 </Button>
               </RentPlotDialog>
-            ) : null}
-          </div>
+            </div>
+          )}
         </CardContent>
       ) : (
         <CardContent className="text-primary">No plot selected</CardContent>
