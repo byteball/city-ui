@@ -121,7 +121,6 @@ interface ICityState {
 export interface IPlot extends ICoordinates {
   amount: NonNegativeNumber;
   sale_price: NonNegativeNumber;
-  rented_amount?: NonNegativeNumber;
   city: string;
   status: "pending" | "land";
   type: "plot";
