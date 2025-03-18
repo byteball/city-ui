@@ -74,7 +74,7 @@ export const SelectedUnitMapCard = () => {
 
           {loading ? <Skeleton className="w-full h-[80px] mt-2" /> : null}
 
-          {(owner === walletAddress && !loading) && (
+          {(owner === walletAddress && !loading && selectedMapUnit?.type === "plot") && (
             <div className="grid gap-2">
               {selectedMapUnit.type === "plot" ? (
                 <SellPlotDialog>
