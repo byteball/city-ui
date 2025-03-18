@@ -16,6 +16,7 @@ export const Layout: FC<ILayoutProps> = () => {
   return (
     <div className="min-w-full min-h-full bg-background-dark">
       <Toaster />
+
       <div className="mb-8">
         <Header />
       </div>

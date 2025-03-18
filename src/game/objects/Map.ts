@@ -6,10 +6,12 @@ import Phaser from "phaser";
 import { IMapUnit, IRoad } from "@/global";
 import { asNonNegativeNumber } from "@/lib/asNonNegativeNumber";
 import { useSettingsStore } from "@/store/settings-store";
+import { defaultAaParams, useAaStore } from "@/store/aa-store";
 
 import { Plot } from "./Plot";
 import { Road } from "./Road";
 
+import { getMapUnitSize } from "@/aaLogic/getMapUnitSize";
 import appConfig from "@/appConfig";
 import { toast } from "@/hooks/use-toast";
 import { House } from "./House";
@@ -20,7 +22,7 @@ export class Map {
   private scene: Phaser.Scene;
   private roadsData: IRoad[];
   private unitsData: IMapUnit[];
-  private allCitySupply: number;
+  private totalSize: number;
   private selectedMapUnit: Plot | House | null = null;
   private MapUnits: (Plot | House)[] = [];
 
@@ -28,7 +30,12 @@ export class Map {
     this.scene = scene;
     this.roadsData = roadsData;
     this.unitsData = unitsData;
-    this.allCitySupply = this.unitsData.reduce((sum, house) => sum + house.amount, 0);
+
+    if (unitsData.length === 0) {
+      this.totalSize = 1; // Or handle empty data explicitly
+    } else {
+      this.totalSize = this.unitsData.reduce((sum, unit) => sum + getMapUnitSize(unit), 0);
+    }
   }
 
   public createMap() {
@@ -73,11 +80,17 @@ export class Map {
 
   private createMapUnits(MAP_WIDTH: number, MAP_HEIGHT: number) {
     const thickness = asNonNegativeNumber(ROAD_THICKNESS);
+    const state = useAaStore.getState().state;
+
+    const referralBoost = state.city_city?.referral_boost ?? state.variables?.referral_boost ?? defaultAaParams.referral_boost;
 
     this.unitsData.forEach((unitData) => {
       // 1) Вычисляем размер участка
-      const { amount, x, y, type } = unitData;
-      const plotFraction = (amount / this.allCitySupply) * 0.1; // TODO: Учитывать referral_boost
+      const { x, y, type } = unitData;
+      const totalAmount = getMapUnitSize(unitData);
+
+      const plotFraction = (totalAmount / this.totalSize) * 0.1 * (1 + referralBoost);
+
       const plotArea = plotFraction * MAP_WIDTH * MAP_HEIGHT;
       const plotSize = Math.sqrt(plotArea);
 

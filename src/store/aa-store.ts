@@ -9,7 +9,7 @@ import { asNonNegativeNumber } from "@/lib/asNonNegativeNumber";
 
 import appConfig from "@/appConfig";
 
-const defaultAaParams: IAaParams = {
+export const defaultAaParams: IAaParams = {
   matching_probability: asNonNegativeNumber(0.05),
   plot_price: asNonNegativeNumber(1000e9),
   referral_boost: asNonNegativeNumber(0.1),
@@ -29,6 +29,7 @@ export interface ICityAaState extends IAaStateVars {
     governance_aa?: string;
   };
   state?: ICityState;
+  city_city?: ICity;
 }
 
 export interface AaStoreState {

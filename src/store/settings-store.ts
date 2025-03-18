@@ -1,3 +1,4 @@
+import obyte from "obyte";
 import { create, StateCreator } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
@@ -8,7 +9,7 @@ import client from "@/services/obyteWsClient";
 import { ICityAaState } from "./aa-store";
 
 const LOCAL_STORAGE_KEY = "settings-store";
-const STORAGE_VERSION = 4; // change this to invalidate old persisted data
+const STORAGE_VERSION = 5; // change this to invalidate old persisted data
 
 interface SettingsState {
   firstInit: () => void;
@@ -18,7 +19,9 @@ interface SettingsState {
   decimals: number | null;
   governanceAa: string | null;
   refData: IRefData | null;
+  walletAddress: string | null;
   setRefData: (refData: IRefData) => void;
+  setWalletAddress: (walletAddress: string) => void;
   selectedMapUnit?: { x: NonNegativeNumber; y: NonNegativeNumber };
   setSelectedMapUnit: (coordinates?: ICoordinates | null) => void;
 }
@@ -51,9 +54,15 @@ const storeCreator: StateCreator<SettingsState> = (set, get) => ({
   governanceAa: null,
   refData: null,
   selectedMapUnit: undefined,
+  walletAddress: null,
   setSelectedMapUnit: (coordinates) => {
     if (!coordinates) return set({ selectedMapUnit: undefined });
     set({ selectedMapUnit: { x: coordinates.x, y: coordinates.y } });
+  },
+  setWalletAddress: (walletAddress: string) => {
+    if (!obyte.utils.isValidAddress(walletAddress)) throw new Error("Invalid wallet address");
+    console.log("log: set wallet address", walletAddress);
+    set({ walletAddress });
   },
   setRefData: (refData: IRefData) => set({ refData }),
 });
@@ -82,4 +91,6 @@ export const useSettingsStore = create<SettingsState>()(
 export const initializeSettings = (): void => useSettingsStore.getState().firstInit();
 
 export const setSelectedMapUnit = (coordinates?: ICoordinates | null): void => useSettingsStore.getState().setSelectedMapUnit(coordinates);
+
+export const setWalletAddress = (address: string): void => useSettingsStore.getState().setWalletAddress(address);
 
