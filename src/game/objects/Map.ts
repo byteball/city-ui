@@ -30,7 +30,12 @@ export class Map {
     this.scene = scene;
     this.roadsData = roadsData;
     this.unitsData = unitsData;
-    this.totalSize = this.unitsData.reduce((sum, unit) => sum + getMapUnitSize(unit), 0);
+
+    if (unitsData.length === 0) {
+      this.totalSize = 1; // Or handle empty data explicitly
+    } else {
+      this.totalSize = this.unitsData.reduce((sum, unit) => sum + getMapUnitSize(unit), 0);
+    }
   }
 
   public createMap() {
