@@ -1,5 +1,6 @@
 import obyte from "obyte";
 import { Navigate, useParams } from "react-router";
+import { FC } from 'react';
 
 import { PageLayout } from "@/components/layout/page-layout";
 import { InfoPanel } from "@/components/ui/_info-panel";
@@ -10,7 +11,9 @@ import { UserPlots } from "./UserPlots";
 import appConfig from "@/appConfig";
 import { UserHouses } from "./UserHouses";
 
-export default () => {
+interface UserPageProps { }
+
+const UserPage: FC<UserPageProps> = () => {
   const { address } = useParams<{ address: string }>();
   const inited = useSettingsStore((state) => state.inited);
   const stateLoaded = useAaStore((state) => state.loaded);
@@ -18,6 +21,7 @@ export default () => {
   if (!address || !obyte.utils.isValidAddress(address)) {
     return <Navigate to="/not-found" replace />;
   }
+
   const loading = !inited || !stateLoaded;
 
   return (
@@ -39,3 +43,4 @@ export default () => {
   );
 };
 
+export default UserPage;
