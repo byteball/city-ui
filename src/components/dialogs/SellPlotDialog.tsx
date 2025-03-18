@@ -53,7 +53,7 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
         putBtnRef.current?.click();
       }
     },
-    [putBtnRef.current]
+    [putBtnRef]
   );
 
   const url = generateLink({
