@@ -1,4 +1,6 @@
 type NonNegativeNumber = number & { __brand: "NonNegativeNumber" };
+type paramName = "matching_probability" | "plot_price" | 'referral_boost' | 'randomness_aa' | 'randomness_price' | 'p2p_sale_fee' | 'shortcode_sale_fee' | 'rental_surcharge_factor' | 'followup_reward_share' | 'attestors' | 'new_city' | 'mayor';
+
 
 interface ICoordinates {
   x: NonNegativeNumber;
