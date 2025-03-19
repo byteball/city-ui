@@ -9,7 +9,6 @@ const getAaState = (state: AaStoreState) => state.state;
 
 // uniq -> type + x + y
 export const mapUnitsSelector = createSelector([getAaState], (aaState: ICityAaState): IMapUnit[] => {
-  console.log("selector", aaState);
   if (!aaState) return [];
 
   return Object.entries(aaState)
