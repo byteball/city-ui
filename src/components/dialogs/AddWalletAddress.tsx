@@ -37,7 +37,7 @@ export const AddWalletAddress: FC<IAddWalletAddressProps> = ({ children }) => {
     [setAddress]
   );
 
-  const handleKeyDawn = useCallback(
+  const handleKeyDown = useCallback(
     (_e: KeyboardEvent<HTMLInputElement>) => {
       saveBtnRef.current?.click();
     },
@@ -83,7 +83,7 @@ export const AddWalletAddress: FC<IAddWalletAddressProps> = ({ children }) => {
               id="address"
               className={cn({ "border-red-800": address && !validAddress })}
               autoComplete="false"
-              onKeyDown={handleKeyDawn}
+              onKeyDown={handleKeyDown}
               onChange={handleChange}
               value={address || ""}
             />

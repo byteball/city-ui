@@ -46,7 +46,7 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
     [setAmount, decimals]
   );
 
-  const handleKeyDawn = useCallback(
+  const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Enter") {
         e.preventDefault();
@@ -89,7 +89,7 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
         <div className="grid gap-4 py-4">
           <div className="flex flex-col space-y-2">
             <Label htmlFor="amount">Amount</Label>
-            <Input id="amount" error={error} onKeyDown={handleKeyDawn} suffix={symbol} onChange={handleChange} value={amount} />
+            <Input id="amount" error={error} onKeyDown={handleKeyDown} suffix={symbol} onChange={handleChange} value={amount} />
           </div>
         </div>
         <DialogFooter>
