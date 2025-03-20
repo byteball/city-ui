@@ -20,6 +20,7 @@ export const defaultAaParams: IAaParams = {
   rental_surcharge_factor: asNonNegativeNumber(1),
   followup_reward_share: asNonNegativeNumber(0.1),
   attestors: "",
+  mayor: "",
 };
 
 export interface ICityAaState extends IAaStateVars {
@@ -32,8 +33,10 @@ export interface ICityAaState extends IAaStateVars {
   city_city?: ICity;
 }
 
+export interface IGovernanceAaStateVars extends IAaStateVars {}
 export interface AaStoreState {
   state: ICityAaState;
+  governanceState: IGovernanceAaStateVars;
   loading: boolean;
   loaded: boolean;
   error: string | null;
@@ -42,6 +45,7 @@ export interface AaStoreState {
 
 const storeCreator: StateCreator<AaStoreState> = (set, _get) => ({
   state: {},
+  governanceState: {},
   loading: false,
   loaded: false,
   error: null,
@@ -53,7 +57,10 @@ const storeCreator: StateCreator<AaStoreState> = (set, _get) => ({
     try {
       const aaState = (await client.api.getAaStateVars({ address: appConfig.AA_ADDRESS })) as ICityAaState;
 
-      set({ state: aaState, loading: false, loaded: true, error: null });
+      const governanceAa = aaState.constants?.governance_aa;
+      const governanceState = (await client.api.getAaStateVars({ address: governanceAa! })) as ICityAaState;
+
+      set({ state: aaState, governanceState, loading: false, loaded: true, error: null });
 
       console.log("log: loaded AA store", import.meta.env.DEV ? aaState : "");
     } catch (err) {
@@ -106,6 +113,8 @@ export const useAaParams = () =>
         rental_surcharge_factor,
         followup_reward_share,
         attestors,
-      };
+        mayor: city?.mayor ?? defaultAaParams.mayor,
+      } as { [paramName: string]: number | string };
     })
   );
+
