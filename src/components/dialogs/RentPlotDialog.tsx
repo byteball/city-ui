@@ -58,7 +58,7 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   const { plot_price, matching_probability, rental_surcharge_factor, referral_boost } = useAaParams();
   const state = useAaStore((state) => state.state);
   const city = state.city_city!;
-  const countBought = city.total_bought / plot_price;
+  const countBought = city.total_bought / +plot_price;
   const rentedAmount = selectedMapUnit.type === "plot" ? selectedMapUnit?.rented_amount ?? 0 : 0;
   const amountInSmallestUnit = Number(amount) * decimalsFactor;
   const totalWorking =
@@ -68,9 +68,9 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   const year = 365 * 24 * 3600;
   const countBuysNextYear = (year / elapsed) * countBought;
 
-  const incomeFromOneBuy = (2 * plot_price * matching_probability * amountInSmallestUnit) / totalWorking;
+  const incomeFromOneBuy = (2 * +plot_price * +matching_probability * amountInSmallestUnit) / totalWorking;
   const yearIncome = incomeFromOneBuy * countBuysNextYear;
-  const rental_fee = Math.ceil(rental_surcharge_factor * yearIncome);
+  const rental_fee = Math.ceil(+rental_surcharge_factor * yearIncome);
   let unusedRent = 0;
   let rentalExpiryFormatted = "";
 
@@ -108,8 +108,8 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   
   // Calculate distance according to the contract formula
   const isReferrerMatch = "ref_plot_num" in selectedMapUnit ? 1 : 0;
-  const oldDistance = Math.sqrt(1e12 * matching_probability * (oldShare + isReferrerMatch * referral_boost)) / 2;
-  const newDistance = Math.sqrt(1e12 * matching_probability * (newShare + isReferrerMatch * referral_boost)) / 2;
+  const oldDistance = Math.sqrt(1e12 * +matching_probability * (oldShare + isReferrerMatch * +referral_boost)) / 2;
+  const newDistance = Math.sqrt(1e12 * +matching_probability * (newShare + isReferrerMatch * +referral_boost)) / 2;
   
   // Percentage distance increase
   const areaIncrease = (newPlotArea / currentPlotArea - 1) * 100;
