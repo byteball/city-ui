@@ -1,6 +1,16 @@
 type NonNegativeNumber = number & { __brand: "NonNegativeNumber" };
-type paramName = "matching_probability" | "plot_price" | 'referral_boost' | 'randomness_aa' | 'randomness_price' | 'p2p_sale_fee' | 'shortcode_sale_fee' | 'rental_surcharge_factor' | 'followup_reward_share' | 'attestors' | 'new_city' | 'mayor';
-
+type paramName =
+  | "matching_probability"
+  | "plot_price"
+  | "referral_boost"
+  | "randomness_aa"
+  | "randomness_price"
+  | "p2p_sale_fee"
+  | "shortcode_sale_fee"
+  | "rental_surcharge_factor"
+  | "followup_reward_share"
+  | "attestors"
+  | "mayor";
 
 interface ICoordinates {
   x: NonNegativeNumber;
@@ -52,6 +62,7 @@ interface IAaParams {
   rental_surcharge_factor: NonNegativeNumber;
   followup_reward_share: NonNegativeNumber;
   attestors: string;
+  mayor: string;
 }
 
 interface IAaStateVars {
@@ -240,3 +251,7 @@ export interface IRefData {
   ref_plot_num?: string;
 }
 
+export interface ITokenInfo {
+  symbol: string;
+  decimals: number;
+}
