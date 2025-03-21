@@ -18,13 +18,11 @@ export const GovernanceProfile: FC<IGovernanceProfileProps> = () => {
     const balanceView = `${toLocalString(userBalance / 10 ** decimals!)} ${symbol}`;
 
     return (
-        <Card>
-            <CardContent className="pt-6">
-                {walletAddress ? <ul>
-                    <li>Your voting address is <a target="_blank" className="text-link" href={`https://${appConfig.TESTNET ? 'testnet' : ''}explorer.obyte.org/address/${walletAddress}`} rel="noopener">{walletAddress}</a></li>
-                    <li>Locked balance: {balanceView}</li>
-                </ul> : <div className="font-medium">Please <AddWalletAddress><button className="underline">add your wallet address</button></AddWalletAddress></div>}
-            </CardContent>
-        </Card>
+        <div className="py-2">
+            {walletAddress ? <ul>
+                <li>Your voting address is <a target="_blank" className="text-link" href={`https://${appConfig.TESTNET ? 'testnet' : ''}explorer.obyte.org/address/${walletAddress}`} rel="noopener">{walletAddress}</a></li>
+                <li>Locked balance: {balanceView}</li>
+            </ul> : <div className="font-medium">Please <AddWalletAddress><button className="underline">add your wallet address</button></AddWalletAddress></div>}
+        </div>
     )
 }
