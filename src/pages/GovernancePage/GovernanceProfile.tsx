@@ -1,7 +1,6 @@
 import { FC } from "react"
 
 import { AddWalletAddress } from "@/components/dialogs/AddWalletAddress";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { useSettingsStore } from "@/store/settings-store";
 import { useAaStore } from "@/store/aa-store";
@@ -15,14 +14,23 @@ interface IGovernanceProfileProps { };
 export const GovernanceProfile: FC<IGovernanceProfileProps> = () => {
     const { symbol, decimals, walletAddress } = useSettingsStore((state) => state);
     const userBalance = useAaStore(state => userBalanceSelector(state, walletAddress));
-    const balanceView = `${toLocalString(userBalance / 10 ** decimals!)} ${symbol}`;
+    const formattedBalance = `${toLocalString(userBalance / (10 ** decimals!))} ${symbol}`;
+    const explorerUrl = walletAddress ? `https://${appConfig.TESTNET ? 'testnet.' : ''}explorer.obyte.org/address/${walletAddress}` : '';
 
     return (
         <div className="py-2">
-            {walletAddress ? <ul>
-                <li>Your voting address is <a target="_blank" className="text-link" href={`https://${appConfig.TESTNET ? 'testnet' : ''}explorer.obyte.org/address/${walletAddress}`} rel="noopener">{walletAddress}</a></li>
-                <li>Locked balance: {balanceView}</li>
-            </ul> : <div className="font-medium">Please <AddWalletAddress><button className="underline">add your wallet address</button></AddWalletAddress></div>}
+            {walletAddress ? (
+                <ul>
+                    <li>
+                        Your voting address is <a target="_blank" className="text-link" href={explorerUrl} rel="noopener noreferrer">{walletAddress}</a>
+                    </li>
+                    <li>Locked balance: {formattedBalance}</li>
+                </ul>
+            ) : (
+                <div className="font-medium">
+                    Please <AddWalletAddress><button className="underline">add your wallet address</button></AddWalletAddress>, to see balance
+                </div>
+            )}
         </div>
     )
 }
