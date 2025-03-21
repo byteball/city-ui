@@ -1,6 +1,6 @@
 {
     "name": "obyte-city-game",
-    "description": "interface for City game on Obyte",
+    "description": "interface for City on Obyte",
     "version": "1.0.3",
     "repository": {
         "type": "git",
@@ -16,7 +16,6 @@
     "keywords": [
         "obyte",
         "deFi",
-        "game",
         "crypto"
     ],
     "scripts": {

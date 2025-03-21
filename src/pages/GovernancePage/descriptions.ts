@@ -8,7 +8,7 @@ export const paramDescriptions: IParamDescriptions = {
   plot_price:
     "The base price for a plot of land within the city AA; this integral value sets the economic benchmark for land purchases. It is used in calculations for fees and other pricing-related parameters.",
   referral_boost:
-    "The bonus applied to the size of the plot when a player refers another player to the game; this bonus is a percentage of the total plot size.",
+    "The bonus applied to the size of the plot when a player refers another player to the process; this bonus is a percentage of the total plot size.",
   randomness_aa:
     "The randomness factor used to determine the size of the matching square for adjacent plots; it controls how strict the matching criteria are. It must be a non-negative number.",
   randomness_price:
