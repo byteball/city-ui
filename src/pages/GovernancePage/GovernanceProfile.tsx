@@ -19,10 +19,7 @@ export const GovernanceProfile: FC<IGovernanceProfileProps> = () => {
 
     return (
         <Card>
-            <CardHeader>
-                <CardTitle>User Profile</CardTitle>
-            </CardHeader>
-            <CardContent>
+            <CardContent className="pt-6">
                 {walletAddress ? <ul>
                     <li>Your voting address is <a target="_blank" className="text-link" href={`https://${appConfig.TESTNET ? 'testnet' : ''}explorer.obyte.org/address/${walletAddress}`} rel="noopener">{walletAddress}</a></li>
                     <li>Locked balance: {balanceView}</li>
