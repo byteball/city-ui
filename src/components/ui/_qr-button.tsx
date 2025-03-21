@@ -43,11 +43,11 @@ export const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(({ classNa
 
         <div className="text-xs text-foreground max-w-[220px] mx-auto text-center">
           Install Obyte wallet for{" "}
-          <a className="text-blue-700" target="_blank" href="https://itunes.apple.com/us/app/byteball/id1147137332?ls=1&mt=8">
+          <a className="text-blue-700" rel="noopener" target="_blank" href="https://itunes.apple.com/us/app/byteball/id1147137332?ls=1&mt=8">
             iOS
           </a>{" "}
           or{" "}
-          <a className="text-blue-700" target="_blank" href="https://play.google.com/store/apps/details?id=org.byteball.wallet">
+          <a className="text-blue-700" rel="noopener" target="_blank" href="https://play.google.com/store/apps/details?id=org.byteball.wallet">
             Android
           </a>{" "}
           if you don't have one yet

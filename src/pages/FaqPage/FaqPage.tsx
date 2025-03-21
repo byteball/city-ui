@@ -59,7 +59,7 @@ export default () => {
       </div>
       <div className="mt-8">
         Any other questions? Ask on{" "}
-        <a href="https://discord.obyte.org/" target="_blank" className="text-blue-400">
+        <a href="https://discord.obyte.org/" target="_blank" rel="noopener" className="text-blue-400">
           Discord
         </a>
       </div>

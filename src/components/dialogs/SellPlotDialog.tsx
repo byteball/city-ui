@@ -80,7 +80,7 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
         <DialogHeader>
           <DialogTitle>Put your land up for sale</DialogTitle>
           {/* <DialogDescription>
-            <a href="https://obyte.org/#download" target="_blank" className="text-link">
+            <a href="https://obyte.org/#download" target="_blank"  rel="noopener" className="text-link">
               Install Obyte wallet
             </a>{" "}
             if you don't have one yet, and copy/paste your address here.{" "}
