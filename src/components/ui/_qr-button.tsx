@@ -18,7 +18,7 @@ export const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(({ classNa
         <Tooltip>
           <TooltipTrigger asChild>
             <DialogTrigger asChild>
-              <Button {...props} disabled={disabled} className={cn("px-3 rounded-tr-none rounded-br-none", props.variant === "link" ? "px-1" : "px-3")}>
+              <Button {...props} tabIndex={-1} disabled={disabled} className={cn("px-3 rounded-tr-none rounded-br-none", props.variant === "link" ? "px-1" : "px-3")}>
                 <QrCode className="w-4 h-4" />
               </Button>
             </DialogTrigger>
@@ -66,7 +66,7 @@ export const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(({ classNa
               "pointer-events-none opacity-50 select-none": disabled,
             })}
           >
-            <a href={href}>{children}</a>
+            <a href={href} tabIndex={-1}>{children}</a>
           </Button>
         </TooltipTrigger>
         <TooltipContent className="max-w-[250px]">
