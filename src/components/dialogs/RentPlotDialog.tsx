@@ -167,7 +167,7 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
 
         <div className="flex flex-col space-y-2">
           <Label htmlFor="amount">New rent amount</Label>
-          <Input id="amount" error={error} onKeyDown={handleKeyDown} suffix={symbol} onChange={handleChange} value={amount} />
+          <Input id="amount" error={amount !== "" ? error : undefined} onKeyDown={handleKeyDown} suffix={symbol} onChange={handleChange} value={amount} />
         </div>
 
         <InfoPanel>
