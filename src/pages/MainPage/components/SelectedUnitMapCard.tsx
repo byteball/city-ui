@@ -75,7 +75,7 @@ export const SelectedUnitMapCard = () => {
             </InfoPanel.Item>
           </InfoPanel>
 
-          {loading ? <Skeleton className="w-full h-[80px] mt-2" /> : null}
+          {loading ? <Skeleton className="w-full h-[124px] mt-2" /> : null}
 
           {(owner === walletAddress && !loading && selectedMapUnit?.type === "plot") && (
             <div className="grid gap-2">
