@@ -14,103 +14,122 @@ import { generateLink } from "@/lib";
 import { useAaStore } from "@/store/aa-store";
 
 interface ISuggestAnotherValueDialogProps {
-	children: ReactNode;
-	name: paramName;
-	value?: number | string;
+  children: ReactNode;
+  name: paramName;
+  value?: number | string;
 }
+
+const getInitialInputValue = (
+  defaultValue: number | string | undefined,
+  name: paramName,
+  decimals: number
+): string => {
+  if (defaultValue === undefined || defaultValue === null) return "";
+  if (percentInputParamNames.includes(name)) {
+    return (Number(defaultValue) * 100).toFixed(4);
+  } else if (name === "plot_price") {
+    return (Number(defaultValue) / 10 ** decimals).toFixed(decimals);
+  } else {
+    return String(defaultValue);
+  }
+};
 
 export const SuggestAnotherValueDialog: FC<ISuggestAnotherValueDialogProps> = ({ children, name, value: defaultValue }) => {
-	const { decimals, symbol } = useSettingsStore((state) => state);
-	const btnRef = useRef<HTMLButtonElement>(null);
-	const [value, setValue] = useState<string>(defaultValue ? String(percentInputParamNames.includes(name) ? +(Number(defaultValue) * 100).toFixed(4) : (name === "plot_price" ? +(Number(defaultValue) / 10 ** decimals!).toFixed(decimals!) : defaultValue)) : "");
-	const governanceAA = useAaStore((state) => state.state.constants?.governance_aa);
+  const { decimals, symbol } = useSettingsStore((state) => state);
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const [inputValue, setInputValue] = useState<string>(() => getInitialInputValue(defaultValue, name, decimals!));
+  const governanceAA = useAaStore((state) => state.state.constants?.governance_aa);
 
-	let maxInputDecimals = decimals!;
-	let suffix = "";
-	let maxValue = 100; // only for numeric params
+  let maxInputDecimals = decimals!;
+  let suffix = "";
+  let maxAllowedValue = 100; // only for numeric params
 
-	if (percentInputParamNames.includes(name)) {
-		suffix = "%";
-		maxInputDecimals = 4;
-		maxValue = 100;
-	} else if (name === "plot_price") {
-		suffix = symbol!;
-		maxValue = 1000 * 10 ** decimals!;
-	}
+  if (percentInputParamNames.includes(name)) {
+    suffix = "%";
+    maxInputDecimals = 4;
+    maxAllowedValue = 100;
+  } else if (name === "plot_price") {
+    suffix = symbol!;
+    maxAllowedValue = 1000 * 10 ** decimals!;
+  }
 
-	const handleChange = useCallback(
-		(e: React.ChangeEvent<HTMLInputElement>) => {
-			const newValue = e.target.value.trim() ?? "";
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = e.target.value.trim() ?? "";
+      setInputValue((prevValue) => {
+        if (percentInputParamNames.includes(name) || numericInputParamNames.includes(name)) {
+          if (getCountOfDecimals(newValue) <= maxInputDecimals && Number(newValue) <= maxAllowedValue) {
+            return newValue === "." || newValue === "," ? "0." : !isNaN(Number(newValue)) ? newValue : prevValue;
+          }
+          return prevValue;
+        } else {
+          return newValue.toUpperCase();
+        }
+      });
+    },
+    [maxInputDecimals, maxAllowedValue, name]
+  );
 
-			setValue(value => {
-				if (percentInputParamNames.includes(name) || numericInputParamNames.includes(name)) {
-					if ((getCountOfDecimals(newValue) <= maxInputDecimals && Number(newValue) <= maxValue)) {
-						return newValue === "." || newValue === "," ? "0." : !isNaN(Number(newValue)) ? newValue : value;
-					}
+  const handleKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      submitButtonRef.current?.click();
+    }
+  }, [submitButtonRef]);
 
-					return value;
-				} else {
-					return newValue.toUpperCase();
-				}
-			});
+  const transformValue = useCallback((val: string) => {
+    if (percentInputParamNames.includes(name)) {
+      return Number(val) / 100;
+    } else if (name === "plot_price") {
+      return Number(val) * 10 ** decimals!;
+    }
+    return val;
+  }, [name, decimals]);
 
-		},
-		[setValue, decimals]
-	);
+  const [isValid, error] = useMemo(() => validateParam(name, inputValue), [name, inputValue]);
 
+  const url = generateLink({
+    amount: 1e4,
+    data: { name, value: transformValue(inputValue) },
+    aa: governanceAA!
+  });
 
-	const handleKeyDown = useCallback(
-		(e: KeyboardEvent<HTMLInputElement>) => {
-			if (e.key === "Enter") {
-				e.preventDefault();
-				btnRef.current?.click();
-			}
-		},
-		[btnRef]
-	);
-
-	const transformValue = useCallback((value: string) => {
-		if (percentInputParamNames.includes(name)) {
-			return Number(value) / 100
-		} else if (name === "plot_price") {
-			return Number(value) * 10 ** decimals!;
-		}
-
-		return value;
-	}, [name, value]);
-
-	const [valid, error] = useMemo(() => validateParam(name, value), [name, value]);
-
-	const url = generateLink({ amount: 1e4, data: { name, value: transformValue(value) }, aa: governanceAA! });
-
-	return <Dialog>
-		<DialogTrigger asChild>{children}</DialogTrigger>
-		<DialogContent autoFocus={false}>
-			<DialogHeader>
-				<DialogTitle>Change <span className="lowercase">{beautifyParamName(name)}</span></DialogTitle>
-				<DialogDescription>
-					{paramDescriptions[name]}
-				</DialogDescription>
-			</DialogHeader>
-			<div className="grid gap-4 py-4">
-				<div className="flex flex-col space-y-2">
-					<Label htmlFor={"value" + name}>Parameter value</Label>
-					<Input
-						error={value !== "" ? error : undefined}
-						value={value}
-						suffix={suffix}
-						id={"value" + name}
-						onChange={handleChange}
-						onKeyDown={handleKeyDown}
-						disabled={defaultValue !== undefined}
-					/>
-				</div>
-			</div>
-			<DialogFooter>
-				<QRButton autoFocus={false} ref={btnRef} disabled={!valid || !value} className="w-full" href={url}>
-					Add support for this
-				</QRButton>
-			</DialogFooter>
-		</DialogContent>
-	</Dialog>
-}
+  return (
+    <Dialog>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent autoFocus={false}>
+        <DialogHeader>
+          <DialogTitle>
+            Change <span className="lowercase">{beautifyParamName(name)}</span>
+          </DialogTitle>
+          <DialogDescription>{paramDescriptions[name]}</DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="flex flex-col space-y-2">
+            <Label htmlFor={`value${name}`}>Parameter value</Label>
+            <Input
+              error={inputValue !== "" ? error : undefined}
+              value={inputValue}
+              suffix={suffix}
+              id={`value${name}`}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+              disabled={defaultValue !== undefined}
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <QRButton
+            autoFocus={false}
+            ref={submitButtonRef}
+            disabled={!isValid || !inputValue}
+            className="w-full"
+            href={url}
+          >
+            Suggest New Value
+          </QRButton>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
