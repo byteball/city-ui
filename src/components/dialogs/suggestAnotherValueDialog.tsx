@@ -96,7 +96,7 @@ export const SuggestAnotherValueDialog: FC<ISuggestAnotherValueDialogProps> = ({
 				<div className="flex flex-col space-y-2">
 					<Label htmlFor={"value" + name}>Parameter value</Label>
 					<Input
-						error={error}
+						error={value !== "" ? error : undefined}
 						value={value}
 						suffix={suffix}
 						id={"value" + name}
