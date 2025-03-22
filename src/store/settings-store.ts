@@ -9,7 +9,7 @@ import client from "@/services/obyteWsClient";
 import { ICityAaState } from "./aa-store";
 
 const LOCAL_STORAGE_KEY = "settings-store";
-const STORAGE_VERSION = 5; // change this to invalidate old persisted data
+const STORAGE_VERSION = 6; // change this to invalidate old persisted data
 
 interface SettingsState {
   firstInit: () => void;
@@ -17,6 +17,7 @@ interface SettingsState {
   asset: string | null;
   symbol: string | null;
   decimals: number | null;
+  challengingPeriod: number | null;
   governanceAa: string | null;
   refData: IRefData | null;
   walletAddress: string | null;
@@ -40,17 +41,21 @@ const storeCreator: StateCreator<SettingsState> = (set, get) => ({
     }
 
     const tokenRegistry = client.api.getOfficialTokenRegistryAddress();
-    const decimals = await client.api.getDecimalsBySymbolOrAsset(tokenRegistry, asset);
-    const symbol = await client.api.getSymbolByAsset(tokenRegistry, asset);
 
-    console.log("log: init settings store");
-    set({ inited: true, asset, governanceAa, decimals: decimals || 0, symbol });
+    const [decimals, symbol, challengingPeriod] = await Promise.all([
+      client.api.getDecimalsBySymbolOrAsset(tokenRegistry, asset),
+      client.api.getSymbolByAsset(tokenRegistry, asset),
+      client.api.getDefinition(governanceAa).then((def) => def[1]?.params?.challenging_period || 3 * 24 * 3600),
+    ]);
+
+    set({ inited: true, asset, governanceAa, decimals: decimals || 0, symbol, challengingPeriod });
     console.log("log: initialized settings store");
   },
   inited: false,
   asset: null,
   symbol: null,
   decimals: null,
+  challengingPeriod: null,
   governanceAa: null,
   refData: null,
   selectedMapUnit: undefined,
