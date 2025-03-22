@@ -26,9 +26,9 @@ const getInitialInputValue = (
 ): string => {
   if (defaultValue === undefined || defaultValue === null) return "";
   if (percentInputParamNames.includes(name)) {
-    return (Number(defaultValue) * 100).toFixed(4);
+    return (+(Number(defaultValue) * 100).toFixed(4)).toString();
   } else if (name === "plot_price") {
-    return (Number(defaultValue) / 10 ** decimals).toFixed(decimals);
+    return (+(Number(defaultValue) / 10 ** decimals).toFixed(decimals)).toString();
   } else {
     return String(defaultValue);
   }
