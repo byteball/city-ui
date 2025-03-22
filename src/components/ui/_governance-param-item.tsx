@@ -34,15 +34,24 @@ interface IGovernanceParamItemProps {
 }
 
 export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leader, currentValue, votes = {} }) => {
-	const { decimals, symbol } = useSettingsStore((state) => state);
+	const { decimals, symbol, challengingPeriod } = useSettingsStore((state) => state);
 	const governanceAA = useAaStore((state) => state.state.constants?.governance_aa);
-	const { [`challenging_period_start_ts_${name}`]: challengingPeriodStartAt = false } = useAaStore((state) => state.governanceState);
+	const { [`challenging_period_start_ts_${name}`]: challengingPeriodStartAt } = useAaStore((state) => state.governanceState);
 
 	const tokenInfo = { symbol: symbol!, decimals: decimals! };
 	const commitUrl = generateLink({ amount: 1e4, data: { name, commit: 1 }, asset: "base", aa: governanceAA! });
-	const challengingPeriodEndTs = challengingPeriodStartAt ?? 0 + appConfig.CHALLENGING_PERIOD;
 
-	const commitDisabled = currentValue === leader // || !challengingPeriodStartAt || moment.unix(+challengingPeriodEndTs).isAfter();
+	const challengingPeriodEndTs = (+(challengingPeriodStartAt ?? 0)) + challengingPeriod!;
+
+	const commitAllowed = !challengingPeriodStartAt || moment.utc().isAfter(moment.unix(challengingPeriodEndTs));
+
+	const timeUntilCommit = commitAllowed
+		? "Now"
+		: moment.duration(moment.unix(challengingPeriodEndTs)
+			.diff(moment.utc()))
+			.humanize();
+
+	const commitDisabled = currentValue === leader || !commitAllowed;
 
 	return <Card>
 		<CardHeader>
@@ -68,7 +77,7 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
 				<div>Leader: {beautifyParamValue(name, leader, tokenInfo)}</div>
 				<div>
 					<QRButton href={commitUrl} disabled={commitDisabled} variant="link" className="p-0 text-link">commit</QRButton>
-					{/* {challengingPeriodStartAt && challengingPeriodEndTs && moment.unix(+challengingPeriodEndTs).isSameOrBefore() ? <small>Time to unlock: {moment.unix(+challengingPeriodEndTs).utc().toNow()} {challengingPeriodEndTs}</small> : null} */}
+					{!commitAllowed ? <small className="text-yellow-600">Time to unlock: {timeUntilCommit}</small> : null}
 				</div>
 			</div> : null}
 			{Object.entries(votes).length ? <Table>
