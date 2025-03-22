@@ -15,7 +15,7 @@ export const beautifyParamValue = (name: paramName, value: string | number, toke
     return <a target="_blank" className="text-link" href={`https://${appConfig.TESTNET ? 'testnet' : ''}explorer.obyte.org/address/${value}`} rel="noopener">{value}</a>
   } else if (name === "attestors") {
     return <>
-      {String(value).split(":").map((attestor) => <a target="_blank" key={attestor} className="text-link" href={`https://${appConfig.TESTNET ? 'testnet' : ''}explorer.obyte.org/address/${attestor}`} rel="noopener">{attestor}</a>).reduce((prev, curr) => [prev, ", ", curr])}
+      {String(value).split(":").map((attestor) => <a target="_blank" key={attestor} className="text-link" href={`https://${appConfig.TESTNET ? 'testnet' : ''}explorer.obyte.org/address/${attestor}`} rel="noopener">{attestor.slice(0, 5)}...{attestor.slice(-5, attestor.length,)}</a>).reduce((prev, curr) => [prev, ", ", curr])}
     </>
   }
 
