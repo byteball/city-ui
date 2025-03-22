@@ -116,6 +116,7 @@ export const SuggestAnotherValueDialog: FC<ISuggestAnotherValueDialogProps> = ({
               onKeyDown={handleKeyDown}
               disabled={defaultValue !== undefined}
             />
+            {name === "attestors" ? <small>If you want to use multiple addresses, use ":" as a separator.</small> : null}
           </div>
         </div>
         <DialogFooter>
