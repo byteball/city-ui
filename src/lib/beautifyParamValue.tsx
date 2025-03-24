@@ -7,7 +7,9 @@ const priceParams: paramName[] = ["plot_price"];
 const addressParams: paramName[] = ["randomness_aa", "mayor"];
 
 export const beautifyParamValue = (name: paramName, value: string | number, tokenInfo: ITokenInfo) => {
-  if (priceParams.includes(name)) {
+  if (value === undefined || value === null) {
+    return "N/A";
+  } else if (priceParams.includes(name)) {
     return `${toLocalString(+value / 10 ** tokenInfo.decimals)} ${tokenInfo.symbol}`;
   } else if (percentInputParamNames.includes(name)) {
     return `${toLocalString(Number(value) * 100)} %`;
