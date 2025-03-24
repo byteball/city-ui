@@ -58,7 +58,8 @@ const storeCreator: StateCreator<AaStoreState> = (set, _get) => ({
       const aaState = (await client.api.getAaStateVars({ address: appConfig.AA_ADDRESS })) as ICityAaState;
 
       const governanceAa = aaState.constants?.governance_aa;
-      const governanceState = (await client.api.getAaStateVars({ address: governanceAa! })) as ICityAaState;
+      if (!governanceAa) throw new Error("governance AA address not found");
+      const governanceState = (await client.api.getAaStateVars({ address: governanceAa })) as ICityAaState;
 
       set({ state: aaState, governanceState, loading: false, loaded: true, error: null });
 
