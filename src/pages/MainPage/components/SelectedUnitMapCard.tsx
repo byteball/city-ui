@@ -8,11 +8,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ICoordinates } from "@/global";
-import { toLocalString } from "@/lib";
+import { generateLink, toLocalString } from "@/lib";
 import { useAaStore } from "@/store/aa-store";
 import { mapUnitsByCoordinatesSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 import { RentPlotDialog } from "@/components/dialogs/RentPlotDialog";
+import appConfig from "@/appConfig";
 
 export const SelectedUnitMapCard = () => {
   const selectedMapUnitCoordinates = useSettingsStore((state) => state.selectedMapUnit);
@@ -29,6 +30,8 @@ export const SelectedUnitMapCard = () => {
   const formattedRentedAmount = rented_amount ? toLocalString(rented_amount / decimalsPow) : "";
 
   const owner = selectedMapUnit?.owner;
+
+  const leaveUrl = generateLink({ amount: 1e4, data: { leave: 1, plot_num: selectedMapUnit?.plot_num }, asset: "base", aa: appConfig.AA_ADDRESS });
 
   return (
     <Card>
@@ -72,7 +75,7 @@ export const SelectedUnitMapCard = () => {
             </InfoPanel.Item>
           </InfoPanel>
 
-          {loading ? <Skeleton className="w-full h-[80px] mt-2" /> : null}
+          {loading ? <Skeleton className="w-full h-[124px] mt-2" /> : null}
 
           {(owner === walletAddress && !loading && selectedMapUnit?.type === "plot") && (
             <div className="grid gap-2">
@@ -89,6 +92,12 @@ export const SelectedUnitMapCard = () => {
                   Rent additional land
                 </Button>
               </RentPlotDialog>
+
+              <a href={leaveUrl}>
+                <Button variant="secondary" className="w-full">
+                  leave an unbuilt plot
+                </Button>
+              </a>
             </div>
           )}
         </CardContent>

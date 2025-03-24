@@ -28,7 +28,7 @@ const UserPage: FC<UserPageProps> = () => {
     <PageLayout title="User page" loading={loading}>
       <InfoPanel>
         <InfoPanel.Item label="Address" loading={loading}>
-          <a className="text-link" target="_blank" href={`https://${appConfig.TESTNET ? 'testnet' : ''}explorer.obyte.org/address/${address}`}>
+          <a className="text-link" target="_blank" rel="noopener" href={`https://${appConfig.TESTNET ? 'testnet' : ''}explorer.obyte.org/address/${address}`}>
             {address}
           </a>
         </InfoPanel.Item>

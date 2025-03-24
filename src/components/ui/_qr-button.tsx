@@ -18,7 +18,7 @@ export const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(({ classNa
         <Tooltip>
           <TooltipTrigger asChild>
             <DialogTrigger asChild>
-              <Button {...props} disabled={disabled} className="px-3 rounded-tr-none rounded-br-none">
+              <Button {...props} tabIndex={-1} disabled={disabled} className={cn("px-3 rounded-tr-none rounded-br-none", props.variant === "link" ? "px-1" : "px-3")}>
                 <QrCode className="w-4 h-4" />
               </Button>
             </DialogTrigger>
@@ -43,11 +43,11 @@ export const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(({ classNa
 
         <div className="text-xs text-foreground max-w-[220px] mx-auto text-center">
           Install Obyte wallet for{" "}
-          <a className="text-blue-700" target="_blank" href="https://itunes.apple.com/us/app/byteball/id1147137332?ls=1&mt=8">
+          <a className="text-blue-700" rel="noopener" target="_blank" href="https://itunes.apple.com/us/app/byteball/id1147137332?ls=1&mt=8">
             iOS
           </a>{" "}
           or{" "}
-          <a className="text-blue-700" target="_blank" href="https://play.google.com/store/apps/details?id=org.byteball.wallet">
+          <a className="text-blue-700" rel="noopener" target="_blank" href="https://play.google.com/store/apps/details?id=org.byteball.wallet">
             Android
           </a>{" "}
           if you don't have one yet
@@ -66,7 +66,7 @@ export const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(({ classNa
               "pointer-events-none opacity-50 select-none": disabled,
             })}
           >
-            <a href={href}>{children}</a>
+            <a href={href} tabIndex={-1}>{children}</a>
           </Button>
         </TooltipTrigger>
         <TooltipContent className="max-w-[250px]">
