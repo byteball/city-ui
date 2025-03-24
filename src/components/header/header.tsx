@@ -1,6 +1,7 @@
 import { FC } from "react";
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 
+import { useSettingsStore } from "@/store/settings-store";
 import { AddWalletAddress } from "../dialogs/AddWalletAddress";
 import { Button } from "../ui/button";
 
@@ -14,6 +15,8 @@ const navigation = [
 ];
 
 export const Header: FC<IHeaderProps> = () => {
+  const walletAddress = useSettingsStore((state) => state.walletAddress);
+
   return (
     <header className="border-b">
       <nav aria-label="Global" className="flex items-center justify-between p-6 mx-auto max-w-7xl lg:px-8">
@@ -41,7 +44,8 @@ export const Header: FC<IHeaderProps> = () => {
             </NavLink>
           ))}
         </div>
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+        <div className="items-center hidden gap-4 lg:flex lg:flex-1 lg:justify-end">
+          {walletAddress ? <Link to={`/user/${walletAddress}`}>My plots</Link> : null}
           <AddWalletAddress>
             <Button variant="default">Add wallet</Button>
           </AddWalletAddress>
