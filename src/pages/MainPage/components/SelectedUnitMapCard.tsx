@@ -1,19 +1,21 @@
 import moment from "moment";
 import { Link } from "react-router";
 
+import appConfig from "@/appConfig";
+import { RentPlotDialog } from "@/components/dialogs/RentPlotDialog";
 import { SellPlotDialog } from "@/components/dialogs/SellPlotDialog";
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { ICoordinates } from "@/global";
+import { getRoads } from "@/game/utils/getRoads";
+import { ICity, ICoordinates } from "@/global";
 import { generateLink, toLocalString } from "@/lib";
+import { getAddressFromNearestRoad } from "@/lib/getAddressCoordinate";
 import { useAaStore } from "@/store/aa-store";
-import { mapUnitsByCoordinatesSelector } from "@/store/selectors/mapUnitsSelector";
+import { mapUnitsByCoordinatesSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
-import { RentPlotDialog } from "@/components/dialogs/RentPlotDialog";
-import appConfig from "@/appConfig";
 
 export const SelectedUnitMapCard = () => {
   const selectedMapUnitCoordinates = useSettingsStore((state) => state.selectedMapUnit);
@@ -30,8 +32,24 @@ export const SelectedUnitMapCard = () => {
   const formattedRentedAmount = rented_amount ? toLocalString(rented_amount / decimalsPow) : "";
 
   const owner = selectedMapUnit?.owner;
+  const state = useAaStore.getState();
 
-  const leaveUrl = generateLink({ amount: 1e4, data: { leave: 1, plot_num: selectedMapUnit?.plot_num }, asset: "base", aa: appConfig.AA_ADDRESS });
+  const cityStats = state.state.city_city as ICity;
+
+  const leaveUrl = generateLink({
+    amount: 1e4,
+    data: { leave: 1, plot_num: selectedMapUnit?.plot_num },
+    asset: "base",
+    aa: appConfig.AA_ADDRESS,
+  });
+
+  const mapUnits = mapUnitsSelector(state);
+  const roads = getRoads(mapUnits, String(cityStats?.mayor));
+
+  const addresses =
+    selectedMapUnitCoordinates?.x !== undefined && selectedMapUnitCoordinates?.y !== undefined
+      ? getAddressFromNearestRoad(roads, { x: selectedMapUnitCoordinates.x, y: selectedMapUnitCoordinates.y })
+      : [];
 
   return (
     <Card>
@@ -75,9 +93,19 @@ export const SelectedUnitMapCard = () => {
             </InfoPanel.Item>
           </InfoPanel>
 
+          {addresses.length ? (
+            <InfoPanel.Item loading={loading}>
+              <div className="mb-4 font-mono">
+                {addresses.map((adr) => (
+                  <div key={adr}>{adr}</div>
+                ))}
+              </div>
+            </InfoPanel.Item>
+          ) : null}
+
           {loading ? <Skeleton className="w-full h-[124px] mt-2" /> : null}
 
-          {(owner === walletAddress && !loading && selectedMapUnit?.type === "plot") && (
+          {owner === walletAddress && !loading && selectedMapUnit?.type === "plot" && (
             <div className="grid gap-2">
               {selectedMapUnit.type === "plot" ? (
                 <SellPlotDialog>

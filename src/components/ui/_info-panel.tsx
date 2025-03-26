@@ -1,5 +1,5 @@
-import { Children, cloneElement, FC, isValidElement, ReactNode } from "react";
 import cn from "classnames";
+import { Children, cloneElement, FC, isValidElement, ReactNode } from "react";
 
 import { Skeleton } from "./skeleton";
 import { TextScramble } from "./text-scramble";
@@ -23,7 +23,7 @@ const InfoPanel: FC<InfoPanelProps> & { Item: typeof InfoPanelItem } = ({ childr
 };
 
 interface InfoPanelItemProps {
-  label: string;
+  label?: string;
   children: ReactNode;
   tooltip?: ReactNode;
   loading?: boolean;
@@ -35,7 +35,7 @@ const InfoPanelItem: FC<InfoPanelItemProps> = ({ label, children, labelAnimated 
 
   return (
     <div className="flex items-center space-x-2">
-      <LabelWrapper>{`${label}: `}</LabelWrapper>
+      {label ? <LabelWrapper>{`${label}: `}</LabelWrapper> : null}
       {loading ? <Skeleton className="h-[1.125rem] w-[150px]" /> : <div>{children}</div>}
     </div>
   );
