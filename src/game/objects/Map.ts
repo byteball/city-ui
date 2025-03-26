@@ -5,8 +5,8 @@ import Phaser from "phaser";
 
 import { IMapUnit, IRoad } from "@/global";
 import { asNonNegativeNumber } from "@/lib/asNonNegativeNumber";
-import { useSettingsStore } from "@/store/settings-store";
 import { defaultAaParams, useAaStore } from "@/store/aa-store";
+import { useSettingsStore } from "@/store/settings-store";
 
 import { Plot } from "./Plot";
 import { Road } from "./Road";
