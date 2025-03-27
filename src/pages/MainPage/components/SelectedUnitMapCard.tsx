@@ -82,6 +82,10 @@ export const SelectedUnitMapCard = () => {
               </TooltipProvider>
             </InfoPanel.Item>
 
+            <InfoPanel.Item label="Address" loading={loading || addresses.length === 0}>
+              <div>{addresses[0]}</div>
+            </InfoPanel.Item>
+
             <InfoPanel.Item label="Created at" loading={loading}>
               {moment.unix(selectedMapUnit?.ts).format("YYYY-MM-DD HH:mm")}
             </InfoPanel.Item>
@@ -92,16 +96,6 @@ export const SelectedUnitMapCard = () => {
               </Link>
             </InfoPanel.Item>
           </InfoPanel>
-
-          {addresses.length ? (
-            <InfoPanel.Item loading={loading}>
-              <div className="mb-4 font-mono">
-                {addresses.map((adr) => (
-                  <div key={adr}>{adr}</div>
-                ))}
-              </div>
-            </InfoPanel.Item>
-          ) : null}
 
           {loading ? <Skeleton className="w-full h-[124px] mt-2" /> : null}
 
