@@ -89,7 +89,7 @@ export class Map {
       const { x, y, type } = unitData;
       const totalAmount = getMapUnitSize(unitData);
 
-      const plotFraction = (totalAmount / this.totalSize) * 0.1 * (1 + referralBoost);
+      const plotFraction = (totalAmount / this.totalSize) * 0.1 * (1 + referralBoost); // TODO: fix 0.1 to params
 
       const plotArea = plotFraction * MAP_WIDTH * MAP_HEIGHT;
       const plotSize = Math.sqrt(plotArea);
@@ -215,11 +215,11 @@ export class Map {
   }
 
   updateRoads(roads: IRoad[]) {
-    // TODO implement
+    // TODO: implement
   }
 
   updateMapUnits(unitData: IMapUnit[]) {
-    // TODO implement
+    // TODO: implement
   }
 }
 
