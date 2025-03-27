@@ -52,7 +52,7 @@ export function getAddressCoordinate(mapUnit: ICoordinates, road: ICoordinates, 
 }
 
 export function getAddressFromNearestRoad(roads: IRoad[], home: ICoordinates): string[] {
-  const nearestRoads = getNearestRoads(roads, home.x, home.y, 4);
+  const nearestRoads = getNearestRoads(roads, home.x, home.y, 1);
   return nearestRoads.map((nearestRoad) =>
     getAddressCoordinate(
       home,
@@ -62,3 +62,4 @@ export function getAddressFromNearestRoad(roads: IRoad[], home: ICoordinates): s
     )
   );
 }
+
