@@ -12,7 +12,7 @@ interface RoadDistance {
 
 interface IRoadWithDistance extends RoadDistance, IRoad {}
 
-export const getNearestRoads = (roads: IRoad[], x: number, y: number, count: number = 4): IRoadWithDistance[] => {
+export const getNearestRoads = (roads: IRoad[], x: number, y: number, count: number = 1): IRoadWithDistance[] => {
   return roads
     .map((road) => {
       const dx = road.x - x;
@@ -52,7 +52,7 @@ export function getAddressCoordinate(mapUnit: ICoordinates, road: ICoordinates, 
 }
 
 export function getAddressFromNearestRoad(roads: IRoad[], home: ICoordinates): string[] {
-  const nearestRoads = getNearestRoads(roads, home.x, home.y, 1);
+  const nearestRoads = getNearestRoads(roads, home.x, home.y);
   return nearestRoads.map((nearestRoad) =>
     getAddressCoordinate(
       home,
