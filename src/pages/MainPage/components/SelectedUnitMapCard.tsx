@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import appConfig from "@/appConfig";
 import { RentPlotDialog } from "@/components/dialogs/RentPlotDialog";
 import { SellPlotDialog } from "@/components/dialogs/SellPlotDialog";
+import { SettingsDialog } from "@/components/dialogs/SettingsDialog";
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -114,6 +115,12 @@ export const SelectedUnitMapCard = () => {
                   Rent additional land
                 </Button>
               </RentPlotDialog>
+
+              <SettingsDialog>
+                <Button variant="secondary" className="w-full">
+                  Settings
+                </Button>
+              </SettingsDialog>
 
               <a href={leaveUrl}>
                 <Button variant="secondary" className="w-full">
