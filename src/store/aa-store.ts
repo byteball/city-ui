@@ -115,7 +115,6 @@ export const useAaParams = () =>
         followup_reward_share,
         attestors,
         mayor: city?.mayor ?? defaultAaParams.mayor,
-      } as { [paramName: string]: number | string };
+      };
     })
   );
-

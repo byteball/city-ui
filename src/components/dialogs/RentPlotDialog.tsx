@@ -1,17 +1,17 @@
-import { FC, KeyboardEvent, useCallback, useMemo, useRef, useState } from "react";
 import moment from "moment";
+import { FC, KeyboardEvent, useCallback, useMemo, useRef, useState } from "react";
 
+import { ICoordinates } from "@/global";
 import { generateLink, toLocalString } from "@/lib";
+import { getCountOfDecimals } from "@/lib/getCountOfDecimals";
+import { useAaParams, useAaStore } from "@/store/aa-store";
+import { mapUnitsByCoordinatesSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { InfoPanel } from "../ui/_info-panel";
+import { QRButton } from "../ui/_qr-button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { QRButton } from "../ui/_qr-button";
-import { getCountOfDecimals } from "@/lib/getCountOfDecimals";
-import { mapUnitsByCoordinatesSelector } from "@/store/selectors/mapUnitsSelector";
-import { useAaParams, useAaStore } from "@/store/aa-store";
-import { ICoordinates } from "@/global";
-import { InfoPanel } from "../ui/_info-panel";
 
 import appConfig from "@/appConfig";
 
@@ -26,19 +26,12 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   const { symbol, decimals, asset, inited } = useSettingsStore();
   const walletAddressFromStore = useSettingsStore((state) => state.walletAddress);
   const selectedMapUnitCoordinates = useSettingsStore((state) => state.selectedMapUnit);
-  const [selectedMapUnit] = useAaStore((state) =>
-    mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates as ICoordinates | null)
-  );
+  const [selectedMapUnit] = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates as ICoordinates | null));
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value ?? "";
-      if (
-        !value ||
-        (decimals &&
-          getCountOfDecimals(value) <= decimals &&
-          Number(value) <= 100000000)
-      ) {
+      if (!value || (decimals && getCountOfDecimals(value) <= decimals && Number(value) <= 100000000)) {
         setRentalAmount(value === "." || value === "," ? "0." : !isNaN(Number(value)) ? value : rentalAmount);
       }
     },
@@ -61,11 +54,11 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
     return false;
   }, [rentalAmount]);
 
-  const { 
-    plot_price: plotPrice, 
-    matching_probability: matchingProbability, 
-    rental_surcharge_factor: rentalSurchargeFactor, 
-    referral_boost: referralBoost 
+  const {
+    plot_price: plotPrice,
+    matching_probability: matchingProbability,
+    rental_surcharge_factor: rentalSurchargeFactor,
+    referral_boost: referralBoost,
   } = useAaParams();
   const aaState = useAaStore((state) => state.state);
   const cityData = aaState.city_city!;
@@ -73,7 +66,10 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   const existingRentedAmount = selectedMapUnit.type === "plot" ? selectedMapUnit?.rented_amount ?? 0 : 0;
   const rentalAmountSmallestUnit = Number(rentalAmount) * decimalsFactor;
   const totalEffectiveSupply =
-    cityData.total_land + cityData.total_rented + rentalAmountSmallestUnit - (selectedMapUnit.type === "plot" ? selectedMapUnit.rented_amount ?? 0 : 0);
+    cityData.total_land +
+    cityData.total_rented +
+    rentalAmountSmallestUnit -
+    (selectedMapUnit.type === "plot" ? selectedMapUnit.rented_amount ?? 0 : 0);
   const currentTimestamp = moment.utc().unix();
   const elapsed = currentTimestamp - cityData.start_ts;
   const secondsInYear = 365 * 24 * 3600;
@@ -158,6 +154,10 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Rent additional land around your plot</DialogTitle>
+          <DialogDescription>
+            Your plot balance is {toLocalString(+Number(selectedMapUnit.amount / decimalsFactor).toFixed(decimals!))} {symbol}. You can rent
+            additional land to increase the plot's matching probability.
+          </DialogDescription>
         </DialogHeader>
 
         {unusedRentalCredit > 0 && (
@@ -170,9 +170,7 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
             <InfoPanel.Item label="Unused rental">
               {toLocalString(unusedRentalCredit / decimalsFactor)} {symbol}
             </InfoPanel.Item>
-            <InfoPanel.Item label="Unused rental expires">
-              {rentalExpiryFormatted}
-            </InfoPanel.Item>
+            <InfoPanel.Item label="Unused rental expires">{rentalExpiryFormatted}</InfoPanel.Item>
           </InfoPanel>
         )}
 
@@ -191,30 +189,18 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
         <InfoPanel>
           <InfoPanel.Item label="Expires in">1 year</InfoPanel.Item>
           <InfoPanel.Item label="Rental fee">
-            {isFeeCoveredByUnusedCredit
-              ? "Covered by unused credit"
-              : `${toLocalString(requiredFee / decimalsFactor)} ${symbol}`}
+            {isFeeCoveredByUnusedCredit ? "Covered by unused credit" : `${toLocalString(requiredFee / decimalsFactor)} ${symbol}`}
           </InfoPanel.Item>
           <InfoPanel.Item label="Total balance (inc. rented)">
-            {toLocalString(((selectedMapUnit.amount) / decimalsFactor) + Number(rentalAmount))} {symbol}
+            {toLocalString(selectedMapUnit.amount / decimalsFactor + Number(rentalAmount))} {symbol}
           </InfoPanel.Item>
           {rentalAmount && Number(rentalAmount) > 0 && (
             <>
-              <InfoPanel.Item label="Area change">
-                {areaChangeDescription}
-              </InfoPanel.Item>
-              <InfoPanel.Item label="Matching range">
-                {rangeChangeDescription}
-              </InfoPanel.Item>
+              <InfoPanel.Item label="Area change">{areaChangeDescription}</InfoPanel.Item>
+              <InfoPanel.Item label="Matching range">{rangeChangeDescription}</InfoPanel.Item>
             </>
           )}
         </InfoPanel>
-
-        <div className="my-1 text-sm text-gray-400">
-          <p>
-            Renting land increases your plot's effective area, extending the range for finding neighboring plots to build houses.
-          </p>
-        </div>
 
         <DialogFooter>
           <div className="w-full">
@@ -227,17 +213,11 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
             </QRButton>
             <div className="mt-2 text-gray-400 text-foreground">
               {isFeeCoveredByUnusedCredit ? (
-                <small>
-                  Your unused rental credit covers most of this rental. A minimal transaction amount is still required.
-                </small>
+                <small>Your unused rental credit covers most of this rental. A minimal transaction amount is still required.</small>
               ) : isRenewal ? (
-                <small>
-                  Rental fee may be lower than before. Any excess will be returned to you.
-                </small>
+                <small>Rental fee may be lower than before. Any excess will be returned to you.</small>
               ) : (
-                <small>
-                  The fee might slightly change. We added 1%, the excess will be returned to you.
-                </small>
+                <small>The fee might slightly change. We added 1%, the excess will be returned to you.</small>
               )}
             </div>
           </div>
@@ -246,3 +226,4 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
     </Dialog>
   );
 };
+
