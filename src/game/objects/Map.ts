@@ -85,8 +85,11 @@ export class Map {
     const referralBoost = state.city_city?.referral_boost ?? state.variables?.referral_boost ?? defaultAaParams.referral_boost;
 
     this.unitsData.forEach((unitData) => {
+      if (unitData.type === "plot" && unitData.status === "pending") return;
+
       // 1) Вычисляем размер участка
       const { x, y, type } = unitData;
+
       const totalAmount = getMapUnitSize(unitData);
 
       const plotFraction = (totalAmount / this.totalSize) * 0.1 * (1 + referralBoost); // TODO: fix 0.1 to params
