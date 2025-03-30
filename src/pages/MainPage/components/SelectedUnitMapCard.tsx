@@ -83,8 +83,8 @@ export const SelectedUnitMapCard = () => {
               </TooltipProvider>
             </InfoPanel.Item>
 
-            <InfoPanel.Item label="Address" loading={loading || addresses.length === 0}>
-              <div>{addresses[0]}</div>
+            <InfoPanel.Item label="Address" loading={loading}>
+              <div>{addresses[0] ?? "No address"}</div>
             </InfoPanel.Item>
 
             <InfoPanel.Item label="Created at" loading={loading}>
