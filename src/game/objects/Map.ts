@@ -215,11 +215,11 @@ export class Map {
   }
 
   updateRoads(roads: IRoad[]) {
-    // TODO: implement
+    this.roadsData = roads;
   }
 
   updateMapUnits(unitData: IMapUnit[]) {
-    // TODO: implement
+    this.unitsData = unitData;
   }
 }
 
