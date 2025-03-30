@@ -14,7 +14,7 @@ export default class MapScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.svg("plot", "assets/plot.svg", { width: 50, height: 50 });
+    this.load.svg("plot", "assets/plot.svg", { width: 100, height: 100 });
 
     this.load.svg("road-vertical", "assets/road-vertical.svg", { width: 30, height: 50 });
     this.load.svg("road-horizontal", "assets/road-horizontal.svg", { width: 50, height: 30 });
