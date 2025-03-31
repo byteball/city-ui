@@ -59,6 +59,8 @@ export class Map {
 
     this.scene.cameras.main.setBounds(0, 0, MAP_WIDTH, MAP_HEIGHT);
 
+    // this.scene.add.rectangle(0, 0, MAP_WIDTH, MAP_HEIGHT, 0x282826).setOrigin(0).setDepth(-10);
+
     // 3) Передаём их в функции, создающие дороги и участки
     this.createRoads(MAP_WIDTH, MAP_HEIGHT);
     this.createMapUnits(MAP_WIDTH, MAP_HEIGHT);

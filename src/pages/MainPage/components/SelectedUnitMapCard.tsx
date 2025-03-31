@@ -116,12 +116,6 @@ export const SelectedUnitMapCard = () => {
                 </Button>
               </RentPlotDialog>
 
-              <SettingsDialog>
-                <Button variant="secondary" className="w-full">
-                  Settings
-                </Button>
-              </SettingsDialog>
-
               <a href={leaveUrl}>
                 <Button variant="secondary" className="w-full">
                   leave an unbuilt plot
@@ -129,6 +123,14 @@ export const SelectedUnitMapCard = () => {
               </a>
             </div>
           )}
+
+          {owner === walletAddress ? (
+            <SettingsDialog unitData={selectedMapUnit}>
+              <Button variant="secondary" className="w-full mt-2">
+                Settings
+              </Button>
+            </SettingsDialog>
+          ) : null}
         </CardContent>
       ) : (
         <CardContent className="text-primary">No plot selected</CardContent>
