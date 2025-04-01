@@ -118,7 +118,7 @@ export const SelectedUnitMapCard = () => {
 
               <a href={leaveUrl}>
                 <Button variant="secondary" className="w-full">
-                  leave an unbuilt plot
+                  Leave the unbuilt plot
                 </Button>
               </a>
             </div>

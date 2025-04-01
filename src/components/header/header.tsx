@@ -45,7 +45,7 @@ export const Header: FC<IHeaderProps> = () => {
           ))}
         </div>
         <div className="items-center hidden gap-4 lg:flex lg:flex-1 lg:justify-end">
-          {walletAddress ? <Link to={`/user/${walletAddress}`}>My plots</Link> : null}
+          {walletAddress ? <Link to={`/user/${walletAddress}`}>My profile</Link> : null}
           <AddWalletAddress>
             <Button variant="default">Add wallet</Button>
           </AddWalletAddress>
