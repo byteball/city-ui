@@ -1,36 +1,45 @@
-import { FC } from "react"
+import { FC } from "react";
 
 import { AddWalletAddress } from "@/components/dialogs/AddWalletAddress";
 
-import { useSettingsStore } from "@/store/settings-store";
 import { useAaStore } from "@/store/aa-store";
 import { userBalanceSelector } from "@/store/selectors/userBalanceSelector";
+import { useSettingsStore } from "@/store/settings-store";
 
 import { toLocalString } from "@/lib";
+
 import appConfig from "@/appConfig";
 
-interface IGovernanceProfileProps { };
+interface IGovernanceProfileProps {}
 
 export const GovernanceProfile: FC<IGovernanceProfileProps> = () => {
-    const { symbol, decimals, walletAddress } = useSettingsStore((state) => state);
-    const userBalance = useAaStore(state => userBalanceSelector(state, walletAddress));
-    const formattedBalance = `${toLocalString(userBalance / (10 ** decimals!))} ${symbol}`;
-    const explorerUrl = walletAddress ? `https://${appConfig.TESTNET ? 'testnet.' : ''}explorer.obyte.org/address/${walletAddress}` : '';
+  const { symbol, decimals, walletAddress } = useSettingsStore((state) => state);
+  const userBalance = useAaStore((state) => userBalanceSelector(state, walletAddress));
+  const formattedBalance = `${toLocalString(userBalance / 10 ** decimals!)} ${symbol}`;
+  const explorerUrl = walletAddress ? `https://${appConfig.TESTNET ? "testnet" : ""}explorer.obyte.org/address/${walletAddress}` : "";
 
-    return (
-        <div className="py-2">
-            {walletAddress ? (
-                <ul>
-                    <li>
-                        Your voting address is <a target="_blank" className="text-link" href={explorerUrl} rel="noopener noreferrer">{walletAddress}</a>
-                    </li>
-                    <li>Locked balance: {formattedBalance}</li>
-                </ul>
-            ) : (
-                <div className="font-medium">
-                    Please <AddWalletAddress><button className="underline">add your wallet address</button></AddWalletAddress>, to see balance
-                </div>
-            )}
+  return (
+    <div className="py-2">
+      {walletAddress ? (
+        <ul>
+          <li>
+            Your voting address is{" "}
+            <a target="_blank" className="text-link" href={explorerUrl} rel="noopener noreferrer">
+              {walletAddress}
+            </a>
+          </li>
+          <li>Locked balance: {formattedBalance}</li>
+        </ul>
+      ) : (
+        <div className="font-medium">
+          Please{" "}
+          <AddWalletAddress>
+            <button className="underline">add your wallet address</button>
+          </AddWalletAddress>
+          , to see balance
         </div>
-    )
-}
+      )}
+    </div>
+  );
+};
+
