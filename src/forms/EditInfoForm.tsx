@@ -99,7 +99,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
       <div className="mb-6">
         <h3 className="text-lg font-medium">Edit Information</h3>
         <p className="text-sm text-muted-foreground">
-          You can edit the information here, which will be publicly published and linked to this {unitData.type}.
+          You can edit the information here, which will be <b>publicly published</b> and linked to this {unitData.type}.
         </p>
       </div>
 
