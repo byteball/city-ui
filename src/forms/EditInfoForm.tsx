@@ -132,24 +132,12 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
       <div className="mb-6">
         <h3 className="text-lg font-medium">Edit Information</h3>
         <p className="text-sm text-muted-foreground">
-          You can edit the information here, which will be <b>publicly published</b> and linked to this {unitData.type}.
+          You can edit the information here, which will be <b>publicly published</b> in the DAG and linked to this{" "}
+          {unitData.type}.
         </p>
       </div>
 
       <div className="space-y-3">
-        {newInfo.length > 0 ? (
-          <div className="flex items-center w-full space-x-2 text-sm font-semibold">
-            <div className="w-[45%]">Name</div>
-            <div className="w-[45%]">Value</div>
-          </div>
-        ) : null}
-
-        {newInfo.length === 0 ? (
-          <div className="py-4 text-center text-muted-foreground">
-            No any info. Send this to remove the previous value)
-          </div>
-        ) : null}
-
         {newInfo.map((item, index) => (
           <div key={index} className="flex items-center w-full gap-2">
             <div className="w-[45%]">
