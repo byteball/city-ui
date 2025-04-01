@@ -20,6 +20,8 @@ interface EditInfoFormProps {
 
 const defaultFieldKeys = ["name", "homepage", "twitter", "telegram", "facebook", "instagram"] as const;
 
+const PAYLOAD_STRING_LIMIT = 10000 as const;
+
 const getDefaultFields = (currentInfo: IMapUnit["info"]): Array<Record<string, any>> => {
   const defaultFields = defaultFieldKeys.map((field: string) => ({ key: field, value: "" }));
   if (!currentInfo) return defaultFields;
@@ -80,19 +82,38 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
 
   // Convert array of key-value pairs back to object
   let obj = newInfo.reduce((acc, { key, value }) => {
-    if (defaultFieldKeys.includes(key) && value === "") {
-      // just remove the field
-    } else if (key) {
-      acc[key] = value;
+    // Skip empty default fields and fields with no key
+    if ((defaultFieldKeys.includes(key as (typeof defaultFieldKeys)[number]) && value === "") || !key) {
+      return acc; // Skip this field
     }
 
+    // Sanitize the value - trim any whitespace
+    acc[key] = typeof value === "string" ? value.trim() : value;
     return acc;
   }, {} as Record<string, any>);
 
-  // And then convert to JSON string
-  let objString = JSON.stringify(obj);
+  // Convert to JSON string with error handling
+  let objString = "";
+  try {
+    objString = JSON.stringify(obj);
+    if (objString.length > PAYLOAD_STRING_LIMIT) {
+      // Arbitrary limit to prevent URL issues
+      console.warn("Warning: Info object is very large and may cause URL issues");
+    }
+  } catch (error) {
+    console.error("Error serializing info object:", error);
+    // Could show an error to the user here
+  }
 
+  const isVeryLarge = objString.length > PAYLOAD_STRING_LIMIT;
+
+  // Check for duplicate keys
   const areAllUniq = unionBy(newInfo, "key").length === newInfo.length;
+
+  // Check for empty fields that require values
+  const emptyFields = newInfo.filter(
+    (item) => !item.key || (!item.value && !defaultFieldKeys.includes(item.key as (typeof defaultFieldKeys)[number]))
+  );
 
   const url = generateLink({
     amount: 10000,
@@ -106,8 +127,6 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
     asset: "base",
     is_single: true,
   });
-
-  const emptyFields = newInfo.filter((item) => !item.key || (!item.value && !defaultFieldKeys.includes(item.key)));
 
   return (
     <div className="mt-8 space-y-4 ">
@@ -164,7 +183,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
         <Plus size={16} /> Add custom field
       </Button>
 
-      <QRButton href={url} disabled={!areAllUniq || emptyFields.length > 0} className="w-full">
+      <QRButton href={url} disabled={!areAllUniq || emptyFields.length > 0 || isVeryLarge} className="w-full">
         Save changes
       </QRButton>
     </div>
