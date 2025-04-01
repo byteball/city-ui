@@ -15,7 +15,6 @@ import appConfig from "@/appConfig";
 
 interface EditInfoFormProps {
   unitData: IMapUnit;
-  onSubmit?: (info: any) => void;
 }
 
 const defaultFieldKeys = ["name", "homepage", "twitter", "telegram", "facebook", "instagram"] as const;
