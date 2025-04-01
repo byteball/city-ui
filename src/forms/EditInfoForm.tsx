@@ -1,13 +1,17 @@
-import appConfig from "@/appConfig";
-import { QRButton } from "@/components/ui/_qr-button";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { IMapUnit } from "@/global";
-import { generateLink } from "@/lib";
-import { useSettingsStore } from "@/store/settings-store";
 import { isArray, isObject, unionBy } from "lodash";
 import { X } from "lucide-react";
 import { FC, useState } from "react";
+
+import { QRButton } from "@/components/ui/_qr-button";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+import { useSettingsStore } from "@/store/settings-store";
+
+import { IMapUnit } from "@/global";
+import { generateLink } from "@/lib";
+
+import appConfig from "@/appConfig";
 
 interface EditInfoFormProps {
   unitData: IMapUnit;
