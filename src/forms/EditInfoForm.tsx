@@ -1,5 +1,5 @@
 import { isArray, isObject, unionBy } from "lodash";
-import { X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { FC, useState } from "react";
 
 import { QRButton } from "@/components/ui/_qr-button";
@@ -22,7 +22,7 @@ type TInfoType = "string" | "object";
 
 export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
   const { info, type, plot_num } = unitData;
-  const walletAddress = useSettingsStore((state) => state.walletAddress);
+  const walletAddress = useSettingsStore((state) => state.walletAddress!);
 
   const infoType: TInfoType = isObject(info) ? "object" : "string";
 
@@ -86,17 +86,13 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
       info: objString,
       edit_plot: 1,
     },
-    from_address: walletAddress!,
+    from_address: walletAddress,
     aa: appConfig.AA_ADDRESS,
     asset: "base",
     is_single: true,
   });
 
   const emptyFields = newInfo.filter((item) => !item.key || !item.value);
-
-  //   <Button size="sm" variant="outline" onClick={addObjectField} className="flex items-center gap-1">
-  //   <Plus size={16} /> Add Field
-  // </Button>
 
   return (
     <div className="mt-8 space-y-4 ">
@@ -145,6 +141,10 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
           </div>
         ))}
       </div>
+
+      <Button size="sm" variant="link" onClick={addObjectField} className="flex items-center gap-1 p-0">
+        <Plus size={16} /> Add Field
+      </Button>
 
       <QRButton href={url} disabled={!areAllUniq || emptyFields.length > 0} className="w-full">
         Save changes
