@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 
-import { getRefDataFromSearch } from "@/lib/getRefDataFromSearch";
+import { getRefDataFromSearch } from "@/lib";
 import { useSettingsStore } from "@/store/settings-store";
 
 export const useApplyRefData = () => {

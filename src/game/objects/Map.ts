@@ -4,7 +4,7 @@ import { Decimal } from "decimal.js";
 import Phaser from "phaser";
 
 import { IMapUnit, IRoad } from "@/global";
-import { asNonNegativeNumber } from "@/lib/asNonNegativeNumber";
+import { asNonNegativeNumber } from "@/lib";
 import { defaultAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
@@ -12,9 +12,10 @@ import { Plot } from "./Plot";
 import { Road } from "./Road";
 
 import { getMapUnitSize } from "@/aaLogic/getMapUnitSize";
-import appConfig from "@/appConfig";
 import { toast } from "@/hooks/use-toast";
 import { House } from "./House";
+
+import appConfig from "@/appConfig";
 
 export const ROAD_THICKNESS = 30;
 

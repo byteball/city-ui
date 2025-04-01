@@ -1,17 +1,14 @@
-import { FC, useRef, ReactNode, KeyboardEvent, useCallback, useState, useMemo } from "react";
+import { FC, KeyboardEvent, ReactNode, useCallback, useMemo, useRef, useState } from "react";
 
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { paramName } from "@/global";
+import { beautifyParamName, generateLink, getCountOfDecimals, numericInputParamNames, percentInputParamNames, validateParam } from "@/lib";
 import { paramDescriptions } from "@/pages/GovernancePage/descriptions";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { beautifyParamName } from "@/lib/beautifyParamName";
-import { QRButton } from "../ui/_qr-button";
-import { useSettingsStore } from "@/store/settings-store";
-import { getCountOfDecimals } from "@/lib/getCountOfDecimals";
-import { numericInputParamNames, percentInputParamNames, validateParam } from "@/lib/validateParam";
-import { generateLink } from "@/lib";
 import { useAaStore } from "@/store/aa-store";
+import { useSettingsStore } from "@/store/settings-store";
+import { QRButton } from "../ui/_qr-button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 interface ISuggestAnotherValueDialogProps {
   children: ReactNode;
@@ -19,11 +16,7 @@ interface ISuggestAnotherValueDialogProps {
   value?: number | string;
 }
 
-const getInitialInputValue = (
-  defaultValue: number | string | undefined,
-  name: paramName,
-  decimals: number
-): string => {
+const getInitialInputValue = (defaultValue: number | string | undefined, name: paramName, decimals: number): string => {
   if (defaultValue === undefined || defaultValue === null) return "";
   if (percentInputParamNames.includes(name)) {
     return (+(Number(defaultValue) * 100).toFixed(4)).toString();
@@ -70,28 +63,34 @@ export const SuggestAnotherValueDialog: FC<ISuggestAnotherValueDialogProps> = ({
     [maxInputDecimals, maxAllowedValue, name]
   );
 
-  const handleKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      submitButtonRef.current?.click();
-    }
-  }, [submitButtonRef]);
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        submitButtonRef.current?.click();
+      }
+    },
+    [submitButtonRef]
+  );
 
-  const transformValue = useCallback((val: string) => {
-    if (percentInputParamNames.includes(name)) {
-      return Number(val) / 100;
-    } else if (name === "plot_price") {
-      return Number(val) * 10 ** decimals!;
-    }
-    return val;
-  }, [name, decimals]);
+  const transformValue = useCallback(
+    (val: string) => {
+      if (percentInputParamNames.includes(name)) {
+        return Number(val) / 100;
+      } else if (name === "plot_price") {
+        return Number(val) * 10 ** decimals!;
+      }
+      return val;
+    },
+    [name, decimals]
+  );
 
   const [isValid, error] = useMemo(() => validateParam(name, inputValue), [name, inputValue]);
 
   const url = generateLink({
     amount: 1e4,
     data: { name, value: transformValue(inputValue) },
-    aa: governanceAA!
+    aa: governanceAA!,
   });
 
   return (
@@ -120,13 +119,7 @@ export const SuggestAnotherValueDialog: FC<ISuggestAnotherValueDialogProps> = ({
           </div>
         </div>
         <DialogFooter>
-          <QRButton
-            autoFocus={false}
-            ref={submitButtonRef}
-            disabled={!isValid || !inputValue}
-            className="w-full"
-            href={url}
-          >
+          <QRButton autoFocus={false} ref={submitButtonRef} disabled={!isValid || !inputValue} className="w-full" href={url}>
             Suggest New Value
           </QRButton>
         </DialogFooter>
@@ -134,3 +127,4 @@ export const SuggestAnotherValueDialog: FC<ISuggestAnotherValueDialogProps> = ({
     </Dialog>
   );
 };
+

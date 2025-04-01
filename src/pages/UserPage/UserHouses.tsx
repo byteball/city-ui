@@ -6,12 +6,11 @@ import { InfoPanel } from "@/components/ui/_info-panel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TextScramble } from "@/components/ui/text-scramble";
 
-import { asNonNegativeNumber } from "@/lib/asNonNegativeNumber";
 import { useAaStore } from "@/store/aa-store";
 import { mapUnitsByOwnerAddressSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 
-import { toLocalString } from "@/lib";
+import { asNonNegativeNumber, toLocalString } from "@/lib";
 
 interface IUserHousesProps {
   address: string;

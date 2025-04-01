@@ -6,9 +6,8 @@ import { FC } from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./card";
 
 import { NonNegativeNumber, paramName } from "@/global";
-import { generateLink, toLocalString } from "@/lib";
-import { beautifyParamName } from "@/lib/beautifyParamName";
-import { beautifyParamValue } from "@/lib/beautifyParamValue";
+import { beautifyParamName, beautifyParamValue, generateLink, getExplorerUrl, toLocalString } from "@/lib";
+
 import { paramDescriptions } from "@/pages/GovernancePage/descriptions";
 import { defaultAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
@@ -19,8 +18,6 @@ import { Button } from "./button";
 import { DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./table";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
-
-import { getExplorerUrl } from "@/lib/getExplorerUrl";
 
 interface IGovernanceParamItemProps {
   name: paramName;

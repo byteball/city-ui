@@ -2,7 +2,7 @@ import obyte from "obyte";
 import { createSelector } from "reselect";
 
 import { ICoordinates, IHouse, IMapUnit, IPlot } from "@/global";
-import { asNonNegativeNumber } from "@/lib/asNonNegativeNumber";
+import { asNonNegativeNumber } from "@/lib";
 import { AaStoreState, ICityAaState } from "../aa-store";
 
 const getAaState = (state: AaStoreState) => state.state;

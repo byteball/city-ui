@@ -6,9 +6,7 @@ import { useAaStore } from "@/store/aa-store";
 import { userBalanceSelector } from "@/store/selectors/userBalanceSelector";
 import { useSettingsStore } from "@/store/settings-store";
 
-import { toLocalString } from "@/lib";
-
-import { getExplorerUrl } from "@/lib/getExplorerUrl";
+import { getExplorerUrl, toLocalString } from "@/lib";
 
 interface IGovernanceProfileProps {}
 
