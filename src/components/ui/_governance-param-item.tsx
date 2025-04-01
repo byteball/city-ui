@@ -20,7 +20,7 @@ import { DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./dialo
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./table";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 
-import appConfig from "@/appConfig";
+import { getExplorerUrl } from "@/lib/getExplorerUrl";
 
 interface IGovernanceParamItemProps {
   name: paramName;
@@ -119,12 +119,7 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
                             {votesForValue.map(({ address, balance }) => (
                               <TableRow key={address}>
                                 <TableCell>
-                                  <a
-                                    href={`https://${appConfig.TESTNET ? "testnet" : ""}explorer.obyte.org/address/${address}`}
-                                    target="_blank"
-                                    className="text-link"
-                                    rel="noopener"
-                                  >
+                                  <a href={getExplorerUrl(address, "address")} target="_blank" className="text-link" rel="noopener">
                                     {address}
                                   </a>
                                 </TableCell>

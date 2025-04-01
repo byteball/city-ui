@@ -8,7 +8,7 @@ import { useSettingsStore } from "@/store/settings-store";
 
 import { toLocalString } from "@/lib";
 
-import appConfig from "@/appConfig";
+import { getExplorerUrl } from "@/lib/getExplorerUrl";
 
 interface IGovernanceProfileProps {}
 
@@ -16,7 +16,6 @@ export const GovernanceProfile: FC<IGovernanceProfileProps> = () => {
   const { symbol, decimals, walletAddress } = useSettingsStore((state) => state);
   const userBalance = useAaStore((state) => userBalanceSelector(state, walletAddress));
   const formattedBalance = `${toLocalString(userBalance / 10 ** decimals!)} ${symbol}`;
-  const explorerUrl = walletAddress ? `https://${appConfig.TESTNET ? "testnet" : ""}explorer.obyte.org/address/${walletAddress}` : "";
 
   return (
     <div className="py-2">
@@ -24,7 +23,7 @@ export const GovernanceProfile: FC<IGovernanceProfileProps> = () => {
         <ul>
           <li>
             Your voting address is{" "}
-            <a target="_blank" className="text-link" href={explorerUrl} rel="noopener noreferrer">
+            <a target="_blank" className="text-link" href={getExplorerUrl(walletAddress, "address")} rel="noopener noreferrer">
               {walletAddress}
             </a>
           </li>

@@ -1,17 +1,17 @@
 import obyte from "obyte";
+import { FC } from "react";
 import { Navigate, useParams } from "react-router";
-import { FC } from 'react';
 
 import { PageLayout } from "@/components/layout/page-layout";
 import { InfoPanel } from "@/components/ui/_info-panel";
+import { getExplorerUrl } from "@/lib/getExplorerUrl";
 import { useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
-import { UserStats } from "./UserStats";
-import { UserPlots } from "./UserPlots";
-import appConfig from "@/appConfig";
 import { UserHouses } from "./UserHouses";
+import { UserPlots } from "./UserPlots";
+import { UserStats } from "./UserStats";
 
-interface UserPageProps { }
+interface UserPageProps {}
 
 const UserPage: FC<UserPageProps> = () => {
   const { address } = useParams<{ address: string }>();
@@ -28,7 +28,7 @@ const UserPage: FC<UserPageProps> = () => {
     <PageLayout title="User page" loading={loading}>
       <InfoPanel>
         <InfoPanel.Item label="Address" loading={loading}>
-          <a className="text-link" target="_blank" rel="noopener" href={`https://${appConfig.TESTNET ? 'testnet' : ''}explorer.obyte.org/address/${address}`}>
+          <a className="text-link" target="_blank" rel="noopener" href={getExplorerUrl(address, "address")}>
             {address}
           </a>
         </InfoPanel.Item>
