@@ -118,13 +118,20 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
         ) : null}
 
         {newInfo.length === 0 ? (
-          <div className="py-4 text-center text-muted-foreground">No any info. Send this to remove the previous value)</div>
+          <div className="py-4 text-center text-muted-foreground">
+            No any info. Send this to remove the previous value)
+          </div>
         ) : null}
 
         {newInfo.map((item, index) => (
           <div key={index} className="flex items-center w-full gap-2">
             <div className="w-[45%]">
-              <Input value={item.key} error={!item.key} onChange={(e) => handleObjectKeyChange(index, e.target.value)} placeholder="Key" />
+              <Input
+                value={item.key}
+                error={!item.key}
+                onChange={(e) => handleObjectKeyChange(index, e.target.value)}
+                placeholder="Key"
+              />
             </div>
             <div className="w-[45%]">
               <Input
