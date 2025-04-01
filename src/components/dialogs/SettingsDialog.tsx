@@ -5,12 +5,12 @@ import { EditInfoForm } from "@/forms/EditInfoForm";
 import { IMapUnit } from "@/global";
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from "../ui/dialog";
 
-interface ISellPlotDialogProps {
+interface ISettingsDialogProps {
   children: React.ReactNode;
   unitData: IMapUnit;
 }
 
-export const SettingsDialog: FC<ISellPlotDialogProps> = ({ children, unitData }) => (
+export const SettingsDialog: FC<ISettingsDialogProps> = ({ children, unitData }) => (
   <Dialog>
     <DialogTrigger asChild>{children}</DialogTrigger>
     <DialogContent className="z-50">
