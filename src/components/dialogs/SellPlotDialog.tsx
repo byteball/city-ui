@@ -67,7 +67,7 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
 
   const error = useMemo(() => {
     if (Number(amount) && Number(amount) * decimalsFactor < selectedMapUnit.amount) {
-      return `it doesn't exceed ${toLocalString(selectedMapUnit.amount / decimalsFactor)}`;
+      return `It doesn't exceed ${toLocalString(selectedMapUnit.amount / decimalsFactor)}`;
     }
 
     return false;
