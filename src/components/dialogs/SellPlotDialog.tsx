@@ -1,16 +1,17 @@
 import { FC, KeyboardEvent, useCallback, useMemo, useRef, useState } from "react";
 
+import { ICoordinates } from "@/global";
 import { generateLink, toLocalString } from "@/lib";
+import { getCountOfDecimals } from "@/lib/getCountOfDecimals";
+import { useAaStore } from "@/store/aa-store";
+import { mapUnitsByCoordinatesSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
+import { QRButton } from "../ui/_qr-button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { QRButton } from "../ui/_qr-button";
+
 import appConfig from "@/appConfig";
-import { getCountOfDecimals } from "@/lib/getCountOfDecimals";
-import { mapUnitsByCoordinatesSelector } from "@/store/selectors/mapUnitsSelector";
-import { useAaStore } from "@/store/aa-store";
-import { ICoordinates } from "@/global";
 
 interface ISellPlotDialogProps {
   children: React.ReactNode;
@@ -67,7 +68,7 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
 
   const error = useMemo(() => {
     if (Number(amount) && Number(amount) * decimalsFactor < selectedMapUnit.amount) {
-      return `Amount  cannot exceed ${toLocalString(selectedMapUnit.amount / decimalsFactor)}`;
+      return `it doesn't exceed ${toLocalString(selectedMapUnit.amount / decimalsFactor)}`;
     }
 
     return false;

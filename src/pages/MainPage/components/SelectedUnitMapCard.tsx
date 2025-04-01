@@ -127,7 +127,7 @@ export const SelectedUnitMapCard = () => {
           {owner === walletAddress ? (
             <SettingsDialog unitData={selectedMapUnit}>
               <Button variant="secondary" className="w-full mt-2">
-                Settings
+                Edit {selectedMapUnit.type}
               </Button>
             </SettingsDialog>
           ) : null}
