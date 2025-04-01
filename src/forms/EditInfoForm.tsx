@@ -1,4 +1,4 @@
-import { isArray, isObject, unionBy } from "lodash";
+import { differenceBy, isArray, isObject, unionBy } from "lodash";
 import { Plus, X } from "lucide-react";
 import { FC, useState } from "react";
 
@@ -18,27 +18,40 @@ interface EditInfoFormProps {
   onSubmit?: (info: any) => void;
 }
 
-type TInfoType = "string" | "object";
+const defaultFieldKeys = ["name", "homepage", "twitter", "telegram", "facebook", "instagram"] as const;
+
+const getDefaultFields = (currentInfo: IMapUnit["info"]): Array<Record<string, any>> => {
+  const defaultFields = defaultFieldKeys.map((field: string) => ({ key: field, value: "" }));
+  if (!currentInfo) return defaultFields;
+
+  if (typeof currentInfo === "string") {
+    const fields = defaultFields.filter((v) => v.key !== "name").map((field) => ({ key: field.key, value: "" }));
+    return [{ key: "name", value: currentInfo }, ...fields];
+  }
+
+  if (isObject(currentInfo)) {
+    const currentInfoFields = Object.entries(currentInfo).map(([key, value]) => ({
+      key,
+      value,
+    }));
+
+    const unSetDefaultFields = differenceBy(defaultFields, currentInfoFields, "key");
+
+    return [...currentInfoFields, ...unSetDefaultFields];
+  }
+
+  return [];
+};
 
 export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
-  const { info, type, plot_num } = unitData;
+  const { info: currentInfo, type, plot_num } = unitData;
   const walletAddress = useSettingsStore((state) => state.walletAddress!);
-
-  const infoType: TInfoType = isObject(info) ? "object" : "string";
-
-  const [newInfo, setNewInfo] = useState<Array<Record<string, any>>>(
-    isObject(info) && infoType === "object"
-      ? Object.entries(info).map(([key, value]) => ({
-          key,
-          value,
-        }))
-      : [{ key: "", value: info }]
-  );
+  const [newInfo, setNewInfo] = useState<Array<Record<string, any>>>(getDefaultFields(currentInfo));
 
   const handleObjectKeyChange = (index: number, value: string) => {
     if (isArray(newInfo)) {
       const updatedInfo = [...newInfo];
-      updatedInfo[index].key = value;
+      updatedInfo[index].key = value.trim();
       setNewInfo(updatedInfo);
     }
   };
@@ -46,7 +59,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
   const handleObjectValueChange = (index: number, value: string) => {
     if (isArray(newInfo)) {
       const updatedInfo = [...newInfo];
-      updatedInfo[index].value = value;
+      updatedInfo[index].value = value.trim();
       setNewInfo(updatedInfo);
     }
   };
@@ -67,7 +80,9 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
 
   // Convert array of key-value pairs back to object
   let obj = newInfo.reduce((acc, { key, value }) => {
-    if (key) {
+    if (defaultFieldKeys.includes(key) && value === "") {
+      // just remove the field
+    } else if (key) {
       acc[key] = value;
     }
 
@@ -92,7 +107,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
     is_single: true,
   });
 
-  const emptyFields = newInfo.filter((item) => !item.key || !item.value);
+  const emptyFields = newInfo.filter((item) => !item.key || (!item.value && !defaultFieldKeys.includes(item.key)));
 
   return (
     <div className="mt-8 space-y-4 ">
@@ -122,28 +137,31 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
             <div className="w-[45%]">
               <Input
                 value={item.key}
+                disabled={defaultFieldKeys.includes(item.key)}
                 error={!item.key}
                 onChange={(e) => handleObjectKeyChange(index, e.target.value)}
-                placeholder="Key"
+                placeholder="Field name"
               />
             </div>
             <div className="w-[45%]">
               <Input
                 value={item.value}
-                error={!item.value}
+                error={defaultFieldKeys.includes(item.key) ? false : !item.value}
                 onChange={(e) => handleObjectValueChange(index, e.target.value)}
                 placeholder="Value"
               />
             </div>
-            <Button size="icon" variant="ghost" className="h-9 w-9" onClick={() => removeObjectField(index)}>
-              <X size={18} />
-            </Button>
+            {!defaultFieldKeys.includes(item.key) ? (
+              <Button size="icon" variant="ghost" className="h-9 w-9" onClick={() => removeObjectField(index)}>
+                <X size={18} />
+              </Button>
+            ) : null}
           </div>
         ))}
       </div>
 
       <Button size="sm" variant="link" onClick={addObjectField} className="flex items-center gap-1 p-0">
-        <Plus size={16} /> Add Field
+        <Plus size={16} /> Add custom field
       </Button>
 
       <QRButton href={url} disabled={!areAllUniq || emptyFields.length > 0} className="w-full">
