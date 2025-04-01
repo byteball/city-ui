@@ -34,7 +34,9 @@ interface IGovernanceParamItemProps {
 export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leader, currentValue, votes = {} }) => {
   const { decimals, symbol, challengingPeriod } = useSettingsStore((state) => state);
   const governanceAA = useAaStore((state) => state.state.constants?.governance_aa);
-  const { [`challenging_period_start_ts_${name}`]: challengingPeriodStartAt } = useAaStore((state) => state.governanceState);
+  const { [`challenging_period_start_ts_${name}`]: challengingPeriodStartAt } = useAaStore(
+    (state) => state.governanceState
+  );
 
   const tokenInfo = { symbol: symbol!, decimals: decimals! };
   const commitUrl = generateLink({ amount: 1e4, data: { name, commit: 1 }, asset: "base", aa: governanceAA! });
@@ -43,7 +45,9 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
 
   const commitAllowed = !challengingPeriodStartAt || moment.utc().isAfter(moment.unix(challengingPeriodEndTs));
 
-  const timeUntilCommit = commitAllowed ? "Now" : moment.duration(moment.unix(challengingPeriodEndTs).diff(moment.utc())).humanize();
+  const timeUntilCommit = commitAllowed
+    ? "Now"
+    : moment.duration(moment.unix(challengingPeriodEndTs).diff(moment.utc())).humanize();
 
   const commitDisabled = currentValue === leader || !commitAllowed;
 
@@ -64,7 +68,9 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
               </Tooltip>
             </TooltipProvider>
           </div>
-          {currentValue || defaultAaParams[name] ? <div>Current value: {beautifyParamValue(name, currentValue, tokenInfo)}</div> : null}
+          {currentValue || defaultAaParams[name] ? (
+            <div>Current value: {beautifyParamValue(name, currentValue, tokenInfo)}</div>
+          ) : null}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -96,7 +102,9 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button variant="link" className="p-0 text-link">
-                          {toLocalString(votesForValue.reduce((acc, { balance }) => acc + Number(balance ?? 0), 0) / 10 ** decimals!)}{" "}
+                          {toLocalString(
+                            votesForValue.reduce((acc, { balance }) => acc + Number(balance ?? 0), 0) / 10 ** decimals!
+                          )}{" "}
                           {symbol}
                         </Button>
                       </DialogTrigger>
@@ -116,7 +124,12 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
                             {votesForValue.map(({ address, balance }) => (
                               <TableRow key={address}>
                                 <TableCell>
-                                  <a href={getExplorerUrl(address, "address")} target="_blank" className="text-link" rel="noopener">
+                                  <a
+                                    href={getExplorerUrl(address, "address")}
+                                    target="_blank"
+                                    className="text-link"
+                                    rel="noopener"
+                                  >
                                     {address}
                                   </a>
                                 </TableCell>

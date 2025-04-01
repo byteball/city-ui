@@ -3,7 +3,7 @@
   "editor.insertSpaces": true,
   "editor.detectIndentation": false,
   "editor.wordWrap": "wordWrapColumn",
-  "editor.wordWrapColumn": 100,
+  "editor.wordWrapColumn": 120,
   "editor.codeActionsOnSave": {
     "source.organizeImports": "always",
     "source.fixAll.eslint": "always"
