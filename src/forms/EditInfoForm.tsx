@@ -6,7 +6,7 @@ import { IMapUnit } from "@/global";
 import { generateLink } from "@/lib";
 import { useSettingsStore } from "@/store/settings-store";
 import { isArray, isObject, unionBy } from "lodash";
-import { Plus, X } from "lucide-react";
+import { X } from "lucide-react";
 import { FC, useState } from "react";
 
 interface EditInfoFormProps {
@@ -90,26 +90,20 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
 
   const emptyFields = newInfo.filter((item) => !item.key || !item.value);
 
+  //   <Button size="sm" variant="outline" onClick={addObjectField} className="flex items-center gap-1">
+  //   <Plus size={16} /> Add Field
+  // </Button>
+
   return (
     <div className="mt-8 space-y-4 ">
       <div className="mb-6">
         <h3 className="text-lg font-medium">Edit Information</h3>
-        {/* <p className="text-sm text-muted-foreground">You can add multiple key-value pairs.</p> */}
+        <p className="text-sm text-muted-foreground">
+          You can edit the information here, which will be publicly published and linked to this {unitData.type}.
+        </p>
       </div>
 
       <div className="space-y-3">
-        <div className="flex items-center justify-between mt-6">
-          <div>
-            <div className="block text-sm font-medium">New {unitData.type} information</div>
-
-            <p className="text-sm text-muted-foreground">The key should be unique.</p>
-          </div>
-
-          <Button size="sm" variant="outline" onClick={addObjectField} className="flex items-center gap-1">
-            <Plus size={16} /> Add Field
-          </Button>
-        </div>
-
         {newInfo.length > 0 ? (
           <div className="flex items-center w-full space-x-2 text-sm font-semibold">
             <div className="w-[45%]">Name</div>
