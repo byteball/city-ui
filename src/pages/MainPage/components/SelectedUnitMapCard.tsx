@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import appConfig from "@/appConfig";
 import { RentPlotDialog } from "@/components/dialogs/RentPlotDialog";
 import { SellPlotDialog } from "@/components/dialogs/SellPlotDialog";
+import { SettingsDialog } from "@/components/dialogs/SettingsDialog";
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -82,8 +83,8 @@ export const SelectedUnitMapCard = () => {
               </TooltipProvider>
             </InfoPanel.Item>
 
-            <InfoPanel.Item label="Address" loading={loading || addresses.length === 0}>
-              <div>{addresses[0]}</div>
+            <InfoPanel.Item label="Address" loading={loading}>
+              <div>{addresses[0] ?? "No address"}</div>
             </InfoPanel.Item>
 
             <InfoPanel.Item label="Created at" loading={loading}>
@@ -117,11 +118,19 @@ export const SelectedUnitMapCard = () => {
 
               <a href={leaveUrl}>
                 <Button variant="secondary" className="w-full">
-                  leave an unbuilt plot
+                  Leave the unbuilt plot
                 </Button>
               </a>
             </div>
           )}
+
+          {owner === walletAddress ? (
+            <SettingsDialog unitData={selectedMapUnit}>
+              <Button variant="secondary" className="w-full mt-2">
+                Edit {selectedMapUnit.type}
+              </Button>
+            </SettingsDialog>
+          ) : null}
         </CardContent>
       ) : (
         <CardContent className="text-primary">No plot selected</CardContent>

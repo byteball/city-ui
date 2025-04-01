@@ -5,7 +5,7 @@ import { useShallow } from "zustand/react/shallow";
 import { IAaParams, IAaStateVars, ICity, ICityState } from "@/global";
 import client from "@/services/obyteWsClient";
 
-import { asNonNegativeNumber } from "@/lib/asNonNegativeNumber";
+import { asNonNegativeNumber } from "@/lib";
 
 import appConfig from "@/appConfig";
 
@@ -118,3 +118,4 @@ export const useAaParams = () =>
       };
     })
   );
+

@@ -4,7 +4,7 @@ import { Decimal } from "decimal.js";
 import Phaser from "phaser";
 
 import { IMapUnit, IRoad } from "@/global";
-import { asNonNegativeNumber } from "@/lib/asNonNegativeNumber";
+import { asNonNegativeNumber } from "@/lib";
 import { defaultAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
@@ -12,9 +12,10 @@ import { Plot } from "./Plot";
 import { Road } from "./Road";
 
 import { getMapUnitSize } from "@/aaLogic/getMapUnitSize";
-import appConfig from "@/appConfig";
 import { toast } from "@/hooks/use-toast";
 import { House } from "./House";
+
+import appConfig from "@/appConfig";
 
 export const ROAD_THICKNESS = 30;
 
@@ -59,6 +60,8 @@ export class Map {
 
     this.scene.cameras.main.setBounds(0, 0, MAP_WIDTH, MAP_HEIGHT);
 
+    // this.scene.add.rectangle(0, 0, MAP_WIDTH, MAP_HEIGHT, 0x282826).setOrigin(0).setDepth(-10);
+
     // 3) Передаём их в функции, создающие дороги и участки
     this.createRoads(MAP_WIDTH, MAP_HEIGHT);
     this.createMapUnits(MAP_WIDTH, MAP_HEIGHT);
@@ -85,8 +88,11 @@ export class Map {
     const referralBoost = state.city_city?.referral_boost ?? state.variables?.referral_boost ?? defaultAaParams.referral_boost;
 
     this.unitsData.forEach((unitData) => {
+      if (unitData.type === "plot" && unitData.status === "pending") return;
+
       // 1) Вычисляем размер участка
       const { x, y, type } = unitData;
+
       const totalAmount = getMapUnitSize(unitData);
 
       const plotFraction = (totalAmount / this.totalSize) * 0.1 * (1 + referralBoost); // TODO: fix 0.1 to params
@@ -215,11 +221,11 @@ export class Map {
   }
 
   updateRoads(roads: IRoad[]) {
-    // TODO: implement
+    this.roadsData = roads;
   }
 
   updateMapUnits(unitData: IMapUnit[]) {
-    // TODO: implement
+    this.unitsData = unitData;
   }
 }
 

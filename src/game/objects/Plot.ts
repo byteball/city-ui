@@ -39,7 +39,7 @@ export class Plot {
   public setSelected(selected: boolean) {
     if (selected) {
       // Применяем tint к изображению
-      this.plotImage.setTint(0xffff00);
+      // this.plotImage.setTint(0x60a5fa);
 
       // Добавляем контур с нужной толщиной
       if (!this.outline) {
@@ -47,7 +47,7 @@ export class Plot {
       }
 
       this.outline.clear();
-      this.outline.lineStyle(4, 0xffff00); // здесь 4 - толщина контура
+      this.outline.lineStyle(20, 0x60a5fa); // здесь 20 - толщина контура
       this.outline.strokeRect(
         this.plotImage.x - this.plotImage.displayWidth / 2,
         this.plotImage.y - this.plotImage.displayHeight / 2,

@@ -6,12 +6,11 @@ import { InfoPanel } from "@/components/ui/_info-panel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TextScramble } from "@/components/ui/text-scramble";
 
-import { asNonNegativeNumber } from "@/lib/asNonNegativeNumber";
 import { useAaStore } from "@/store/aa-store";
 import { mapUnitsByOwnerAddressSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 
-import { toLocalString } from "@/lib";
+import { asNonNegativeNumber, toLocalString } from "@/lib";
 
 interface IUserPlotsProps {
   address: string;
@@ -26,7 +25,7 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
   const changePlot = useCallback(({ x, y }: { x: number; y: number }) => {
     useSettingsStore.getState().setSelectedMapUnit({ x: asNonNegativeNumber(x), y: asNonNegativeNumber(y) });
   }, []);
-  
+
   const decimalsFactor = 10 ** decimals!;
 
   return (
@@ -44,14 +43,20 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
               <CardContent>
                 <InfoPanel labelAnimated>
                   <InfoPanel.Item label="Total amount">
-                    <TextScramble className="inline">{toLocalString((amount + rented_amount) / decimalsFactor)}</TextScramble> {" "}
-                    <small><TextScramble className="inline">{symbol!}</TextScramble>{" "}</small>
+                    <TextScramble className="inline">{toLocalString((amount + rented_amount) / decimalsFactor)}</TextScramble>{" "}
+                    <small>
+                      <TextScramble className="inline">{symbol!}</TextScramble>{" "}
+                    </small>
                   </InfoPanel.Item>
                   <InfoPanel.Item label="Rented">
-                  <TextScramble className="inline">{toLocalString((rented_amount) / decimalsFactor)}</TextScramble> {" "}
-                    <small><TextScramble className="inline">{symbol!}</TextScramble>{" "}</small>
+                    <TextScramble className="inline">{toLocalString(rented_amount / decimalsFactor)}</TextScramble>{" "}
+                    <small>
+                      <TextScramble className="inline">{symbol!}</TextScramble>{" "}
+                    </small>
                   </InfoPanel.Item>
-                  <InfoPanel.Item label="Created on"><TextScramble className="inline">{moment(ts * 1000).format("ll")}</TextScramble></InfoPanel.Item>
+                  <InfoPanel.Item label="Created on">
+                    <TextScramble className="inline">{moment(ts * 1000).format("ll")}</TextScramble>
+                  </InfoPanel.Item>
                 </InfoPanel>
               </CardContent>
             </Card>
