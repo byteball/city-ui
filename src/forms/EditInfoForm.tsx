@@ -57,7 +57,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
   // Calculate content height whenever newInfo changes
   useEffect(() => {
     if (contentRef.current) {
-      const height = contentRef.current.scrollHeight;
+      const height = contentRef.current.scrollHeight + 5;
       setContentHeight(Math.min(height, 390));
     }
   }, [newInfo]);
