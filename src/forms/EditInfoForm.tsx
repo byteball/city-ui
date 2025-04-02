@@ -96,6 +96,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
       const updatedFields = [...prev];
       const fieldKey = updatedFields[index].key;
       const prefix = getInformationPrefix(fieldKey);
+      const inputWithoutSpaces = input.replaceAll(" ", "");
 
       if (!input.trim()) {
         // If input is empty, just use the prefix
@@ -104,15 +105,15 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
         // Handle URL prefixes (http://, https://) specially to avoid duplication
         const isUrlPrefix = prefix.match(/^(https:\/\/)/);
 
-        if (isUrlPrefix && (input.startsWith("http://") || input.startsWith("https://"))) {
+        if (isUrlPrefix && inputWithoutSpaces.startsWith("https://")) {
           // If input already has a URL protocol, use it as is
-          updatedFields[index].value = input;
+          updatedFields[index].value = inputWithoutSpaces;
         } else if (!input.startsWith(prefix)) {
           // If input doesn't start with prefix, add the prefix
           updatedFields[index].value = prefix;
         } else {
           // Otherwise use input as is (maintaining prefix if present)
-          updatedFields[index].value = input;
+          updatedFields[index].value = inputWithoutSpaces;
         }
       } else {
         // No prefix, just use the input
