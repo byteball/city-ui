@@ -2,11 +2,12 @@ import moment from "moment";
 import { Link } from "react-router";
 
 import appConfig from "@/appConfig";
+import { LeaveUnbuiltPlotDialog } from "@/components/dialogs/LeaveUnbuiltPlotDialog";
 import { RentPlotDialog } from "@/components/dialogs/RentPlotDialog";
 import { SellPlotDialog } from "@/components/dialogs/SellPlotDialog";
 import { SettingsDialog } from "@/components/dialogs/SettingsDialog";
 import { InfoPanel } from "@/components/ui/_info-panel";
-import { Button } from "@/components/ui/button";
+import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -17,11 +18,14 @@ import { getAddressFromNearestRoad } from "@/lib/getAddressCoordinate";
 import { useAaStore } from "@/store/aa-store";
 import { mapUnitsByCoordinatesSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
+import { DoorOpenIcon, ImageUpscaleIcon, PencilIcon, ShoppingBagIcon } from "lucide-react";
 
 export const SelectedUnitMapCard = () => {
   const selectedMapUnitCoordinates = useSettingsStore((state) => state.selectedMapUnit);
 
-  const [selectedMapUnit] = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates as ICoordinates | null));
+  const [selectedMapUnit] = useAaStore((state) =>
+    mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates as ICoordinates | null)
+  );
   const stateLoaded = useAaStore((state) => state.loaded);
   const { symbol, asset, decimals, inited, walletAddress } = useSettingsStore((state) => state);
 
@@ -100,37 +104,43 @@ export const SelectedUnitMapCard = () => {
 
           {loading ? <Skeleton className="w-full h-[124px] mt-2" /> : null}
 
-          {owner === walletAddress && !loading && selectedMapUnit?.type === "plot" && (
-            <div className="grid gap-2">
-              {selectedMapUnit.type === "plot" ? (
-                <SellPlotDialog>
-                  <Button variant="secondary" className="w-full">
-                    Sell plot
-                  </Button>
-                </SellPlotDialog>
-              ) : null}
+          <div className="flex flex-wrap gap-4 mt-8">
+            {owner === walletAddress ? (
+              <SettingsDialog unitData={selectedMapUnit}>
+                <ButtonWithTooltip
+                  tooltipText={`Edit ${selectedMapUnit.type}`}
+                  variant="secondary"
+                  className="rounded-xl"
+                >
+                  <PencilIcon className="w-4 h-4" />
+                </ButtonWithTooltip>
+              </SettingsDialog>
+            ) : null}
 
-              <RentPlotDialog>
-                <Button variant="secondary" className="w-full">
-                  Rent additional land
-                </Button>
-              </RentPlotDialog>
+            {owner === walletAddress && !loading && selectedMapUnit?.type === "plot" && (
+              <>
+                {selectedMapUnit.type === "plot" ? (
+                  <SellPlotDialog>
+                    <ButtonWithTooltip tooltipText="Sell" variant="secondary" className="rounded-xl">
+                      <ShoppingBagIcon className="w-4 h-4" />
+                    </ButtonWithTooltip>
+                  </SellPlotDialog>
+                ) : null}
 
-              <a href={leaveUrl}>
-                <Button variant="secondary" className="w-full">
-                  Leave the unbuilt plot
-                </Button>
-              </a>
-            </div>
-          )}
+                <RentPlotDialog>
+                  <ButtonWithTooltip tooltipText="Rent additional land" variant="secondary" className="rounded-xl">
+                    <ImageUpscaleIcon className="w-4 h-4" />
+                  </ButtonWithTooltip>
+                </RentPlotDialog>
 
-          {owner === walletAddress ? (
-            <SettingsDialog unitData={selectedMapUnit}>
-              <Button variant="secondary" className="w-full mt-2">
-                Edit {selectedMapUnit.type}
-              </Button>
-            </SettingsDialog>
-          ) : null}
+                <LeaveUnbuiltPlotDialog leaveUrl={leaveUrl}>
+                  <ButtonWithTooltip tooltipText="Leave the unbuilt plot" variant="secondary" className="rounded-xl">
+                    <DoorOpenIcon className="w-4 h-4" />
+                  </ButtonWithTooltip>
+                </LeaveUnbuiltPlotDialog>
+              </>
+            )}
+          </div>
         </CardContent>
       ) : (
         <CardContent className="text-primary">No plot selected</CardContent>
