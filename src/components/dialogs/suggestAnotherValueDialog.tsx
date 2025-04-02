@@ -1,12 +1,27 @@
 import { FC, KeyboardEvent, ReactNode, useCallback, useMemo, useRef, useState } from "react";
 
 import { paramName } from "@/global";
-import { beautifyParamName, generateLink, getCountOfDecimals, numericInputParamNames, percentInputParamNames, validateParam } from "@/lib";
+import {
+  beautifyParamName,
+  generateLink,
+  getCountOfDecimals,
+  numericInputParamNames,
+  percentInputParamNames,
+  validateParam,
+} from "@/lib";
 import { paramDescriptions } from "@/pages/GovernancePage/descriptions";
 import { useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 import { QRButton } from "../ui/_qr-button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
@@ -27,7 +42,11 @@ const getInitialInputValue = (defaultValue: number | string | undefined, name: p
   }
 };
 
-export const SuggestAnotherValueDialog: FC<ISuggestAnotherValueDialogProps> = ({ children, name, value: defaultValue }) => {
+export const SuggestAnotherValueDialog: FC<ISuggestAnotherValueDialogProps> = ({
+  children,
+  name,
+  value: defaultValue,
+}) => {
   const { decimals, symbol } = useSettingsStore((state) => state);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
   const [inputValue, setInputValue] = useState<string>(() => getInitialInputValue(defaultValue, name, decimals!));
@@ -115,11 +134,19 @@ export const SuggestAnotherValueDialog: FC<ISuggestAnotherValueDialogProps> = ({
               onKeyDown={handleKeyDown}
               disabled={defaultValue !== undefined}
             />
-            {name === "attestors" ? <small>If you want to use multiple addresses, use ":" as a separator.</small> : null}
+            {name === "attestors" ? (
+              <small>If you want to use multiple addresses, use ":" as a separator.</small>
+            ) : null}
           </div>
         </div>
         <DialogFooter>
-          <QRButton autoFocus={false} ref={submitButtonRef} disabled={!isValid || !inputValue} className="w-full" href={url}>
+          <QRButton
+            autoFocus={false}
+            ref={submitButtonRef}
+            disabled={!isValid || !inputValue}
+            className="w-full"
+            href={url}
+          >
             Suggest New Value
           </QRButton>
         </DialogFooter>
