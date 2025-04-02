@@ -1,10 +1,11 @@
 import { differenceBy, isArray, isObject, unionBy } from "lodash";
 import { Plus, X } from "lucide-react";
-import { FC, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 
 import { QRButton } from "@/components/ui/_qr-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { useSettingsStore } from "@/store/settings-store";
 
@@ -48,6 +49,16 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
   const { info: currentInfo, type, plot_num } = unitData;
   const walletAddress = useSettingsStore((state) => state.walletAddress!);
   const [newInfo, setNewInfo] = useState<Array<Record<string, any>>>(getDefaultFields(currentInfo));
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [contentHeight, setContentHeight] = useState<number>(0);
+
+  // Calculate content height whenever newInfo changes
+  useEffect(() => {
+    if (contentRef.current) {
+      const height = contentRef.current.scrollHeight;
+      setContentHeight(Math.min(height, 390));
+    }
+  }, [newInfo]);
 
   const handleObjectKeyChange = (index: number, value: string) => {
     if (isArray(newInfo)) {
@@ -137,34 +148,41 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
         </p>
       </div>
 
-      <div className="space-y-3">
-        {newInfo.map((item, index) => (
-          <div key={index} className="flex items-center w-full gap-2">
-            <div className="w-[45%]">
-              <Input
-                value={item.key}
-                disabled={defaultFieldKeys.includes(item.key)}
-                error={!item.key}
-                onChange={(e) => handleObjectKeyChange(index, e.target.value)}
-                placeholder="Field name"
-              />
+      <ScrollArea style={{ height: contentHeight }} type="always">
+        <div ref={contentRef} className="space-y-2">
+          {newInfo.map((item, index) => (
+            <div
+              key={index}
+              className="flex flex-col items-center flex-grow-0 flex-shrink-0 w-full pr-5 sm:gap-2 sm:pr-0 sm:flex-row"
+            >
+              <div className="w-full sm:w-[42%] flex-grow-0 flex-shrink-0">
+                <Input
+                  value={item.key}
+                  disabled={defaultFieldKeys.includes(item.key)}
+                  error={!item.key}
+                  onChange={(e) => handleObjectKeyChange(index, e.target.value)}
+                  placeholder="Field name"
+                />
+              </div>
+
+              <div className="w-full sm:w-[42%] flex-grow-0 flex-shrink-0">
+                <Input
+                  value={item.value}
+                  error={defaultFieldKeys.includes(item.key) ? false : !item.value}
+                  onChange={(e) => handleObjectValueChange(index, e.target.value)}
+                  placeholder="Value"
+                />
+              </div>
+
+              {!defaultFieldKeys.includes(item.key) ? (
+                <Button size="icon" variant="secondary" className="h-9 w-9" onClick={() => removeObjectField(index)}>
+                  <X size={18} />
+                </Button>
+              ) : null}
             </div>
-            <div className="w-[45%]">
-              <Input
-                value={item.value}
-                error={defaultFieldKeys.includes(item.key) ? false : !item.value}
-                onChange={(e) => handleObjectValueChange(index, e.target.value)}
-                placeholder="Value"
-              />
-            </div>
-            {!defaultFieldKeys.includes(item.key) ? (
-              <Button size="icon" variant="ghost" className="h-9 w-9" onClick={() => removeObjectField(index)}>
-                <X size={18} />
-              </Button>
-            ) : null}
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </ScrollArea>
 
       <Button size="sm" variant="link" onClick={addObjectField} className="flex items-center gap-1 p-0">
         <Plus size={16} /> Add custom field
