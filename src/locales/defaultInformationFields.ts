@@ -69,5 +69,5 @@ export const defaultInformationFields: { [name: string]: IDefaultInformationHint
     },
     hint: "Instagram username of the map unit owner.",
   },
-};
+} as const;
 
