@@ -18,7 +18,9 @@ interface EditInfoFormProps {
   unitData: IMapUnit;
 }
 
-const defaultFieldKeys = ["name", "homepage", "twitter", "telegram", "facebook", "instagram"] as const;
+const socialNetworks = ["twitter", "telegram", "facebook", "instagram"];
+
+const defaultFieldKeys = ["name", "homepage", ...socialNetworks] as const;
 
 const PAYLOAD_STRING_LIMIT = 10000 as const;
 
