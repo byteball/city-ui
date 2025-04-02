@@ -28,7 +28,10 @@ export const AddWalletAddress: FC<IAddWalletAddressProps> = ({ children }) => {
   const walletAddressFromStore = useSettingsStore((state) => state.walletAddress);
   const validAddress = useMemo(() => (address ? obyte.utils.isValidAddress(address) : false), [address]);
 
-  const disabled = useMemo(() => walletAddressFromStore === address || !validAddress, [walletAddressFromStore, address, validAddress]);
+  const disabled = useMemo(
+    () => walletAddressFromStore === address || !validAddress,
+    [walletAddressFromStore, address, validAddress]
+  );
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,8 +41,10 @@ export const AddWalletAddress: FC<IAddWalletAddressProps> = ({ children }) => {
   );
 
   const handleKeyDown = useCallback(
-    (_e: KeyboardEvent<HTMLInputElement>) => {
-      saveBtnRef.current?.click();
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        saveBtnRef.current?.click();
+      }
     },
     [saveBtnRef.current]
   );

@@ -1,7 +1,7 @@
 import cn from "classnames";
 import { differenceBy, isArray, isObject, unionBy } from "lodash";
 import { InfoIcon, Plus, X } from "lucide-react";
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 
 import { QRButton } from "@/components/ui/_qr-button";
 import { Button } from "@/components/ui/button";
@@ -74,6 +74,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
   const [newInfo, setNewInfo] = useState<Array<Record<string, any>>>(getDefaultFields(currentInfo));
   const [contentHeight, setContentHeight] = useState<number>(0);
   const contentRef = useRef<HTMLDivElement>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   // Calculate content height whenever newInfo changes
   useEffect(() => {
@@ -199,6 +200,17 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
       (item.key in defaultInformationFields && item.value === getInformationPrefix(item.key))
   );
 
+  const disabled = !areAllUniq || emptyFields.length > 0 || isVeryLarge || !areAllValid;
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      if (!disabled && e.key === "Enter") {
+        btnRef.current?.click();
+      }
+    },
+    [btnRef.current, disabled]
+  );
+
   return (
     <div className="mt-8 space-y-4 ">
       <div className="mb-6">
@@ -220,6 +232,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
                 <Input
                   value={item.key}
                   disabled={item.isDefault}
+                  onKeyDown={handleKeyDown}
                   onChange={(e) => handleObjectKeyChange(index, e.target.value)}
                   placeholder="Field name"
                 />
@@ -228,6 +241,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
               <div className="w-full sm:w-[42%] flex-grow-0 flex-shrink-0">
                 <Input
                   value={item.value}
+                  onKeyDown={handleKeyDown}
                   error={
                     item.key in defaultInformationFields && item.value !== getInformationPrefix(item.key)
                       ? !item.isValid
@@ -282,11 +296,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
         <Plus size={16} /> Add custom field
       </Button>
 
-      <QRButton
-        href={url}
-        disabled={!areAllUniq || emptyFields.length > 0 || isVeryLarge || !areAllValid}
-        className="w-full"
-      >
+      <QRButton href={url} ref={btnRef} disabled={disabled} className="w-full">
         Save changes
       </QRButton>
     </div>
