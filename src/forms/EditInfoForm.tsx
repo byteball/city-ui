@@ -1,16 +1,19 @@
+import cn from "classnames";
 import { differenceBy, isArray, isObject, unionBy } from "lodash";
-import { Plus, X } from "lucide-react";
+import { InfoIcon, Plus, X } from "lucide-react";
 import { FC, useEffect, useRef, useState } from "react";
 
 import { QRButton } from "@/components/ui/_qr-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { useSettingsStore } from "@/store/settings-store";
 
 import { IMapUnit } from "@/global";
-import { generateLink } from "@/lib";
+import { generateLink, getInformationPrefix } from "@/lib";
+import { defaultInformationFields } from "@/locales";
 
 import appConfig from "@/appConfig";
 
@@ -18,23 +21,43 @@ interface EditInfoFormProps {
   unitData: IMapUnit;
 }
 
-const defaultFieldKeys = ["name", "homepage", "twitter", "telegram", "facebook", "instagram"] as const;
-
 const PAYLOAD_STRING_LIMIT = 10000 as const;
 
-const getDefaultFields = (currentInfo: IMapUnit["info"]): Array<Record<string, any>> => {
-  const defaultFields = defaultFieldKeys.map((field: string) => ({ key: field, value: "" }));
+interface IField {
+  key: string;
+  value: string;
+  isDefault?: boolean;
+  isModified: boolean;
+  isValid: boolean;
+}
+
+const getDefaultFields = (currentInfo: IMapUnit["info"]): IField[] => {
+  const defaultFields = Object.keys(defaultInformationFields).map(
+    (field: string): IField => ({
+      key: field,
+      value: getInformationPrefix(field),
+      isDefault: true,
+      isModified: false,
+      isValid: true,
+    })
+  );
+
   if (!currentInfo) return defaultFields;
 
   if (typeof currentInfo === "string") {
-    const fields = defaultFields.filter((v) => v.key !== "name").map((field) => ({ key: field.key, value: "" }));
-    return [{ key: "name", value: currentInfo }, ...fields];
+    const fields = defaultFields.filter((v) => v.key !== "name");
+    return [{ key: "name", value: currentInfo, isDefault: true, isModified: true, isValid: true }, ...fields];
   }
 
   if (isObject(currentInfo)) {
     const currentInfoFields = Object.entries(currentInfo).map(([key, value]) => ({
       key,
-      value,
+      value: value?.toString().startsWith(getInformationPrefix(key))
+        ? value.toString()
+        : getInformationPrefix(key) + value,
+      isDefault: key in defaultInformationFields,
+      isModified: true,
+      isValid: true,
     }));
 
     const unSetDefaultFields = differenceBy(defaultFields, currentInfoFields, "key");
@@ -49,13 +72,13 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
   const { info: currentInfo, type, plot_num } = unitData;
   const walletAddress = useSettingsStore((state) => state.walletAddress!);
   const [newInfo, setNewInfo] = useState<Array<Record<string, any>>>(getDefaultFields(currentInfo));
-  const contentRef = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState<number>(0);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   // Calculate content height whenever newInfo changes
   useEffect(() => {
     if (contentRef.current) {
-      const height = contentRef.current.scrollHeight;
+      const height = contentRef.current.scrollHeight + 5;
       setContentHeight(Math.min(height, 390));
     }
   }, [newInfo]);
@@ -68,12 +91,44 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
     }
   };
 
-  const handleObjectValueChange = (index: number, value: string) => {
-    if (isArray(newInfo)) {
-      const updatedInfo = [...newInfo];
-      updatedInfo[index].value = value.trim();
-      setNewInfo(updatedInfo);
-    }
+  const handleObjectValueChange = (index: number, input: string) => {
+    setNewInfo((prev) => {
+      const updatedFields = [...prev];
+      const fieldKey = updatedFields[index].key;
+      const prefix = getInformationPrefix(fieldKey);
+
+      if (!input.trim()) {
+        // If input is empty, just use the prefix
+        updatedFields[index].value = prefix;
+      } else if (prefix) {
+        // Handle URL prefixes (http://, https://) specially to avoid duplication
+        const isUrlPrefix = prefix.match(/^(https:\/\/)/);
+
+        if (isUrlPrefix && (input.startsWith("http://") || input.startsWith("https://"))) {
+          // If input already has a URL protocol, use it as is
+          updatedFields[index].value = input;
+        } else if (!input.startsWith(prefix)) {
+          // If input doesn't start with prefix, add the prefix
+          updatedFields[index].value = prefix;
+        } else {
+          // Otherwise use input as is (maintaining prefix if present)
+          updatedFields[index].value = input;
+        }
+      } else {
+        // No prefix, just use the input
+        updatedFields[index].value = input;
+      }
+
+      let isValid = true;
+
+      if (fieldKey in defaultInformationFields) {
+        isValid = defaultInformationFields[fieldKey].validationFunc(updatedFields[index].value);
+      }
+
+      updatedFields[index].isValid = isValid;
+
+      return updatedFields;
+    });
   };
 
   const addObjectField = () => {
@@ -92,8 +147,8 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
 
   // Convert array of key-value pairs back to object
   let obj = newInfo.reduce((acc, { key, value }) => {
-    // Skip empty default fields and fields with no key
-    if ((defaultFieldKeys.includes(key as (typeof defaultFieldKeys)[number]) && value === "") || !key) {
+    // Skip empty default fields and fields with no key or with prefix
+    if ((key in defaultInformationFields && (value === "" || value === getInformationPrefix(key))) || !key) {
       return acc; // Skip this field
     }
 
@@ -121,9 +176,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
   const areAllUniq = unionBy(newInfo, "key").length === newInfo.length;
 
   // Check for empty fields that require values
-  const emptyFields = newInfo.filter(
-    (item) => !item.key || (!item.value && !defaultFieldKeys.includes(item.key as (typeof defaultFieldKeys)[number]))
-  );
+  const emptyFields = newInfo.filter((item) => !item.key || (!item.value && !(item.key in defaultInformationFields)));
 
   const url = generateLink({
     amount: 10000,
@@ -138,6 +191,13 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
     is_single: true,
   });
 
+  const areAllValid = newInfo.every(
+    (item) =>
+      item.isValid ||
+      !(item.key in defaultInformationFields) ||
+      (item.key in defaultInformationFields && item.value === getInformationPrefix(item.key))
+  );
+
   return (
     <div className="mt-8 space-y-4 ">
       <div className="mb-6">
@@ -149,7 +209,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
       </div>
 
       <ScrollArea style={{ height: contentHeight }} type="always">
-        <div ref={contentRef} className="space-y-2">
+        <div ref={contentRef} className="pl-1 space-y-2">
           {newInfo.map((item, index) => (
             <div
               key={index}
@@ -158,8 +218,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
               <div className="w-full sm:w-[42%] flex-grow-0 flex-shrink-0">
                 <Input
                   value={item.key}
-                  disabled={defaultFieldKeys.includes(item.key)}
-                  error={!item.key}
+                  disabled={item.isDefault}
                   onChange={(e) => handleObjectKeyChange(index, e.target.value)}
                   placeholder="Field name"
                 />
@@ -168,27 +227,65 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
               <div className="w-full sm:w-[42%] flex-grow-0 flex-shrink-0">
                 <Input
                   value={item.value}
-                  error={defaultFieldKeys.includes(item.key) ? false : !item.value}
+                  error={
+                    item.key in defaultInformationFields && item.value !== getInformationPrefix(item.key)
+                      ? !item.isValid
+                      : false
+                  }
                   onChange={(e) => handleObjectValueChange(index, e.target.value)}
-                  placeholder="Value"
+                  placeholder={defaultInformationFields[item.key]?.placeholder ?? ""}
                 />
               </div>
 
-              {!defaultFieldKeys.includes(item.key) ? (
+              {item.key in defaultInformationFields ? (
+                "hint" in defaultInformationFields[item.key] ? (
+                  <TooltipProvider delayDuration={100}>
+                    <Tooltip>
+                      <TooltipContent className="max-w-xs">
+                        <div>{defaultInformationFields[item.key]?.hint}</div>
+                        <div className="mt-2 italic">{defaultInformationFields[item.key]?.validationRule}</div>
+                      </TooltipContent>
+                      <TooltipTrigger className="flex items-center justify-center">
+                        <InfoIcon
+                          size={18}
+                          className={cn(
+                            "ml-2",
+                            item.isValid || item.value === getInformationPrefix(item.key)
+                              ? "text-muted-foreground"
+                              : "text-red-500"
+                          )}
+                        />
+                      </TooltipTrigger>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : null
+              ) : (
                 <Button size="icon" variant="secondary" className="h-9 w-9" onClick={() => removeObjectField(index)}>
                   <X size={18} />
                 </Button>
-              ) : null}
+              )}
             </div>
           ))}
         </div>
       </ScrollArea>
 
+      {isVeryLarge && (
+        <div className="text-sm text-red-500">The information is too large. Please reduce the content.</div>
+      )}
+
+      {!areAllUniq && (
+        <div className="text-sm text-red-500">Duplicate field names detected. All field names must be unique.</div>
+      )}
+
       <Button size="sm" variant="link" onClick={addObjectField} className="flex items-center gap-1 p-0">
         <Plus size={16} /> Add custom field
       </Button>
 
-      <QRButton href={url} disabled={!areAllUniq || emptyFields.length > 0 || isVeryLarge} className="w-full">
+      <QRButton
+        href={url}
+        disabled={!areAllUniq || emptyFields.length > 0 || isVeryLarge || !areAllValid}
+        className="w-full"
+      >
         Save changes
       </QRButton>
     </div>

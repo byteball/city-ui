@@ -4,6 +4,7 @@ export { beautifyParamValue } from "./beautifyParamValue";
 export { generateLink } from "./generateLink";
 export { getCountOfDecimals } from "./getCountOfDecimals";
 export { getExplorerUrl } from "./getExplorerUrl";
+export { getInformationPrefix } from "./getInformationPrefix";
 export { getRefDataFromSearch } from "./getRefDataFromSearch";
 export { toLocalString } from "./toLocalString";
 export { numericInputParamNames, percentInputParamNames, validateParam } from "./validateParam";

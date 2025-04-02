@@ -1,0 +1,2 @@
+export { defaultInformationFields } from "./defaultInformationFields";
+
