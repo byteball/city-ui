@@ -102,7 +102,14 @@ export const SelectedUnitMapCard = () => {
             </InfoPanel.Item>
           </InfoPanel>
 
-          {loading ? <Skeleton className="w-full h-[124px] mt-2" /> : null}
+          {loading ? (
+            <div className="flex flex-wrap gap-4">
+              <Skeleton className="rounded-xl w-[48px] h-[36px]" />
+              <Skeleton className="rounded-xl w-[48px] h-[36px]" />
+              <Skeleton className="rounded-xl w-[48px] h-[36px]" />
+              <Skeleton className="rounded-xl w-[48px] h-[36px]" />
+            </div>
+          ) : null}
 
           <div className="flex flex-wrap gap-4">
             {owner === walletAddress ? (
