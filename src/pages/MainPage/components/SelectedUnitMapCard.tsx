@@ -104,7 +104,7 @@ export const SelectedUnitMapCard = () => {
 
           {loading ? <Skeleton className="w-full h-[124px] mt-2" /> : null}
 
-          <div className="flex flex-wrap gap-4 mt-8">
+          <div className="flex flex-wrap gap-4">
             {owner === walletAddress ? (
               <SettingsDialog unitData={selectedMapUnit}>
                 <ButtonWithTooltip
