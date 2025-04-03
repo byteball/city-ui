@@ -183,9 +183,8 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
   const url = generateLink({
     amount: 10000,
     data: {
-      ...(type === "house" ? { house_num: unitData.house_num } : { plot_num }),
+      ...(type === "house" ? { house_num: unitData.house_num, edit_house: 1 } : { plot_num, edit_plot: 1 }),
       info: obj,
-      edit_plot: 1,
     },
     from_address: walletAddress,
     aa: appConfig.AA_ADDRESS,
