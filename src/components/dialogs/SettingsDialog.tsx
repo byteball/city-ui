@@ -18,7 +18,7 @@ export const SettingsDialog: FC<ISettingsDialogProps> = ({ children, unitData })
       <DialogHeader />
 
       {unitData.type === "house" ? (
-        <Tabs defaultValue="shortcode" className="w-full">
+        <Tabs defaultValue="info" className="w-full">
           <TabsList className="flex justify-between w-full">
             <TabsTrigger className="w-[50%]" value="info">
               Edit information
