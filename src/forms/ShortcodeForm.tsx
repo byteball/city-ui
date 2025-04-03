@@ -10,13 +10,11 @@ import { useSettingsStore } from "@/store/settings-store";
 import appConfig from "@/appConfig";
 
 interface IShortcodeFormProps {
-  defaultValue?: string;
-  plotNum: number;
   unitData: IMapUnit;
 }
 
-export const ShortcodeForm: FC<IShortcodeFormProps> = ({ defaultValue = "", plotNum }) => {
-  const [shortcode, setShortcode] = useState<string>(defaultValue);
+export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
+  const [shortcode, setShortcode] = useState<string>("");
 
   const walletAddress = useSettingsStore((state) => state.walletAddress);
 
@@ -28,7 +26,7 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ defaultValue = "", plot
 
   const url = generateLink({
     amount: 10000,
-    data: { shortcode, plot_num: plotNum },
+    data: { shortcode, plot_num: 1 },
     from_address: walletAddress!,
     aa: appConfig.AA_ADDRESS,
     asset: "base",
