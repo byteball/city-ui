@@ -211,7 +211,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
   );
 
   return (
-    <div className="mt-8 space-y-4 ">
+    <div className="space-y-4">
       <div className="mb-6">
         <h3 className="text-lg font-medium">Edit Information</h3>
         <p className="text-sm text-muted-foreground">

@@ -140,7 +140,7 @@ export const SelectedUnitMapCard = () => {
                   </ButtonWithTooltip>
                 </RentPlotDialog>
 
-                <LeaveUnbuiltPlotDialog leaveUrl={leaveUrl}>
+                <LeaveUnbuiltPlotDialog leaveUrl={leaveUrl} amount={selectedMapUnit.amount}>
                   <ButtonWithTooltip tooltipText="Leave the unbuilt plot" variant="secondary" className="rounded-xl">
                     <DoorOpenIcon className="w-4 h-4" />
                   </ButtonWithTooltip>
