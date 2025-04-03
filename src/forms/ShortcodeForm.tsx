@@ -1,15 +1,18 @@
 import { ChangeEvent, FC, KeyboardEvent, useCallback, useRef, useState } from "react";
+import { Link } from "react-router";
 
 import { QRButton } from "@/components/ui/_qr-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { IHouse } from "@/global";
-import { generateLink } from "@/lib";
+
+import { useAaParams, useAaStore } from "@/store/aa-store";
+import { shortcodesSelector } from "@/store/selectors/shortcodesSelector";
 import { useSettingsStore } from "@/store/settings-store";
 
+import { IHouse } from "@/global";
+import { generateLink } from "@/lib";
+
 import appConfig from "@/appConfig";
-import { useAaParams } from "@/store/aa-store";
-import { Link } from "react-router";
 
 interface IShortcodeFormProps {
   unitData: IHouse;
@@ -21,10 +24,12 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
   const { plot_price } = useAaParams();
   const walletAddress = useSettingsStore((state) => state.walletAddress);
   const btnRef = useRef<HTMLButtonElement>(null);
+  const existingShortcodes = useAaStore((state) => shortcodesSelector(state.state));
 
   const mayorHouse = unitData.amount < 0;
   const isTooCheap = unitData.amount < plot_price;
   const shortcodeMoreThan20Characters = shortcode.length > 20;
+  const isTaken = shortcode in existingShortcodes && existingShortcodes[shortcode] !== walletAddress;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^A-Za-z0-9_-]/g, "").toUpperCase();
@@ -45,7 +50,8 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
     is_single: true,
   });
 
-  const disabled = currentShortcode === shortcode || shortcodeMoreThan20Characters || mayorHouse || isTooCheap;
+  const disabled =
+    currentShortcode === shortcode || shortcodeMoreThan20Characters || mayorHouse || isTooCheap || isTaken;
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
@@ -102,7 +108,13 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
             id="shortcode"
             autoFocus
             onKeyDown={handleKeyDown}
-            error={shortcodeMoreThan20Characters ? "Please enter a shortcode with 20 characters or fewer" : false}
+            error={
+              shortcodeMoreThan20Characters
+                ? "Please enter a shortcode with 20 characters or fewer"
+                : isTaken
+                ? "This shortcode is already taken"
+                : ""
+            }
             value={shortcode}
             onChange={handleChange}
           />

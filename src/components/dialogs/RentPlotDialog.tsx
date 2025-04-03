@@ -8,7 +8,15 @@ import { mapUnitsByCoordinatesSelector } from "@/store/selectors/mapUnitsSelecto
 import { useSettingsStore } from "@/store/settings-store";
 import { InfoPanel } from "../ui/_info-panel";
 import { QRButton } from "../ui/_qr-button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
@@ -25,7 +33,9 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   const { symbol, decimals, asset, inited } = useSettingsStore();
   const walletAddressFromStore = useSettingsStore((state) => state.walletAddress);
   const selectedMapUnitCoordinates = useSettingsStore((state) => state.selectedMapUnit);
-  const [selectedMapUnit] = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates as ICoordinates | null));
+  const [selectedMapUnit] = useAaStore((state) =>
+    mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates as ICoordinates | null)
+  );
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +67,6 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
     plot_price: plotPrice,
     matching_probability: matchingProbability,
     rental_surcharge_factor: rentalSurchargeFactor,
-    referral_boost: referralBoost,
   } = useAaParams();
   const aaState = useAaStore((state) => state.state);
   const cityData = aaState.city_city!;
@@ -83,11 +92,15 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   if (selectedMapUnit.type === "plot") {
     const rentalExpiryTimestamp = selectedMapUnit.rental_expiry_ts ?? 0;
     if (currentTimestamp < rentalExpiryTimestamp) {
-      unusedRentalCredit = Math.floor((existingRentedAmount * (rentalExpiryTimestamp - currentTimestamp)) / secondsInYear);
+      unusedRentalCredit = Math.floor(
+        (existingRentedAmount * (rentalExpiryTimestamp - currentTimestamp)) / secondsInYear
+      );
       rentalExpiryFormatted = moment.unix(rentalExpiryTimestamp).format("YYYY-MM-DD HH:mm");
 
       if (rentalAmountSmallestUnit && rentalAmountSmallestUnit < (selectedMapUnit.rented_amount ?? 0)) {
-        error = `Rental amount cannot be decreased. Min value is ${toLocalString(existingRentedAmount / decimalsFactor)} ${symbol}`;
+        error = `Rental amount cannot be decreased. Min value is ${toLocalString(
+          existingRentedAmount / decimalsFactor
+        )} ${symbol}`;
       }
     }
   }
@@ -106,28 +119,13 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   const currentPlotArea = selectedMapUnit.amount + existingRentedAmount;
   const newPlotArea = selectedMapUnit.amount + rentalAmountSmallestUnit;
 
-  const currentShare = currentPlotArea / (cityData.total_land + cityData.total_rented);
-  const newShare = newPlotArea / (cityData.total_land + cityData.total_rented - existingRentedAmount + rentalAmountSmallestUnit);
-
-  const hasReferrer = "ref_plot_num" in selectedMapUnit ? 1 : 0;
-  const currentDistance = Math.sqrt(1e12 * +matchingProbability * (currentShare + hasReferrer * +referralBoost)) / 2;
-  const newDistance = Math.sqrt(1e12 * +matchingProbability * (newShare + hasReferrer * +referralBoost)) / 2;
-
   const areaChangePercentage = (newPlotArea / currentPlotArea - 1) * 100;
-  const matchingRangeChangePercentage = (newDistance / currentDistance - 1) * 100;
 
   const areaChangeDescription =
     areaChangePercentage > 0
       ? `~${Math.round(areaChangePercentage)}% larger`
       : areaChangePercentage < 0
       ? `~${Math.round(Math.abs(areaChangePercentage))}% smaller`
-      : "unchanged";
-
-  const rangeChangeDescription =
-    matchingRangeChangePercentage > 0
-      ? `~${Math.round(matchingRangeChangePercentage)}% farther`
-      : matchingRangeChangePercentage < 0
-      ? `~${Math.round(Math.abs(matchingRangeChangePercentage))}% closer`
       : "unchanged";
 
   if (requiredFee > rentalAmountSmallestUnit) {
@@ -154,8 +152,8 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
         <DialogHeader>
           <DialogTitle>Rent additional land around your plot</DialogTitle>
           <DialogDescription>
-            Your plot balance is {toLocalString(+Number(selectedMapUnit.amount / decimalsFactor).toFixed(decimals!))} {symbol}. You can rent
-            additional land to increase the plot's matching probability.
+            Your plot balance is {toLocalString(+Number(selectedMapUnit.amount / decimalsFactor).toFixed(decimals!))}{" "}
+            {symbol}. You can rent additional land to increase the plot's matching probability.
           </DialogDescription>
         </DialogHeader>
 
@@ -163,7 +161,10 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
           <InfoPanel className="mb-2 text-sm text-gray-300">
             {selectedMapUnit.type === "plot" && selectedMapUnit?.rented_amount && (
               <InfoPanel.Item label="Previous rental">
-                {toLocalString((selectedMapUnit.type === "plot" ? selectedMapUnit?.rented_amount ?? 0 : 0) / decimalsFactor)} {symbol}
+                {toLocalString(
+                  (selectedMapUnit.type === "plot" ? selectedMapUnit?.rented_amount ?? 0 : 0) / decimalsFactor
+                )}{" "}
+                {symbol}
               </InfoPanel.Item>
             )}
             <InfoPanel.Item label="Unused rental">
@@ -188,7 +189,9 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
         <InfoPanel>
           <InfoPanel.Item label="Expires in">1 year</InfoPanel.Item>
           <InfoPanel.Item label="Rental fee">
-            {isFeeCoveredByUnusedCredit ? "Covered by unused credit" : `${toLocalString(requiredFee / decimalsFactor)} ${symbol}`}
+            {isFeeCoveredByUnusedCredit
+              ? "Covered by unused credit"
+              : `${toLocalString(requiredFee / decimalsFactor)} ${symbol}`}
           </InfoPanel.Item>
           <InfoPanel.Item label="Total balance (inc. rented)">
             {toLocalString(selectedMapUnit.amount / decimalsFactor + Number(rentalAmount))} {symbol}
@@ -196,14 +199,18 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
           {rentalAmount && Number(rentalAmount) > 0 && (
             <>
               <InfoPanel.Item label="Area change">{areaChangeDescription}</InfoPanel.Item>
-              <InfoPanel.Item label="Matching range">{rangeChangeDescription}</InfoPanel.Item>
             </>
           )}
         </InfoPanel>
 
         <DialogFooter>
           <div className="w-full">
-            <QRButton ref={submitButtonRef} disabled={!inited || !!error || !rentalAmount} className="w-full" href={url}>
+            <QRButton
+              ref={submitButtonRef}
+              disabled={!inited || !!error || !rentalAmount}
+              className="w-full"
+              href={url}
+            >
               {isFeeCoveredByUnusedCredit
                 ? `Rent with unused credit`
                 : isRenewal
@@ -212,7 +219,9 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
             </QRButton>
             <div className="mt-2 text-gray-400 text-foreground">
               {isFeeCoveredByUnusedCredit ? (
-                <small>Your unused rental credit covers most of this rental. A minimal transaction amount is still required.</small>
+                <small>
+                  Your unused rental credit covers most of this rental. A minimal transaction amount is still required.
+                </small>
               ) : isRenewal ? (
                 <small>Rental fee may be lower than before. Any excess will be returned to you.</small>
               ) : (
