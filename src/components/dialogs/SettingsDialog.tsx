@@ -18,7 +18,7 @@ export const SettingsDialog: FC<ISettingsDialogProps> = ({ children, unitData })
       <DialogHeader />
 
       {unitData.type === "house" ? (
-        <Tabs defaultValue="info" className="w-full">
+        <Tabs defaultValue="shortcode" className="w-full">
           <TabsList className="flex justify-between w-full">
             <TabsTrigger className="w-[50%]" value="info">
               Edit information
@@ -30,10 +30,12 @@ export const SettingsDialog: FC<ISettingsDialogProps> = ({ children, unitData })
           </TabsList>
 
           <TabsContent value="shortcode">
-            <ShortcodeForm unitData={unitData} />
+            <div className="mt-8">
+              <ShortcodeForm unitData={unitData} />
+            </div>
           </TabsContent>
           <TabsContent value="info">
-            <div className="mt-8 ">
+            <div className="mt-8">
               <EditInfoForm unitData={unitData} />
             </div>
           </TabsContent>
