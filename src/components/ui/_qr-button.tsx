@@ -37,7 +37,7 @@ export const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(
 
         <DialogContent className="sm:max-w-[360px]">
           <DialogHeader className="w-full mb-4 text-center">
-            <DialogTitle className="mx-auto leading-snug text-center max-w-70">
+            <DialogTitle className="mx-auto leading-snug text-center max-w-[200px]">
               Scan this QR code <br /> with your mobile phone
             </DialogTitle>
           </DialogHeader>
