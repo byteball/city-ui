@@ -92,12 +92,16 @@ export const SelectedUnitMapCard = () => {
             </InfoPanel.Item>
 
             <InfoPanel.Item label="Address" loading={loading}>
-              <div>{addresses[0] ?? "No address"}</div>
+              {addresses[0] ?? "No address"}
             </InfoPanel.Item>
 
             {selectedMapUnit?.type === "house" && selectedMapUnit?.shortcode ? (
-              <InfoPanel.Item label="Shortcode" loading={loading}>
-                <div>{selectedMapUnit.shortcode}</div>
+              <InfoPanel.Item
+                label="Shortcode"
+                tooltipText="Shortcodes are used to send money via the wallet instead of using a full address"
+                loading={loading}
+              >
+                {selectedMapUnit.shortcode}
               </InfoPanel.Item>
             ) : null}
 
