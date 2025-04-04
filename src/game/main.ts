@@ -11,7 +11,7 @@ const config: Phaser.Types.Core.GameConfig = {
   width: 1800,
   height: 1800,
   banner: appConfig.TESTNET,
-  resizeInterval: 1,
+  resizeInterval: 10,
   render: {
     antialias: true,
     transparent: true,
@@ -20,6 +20,10 @@ const config: Phaser.Types.Core.GameConfig = {
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
+  },
+  failIfMajorPerformanceCaveat: true,
+  fps: {
+    target: 10,
   },
 };
 
