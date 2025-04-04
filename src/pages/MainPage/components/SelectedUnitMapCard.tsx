@@ -68,7 +68,7 @@ export const SelectedUnitMapCard = () => {
       </CardHeader>
 
       {selectedMapUnitCoordinates ? (
-        <CardContent>
+        <CardContent className="text-sm">
           <InfoPanel>
             <InfoPanel.Item label="Amount" loading={loading}>
               {formattedTotalAmount} {symbol} {rented_amount ? `(inc. ${formattedRentedAmount} rented ${symbol})` : ""}
@@ -94,6 +94,12 @@ export const SelectedUnitMapCard = () => {
             <InfoPanel.Item label="Address" loading={loading}>
               <div>{addresses[0] ?? "No address"}</div>
             </InfoPanel.Item>
+
+            {selectedMapUnit?.type === "house" && selectedMapUnit?.shortcode ? (
+              <InfoPanel.Item label="Shortcode" loading={loading}>
+                <div>{selectedMapUnit.shortcode}</div>
+              </InfoPanel.Item>
+            ) : null}
 
             <InfoPanel.Item label="Created at" loading={loading}>
               {moment.unix(selectedMapUnit?.ts).format("YYYY-MM-DD HH:mm")}
