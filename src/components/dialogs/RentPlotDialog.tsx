@@ -2,7 +2,6 @@ import moment from "moment";
 import { FC, KeyboardEvent, useCallback, useMemo, useRef, useState } from "react";
 
 import { ICoordinates } from "@/global";
-import { generateLink, getCountOfDecimals, toLocalString } from "@/lib";
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { mapUnitsByCoordinatesSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
@@ -19,6 +18,9 @@ import {
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+
+import { generateLink, getCountOfDecimals, toLocalString } from "@/lib";
+import { getAreaChangeDescription, getRequiredFee, getUnusedRental } from "./utils";
 
 import appConfig from "@/appConfig";
 
@@ -55,24 +57,18 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   }, []);
 
   const decimalsFactor = 10 ** decimals!;
-
-  let error = useMemo(() => {
-    if (rentalAmount !== "" && Number(rentalAmount) <= 0) {
-      return `Amount should be greater than 0`;
-    }
-    return false;
-  }, [rentalAmount]);
-
   const {
     plot_price: plotPrice,
     matching_probability: matchingProbability,
     rental_surcharge_factor: rentalSurchargeFactor,
   } = useAaParams();
+
   const aaState = useAaStore((state) => state.state);
   const cityData = aaState.city_city!;
   const totalPlotsBought = cityData.total_bought / +plotPrice;
   const existingRentedAmount = selectedMapUnit.type === "plot" ? selectedMapUnit?.rented_amount ?? 0 : 0;
   const rentalAmountSmallestUnit = Number(rentalAmount) * decimalsFactor;
+
   const totalEffectiveSupply =
     cityData.total_land +
     cityData.total_rented +
@@ -86,51 +82,42 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   const incomePerPurchase = (2 * +plotPrice * +matchingProbability * rentalAmountSmallestUnit) / totalEffectiveSupply;
   const annualIncome = incomePerPurchase * expectedPurchasesNextYear;
   const rentalFee = Math.ceil(+rentalSurchargeFactor * annualIncome);
-  let unusedRentalCredit = 0;
-  let rentalExpiryFormatted = "";
 
-  if (selectedMapUnit.type === "plot") {
-    const rentalExpiryTimestamp = selectedMapUnit.rental_expiry_ts ?? 0;
-    if (currentTimestamp < rentalExpiryTimestamp) {
-      unusedRentalCredit = Math.floor(
-        (existingRentedAmount * (rentalExpiryTimestamp - currentTimestamp)) / secondsInYear
-      );
-      rentalExpiryFormatted = moment.unix(rentalExpiryTimestamp).format("YYYY-MM-DD HH:mm");
-
-      if (rentalAmountSmallestUnit && rentalAmountSmallestUnit < (selectedMapUnit.rented_amount ?? 0)) {
-        error = `Rental amount cannot be decreased. Min value is ${toLocalString(
-          existingRentedAmount / decimalsFactor
-        )} ${symbol}`;
-      }
+  let error = useMemo(() => {
+    if (rentalAmount !== "" && Number(rentalAmount) <= 0) {
+      return `Amount should be greater than 0`;
     }
+    return false;
+  }, [rentalAmount]);
+
+  const { unusedRentalCredit, rentalExpiryFormatted } =
+    selectedMapUnit.type === "plot"
+      ? getUnusedRental(currentTimestamp, selectedMapUnit.rental_expiry_ts, selectedMapUnit.rented_amount)
+      : { unusedRentalCredit: 0, rentalExpiryFormatted: "" };
+
+  if (
+    selectedMapUnit.type === "plot" &&
+    rentalAmount &&
+    Number(rentalAmount) > 0 &&
+    rentalAmountSmallestUnit < (selectedMapUnit.rented_amount ?? 0)
+  ) {
+    error = `Rental amount cannot be decreased. Min value is ${toLocalString(
+      existingRentedAmount / decimalsFactor
+    )} ${symbol}`;
   }
 
   const rentalFeeWithMargin = rentalFee * 1.01;
   const isFeeCoveredByUnusedCredit = unusedRentalCredit >= rentalFeeWithMargin - 0.01;
-
   const minTransactionAmount = 1;
-
   const requiredFee = isFeeCoveredByUnusedCredit
     ? minTransactionAmount
-    : Math.max(minTransactionAmount, rentalFeeWithMargin - unusedRentalCredit);
+    : getRequiredFee(rentalFee, unusedRentalCredit, minTransactionAmount, rentalAmountSmallestUnit);
 
   const isRenewal = Math.abs(Number(rentalAmount) - existingRentedAmount / decimalsFactor) < 0.001;
 
   const currentPlotArea = selectedMapUnit.amount + existingRentedAmount;
   const newPlotArea = selectedMapUnit.amount + rentalAmountSmallestUnit;
-
-  const areaChangePercentage = (newPlotArea / currentPlotArea - 1) * 100;
-
-  const areaChangeDescription =
-    areaChangePercentage > 0
-      ? `~${Math.round(areaChangePercentage)}% larger`
-      : areaChangePercentage < 0
-      ? `~${Math.round(Math.abs(areaChangePercentage))}% smaller`
-      : "unchanged";
-
-  if (requiredFee > rentalAmountSmallestUnit) {
-    error = "Not enough paid for rental fee";
-  }
+  const areaChangeDescription = getAreaChangeDescription(currentPlotArea, newPlotArea);
 
   const url = generateLink({
     amount: requiredFee,
@@ -188,10 +175,10 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
 
         <InfoPanel>
           <InfoPanel.Item label="Expires in">1 year</InfoPanel.Item>
-          <InfoPanel.Item label="Rental fee">
+          <InfoPanel.Item label="Rental fee" tooltipText="The amount you will pay to rent additional plot space.">
             {isFeeCoveredByUnusedCredit
               ? "Covered by unused credit"
-              : `${toLocalString(requiredFee / decimalsFactor)} ${symbol}`}
+              : `${toLocalString(rentalFee / decimalsFactor)} ${symbol}`}
           </InfoPanel.Item>
           <InfoPanel.Item label="Total balance (inc. rented)">
             {toLocalString(selectedMapUnit.amount / decimalsFactor + Number(rentalAmount))} {symbol}
