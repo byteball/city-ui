@@ -7,9 +7,7 @@ import { InfoPanel } from "@/components/ui/_info-panel";
 import { getExplorerUrl } from "@/lib";
 import { useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
-import { UserHouses } from "./UserHouses";
-import { UserPlots } from "./UserPlots";
-import { UserStats } from "./UserStats";
+import { UserHouses, UserPlots, UserStats } from "./components";
 
 interface UserPageProps {}
 
