@@ -68,5 +68,12 @@ export const defaultInformationFields: { [name: string]: IDefaultInformationHint
     validationFunc: validateSocialNetworkUsername,
     hint: "Instagram username of the map unit owner.",
   },
+  discord: {
+    placeholder: "ex. @obyteOrg",
+    validationRule: "Must be 3-20 characters long. Just the username without URL.",
+    type: "socialNetwork",
+    validationFunc: validateSocialNetworkUsername,
+    hint: "Discord username of the map unit owner.",
+  },
 } as const;
 

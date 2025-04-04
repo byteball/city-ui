@@ -7,7 +7,10 @@ import { InfoPanel } from "@/components/ui/_info-panel";
 import { getExplorerUrl } from "@/lib";
 import { useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
-import { UserHouses, UserPlots, UserStats } from "./components";
+
+import { AttestationList, UserHouses, UserPlots, UserStats } from "./components";
+
+import { useAttestations } from "@/hooks/useAttestations";
 
 interface UserPageProps {}
 
@@ -15,6 +18,8 @@ const UserPage: FC<UserPageProps> = () => {
   const { address } = useParams<{ address: string }>();
   const inited = useSettingsStore((state) => state.inited);
   const stateLoaded = useAaStore((state) => state.loaded);
+
+  const { data: attestations, loaded } = useAttestations(address);
 
   if (!address || !obyte.utils.isValidAddress(address)) {
     return <Navigate to="/not-found" replace />;
@@ -29,6 +34,10 @@ const UserPage: FC<UserPageProps> = () => {
           <a className="text-link" target="_blank" rel="noopener" href={getExplorerUrl(address, "address")}>
             {address}
           </a>
+        </InfoPanel.Item>
+
+        <InfoPanel.Item label="Attested contacts" loading={!loaded}>
+          <AttestationList data={attestations} />
         </InfoPanel.Item>
       </InfoPanel>
 

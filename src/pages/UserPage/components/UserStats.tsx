@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TextScramble } from "@/components/ui/text-scramble";
@@ -14,7 +14,7 @@ interface IUserStatsProps {
   address: string;
 }
 
-export const UserStats: FC<IUserStatsProps> = ({ address }) => {
+export const UserStats: FC<IUserStatsProps> = memo(({ address }) => {
   const decimals = useSettingsStore((state) => state.decimals);
   const symbol = useSettingsStore((state) => state.symbol);
   const balance = useAaStore((state) => Number(state.state?.[`user_land_${address}`] ?? 0));
@@ -67,5 +67,5 @@ export const UserStats: FC<IUserStatsProps> = ({ address }) => {
       </Card>
     </div>
   );
-};
+});
 
