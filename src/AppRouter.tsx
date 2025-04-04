@@ -14,7 +14,7 @@ export const AppRouter: FC<IAppRouterProps> = () => (
       <Route path="/" element={<MainPage />} />
       <Route path="/user/:address" element={<UserPage />} />
       <Route path="/faq" element={<FaqPage />} />
-      <Route path="/gover" element={<GovernancePage />} />
+      <Route path="/governance" element={<GovernancePage />} />
       <Route path="/not-found" element={<NotFound />} />
       <Route path="/claim/:nums" element={<ClaimRedirectPage />} />
       <Route path="*" element={<NotFound />} />
