@@ -3,14 +3,11 @@ import { FC } from "react";
 import { Navigate, useParams } from "react-router";
 
 import { PageLayout } from "@/components/layout/page-layout";
-import { InfoPanel } from "@/components/ui/_info-panel";
-import { getExplorerUrl } from "@/lib";
 import { useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
-import { AttestationList, UserHouses, UserPlots, UserStats } from "./components";
-
-import { useAttestations } from "@/hooks/useAttestations";
+import { UserHouses, UserPlots, UserStats } from "./components";
+import { UserInfo } from "./components/UserInfo";
 
 interface UserPageProps {}
 
@@ -18,8 +15,6 @@ const UserPage: FC<UserPageProps> = () => {
   const { address } = useParams<{ address: string }>();
   const inited = useSettingsStore((state) => state.inited);
   const stateLoaded = useAaStore((state) => state.loaded);
-
-  const { data: attestations, loaded } = useAttestations(address);
 
   if (!address || !obyte.utils.isValidAddress(address)) {
     return <Navigate to="/not-found" replace />;
@@ -29,22 +24,9 @@ const UserPage: FC<UserPageProps> = () => {
 
   return (
     <PageLayout title="User page" loading={loading}>
-      <InfoPanel>
-        <InfoPanel.Item label="Address" loading={loading}>
-          <a className="text-link" target="_blank" rel="noopener" href={getExplorerUrl(address, "address")}>
-            {address}
-          </a>
-        </InfoPanel.Item>
-
-        <InfoPanel.Item label="Attested contacts" loading={!loaded}>
-          <AttestationList data={attestations} />
-        </InfoPanel.Item>
-      </InfoPanel>
-
+      <UserInfo address={address} />
       <UserStats address={address} />
-
       <UserPlots address={address} />
-
       <UserHouses address={address} />
     </PageLayout>
   );
