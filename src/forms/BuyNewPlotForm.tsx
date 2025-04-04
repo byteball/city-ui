@@ -42,13 +42,17 @@ export const BuyNewPlotForm: FC = memo(() => {
 
   return (
     <div className="text-sm">
-      <InfoPanel>
+      <InfoPanel className="mb-4">
         <InfoPanel.Item label="Price" loading={isLoading}>
           {formattedValues.price} {symbol}
         </InfoPanel.Item>
 
-        <InfoPanel.Item label="Fee" loading={isLoading}>
-          {formattedValues.fee}%
+        <InfoPanel.Item
+          tooltipText="A fee applies to prevent misuse. See the governance page for details."
+          label="Fee"
+          loading={isLoading}
+        >
+          {formattedValues.fee + "%"}
         </InfoPanel.Item>
 
         <InfoPanel.Item label="Total price" loading={isLoading}>
