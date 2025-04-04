@@ -21,7 +21,7 @@ export const Layout: FC<ILayoutProps> = () => {
         <Header />
       </div>
 
-      <div className="container mx-auto sm:px-6 lg:px-8">
+      <div className="container mx-auto sm:px-4 lg:px-6">
         <Outlet />
       </div>
 

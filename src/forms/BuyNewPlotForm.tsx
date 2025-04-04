@@ -42,7 +42,7 @@ export const BuyNewPlotForm: FC = memo(() => {
 
   return (
     <div className="text-sm">
-      <InfoPanel>
+      <InfoPanel className="mb-4">
         <InfoPanel.Item label="Price" loading={isLoading}>
           {formattedValues.price} {symbol}
         </InfoPanel.Item>

@@ -1,7 +1,8 @@
+import cn from "classnames";
+import { DoorOpenIcon, ImageUpscaleIcon, PencilIcon, ShoppingBagIcon } from "lucide-react";
 import moment from "moment";
 import { Link } from "react-router";
 
-import appConfig from "@/appConfig";
 import { LeaveUnbuiltPlotDialog } from "@/components/dialogs/LeaveUnbuiltPlotDialog";
 import { RentPlotDialog } from "@/components/dialogs/RentPlotDialog";
 import { SellPlotDialog } from "@/components/dialogs/SellPlotDialog";
@@ -11,14 +12,17 @@ import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+import { useAaStore } from "@/store/aa-store";
+import { mapUnitsByCoordinatesSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
+import { useSettingsStore } from "@/store/settings-store";
+
 import { getRoads } from "@/game/utils/getRoads";
 import { ICity, ICoordinates } from "@/global";
 import { generateLink, toLocalString } from "@/lib";
 import { getAddressFromNearestRoad } from "@/lib/getAddressCoordinate";
-import { useAaStore } from "@/store/aa-store";
-import { mapUnitsByCoordinatesSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
-import { useSettingsStore } from "@/store/settings-store";
-import { DoorOpenIcon, ImageUpscaleIcon, PencilIcon, ShoppingBagIcon } from "lucide-react";
+
+import appConfig from "@/appConfig";
 
 export const SelectedUnitMapCard = () => {
   const selectedMapUnitCoordinates = useSettingsStore((state) => state.selectedMapUnit);
@@ -103,7 +107,7 @@ export const SelectedUnitMapCard = () => {
           </InfoPanel>
 
           {loading ? (
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 mt-4">
               <Skeleton className="rounded-xl w-[48px] h-[36px]" />
               <Skeleton className="rounded-xl w-[48px] h-[36px]" />
               <Skeleton className="rounded-xl w-[48px] h-[36px]" />
@@ -111,7 +115,7 @@ export const SelectedUnitMapCard = () => {
             </div>
           ) : null}
 
-          <div className="flex flex-wrap gap-4">
+          <div className={cn("flex flex-wrap gap-4", { "mt-4": owner === walletAddress })}>
             {owner === walletAddress ? (
               <SettingsDialog unitData={selectedMapUnit}>
                 <ButtonWithTooltip
@@ -155,4 +159,6 @@ export const SelectedUnitMapCard = () => {
     </Card>
   );
 };
+
+SelectedUnitMapCard.displayName = "SelectedUnitMapCard";
 

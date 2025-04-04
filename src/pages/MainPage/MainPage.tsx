@@ -1,11 +1,11 @@
 import { BuyNewPlotCard, GameCard, SelectedUnitMapCard } from "./components";
 
 export default () => (
-  <div className="grid grid-cols-3 gap-8 md:grid-cols-5">
-    <div className="col-span-3">
+  <div className="grid gap-6 px-4 md:px-0 md:grid-cols-5">
+    <div className="md:col-span-3">
       <GameCard />
     </div>
-    <div className="col-span-2">
+    <div className="md:col-span-2">
       <div className="grid grid-cols-1 gap-8">
         <SelectedUnitMapCard />
         <BuyNewPlotCard />

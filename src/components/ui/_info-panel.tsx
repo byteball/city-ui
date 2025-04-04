@@ -10,7 +10,11 @@ interface InfoPanelProps {
   labelAnimated?: boolean;
 }
 
-const InfoPanel: FC<InfoPanelProps> & { Item: typeof InfoPanelItem } = ({ children, className = "", labelAnimated = false }) => {
+const InfoPanel: FC<InfoPanelProps> & { Item: typeof InfoPanelItem } = ({
+  children,
+  className = "",
+  labelAnimated = false,
+}) => {
   const enhancedChildren = Children.map(children, (child) => {
     if (isValidElement<{ labelAnimated?: boolean }>(child)) {
       return cloneElement(child, { labelAnimated });
@@ -19,7 +23,7 @@ const InfoPanel: FC<InfoPanelProps> & { Item: typeof InfoPanelItem } = ({ childr
     return child;
   });
 
-  return <div className={cn("grid gap-1 mb-4", className)}>{enhancedChildren}</div>;
+  return <div className={cn("grid gap-1", className)}>{enhancedChildren}</div>;
 };
 
 interface InfoPanelItemProps {
@@ -34,8 +38,8 @@ const InfoPanelItem: FC<InfoPanelItemProps> = ({ label, children, labelAnimated 
   const LabelWrapper = labelAnimated ? TextScramble : "div";
 
   return (
-    <div className="flex items-center space-x-2">
-      {label ? <LabelWrapper>{`${label}: `}</LabelWrapper> : null}
+    <div className="flex flex-col mb-2 last:mb-0 lg:mb-0 lg:space-x-2 lg:items-center lg:flex-row">
+      {label ? <LabelWrapper className="text-muted-foreground lg:text-white">{`${label}: `}</LabelWrapper> : null}
       {loading ? <Skeleton className="h-[1.125rem] w-[150px]" /> : <div>{children}</div>}
     </div>
   );
