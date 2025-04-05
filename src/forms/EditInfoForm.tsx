@@ -11,14 +11,20 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 
 import { useSettingsStore } from "@/store/settings-store";
 
-import { IMapUnit } from "@/global";
+import { IMapUnit, IMapUnitInfo } from "@/global";
 import { generateLink, getInformationPrefix } from "@/lib";
 import { defaultInformationFields } from "@/locales";
 
 import appConfig from "@/appConfig";
 
 interface EditInfoFormProps {
-  unitData: IMapUnit;
+  address?: string;
+  unitData:
+    | IMapUnit
+    | {
+        type: "user";
+        info: IMapUnitInfo | string;
+      };
 }
 
 const PAYLOAD_STRING_LIMIT = 10000 as const;
@@ -69,7 +75,7 @@ const getDefaultFields = (currentInfo: IMapUnit["info"]): IField[] => {
 };
 
 export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
-  const { info: currentInfo, type, plot_num } = unitData;
+  const { info: currentInfo, type } = unitData;
   const walletAddress = useSettingsStore((state) => state.walletAddress!);
   const [newInfo, setNewInfo] = useState<Array<Record<string, any>>>(getDefaultFields(currentInfo));
   const [contentHeight, setContentHeight] = useState<number>(0);
@@ -183,7 +189,11 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
   const url = generateLink({
     amount: 10000,
     data: {
-      ...(type === "house" ? { house_num: unitData.house_num, edit_house: 1 } : { plot_num, edit_plot: 1 }),
+      ...(type === "house"
+        ? { house_num: unitData.house_num, edit_house: 1 }
+        : type === "user"
+        ? { edit_user: 1 }
+        : { plot_num: unitData.plot_num, edit_plot: 1 }),
       info: obj,
     },
     from_address: walletAddress,
