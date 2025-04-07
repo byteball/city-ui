@@ -1,6 +1,5 @@
 import { FC, KeyboardEvent, useCallback, useMemo, useRef, useState } from "react";
 
-import { ICoordinates } from "@/global";
 import { generateLink, getCountOfDecimals, toLocalString } from "@/lib";
 import { useAaStore } from "@/store/aa-store";
 import { mapUnitsByCoordinatesSelector } from "@/store/selectors/mapUnitsSelector";
@@ -27,7 +26,7 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
   const walletAddressFromStore = useSettingsStore((state) => state.walletAddress);
   const selectedMapUnitCoordinates = useSettingsStore((state) => state.selectedMapUnit);
 
-  const [selectedMapUnit] = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates as ICoordinates | null));
+  const selectedMapUnit = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates!));
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +82,14 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
         <div className="grid gap-4 py-4">
           <div className="flex flex-col space-y-2">
             <Label htmlFor="amount">Amount</Label>
-            <Input id="amount" error={error} onKeyDown={handleKeyDown} suffix={symbol} onChange={handleChange} value={amount} />
+            <Input
+              id="amount"
+              error={error}
+              onKeyDown={handleKeyDown}
+              suffix={symbol}
+              onChange={handleChange}
+              value={amount}
+            />
           </div>
         </div>
         <DialogFooter>
