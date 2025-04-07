@@ -57,7 +57,10 @@ export const SelectedUnitMapCard = () => {
 
   const addresses =
     selectedMapUnitCoordinates?.x !== undefined && selectedMapUnitCoordinates?.y !== undefined
-      ? getAddressFromNearestRoad(roads, { x: selectedMapUnitCoordinates.x, y: selectedMapUnitCoordinates.y })
+      ? getAddressFromNearestRoad(roads, {
+          x: selectedMapUnitCoordinates.x,
+          y: selectedMapUnitCoordinates.y,
+        })
       : [];
 
   return (

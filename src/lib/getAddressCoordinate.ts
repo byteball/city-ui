@@ -1,3 +1,4 @@
+import { getNearestRoads } from "@/game/utils/getNearestRoads";
 import { ICoordinates, IRoad } from "@/global";
 
 type RoadType = "street" | "avenue";
@@ -12,23 +13,12 @@ interface RoadDistance {
 
 interface IRoadWithDistance extends RoadDistance, IRoad {}
 
-export const getNearestRoads = (roads: IRoad[], x: number, y: number, count: number = 1): IRoadWithDistance[] => {
-  return roads
-    .map((road) => {
-      const dx = road.x - x;
-      const dy = road.y - y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      const isAvenue = road.orientation === "vertical";
-      const along = isAvenue ? dy : dx;
-      const offset = isAvenue ? dx : dy;
-      return { road, distance, dx, dy, along, offset };
-    })
-    .sort((a, b) => a.distance - b.distance)
-    .slice(0, count)
-    .map(({ road, ...r }) => ({ ...r, ...road }));
-};
-
-export function getAddressCoordinate(mapUnit: ICoordinates, road: ICoordinates, roadType: RoadType, name: string): string {
+export function getAddressCoordinate(
+  mapUnit: ICoordinates,
+  road: ICoordinates,
+  roadType: RoadType,
+  name: string
+): string {
   let alongCoord: number;
   let offsetValue: number;
   let direction: string;
