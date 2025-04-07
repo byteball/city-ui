@@ -111,7 +111,7 @@ export const SelectedUnitMapCard = () => {
 
             <InfoPanel.Item label="Owner" loading={loading || !owner}>
               <Link to={`/user/${owner}`} className="text-blue-400 block truncate max-w-[200px]">
-                {selectedMapUnit?.username ?? "Unattested user"} - {owner}
+                {selectedMapUnit?.username ? `${selectedMapUnit?.username} - ${owner}` : owner}
               </Link>
             </InfoPanel.Item>
           </InfoPanel>
