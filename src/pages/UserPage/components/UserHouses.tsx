@@ -22,8 +22,8 @@ export const UserHouses: FC<IUserHousesProps> = ({ address }) => {
 
   const userHouses = userUnits.filter((u) => u.type === "house");
 
-  const changeHouse = useCallback(({ x, y }: { x: number; y: number }) => {
-    useSettingsStore.getState().setSelectedMapUnit({ x: asNonNegativeNumber(x), y: asNonNegativeNumber(y) });
+  const changeHouse = useCallback(({ x, y, type = "plot" }: { x: number; y: number; type: "house" | "plot" }) => {
+    useSettingsStore.getState().setSelectedMapUnit({ x: asNonNegativeNumber(x), y: asNonNegativeNumber(y), type });
   }, []);
 
   if (userHouses.length === 0) return null;
@@ -32,12 +32,12 @@ export const UserHouses: FC<IUserHousesProps> = ({ address }) => {
     <div className="mt-8">
       <h2 className="text-xl font-semibold">Houses</h2>
       <div className="grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-4">
-        {userHouses.map(({ plot_num, x, y, amount, ts }) => (
-          <Link onClick={() => changeHouse({ x, y })} to={`/?c=${x},${y}`} key={plot_num}>
+        {userHouses.map(({ house_num, x, y, amount, ts, type = "house" }) => (
+          <Link onClick={() => changeHouse({ x, y, type })} to={`/?c=${x},${y},${type}`} key={house_num}>
             <Card>
               <CardHeader className="pb-2 space-y-0 ">
                 <CardTitle>
-                  <TextScramble className="text-sm font-semibold">{`House ${plot_num.toString()}`}</TextScramble>
+                  <TextScramble className="text-sm font-semibold">{`House ${house_num.toString()}`}</TextScramble>
                 </CardTitle>
               </CardHeader>
               <CardContent>

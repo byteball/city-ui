@@ -17,6 +17,10 @@ interface ICoordinates {
   y: NonNegativeNumber;
 }
 
+interface ICoordinatesWithType extends ICoordinates {
+  type: "plot" | "house";
+}
+
 interface IMapUnitInfo {
   [key: string]: string | number | boolean | null | undefined;
   name: string;

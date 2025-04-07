@@ -24,7 +24,7 @@ export class Map {
   private roadsData: IRoad[];
   private unitsData: IMapUnit[];
   private totalSize: number;
-  private selectedMapUnit: Plot | House | null = null;
+  private selectedMapUnit: House | Plot | null = null;
   private MapUnits: (Plot | House)[] = [];
 
   constructor(scene: Phaser.Scene, roadsData: IRoad[], unitsData: IMapUnit[]) {
@@ -85,7 +85,8 @@ export class Map {
     const thickness = asNonNegativeNumber(ROAD_THICKNESS);
     const state = useAaStore.getState().state;
 
-    const referralBoost = state.city_city?.referral_boost ?? state.variables?.referral_boost ?? defaultAaParams.referral_boost;
+    const referralBoost =
+      state.city_city?.referral_boost ?? state.variables?.referral_boost ?? defaultAaParams.referral_boost;
 
     this.unitsData.forEach((unitData) => {
       if (unitData.type === "plot" && unitData.status === "pending") return;
@@ -166,11 +167,11 @@ export class Map {
         this.selectedMapUnit = unit;
         unit.setSelected(true);
 
-        const { x, y } = unit.getData();
-
+        const { x, y, type } = unit.getData();
         useSettingsStore.getState().setSelectedMapUnit({
           x: asNonNegativeNumber(Decimal(x).div(appConfig.MAP_SCALE).toNumber()),
           y: asNonNegativeNumber(Decimal(y).div(appConfig.MAP_SCALE).toNumber()),
+          type,
         });
       });
 
@@ -200,9 +201,11 @@ export class Map {
     // Ищем среди созданных участков тот, у которого координаты совпадают со значениями из стора
     const foundPlot = this.MapUnits.find((plot) => {
       const data = plot.getData();
+
       return (
         Decimal(data.x).div(appConfig.MAP_SCALE).toNumber() === Number(storeSelected.x) &&
-        Decimal(data.y).div(appConfig.MAP_SCALE).toNumber() === Number(storeSelected.y)
+        Decimal(data.y).div(appConfig.MAP_SCALE).toNumber() === Number(storeSelected.y) &&
+        data.type === storeSelected.type
       );
     });
 
@@ -216,7 +219,6 @@ export class Map {
       foundPlot.setSelected(true);
     } else {
       toast({ title: "Selected map unit not found", variant: "destructive" });
-      console.log("log(Map): Selected map unit not found", storeSelected);
     }
   }
 

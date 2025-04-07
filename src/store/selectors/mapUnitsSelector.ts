@@ -1,7 +1,7 @@
 import obyte from "obyte";
 import { createSelector } from "reselect";
 
-import { ICoordinates, IHouse, IMapUnit, IPlot } from "@/global";
+import { ICoordinatesWithType, IHouse, IMapUnit, IPlot } from "@/global";
 import { asNonNegativeNumber } from "@/lib";
 import { AaStoreState, ICityAaState } from "../aa-store";
 
@@ -50,10 +50,15 @@ export const mapUnitsSelector = createSelector([getAaState], (aaState: ICityAaSt
 });
 
 export const mapUnitsByCoordinatesSelector = createSelector(
-  [mapUnitsSelector, (_state: AaStoreState, coordinates: ICoordinates | null) => coordinates],
-  (units: IMapUnit[], coordinates) => {
-    if (coordinates === null || !coordinates) return [];
-    return units.filter((unit) => unit.x === coordinates.x && unit.y === coordinates.y);
+  [mapUnitsSelector, (_state: AaStoreState, coordinatesWithType: ICoordinatesWithType | null) => coordinatesWithType],
+  (units: IMapUnit[], coordinatesWithType) => {
+    if (coordinatesWithType === null || !coordinatesWithType) return null;
+
+    return (
+      units
+        .filter((unit) => unit.x === coordinatesWithType.x && unit.y === coordinatesWithType.y)
+        .find((unit) => unit.type === coordinatesWithType.type) ?? null
+    );
   }
 );
 

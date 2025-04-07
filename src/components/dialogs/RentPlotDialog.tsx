@@ -1,7 +1,7 @@
 import moment from "moment";
 import { FC, KeyboardEvent, useCallback, useMemo, useRef, useState } from "react";
 
-import { ICoordinates } from "@/global";
+import { ICoordinatesWithType } from "@/global";
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { mapUnitsByCoordinatesSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
@@ -32,11 +32,12 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   const [rentalAmount, setRentalAmount] = useState<string>("");
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
+  const aaState = useAaStore((state) => state.state);
   const { symbol, decimals, asset, inited } = useSettingsStore();
   const walletAddressFromStore = useSettingsStore((state) => state.walletAddress);
   const selectedMapUnitCoordinates = useSettingsStore((state) => state.selectedMapUnit);
-  const [selectedMapUnit] = useAaStore((state) =>
-    mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates as ICoordinates | null)
+  const selectedMapUnit = useAaStore((state) =>
+    mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates as ICoordinatesWithType | null)
   );
 
   const handleChange = useCallback(
@@ -63,10 +64,11 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
     rental_surcharge_factor: rentalSurchargeFactor,
   } = useAaParams();
 
-  const aaState = useAaStore((state) => state.state);
+  if (!selectedMapUnit) return null;
+
   const cityData = aaState.city_city!;
   const totalPlotsBought = cityData.total_bought / +plotPrice;
-  const existingRentedAmount = selectedMapUnit.type === "plot" ? selectedMapUnit?.rented_amount ?? 0 : 0;
+  const existingRentedAmount = selectedMapUnit?.type === "plot" ? selectedMapUnit?.rented_amount ?? 0 : 0;
   const rentalAmountSmallestUnit = Number(rentalAmount) * decimalsFactor;
 
   const totalEffectiveSupply =
