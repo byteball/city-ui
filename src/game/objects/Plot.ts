@@ -1,17 +1,10 @@
 // src/objects/Plot.ts
+import { IMapUnit } from "@/global";
 import Phaser from "phaser";
-
-export interface HouseData {
-  city: string;
-  amount: number;
-  x: number;
-  y: number;
-  ts: number;
-}
 
 export class Plot {
   private scene: Phaser.Scene;
-  private data: HouseData;
+  private data: IMapUnit;
   private plotSize: number;
 
   private plotImage: Phaser.GameObjects.Image;
@@ -19,7 +12,7 @@ export class Plot {
 
   private houseGraphics: Phaser.GameObjects.Graphics;
 
-  constructor(scene: Phaser.Scene, data: HouseData, plotSize: number) {
+  constructor(scene: Phaser.Scene, data: IMapUnit, plotSize: number) {
     this.scene = scene;
     this.data = data;
     this.plotSize = plotSize;

@@ -18,7 +18,7 @@ import { mapUnitsByCoordinatesSelector, mapUnitsSelector } from "@/store/selecto
 import { useSettingsStore } from "@/store/settings-store";
 
 import { getRoads } from "@/game/utils/getRoads";
-import { ICity, ICoordinates } from "@/global";
+import { ICity } from "@/global";
 import { generateLink, toLocalString } from "@/lib";
 import { getAddressFromNearestRoad } from "@/lib/getAddressCoordinate";
 
@@ -26,24 +26,27 @@ import appConfig from "@/appConfig";
 
 export const SelectedUnitMapCard = () => {
   const selectedMapUnitCoordinates = useSettingsStore((state) => state.selectedMapUnit);
-
-  const [selectedMapUnit] = useAaStore((state) =>
-    mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates as ICoordinates | null)
-  );
   const stateLoaded = useAaStore((state) => state.loaded);
+  const selectedMapUnit = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates!));
+
+  const state = useAaStore.getState();
+
   const { symbol, asset, decimals, inited, walletAddress } = useSettingsStore((state) => state);
 
+  if (!selectedMapUnit) return null;
+
   const loading = !inited || !stateLoaded || !asset || decimals === null;
+
+  const owner = selectedMapUnit?.owner;
+
+  const cityStats = state.state.city_city as ICity;
+  const mapUnits = mapUnitsSelector(state);
+  const roads = getRoads(mapUnits, String(cityStats?.mayor));
 
   const decimalsPow = 10 ** (decimals ?? 0);
   const rented_amount = selectedMapUnit?.type === "plot" ? selectedMapUnit.rented_amount ?? 0 : 0;
   const formattedTotalAmount = toLocalString((selectedMapUnit?.amount + rented_amount) / decimalsPow);
   const formattedRentedAmount = rented_amount ? toLocalString(rented_amount / decimalsPow) : "";
-
-  const owner = selectedMapUnit?.owner;
-  const state = useAaStore.getState();
-
-  const cityStats = state.state.city_city as ICity;
 
   const leaveUrl = generateLink({
     amount: 1e4,
@@ -51,9 +54,6 @@ export const SelectedUnitMapCard = () => {
     asset: "base",
     aa: appConfig.AA_ADDRESS,
   });
-
-  const mapUnits = mapUnitsSelector(state);
-  const roads = getRoads(mapUnits, String(cityStats?.mayor));
 
   const addresses =
     selectedMapUnitCoordinates?.x !== undefined && selectedMapUnitCoordinates?.y !== undefined

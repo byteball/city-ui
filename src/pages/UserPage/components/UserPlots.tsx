@@ -22,8 +22,8 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
 
   const userPlots = userUnits.filter((u) => u.type === "plot");
 
-  const changePlot = useCallback(({ x, y }: { x: number; y: number }) => {
-    useSettingsStore.getState().setSelectedMapUnit({ x: asNonNegativeNumber(x), y: asNonNegativeNumber(y) });
+  const changePlot = useCallback(({ x, y, type }: { x: number; y: number; type: "plot" | "house" }) => {
+    useSettingsStore.getState().setSelectedMapUnit({ x: asNonNegativeNumber(x), y: asNonNegativeNumber(y), type });
   }, []);
 
   const decimalsFactor = 10 ** decimals!;
@@ -32,8 +32,8 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
     <div className="mt-8">
       <h2 className="text-xl font-semibold">Plots</h2>
       <div className="grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-4">
-        {userPlots.map(({ plot_num, x, y, amount, rented_amount = 0, ts }) => (
-          <Link onClick={() => changePlot({ x, y })} to={`/?c=${x},${y}`} key={plot_num}>
+        {userPlots.map(({ plot_num, x, y, amount, rented_amount = 0, ts, type = "plot" }) => (
+          <Link onClick={() => changePlot({ x, y, type })} to={`/?c=${x},${y},${type}`} key={plot_num}>
             <Card>
               <CardHeader className="pb-2 space-y-0 ">
                 <CardTitle>
@@ -43,7 +43,9 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
               <CardContent>
                 <InfoPanel labelAnimated>
                   <InfoPanel.Item label="Total amount">
-                    <TextScramble className="inline">{toLocalString((amount + rented_amount) / decimalsFactor)}</TextScramble>{" "}
+                    <TextScramble className="inline">
+                      {toLocalString((amount + rented_amount) / decimalsFactor)}
+                    </TextScramble>{" "}
                     <small>
                       <TextScramble className="inline">{symbol!}</TextScramble>{" "}
                     </small>
