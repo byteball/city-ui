@@ -15,7 +15,7 @@ export const useSyncCoordinates = () => {
   const [_selectedCoordinate, setSelectedCoordinate] = useQueryState<TCoordinatesWithType>("c", {
     parse: (value) => {
       const result = parseAsArrayOf(parseAsString).parse(value);
-      console.log("value result", value, result);
+
       return result && result.length === 3 && (result[2] === "plot" || result[2] === "house")
         ? ([
             asNonNegativeNumber(Number(result[0])),

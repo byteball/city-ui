@@ -219,7 +219,6 @@ export class Map {
       foundPlot.setSelected(true);
     } else {
       toast({ title: "Selected map unit not found", variant: "destructive" });
-      console.log("log(Map): Selected map unit not found", storeSelected);
     }
   }
 
