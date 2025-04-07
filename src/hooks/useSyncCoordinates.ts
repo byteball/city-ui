@@ -6,7 +6,7 @@ import { asNonNegativeNumber } from "@/lib";
 import { useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
-type TCoordinatesWithType = [NonNegativeNumber, NonNegativeNumber, string];
+type TCoordinatesWithType = [NonNegativeNumber, NonNegativeNumber, "plot" | "house"];
 
 export const useSyncCoordinates = () => {
   const selectedMapUnit = useSettingsStore((state) => state.selectedMapUnit); // selected house or plots
