@@ -2,7 +2,12 @@ import { FC } from "react";
 
 import { EditInfoForm } from "@/forms/EditInfoForm";
 import { IMapUnitInfo } from "@/global";
-import { Dialog, DialogContent, DialogHeader, DialogTrigger } from "../ui/dialog";
+import {
+  DialogWithConfirmationContent,
+  DialogWithConfirmationHeader,
+  DialogWithConfirmationStateProvider,
+  DialogWithConfirmationTrigger,
+} from "../ui/dialogWithConfirmation";
 
 interface IEditUserInfoProps {
   children: React.ReactNode;
@@ -11,10 +16,10 @@ interface IEditUserInfoProps {
 }
 
 export const EditUserInfoDialog: FC<IEditUserInfoProps> = ({ children, info }) => (
-  <Dialog>
-    <DialogTrigger asChild>{children}</DialogTrigger>
-    <DialogContent className="z-50">
-      <DialogHeader />
+  <DialogWithConfirmationStateProvider>
+    <DialogWithConfirmationTrigger asChild>{children}</DialogWithConfirmationTrigger>
+    <DialogWithConfirmationContent className="z-50">
+      <DialogWithConfirmationHeader />
 
       <EditInfoForm
         unitData={{
@@ -22,7 +27,7 @@ export const EditUserInfoDialog: FC<IEditUserInfoProps> = ({ children, info }) =
           info,
         }}
       />
-    </DialogContent>
-  </Dialog>
+    </DialogWithConfirmationContent>
+  </DialogWithConfirmationStateProvider>
 );
 
