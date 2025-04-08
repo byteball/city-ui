@@ -11,7 +11,7 @@ export const GameCard = memo(() => {
   const { loading, error, loaded } = useAaStore((state) => state);
   const settingsInited = useSettingsStore((state) => state.inited);
   useSyncCoordinates();
-
+  console.log("test");
   const shownSkeleton = loading || !!error || !settingsInited || !loaded;
 
   return (
