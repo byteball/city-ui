@@ -40,8 +40,6 @@ export const SelectedUnitMapCard = () => {
 
   const { symbol, asset, decimals, inited, walletAddress } = useSettingsStore((state) => state);
 
-  if (!selectedMapUnit) return null;
-
   const loading = !inited || !stateLoaded || !asset || decimals === null;
 
   const cityStats = aaState.state.city_city as ICity;
@@ -50,7 +48,7 @@ export const SelectedUnitMapCard = () => {
 
   const decimalsPow = 10 ** (decimals ?? 0);
   const rented_amount = selectedMapUnit?.type === "plot" ? selectedMapUnit.rented_amount ?? 0 : 0;
-  const formattedTotalAmount = toLocalString((selectedMapUnit?.amount + rented_amount) / decimalsPow);
+  const formattedTotalAmount = toLocalString((selectedMapUnit?.amount ?? 0 + rented_amount) / decimalsPow);
   const formattedRentedAmount = rented_amount ? toLocalString(rented_amount / decimalsPow) : "";
 
   const leaveUrl = generateLink({
@@ -114,9 +112,11 @@ export const SelectedUnitMapCard = () => {
               </InfoPanel.Item>
             ) : null}
 
-            <InfoPanel.Item textClamp label="Created at" loading={loading}>
-              {moment.unix(selectedMapUnit?.ts).format("YYYY-MM-DD HH:mm")}
-            </InfoPanel.Item>
+            {selectedMapUnit?.ts ? (
+              <InfoPanel.Item textClamp label="Created at" loading={loading}>
+                {moment.unix(selectedMapUnit?.ts).format("YYYY-MM-DD HH:mm")}
+              </InfoPanel.Item>
+            ) : null}
 
             <InfoPanel.Item textClamp label="Owner" loading={loading || !owner}>
               <Link to={`/user/${owner}`} className="text-blue-400 block truncate max-w-[200px]">
@@ -145,7 +145,7 @@ export const SelectedUnitMapCard = () => {
           ) : null}
 
           <div className={cn("flex flex-wrap gap-4", { "mt-4": owner === walletAddress })}>
-            {owner === walletAddress ? (
+            {owner === walletAddress && selectedMapUnit ? (
               <SettingsDialog unitData={selectedMapUnit}>
                 <ButtonWithTooltip
                   tooltipText={`Edit ${selectedMapUnit.type}`}
