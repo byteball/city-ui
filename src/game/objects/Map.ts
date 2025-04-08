@@ -17,7 +17,7 @@ import { House } from "./House";
 
 import appConfig from "@/appConfig";
 
-export const ROAD_THICKNESS = 30;
+export const ROAD_THICKNESS = 80;
 
 export class Map {
   private scene: Phaser.Scene;

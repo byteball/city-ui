@@ -22,7 +22,7 @@ export class House {
     const { x, y } = this.data;
 
     // Use the loaded "plot" SVG asset for the plot
-    this.houseImage = this.scene.add.image(x, y, "plot");
+    this.houseImage = this.scene.add.image(x, y, "house");
     this.houseImage.setDisplaySize(this.plotSize, this.plotSize);
     this.houseImage.setInteractive();
   }
@@ -65,3 +65,4 @@ export class House {
     return this.houseImage;
   }
 }
+

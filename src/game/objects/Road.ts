@@ -67,7 +67,7 @@ export class Road {
       const dynamicStep = BASE_LABEL_STEP / currentZoom;
 
       this.labels.forEach((label, index) => {
-        const baseFontSize = 16; // Базовый размер шрифта
+        const baseFontSize = 20; // Базовый размер шрифта
         const newFontSize = baseFontSize / currentZoom; // Увеличиваем текст при уменьшении масштаба
 
         label.setFontSize(newFontSize);
