@@ -167,7 +167,7 @@ export const SelectedUnitMapCard = () => {
           </div>
         </CardContent>
       ) : (
-        <CardContent className="text-primary">No plot selected</CardContent>
+        <CardContent className="text-primary">No selected</CardContent>
       )}
     </Card>
   );
