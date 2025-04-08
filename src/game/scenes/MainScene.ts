@@ -52,6 +52,7 @@ export default class MapScene extends Phaser.Scene {
     this.map = new GameMap(this, roads, mapUnits);
 
     this.map.createMap();
+    this.setHousesOnTop(); // Устанавливаем дома поверх всех элементов после создания карты
 
     const unsubscribe = useAaStore.subscribe((newState) => {
       const mapUnits = mapUnitsSelector(newState);
@@ -64,11 +65,22 @@ export default class MapScene extends Phaser.Scene {
 
       this.map.updateMapUnits(mapUnits);
       this.map.updateRoads(roads);
+      this.setHousesOnTop(); // Устанавливаем дома поверх всех элементов после обновления карты
     });
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => unsubscribe());
 
     new CameraController(this, this.cameras.main);
+  }
+
+  // Метод для установки высокого значения depth для всех домов
+  private setHousesOnTop(): void {
+    // Находим все объекты с текстурой "house" и устанавливаем для них высокое значение depth
+    this.children.list
+      .filter((obj) => obj instanceof Phaser.GameObjects.Image && obj.texture && obj.texture.key === "house")
+      .forEach((house) => {
+        (house as Phaser.GameObjects.Image).setDepth(1000);
+      });
   }
 }
 
