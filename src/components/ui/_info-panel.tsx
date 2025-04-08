@@ -34,6 +34,7 @@ interface InfoPanelItemProps {
   tooltipText?: string;
   loading?: boolean;
   labelAnimated?: boolean;
+  textClamp?: boolean;
 }
 
 const InfoPanelItem: FC<InfoPanelItemProps> = ({
@@ -42,6 +43,7 @@ const InfoPanelItem: FC<InfoPanelItemProps> = ({
   labelAnimated = false,
   loading = false,
   tooltipText,
+  textClamp = false,
 }) => {
   const LabelWrapper = labelAnimated ? TextScramble : "div";
 
@@ -66,7 +68,11 @@ const InfoPanelItem: FC<InfoPanelItemProps> = ({
         </div>
       ) : null}
 
-      {loading ? <Skeleton className="h-[1.125rem] w-[150px]" /> : <div className="line-clamp-1">{children}</div>}
+      {loading ? (
+        <Skeleton className="h-[1.125rem] w-[150px]" />
+      ) : (
+        <div className={cn({ "line-clamp-1": textClamp })}>{children}</div>
+      )}
     </div>
   );
 };
