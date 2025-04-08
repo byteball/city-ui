@@ -12,6 +12,7 @@ import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { AttestationList } from "@/pages/UserPage/components";
 
 import { useAaStore } from "@/store/aa-store";
 import { mapUnitsByCoordinatesSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
@@ -19,6 +20,7 @@ import { useSettingsStore } from "@/store/settings-store";
 
 import { getRoads } from "@/game/utils/getRoads";
 import { ICity } from "@/global";
+import { useAttestations } from "@/hooks/useAttestations";
 import { generateLink, toLocalString } from "@/lib";
 import { getAddressFromNearestRoad } from "@/lib/getAddressCoordinate";
 
@@ -27,9 +29,14 @@ import appConfig from "@/appConfig";
 export const SelectedUnitMapCard = () => {
   const selectedMapUnitCoordinates = useSettingsStore((state) => state.selectedMapUnit);
   const stateLoaded = useAaStore((state) => state.loaded);
-  const selectedMapUnit = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates!));
+  const aaState = useAaStore((state) => state);
 
-  const state = useAaStore.getState();
+  const selectedMapUnit = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates!));
+  const owner = selectedMapUnit?.owner;
+
+  const { data: attestations, loaded } = useAttestations(selectedMapUnit?.type === "house" ? owner : undefined);
+
+  const ownerUsernameIsLoading = selectedMapUnit?.type === "house" && !loaded;
 
   const { symbol, asset, decimals, inited, walletAddress } = useSettingsStore((state) => state);
 
@@ -37,10 +44,8 @@ export const SelectedUnitMapCard = () => {
 
   const loading = !inited || !stateLoaded || !asset || decimals === null;
 
-  const owner = selectedMapUnit?.owner;
-
-  const cityStats = state.state.city_city as ICity;
-  const mapUnits = mapUnitsSelector(state);
+  const cityStats = aaState.state.city_city as ICity;
+  const mapUnits = mapUnitsSelector(aaState);
   const roads = getRoads(mapUnits, String(cityStats?.mayor));
 
   const decimalsPow = 10 ** (decimals ?? 0);
@@ -73,11 +78,11 @@ export const SelectedUnitMapCard = () => {
       {selectedMapUnitCoordinates ? (
         <CardContent className="text-sm">
           <InfoPanel>
-            <InfoPanel.Item label="Amount" loading={loading}>
+            <InfoPanel.Item textClamp label="Amount" loading={loading}>
               {formattedTotalAmount} {symbol} {rented_amount ? `(inc. ${formattedRentedAmount} rented ${symbol})` : ""}
             </InfoPanel.Item>
 
-            <InfoPanel.Item label="Coordinates" loading={loading}>
+            <InfoPanel.Item textClamp label="Coordinates" loading={loading}>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger className="cursor-text">
@@ -94,13 +99,14 @@ export const SelectedUnitMapCard = () => {
               </TooltipProvider>
             </InfoPanel.Item>
 
-            <InfoPanel.Item label="Address" loading={loading}>
+            <InfoPanel.Item textClamp label="Address" loading={loading}>
               {addresses[0] ?? "No address"}
             </InfoPanel.Item>
 
             {selectedMapUnit?.type === "house" && selectedMapUnit?.shortcode ? (
               <InfoPanel.Item
                 label="Shortcode"
+                textClamp
                 tooltipText="Shortcodes are used to send money via the wallet instead of using a full address"
                 loading={loading}
               >
@@ -108,15 +114,25 @@ export const SelectedUnitMapCard = () => {
               </InfoPanel.Item>
             ) : null}
 
-            <InfoPanel.Item label="Created at" loading={loading}>
+            <InfoPanel.Item textClamp label="Created at" loading={loading}>
               {moment.unix(selectedMapUnit?.ts).format("YYYY-MM-DD HH:mm")}
             </InfoPanel.Item>
 
-            <InfoPanel.Item label="Owner" loading={loading || !owner}>
+            <InfoPanel.Item textClamp label="Owner" loading={loading || !owner}>
               <Link to={`/user/${owner}`} className="text-blue-400 block truncate max-w-[200px]">
                 {selectedMapUnit?.username ? `${selectedMapUnit?.username} - ${owner}` : owner}
               </Link>
             </InfoPanel.Item>
+
+            {selectedMapUnit?.type === "house" ? (
+              <InfoPanel.Item label="Contacts" loading={loading || !owner || ownerUsernameIsLoading}>
+                {attestations.length ? (
+                  <AttestationList data={attestations} blockDisplay={attestations.length > 1} />
+                ) : (
+                  <span>No attested contacts</span>
+                )}
+              </InfoPanel.Item>
+            ) : null}
           </InfoPanel>
 
           {loading ? (
@@ -167,7 +183,7 @@ export const SelectedUnitMapCard = () => {
           </div>
         </CardContent>
       ) : (
-        <CardContent className="text-primary">No plot selected</CardContent>
+        <CardContent className="text-primary">No selected</CardContent>
       )}
     </Card>
   );
