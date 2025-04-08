@@ -56,7 +56,7 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
               User information{" "}
               {address === walletAddress ? (
                 <EditUserInfoDialog address={address} info={parsedUserInfo}>
-                  <ButtonWithTooltip tooltipText={`Edit user`} variant="link" className="rounded-xl">
+                  <ButtonWithTooltip tooltipText="Edit user" variant="link" className="rounded-xl">
                     <UserPenIcon className="w-4 h-4" />
                   </ButtonWithTooltip>
                 </EditUserInfoDialog>
