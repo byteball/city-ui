@@ -80,8 +80,8 @@ const DialogWithConfirmationContent = React.forwardRef<
     const [showConfirmation, setShowConfirmation] = React.useState(false);
     const closeRef = React.useRef<HTMLButtonElement>(null);
 
-    const handleCloseAttempt = () => {
-      if (showCloseConfirmation) {
+    const handleCloseAttempt = (withoutConfirmation: boolean = false) => {
+      if (showCloseConfirmation && !withoutConfirmation) {
         setShowConfirmation(true);
       } else {
         closeRef.current?.click();
@@ -137,6 +137,7 @@ const DialogWithConfirmationContent = React.forwardRef<
                 </button>
                 <button
                   className="px-3 py-1 text-xs rounded-md bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  autoFocus
                   onClick={handleConfirmClose}
                 >
                   Close
@@ -145,7 +146,7 @@ const DialogWithConfirmationContent = React.forwardRef<
             </div>
           ) : (
             <button
-              onClick={handleCloseAttempt}
+              onClick={() => handleCloseAttempt(true)}
               className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
             >
               <X className="w-4 h-4" />
