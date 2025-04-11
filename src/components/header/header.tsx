@@ -9,6 +9,7 @@ interface IHeaderProps {}
 
 const navigation = [
   { name: "Home", href: "/" },
+  { name: "Market", href: "/market" },
   { name: "Governance", href: "/governance" },
   { name: "F.A.Q.", href: "/faq" },
 ];
