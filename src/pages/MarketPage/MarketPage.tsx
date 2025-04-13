@@ -9,6 +9,7 @@ import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
 import { PhaserGame } from "@/game/PhaserGame";
+import { SelectedPlotOnSale } from "./components/SelectedPlotOnSale";
 
 export default () => {
   const { loading, error, loaded } = useAaStore((state) => state);
@@ -46,12 +47,9 @@ export default () => {
         </div>
 
         <div className="col-span-3">
-          <Card className="mb-8">
-            <CardHeader>
-              <h2 className="text-xl font-semibold">Selected plot</h2>
-            </CardHeader>
-            <CardContent>Selected</CardContent>
-          </Card>
+          <div className="mb-8">
+            <SelectedPlotOnSale />
+          </div>
 
           <Card>
             <CardHeader>
