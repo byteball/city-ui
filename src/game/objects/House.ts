@@ -7,18 +7,20 @@ export class House {
   private scene: Phaser.Scene;
   private data: IHouse;
   private plotSize: number;
+  private disabled: boolean;
 
   private houseImage: Phaser.GameObjects.Image;
   private outline?: Phaser.GameObjects.Graphics;
 
-  constructor(scene: Phaser.Scene, data: IHouse, plotSize: number) {
+  constructor(scene: Phaser.Scene, data: IHouse, plotSize: number, disabled: boolean = false) {
     this.scene = scene;
     this.data = data;
     this.plotSize = plotSize;
-    this.createPlot();
+    this.disabled = disabled;
+    this.createHouse();
   }
 
-  private createPlot() {
+  private createHouse() {
     const { x, y } = this.data;
 
     // Use the loaded "plot" SVG asset for the plot
@@ -28,6 +30,8 @@ export class House {
   }
 
   public setSelected(selected: boolean) {
+    if (this.disabled) return;
+
     if (selected) {
       // Применяем tint к изображению
       this.houseImage.setTint(0xffff00);
