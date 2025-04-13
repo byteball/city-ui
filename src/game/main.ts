@@ -1,5 +1,6 @@
 import { Game } from "phaser";
 
+import { IGameOptions } from "./PhaserGame";
 import MapScene from "./scenes/MainScene";
 
 import appConfig from "@/appConfig";
@@ -16,7 +17,6 @@ const config: Phaser.Types.Core.GameConfig = {
     antialias: true,
     transparent: true,
   },
-  scene: [MapScene],
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -27,8 +27,17 @@ const config: Phaser.Types.Core.GameConfig = {
   },
 };
 
-const StartGame = (parent: string) => {
-  return new Game({ ...config, parent, scene: MapScene });
+const StartGame = (parent: string, options: IGameOptions = {}) => {
+  const dynamicConfig = { ...config, parent };
+  // Remove scene from the initial config
+
+  // Create the game instance without the scene initially
+  const game = new Game({ ...dynamicConfig });
+
+  // Add the scene manually and pass options data. The 'true' flag auto-starts the scene.
+  game.scene.add("MapScene", MapScene, true, options);
+
+  return game;
 };
 
 export default StartGame;

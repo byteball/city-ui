@@ -8,16 +8,24 @@ export interface IRefPhaserGame {
   scene: Phaser.Scene | null;
 }
 
-interface IProps {
-  currentActiveScene?: (scene_instance: Phaser.Scene) => void;
+export interface IGameOptions {
+  displayMode?: "all" | "market";
 }
 
-export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ currentActiveScene }, ref) {
+interface IProps {
+  currentActiveScene?: (scene_instance: Phaser.Scene) => void;
+  gameOptions?: IGameOptions;
+}
+
+export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame(
+  { currentActiveScene, gameOptions },
+  ref
+) {
   const game = useRef<Phaser.Game | null>(null!);
 
   useLayoutEffect(() => {
     if (game.current === null) {
-      game.current = StartGame("game-container");
+      game.current = StartGame("game-container", gameOptions);
 
       if (typeof ref === "function") {
         ref({ game: game.current, scene: null });
@@ -34,7 +42,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame
         }
       }
     };
-  }, [ref]);
+  }, [ref, gameOptions]);
 
   useEffect(() => {
     EventBus.on("current-scene-ready", (scene_instance: Phaser.Scene) => {

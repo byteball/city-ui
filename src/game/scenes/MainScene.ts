@@ -6,12 +6,19 @@ import { useAaStore } from "@/store/aa-store";
 import { mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import CameraController from "../controllers/CameraController";
 import { Map as GameMap } from "../objects/Map";
+import { IGameOptions } from "../PhaserGame";
 import { getRoads } from "../utils/getRoads";
+
 export default class MapScene extends Phaser.Scene {
   private map!: GameMap;
+  private options: IGameOptions = { displayMode: "all" };
 
   constructor() {
     super("MapScene");
+  }
+
+  init(data: IGameOptions) {
+    this.options = { ...this.options, ...data };
   }
 
   preload() {
@@ -23,6 +30,7 @@ export default class MapScene extends Phaser.Scene {
   }
 
   create() {
+    console.log("Game instance options", this.options);
     // Add background image and stretch it to fill the entire game world
     const background = this.add.image(0, 0, "background");
     background.setOrigin(0, 0); // Set origin to top-left corner
