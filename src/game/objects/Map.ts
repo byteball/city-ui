@@ -66,7 +66,7 @@ export class Map {
     this.createRoads(MAP_WIDTH, MAP_HEIGHT);
     this.createMapUnits(MAP_WIDTH, MAP_HEIGHT, options.displayMode || "all");
 
-    this.updatePlotSelection();
+    this.updateMapUnitSelection();
   }
 
   private createRoads(mapWidth: number, mapHeight: number) {
@@ -187,7 +187,7 @@ export class Map {
   }
 
   // Метод для обновления выделения на основе состояния из SettingsState
-  public updatePlotSelection() {
+  public updateMapUnitSelection() {
     const storeSelected = useSettingsStore.getState().selectedMapUnit;
 
     if (!storeSelected) {
