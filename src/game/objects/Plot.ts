@@ -10,13 +10,10 @@ export class Plot {
   private plotImage: Phaser.GameObjects.Image;
   private outline?: Phaser.GameObjects.Graphics;
 
-  private houseGraphics: Phaser.GameObjects.Graphics;
-
   constructor(scene: Phaser.Scene, data: IMapUnit, plotSize: number) {
     this.scene = scene;
     this.data = data;
     this.plotSize = plotSize;
-    this.houseGraphics = this.scene.add.graphics();
     this.createPlot();
   }
 
