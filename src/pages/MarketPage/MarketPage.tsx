@@ -29,6 +29,7 @@ export default () => {
           <Card>
             <CardHeader>
               <h2 className="text-xl font-semibold">Plots on sale</h2>
+              <CardDescription>Click on the plot you want to purchase.</CardDescription>
             </CardHeader>
             <CardContent>
               <div ref={gameColumnRef}>
