@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { IRefPhaserGame, PhaserGame } from "@/game/PhaserGame";
 import { useSyncCoordinates } from "@/hooks/useSyncCoordinates";
-import { useAaStore } from "@/store/aa-store";
+import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 import { memo, useRef } from "react";
 
@@ -10,6 +10,7 @@ export const GameCard = memo(() => {
   const phaserRef = useRef<IRefPhaserGame | null>(null);
   const { loading, error, loaded } = useAaStore((state) => state);
   const settingsInited = useSettingsStore((state) => state.inited);
+  const params = useAaParams();
 
   useSyncCoordinates();
 
@@ -22,7 +23,7 @@ export const GameCard = memo(() => {
       </CardHeader>
       <CardContent>
         {!shownSkeleton ? (
-          <PhaserGame key="phaser-game" ref={phaserRef} />
+          <PhaserGame key="phaser-game" gameOptions={{ params, displayMode: "main" }} ref={phaserRef} />
         ) : (
           <div className="game-container-placeholder">
             <Skeleton className="w-full h-[80vh] rounded-xl" />

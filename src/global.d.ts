@@ -262,5 +262,6 @@ export interface ITokenInfo {
 
 export interface IGameOptions {
   displayMode?: "main" | "market";
+  params?: IAaParams;
 }
 

@@ -28,6 +28,8 @@ const config: Phaser.Types.Core.GameConfig = {
 };
 
 const StartGame = (parent: string, options: IGameOptions = {}) => {
+  if (!options.params) return null;
+
   const dynamicConfig = { ...config, parent };
   // Remove scene from the initial config
 

@@ -1,15 +1,21 @@
-import { PageLayout } from "@/components/layout/page-layout";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { IRefPhaserGame, PhaserGame } from "@/game/PhaserGame";
-import { useAaStore } from "@/store/aa-store";
-import { useSettingsStore } from "@/store/settings-store";
 import { useRef } from "react";
 
+import { PageLayout } from "@/components/layout/page-layout";
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ShortcodesOnSaleList } from "./components/ShortcodesOnSaleList";
+
+import { useAaParams, useAaStore } from "@/store/aa-store";
+import { useSettingsStore } from "@/store/settings-store";
+
+import { PhaserGame } from "@/game/PhaserGame";
+
 export default () => {
-  const phaserRef = useRef<IRefPhaserGame | null>(null);
   const { loading, error, loaded } = useAaStore((state) => state);
   const settingsInited = useSettingsStore((state) => state.inited);
+  const gameColumnRef = useRef<HTMLDivElement>(null);
+  const params = useAaParams();
+
   const shownSkeleton = loading || !!error || !settingsInited || !loaded;
 
   return (
@@ -22,25 +28,39 @@ export default () => {
         <div className="col-span-5">
           <Card>
             <CardHeader>
-              <h2 className="text-xl font-semibold">Plots</h2>
+              <h2 className="text-xl font-semibold">Plots on sale</h2>
             </CardHeader>
             <CardContent>
-              {!shownSkeleton ? (
-                <PhaserGame key="phaser-game" ref={phaserRef} />
-              ) : (
-                <div className="game-container-placeholder">
-                  <Skeleton className="w-full h-[80vh] rounded-xl" />
-                </div>
-              )}
+              <div ref={gameColumnRef}>
+                {!shownSkeleton ? (
+                  <PhaserGame gameOptions={{ displayMode: "market", params }} />
+                ) : (
+                  <div className="game-container-placeholder">
+                    <Skeleton className="w-full h-[80vh] rounded-xl" />
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         </div>
+
         <div className="col-span-3">
+          <Card className="mb-8">
+            <CardHeader>
+              <h2 className="text-xl font-semibold">Selected plot</h2>
+            </CardHeader>
+            <CardContent>Selected</CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <h2 className="text-xl font-semibold">Shortcodes</h2>
+              <CardDescription>Lorem ipsum for shortcodes</CardDescription>
             </CardHeader>
-            <CardContent>test</CardContent>
+
+            <CardContent>
+              <ShortcodesOnSaleList />
+            </CardContent>
           </Card>
         </div>
       </div>
