@@ -217,8 +217,8 @@ export class Map {
     }
 
     // Ищем среди созданных участков тот, у которого координаты совпадают со значениями из стора
-    const foundPlot = this.MapUnits.find((plot) => {
-      const data = plot.getData();
+    const foundMapUnit = this.MapUnits.find((plotOrHouse) => {
+      const data = plotOrHouse.getData();
 
       return (
         Decimal(data.x).div(appConfig.MAP_SCALE).toNumber() === Number(storeSelected.x) &&
@@ -227,14 +227,14 @@ export class Map {
       );
     });
 
-    if (foundPlot) {
+    if (foundMapUnit) {
       // Сбрасываем выделение предыдущего участка, если он есть
-      if (this.selectedMapUnit && this.selectedMapUnit !== foundPlot) {
+      if (this.selectedMapUnit && this.selectedMapUnit !== foundMapUnit) {
         this.selectedMapUnit.setSelected(false);
       }
 
-      this.selectedMapUnit = foundPlot;
-      foundPlot.setSelected(true);
+      this.selectedMapUnit = foundMapUnit;
+      foundMapUnit.setSelected(true);
     } else {
       toast({ title: "Selected map unit not found", variant: "destructive" });
     }
