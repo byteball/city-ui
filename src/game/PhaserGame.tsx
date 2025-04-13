@@ -1,15 +1,12 @@
 import { forwardRef, useEffect, useLayoutEffect, useRef } from "react";
 
+import { IGameOptions } from "@/global";
 import { EventBus } from "./EventBus";
 import StartGame from "./main";
 
 export interface IRefPhaserGame {
   game: Phaser.Game | null;
   scene: Phaser.Scene | null;
-}
-
-export interface IGameOptions {
-  displayMode?: "all" | "market";
 }
 
 interface IProps {

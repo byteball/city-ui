@@ -3,7 +3,7 @@
 import { Decimal } from "decimal.js";
 import Phaser from "phaser";
 
-import { IMapUnit, IRoad } from "@/global";
+import { IGameOptions, IMapUnit, IRoad } from "@/global";
 import { asNonNegativeNumber } from "@/lib";
 import { defaultAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
@@ -39,7 +39,7 @@ export class Map {
     }
   }
 
-  public createMap() {
+  public createMap(options: IGameOptions) {
     // 1) Считаем общую толщину вертикальных и горизонтальных дорог
     let totalVerticalThickness = 0;
     let totalHorizontalThickness = 0;
@@ -64,7 +64,7 @@ export class Map {
 
     // 3) Передаём их в функции, создающие дороги и участки
     this.createRoads(MAP_WIDTH, MAP_HEIGHT);
-    this.createMapUnits(MAP_WIDTH, MAP_HEIGHT);
+    this.createMapUnits(MAP_WIDTH, MAP_HEIGHT, options.displayMode || "all");
 
     this.updatePlotSelection();
   }
@@ -81,7 +81,7 @@ export class Map {
     });
   }
 
-  private createMapUnits(MAP_WIDTH: number, MAP_HEIGHT: number) {
+  private createMapUnits(MAP_WIDTH: number, MAP_HEIGHT: number, sceneType: IGameOptions["displayMode"]) {
     const thickness = asNonNegativeNumber(ROAD_THICKNESS);
     const state = useAaStore.getState().state;
 
@@ -90,6 +90,7 @@ export class Map {
 
     this.unitsData.forEach((unitData) => {
       if (unitData.type === "plot" && unitData.status === "pending") return;
+      if (sceneType === "market" && !(unitData.type === "plot" ? unitData.sale_price : true)) return; // Only plots with sale price
 
       // 1) Вычисляем размер участка
       const { x, y, type } = unitData;

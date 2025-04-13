@@ -1,7 +1,7 @@
 import { Game } from "phaser";
-
-import { IGameOptions } from "./PhaserGame";
 import MapScene from "./scenes/MainScene";
+
+import { IGameOptions } from "@/global";
 
 import appConfig from "@/appConfig";
 

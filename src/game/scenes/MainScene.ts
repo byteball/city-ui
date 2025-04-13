@@ -30,7 +30,6 @@ export default class MapScene extends Phaser.Scene {
   }
 
   create() {
-    console.log("Game instance options", this.options);
     // Add background image and stretch it to fill the entire game world
     const background = this.add.image(0, 0, "background");
     background.setOrigin(0, 0); // Set origin to top-left corner
@@ -59,7 +58,7 @@ export default class MapScene extends Phaser.Scene {
 
     this.map = new GameMap(this, roads, mapUnits);
 
-    this.map.createMap();
+    this.map.createMap(this.options);
     this.setHousesOnTop(); // Устанавливаем дома поверх всех элементов после создания карты
 
     const unsubscribe = useAaStore.subscribe((newState) => {
