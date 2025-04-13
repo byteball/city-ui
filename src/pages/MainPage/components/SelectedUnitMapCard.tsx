@@ -60,10 +60,14 @@ export const SelectedUnitMapCard = () => {
 
   const addresses =
     selectedMapUnitCoordinates?.x !== undefined && selectedMapUnitCoordinates?.y !== undefined
-      ? getAddressFromNearestRoad(roads, {
-          x: selectedMapUnitCoordinates.x,
-          y: selectedMapUnitCoordinates.y,
-        })
+      ? getAddressFromNearestRoad(
+          roads,
+          {
+            x: selectedMapUnitCoordinates.x,
+            y: selectedMapUnitCoordinates.y,
+          },
+          selectedMapUnit?.type === "house" ? selectedMapUnit?.house_num ?? 0 : selectedMapUnit?.plot_num ?? 0
+        )
       : [];
 
   return (

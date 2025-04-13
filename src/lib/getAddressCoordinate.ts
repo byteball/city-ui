@@ -3,21 +3,12 @@ import { ICoordinates, IRoad } from "@/global";
 
 type RoadType = "street" | "avenue";
 
-interface RoadDistance {
-  dx: number;
-  dy: number;
-  distance: number;
-  along: number;
-  offset: number;
-}
-
-interface IRoadWithDistance extends RoadDistance, IRoad {}
-
 export function getAddressCoordinate(
   mapUnit: ICoordinates,
   road: ICoordinates,
   roadType: RoadType,
-  name: string
+  name: string,
+  plotOrHouseNumber: number
 ): string {
   let alongCoord: number;
   let offsetValue: number;
@@ -38,17 +29,18 @@ export function getAddressCoordinate(
 
   const coordCode = `${mainCoordStr}/${direction}${offset}`;
 
-  return `${name}, ${coordCode}`;
+  return `#${plotOrHouseNumber} ${name}, ${coordCode}`;
 }
 
-export function getAddressFromNearestRoad(roads: IRoad[], home: ICoordinates): string[] {
+export function getAddressFromNearestRoad(roads: IRoad[], home: ICoordinates, plotOrHouseNumber: number): string[] {
   const nearestRoads = getNearestRoads(roads, home.x, home.y);
   return nearestRoads.map((nearestRoad) =>
     getAddressCoordinate(
       home,
       { x: nearestRoad.x, y: nearestRoad.y },
       nearestRoad.orientation === "vertical" ? "avenue" : "street",
-      nearestRoad.name
+      nearestRoad.name,
+      plotOrHouseNumber
     )
   );
 }
