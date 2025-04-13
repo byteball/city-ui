@@ -1,17 +1,16 @@
 import Phaser from "phaser";
 
 import appConfig from "@/appConfig";
-import { ICity } from "@/global";
+import { ICity, IGameOptions } from "@/global";
 import { useAaStore } from "@/store/aa-store";
 import { mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import CameraController from "../controllers/CameraController";
 import { Map as GameMap } from "../objects/Map";
-import { IGameOptions } from "../PhaserGame";
 import { getRoads } from "../utils/getRoads";
 
 export default class MapScene extends Phaser.Scene {
   private map!: GameMap;
-  private options: IGameOptions = { displayMode: "all" };
+  private options: IGameOptions = { displayMode: "main" };
 
   constructor() {
     super("MapScene");

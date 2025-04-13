@@ -261,5 +261,6 @@ export interface ITokenInfo {
 }
 
 export interface IGameOptions {
-  displayMode?: "all" | "market";
+  displayMode?: "main" | "market";
 }
+

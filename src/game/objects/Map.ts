@@ -26,6 +26,7 @@ export class Map {
   private totalSize: number;
   private selectedMapUnit: House | Plot | null = null;
   private MapUnits: (Plot | House)[] = [];
+  private gameOptions: IGameOptions | null = null;
 
   constructor(scene: Phaser.Scene, roadsData: IRoad[], unitsData: IMapUnit[]) {
     this.scene = scene;
@@ -40,6 +41,7 @@ export class Map {
   }
 
   public createMap(options: IGameOptions) {
+    this.gameOptions = options;
     // 1) Считаем общую толщину вертикальных и горизонтальных дорог
     let totalVerticalThickness = 0;
     let totalHorizontalThickness = 0;
@@ -64,8 +66,7 @@ export class Map {
 
     // 3) Передаём их в функции, создающие дороги и участки
     this.createRoads(MAP_WIDTH, MAP_HEIGHT);
-    this.createMapUnits(MAP_WIDTH, MAP_HEIGHT, options.displayMode || "all");
-
+    this.createMapUnits(MAP_WIDTH, MAP_HEIGHT, options.displayMode || "main");
     this.updateMapUnitSelection();
   }
 
@@ -145,7 +146,12 @@ export class Map {
       let unit: Plot | House;
 
       if (type === "house") {
-        unit = new House(this.scene, { ...unitData, x: finalX, y: finalY }, plotSize);
+        unit = new House(
+          this.scene,
+          { ...unitData, x: finalX, y: finalY },
+          plotSize,
+          this.gameOptions?.displayMode === "market"
+        );
       } else if (type === "plot") {
         unit = new Plot(this.scene, { ...unitData, x: finalX, y: finalY }, plotSize);
       } else {
@@ -167,13 +173,21 @@ export class Map {
 
         this.selectedMapUnit = unit;
         unit.setSelected(true);
-
         const { x, y, type } = unit.getData();
-        useSettingsStore.getState().setSelectedMapUnit({
-          x: asNonNegativeNumber(Decimal(x).div(appConfig.MAP_SCALE).toNumber()),
-          y: asNonNegativeNumber(Decimal(y).div(appConfig.MAP_SCALE).toNumber()),
-          type,
-        });
+
+        if (this.gameOptions?.displayMode === "main") {
+          useSettingsStore.getState().setSelectedMapUnit({
+            x: asNonNegativeNumber(Decimal(x).div(appConfig.MAP_SCALE).toNumber()),
+            y: asNonNegativeNumber(Decimal(y).div(appConfig.MAP_SCALE).toNumber()),
+            type,
+          });
+        } else if (this.gameOptions?.displayMode === "market" && type === "plot") {
+          useSettingsStore.getState().setSelectedMarketPlot({
+            x: asNonNegativeNumber(Decimal(x).div(appConfig.MAP_SCALE).toNumber()),
+            y: asNonNegativeNumber(Decimal(y).div(appConfig.MAP_SCALE).toNumber()),
+            type,
+          });
+        }
       });
 
       unitImage.on("pointerover", () => {
@@ -188,7 +202,10 @@ export class Map {
 
   // Метод для обновления выделения на основе состояния из SettingsState
   public updateMapUnitSelection() {
-    const storeSelected = useSettingsStore.getState().selectedMapUnit;
+    const settingsState = useSettingsStore.getState();
+
+    const storeSelected =
+      this.gameOptions?.displayMode === "market" ? settingsState.selectedMarketPlot : settingsState.selectedMapUnit;
 
     if (!storeSelected) {
       // Сбрасываем выделение, если ничего не выбрано
