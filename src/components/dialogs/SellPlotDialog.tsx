@@ -57,7 +57,7 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
     [putBtnRef]
   );
 
-  if (!selectedMapUnit) return null;
+  if (!selectedMapUnit || selectedMapUnit.type !== "plot") return null;
 
   const url = generateLink({
     amount: 10000,
@@ -100,6 +100,12 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
           </div>
         </div>
         <InfoPanel>
+          {selectedMapUnit.sale_price ? (
+            <InfoPanel.Item label="Current price" loading={!inited} textClamp>
+              {toLocalString(selectedMapUnit.sale_price / decimalsFactor)} {symbol}
+            </InfoPanel.Item>
+          ) : null}
+
           <InfoPanel.Item
             label="p2p fee"
             tooltipText={`This value can be changed on governance page. Not it's ${p2p_sale_fee * 100}%`}
