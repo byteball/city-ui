@@ -24,7 +24,9 @@ interface SettingsState {
   setRefData: (refData: IRefData) => void;
   setWalletAddress: (walletAddress: string) => void;
   selectedMapUnit?: ICoordinatesWithType;
+  selectedMarketPlot?: ICoordinatesWithType;
   setSelectedMapUnit: (coordinatesWithType: ICoordinatesWithType) => void;
+  setSelectedMarketPlot: (coordinatesWithType: ICoordinatesWithType) => void;
 }
 
 const storeCreator: StateCreator<SettingsState> = (set, get) => ({
@@ -62,10 +64,16 @@ const storeCreator: StateCreator<SettingsState> = (set, get) => ({
   governanceAa: null,
   refData: null,
   selectedMapUnit: undefined,
+  selectedMarketPlot: undefined,
   walletAddress: null,
   setSelectedMapUnit: (coordinatesWithType) => {
     if (!coordinatesWithType) return set({ selectedMapUnit: undefined });
     set({ selectedMapUnit: { x: coordinatesWithType.x, y: coordinatesWithType.y, type: coordinatesWithType.type } });
+  },
+  setSelectedMarketPlot: (coordinatesWithType) => {
+    if (!coordinatesWithType) return set({ selectedMarketPlot: undefined });
+    if (coordinatesWithType.type !== "plot") throw new Error("Invalid type for market plot");
+    set({ selectedMarketPlot: { x: coordinatesWithType.x, y: coordinatesWithType.y, type: coordinatesWithType.type } });
   },
   setWalletAddress: (walletAddress: string) => {
     if (!obyte.utils.isValidAddress(walletAddress)) throw new Error("Invalid wallet address");

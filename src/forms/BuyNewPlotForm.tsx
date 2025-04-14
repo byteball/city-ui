@@ -28,7 +28,8 @@ export const BuyNewPlotForm: FC = memo(() => {
   const decimalsPow = 10 ** (decimals ?? 0);
   const formattedValues = {
     price: toLocalString(price / decimalsPow),
-    fee: toLocalString((fee * 100).toFixed(2)),
+    // Simplify fee formatting: toFixed(2) already returns a string.
+    fee: (fee * 100).toFixed(2),
     total: toLocalString(totalPrice / decimalsPow),
   };
 

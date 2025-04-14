@@ -1,5 +1,5 @@
 import cn from "classnames";
-import { DoorOpenIcon, ImageUpscaleIcon, PencilIcon, ShoppingBagIcon } from "lucide-react";
+import { CaseUpperIcon, DoorOpenIcon, ImageUpscaleIcon, PencilIcon, ShoppingBagIcon } from "lucide-react";
 import moment from "moment";
 import { Link } from "react-router";
 
@@ -25,9 +25,19 @@ import { generateLink, toLocalString } from "@/lib";
 import { getAddressFromNearestRoad } from "@/lib/getAddressCoordinate";
 
 import appConfig from "@/appConfig";
+import { ShortCodeSellDialog } from "@/components/dialogs/ShortCodeSellDialog";
+import { QRButton } from "@/components/ui/_qr-button";
+import { FC } from "react";
 
-export const SelectedUnitMapCard = () => {
-  const selectedMapUnitCoordinates = useSettingsStore((state) => state.selectedMapUnit);
+interface ISelectedUnitMapCardProps {
+  sceneType: "main" | "market";
+}
+
+export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType = "main" }) => {
+  const selectedMapUnitCoordinates = useSettingsStore((state) =>
+    sceneType === "market" ? state.selectedMarketPlot : state.selectedMapUnit
+  );
+
   const stateLoaded = useAaStore((state) => state.loaded);
   const aaState = useAaStore((state) => state);
 
@@ -50,6 +60,7 @@ export const SelectedUnitMapCard = () => {
   const rented_amount = selectedMapUnit?.type === "plot" ? selectedMapUnit.rented_amount ?? 0 : 0;
   const formattedTotalAmount = toLocalString((selectedMapUnit?.amount ?? 0 + rented_amount) / decimalsPow);
   const formattedRentedAmount = rented_amount ? toLocalString(rented_amount / decimalsPow) : "";
+  const isOwner = owner === walletAddress;
 
   const leaveUrl = generateLink({
     amount: 1e4,
@@ -60,11 +71,42 @@ export const SelectedUnitMapCard = () => {
 
   const addresses =
     selectedMapUnitCoordinates?.x !== undefined && selectedMapUnitCoordinates?.y !== undefined
-      ? getAddressFromNearestRoad(roads, {
-          x: selectedMapUnitCoordinates.x,
-          y: selectedMapUnitCoordinates.y,
-        })
+      ? getAddressFromNearestRoad(
+          roads,
+          {
+            x: selectedMapUnitCoordinates.x,
+            y: selectedMapUnitCoordinates.y,
+          },
+          selectedMapUnit?.type === "house" ? selectedMapUnit?.house_num ?? 0 : selectedMapUnit?.plot_num ?? 0
+        )
       : [];
+
+  const p2pBuyLink =
+    selectedMapUnit?.type === "plot" && selectedMapUnit.sale_price
+      ? generateLink({
+          aa: appConfig.AA_ADDRESS,
+          amount: selectedMapUnit?.sale_price!,
+          data: {
+            p2p_buy: 1,
+            plot_num: selectedMapUnit?.plot_num,
+          },
+          asset: asset!,
+        })
+      : "#";
+
+  const p2pWithdrawFromSale =
+    selectedMapUnit?.type === "plot" && selectedMapUnit.sale_price
+      ? generateLink({
+          aa: appConfig.AA_ADDRESS,
+          amount: selectedMapUnit?.sale_price!,
+          data: {
+            sell: 1,
+            plot_num: selectedMapUnit?.plot_num,
+            sale_price: 0,
+          },
+          asset: asset!,
+        })
+      : "#";
 
   return (
     <Card>
@@ -133,54 +175,82 @@ export const SelectedUnitMapCard = () => {
                 )}
               </InfoPanel.Item>
             ) : null}
+
+            {sceneType === "market" && selectedMapUnit?.type === "plot" ? (
+              <div className="mt-4 space-y-2">
+                {isOwner ? (
+                  <QRButton href={p2pWithdrawFromSale}>Withdraw from sale</QRButton>
+                ) : (
+                  <QRButton href={p2pBuyLink}>
+                    Buy for {toLocalString(selectedMapUnit?.sale_price / decimalsPow)} {symbol}
+                  </QRButton>
+                )}
+              </div>
+            ) : null}
           </InfoPanel>
 
-          {loading ? (
+          {loading && sceneType === "main" ? (
             <div className="flex flex-wrap gap-4 mt-4">
               <Skeleton className="rounded-xl w-[48px] h-[36px]" />
               <Skeleton className="rounded-xl w-[48px] h-[36px]" />
-              <Skeleton className="rounded-xl w-[48px] h-[36px]" />
-              <Skeleton className="rounded-xl w-[48px] h-[36px]" />
+              {selectedMapUnit?.type === "house" ? (
+                <>
+                  <Skeleton className="rounded-xl w-[48px] h-[36px]" />
+                  <Skeleton className="rounded-xl w-[48px] h-[36px]" />
+                </>
+              ) : null}
             </div>
           ) : null}
 
-          <div className={cn("flex flex-wrap gap-4", { "mt-4": owner === walletAddress })}>
-            {owner === walletAddress && selectedMapUnit ? (
-              <SettingsDialog unitData={selectedMapUnit}>
-                <ButtonWithTooltip
-                  tooltipText={`Edit ${selectedMapUnit.type}`}
-                  variant="secondary"
-                  className="rounded-xl"
-                >
-                  <PencilIcon className="w-4 h-4" />
-                </ButtonWithTooltip>
-              </SettingsDialog>
-            ) : null}
+          {sceneType === "main" ? (
+            <div className={cn("flex flex-wrap gap-4", { "mt-4": isOwner })}>
+              {isOwner && selectedMapUnit ? (
+                <SettingsDialog unitData={selectedMapUnit}>
+                  <ButtonWithTooltip
+                    tooltipText={`Edit ${selectedMapUnit.type}`}
+                    variant="secondary"
+                    className="rounded-xl"
+                  >
+                    <PencilIcon className="w-4 h-4" />
+                  </ButtonWithTooltip>
+                </SettingsDialog>
+              ) : null}
 
-            {owner === walletAddress && !loading && selectedMapUnit?.type === "plot" && (
-              <>
-                {selectedMapUnit.type === "plot" ? (
+              {isOwner && !loading && selectedMapUnit?.type === "plot" && (
+                <>
                   <SellPlotDialog>
                     <ButtonWithTooltip tooltipText="Sell" variant="secondary" className="rounded-xl">
                       <ShoppingBagIcon className="w-4 h-4" />
                     </ButtonWithTooltip>
                   </SellPlotDialog>
-                ) : null}
+                  <RentPlotDialog>
+                    <ButtonWithTooltip tooltipText="Rent additional land" variant="secondary" className="rounded-xl">
+                      <ImageUpscaleIcon className="w-4 h-4" />
+                    </ButtonWithTooltip>
+                  </RentPlotDialog>
 
-                <RentPlotDialog>
-                  <ButtonWithTooltip tooltipText="Rent additional land" variant="secondary" className="rounded-xl">
-                    <ImageUpscaleIcon className="w-4 h-4" />
-                  </ButtonWithTooltip>
-                </RentPlotDialog>
+                  <LeaveUnbuiltPlotDialog leaveUrl={leaveUrl} amount={selectedMapUnit.amount}>
+                    <ButtonWithTooltip tooltipText="Leave the unbuilt plot" variant="secondary" className="rounded-xl">
+                      <DoorOpenIcon className="w-4 h-4" />
+                    </ButtonWithTooltip>
+                  </LeaveUnbuiltPlotDialog>
+                </>
+              )}
 
-                <LeaveUnbuiltPlotDialog leaveUrl={leaveUrl} amount={selectedMapUnit.amount}>
-                  <ButtonWithTooltip tooltipText="Leave the unbuilt plot" variant="secondary" className="rounded-xl">
-                    <DoorOpenIcon className="w-4 h-4" />
+              {selectedMapUnit?.type === "house" && isOwner && selectedMapUnit.shortcode ? (
+                <ShortCodeSellDialog plot_num={selectedMapUnit.plot_num} shortcode={selectedMapUnit.shortcode}>
+                  <ButtonWithTooltip
+                    disabled={!selectedMapUnit.shortcode}
+                    tooltipText="Sell shortcode"
+                    variant="secondary"
+                    className="rounded-xl"
+                  >
+                    <CaseUpperIcon className="w-4 h-4" />
                   </ButtonWithTooltip>
-                </LeaveUnbuiltPlotDialog>
-              </>
-            )}
-          </div>
+                </ShortCodeSellDialog>
+              ) : null}
+            </div>
+          ) : null}
         </CardContent>
       ) : (
         <CardContent className="text-primary">No selected</CardContent>

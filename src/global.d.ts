@@ -259,3 +259,9 @@ export interface ITokenInfo {
   symbol: string;
   decimals: number;
 }
+
+export interface IGameOptions {
+  displayMode?: "main" | "market";
+  params?: IAaParams;
+}
+

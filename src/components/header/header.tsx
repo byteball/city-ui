@@ -9,6 +9,7 @@ interface IHeaderProps {}
 
 const navigation = [
   { name: "Home", href: "/" },
+  { name: "Market", href: "/market" },
   { name: "Governance", href: "/governance" },
   { name: "F.A.Q.", href: "/faq" },
 ];
@@ -17,8 +18,8 @@ export const Header: FC<IHeaderProps> = () => {
   const walletAddress = useSettingsStore((state) => state.walletAddress);
 
   return (
-    <header className="border-b">
-      <nav aria-label="Global" className="flex items-center justify-between p-6 mx-auto max-w-7xl lg:px-8">
+    <header>
+      <nav aria-label="Global" className="flex items-center justify-between py-6">
         <div className="flex lg:flex-1">
           <NavLink to="/" className="-m-1.5 p-1.5 flex space-x-4 items-center">
             <span className="sr-only">Obyte City</span>

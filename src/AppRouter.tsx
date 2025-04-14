@@ -2,7 +2,7 @@ import { FC, ReactElement } from "react";
 import { Route, Routes } from "react-router";
 
 import { Layout } from "./components/layout/layout";
-import { ClaimRedirectPage, FaqPage, GovernancePage, MainPage, NotFound, UserPage } from "./pages";
+import { ClaimRedirectPage, FaqPage, GovernancePage, MainPage, MarketPage, NotFound, UserPage } from "./pages";
 
 interface IAppRouterProps {
   children?: ReactElement;
@@ -15,6 +15,7 @@ export const AppRouter: FC<IAppRouterProps> = () => (
       <Route path="/user/:address" element={<UserPage />} />
       <Route path="/faq" element={<FaqPage />} />
       <Route path="/governance" element={<GovernancePage />} />
+      <Route path="/market" element={<MarketPage />} />
       <Route path="/not-found" element={<NotFound />} />
       <Route path="/claim/:nums" element={<ClaimRedirectPage />} />
       <Route path="*" element={<NotFound />} />

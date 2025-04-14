@@ -1,17 +1,23 @@
 import Phaser from "phaser";
 
 import appConfig from "@/appConfig";
-import { ICity } from "@/global";
+import { ICity, IGameOptions } from "@/global";
 import { useAaStore } from "@/store/aa-store";
 import { mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import CameraController from "../controllers/CameraController";
 import { Map as GameMap } from "../objects/Map";
 import { getRoads } from "../utils/getRoads";
+
 export default class MapScene extends Phaser.Scene {
   private map!: GameMap;
+  private options: IGameOptions = { displayMode: "main" };
 
   constructor() {
     super("MapScene");
+  }
+
+  init(data: IGameOptions) {
+    this.options = { ...this.options, ...data };
   }
 
   preload() {
@@ -51,7 +57,7 @@ export default class MapScene extends Phaser.Scene {
 
     this.map = new GameMap(this, roads, mapUnits);
 
-    this.map.createMap();
+    this.map.createMap(this.options);
     this.setHousesOnTop(); // Устанавливаем дома поверх всех элементов после создания карты
 
     const unsubscribe = useAaStore.subscribe((newState) => {
