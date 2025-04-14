@@ -1,5 +1,6 @@
 import { FC, useMemo } from "react";
 
+import { BuyShortcodeDialog } from "@/components/dialogs/BuyShortcodeDialog";
 import { QRButton } from "@/components/ui/_qr-button";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -34,52 +35,58 @@ export const ShortcodesOnSaleList: FC<IShortcodesOnSaleListProps> = ({}) => {
       <Tabs defaultValue="all" className="w-full">
         <TabsList className="flex justify-between w-full mb-4">
           <TabsTrigger className="w-[50%]" value="all">
-            All shortcodes
+            All orders
           </TabsTrigger>
 
           <TabsTrigger disabled={!walletAddress} className="w-[50%]" value="my">
-            My shortcodes
+            My orders
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="all">
           <div>
-            {sellOrders.map(({ name, price }) => (
+            {sellOrders.map(({ name, price, houseNum, owner }) => (
               <div key={name} className="flex items-center justify-between p-4 border rounded-md">
                 <div className="font-bold">{name}</div>
-                <Button>
-                  Buy for {toLocalString(price / decimalsPow)} {symbol}
-                </Button>
+                <BuyShortcodeDialog sellerHouseNum={houseNum} shortcode={name} price={price}>
+                  <Button disabled={!walletAddress || owner === walletAddress}>
+                    Buy for {toLocalString(price / decimalsPow)} {symbol}
+                  </Button>
+                </BuyShortcodeDialog>
               </div>
             ))}
           </div>
         </TabsContent>
 
         <TabsContent value="my">
-          <div>
-            {mySellOrders.map(({ name, houseNum }) => (
-              <div key={name + houseNum} className="flex items-center justify-between p-4 border rounded-md">
-                <div className="font-bold">{name}</div>
-                <QRButton
-                  href={generateLink({
-                    amount: 10000,
-                    data: {
-                      house_num: houseNum,
-                      edit_house: 1,
-                      sell_shortcode: 1,
-                      shortcode_price: 0,
-                    },
-                    from_address: walletAddress!,
-                    aa: appConfig.AA_ADDRESS,
-                    asset: "base",
-                    is_single: true,
-                  })}
-                >
-                  Withdraw from sale
-                </QRButton>
-              </div>
-            ))}
-          </div>
+          {mySellOrders.length ? (
+            <div>
+              {mySellOrders.map(({ name, houseNum }) => (
+                <div key={name + houseNum} className="flex items-center justify-between p-4 border rounded-md">
+                  <div className="font-bold">{name}</div>
+                  <QRButton
+                    href={generateLink({
+                      amount: 10000,
+                      data: {
+                        house_num: houseNum,
+                        edit_house: 1,
+                        sell_shortcode: 1,
+                        shortcode_price: 0,
+                      },
+                      from_address: walletAddress!,
+                      aa: appConfig.AA_ADDRESS,
+                      asset: "base",
+                      is_single: true,
+                    })}
+                  >
+                    Withdraw from sale
+                  </QRButton>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-muted-foreground">You don't sell your shortcodes</div>
+          )}
         </TabsContent>
       </Tabs>
     </ScrollArea>
