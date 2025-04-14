@@ -241,7 +241,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                 <ShortCodeSellDialog plot_num={selectedMapUnit.plot_num} shortcode={selectedMapUnit.shortcode}>
                   <ButtonWithTooltip
                     disabled={!selectedMapUnit.shortcode}
-                    tooltipText="Sell or transfer shortcode"
+                    tooltipText="Sell shortcode"
                     variant="secondary"
                     className="rounded-xl"
                   >
