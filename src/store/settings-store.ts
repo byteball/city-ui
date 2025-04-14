@@ -71,9 +71,8 @@ const storeCreator: StateCreator<SettingsState> = (set, get) => ({
     set({ selectedMapUnit: { x: coordinatesWithType.x, y: coordinatesWithType.y, type: coordinatesWithType.type } });
   },
   setSelectedMarketPlot: (coordinatesWithType) => {
-    if (coordinatesWithType.type !== "plot") throw new Error("Invalid type for market plot");
-
     if (!coordinatesWithType) return set({ selectedMarketPlot: undefined });
+    if (coordinatesWithType.type !== "plot") throw new Error("Invalid type for market plot");
     set({ selectedMarketPlot: { x: coordinatesWithType.x, y: coordinatesWithType.y, type: coordinatesWithType.type } });
   },
   setWalletAddress: (walletAddress: string) => {
