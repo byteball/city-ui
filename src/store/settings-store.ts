@@ -3,13 +3,27 @@ import { create, StateCreator } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
 import appConfig from "@/appConfig";
-import { ICoordinatesWithType, IRefData } from "@/global";
+import { ICoordinatesWithType, IMapUnit, IRefData } from "@/global";
 import { toast } from "@/hooks/use-toast";
 import client from "@/services/obyteWsClient";
 import { ICityAaState } from "./aa-store";
 
 const LOCAL_STORAGE_KEY = "settings-store";
-const STORAGE_VERSION = 9; // change this to invalidate old persisted data
+const STORAGE_VERSION = 10; // change this to invalidate old persisted data
+
+export type SortDirectionType = "ASC" | "DESC";
+
+export enum IPlotSortTypeEnum {
+  CREATED_TS = "By created on",
+  AMOUNT = "By amount",
+  RENTED_AMOUNT = "By rented amount",
+  TOTAL_AMOUNT = "By total amount",
+}
+
+export enum IHouseSortTypeEnum {
+  CREATED_TS = "By created on",
+  AMOUNT = "By amount",
+}
 
 interface SettingsState {
   firstInit: () => void;
@@ -27,6 +41,21 @@ interface SettingsState {
   selectedMarketPlot?: ICoordinatesWithType;
   setSelectedMapUnit: (coordinatesWithType: ICoordinatesWithType) => void;
   setSelectedMarketPlot: (coordinatesWithType: ICoordinatesWithType) => void;
+  setMapUnitSortType: <T extends "house" | "plot">(
+    unit: T,
+    sortType: T extends "house" ? keyof typeof IHouseSortTypeEnum : keyof typeof IPlotSortTypeEnum
+  ) => void;
+  mapUnitSortType: {
+    house: {
+      type: keyof typeof IHouseSortTypeEnum;
+      direction: SortDirectionType;
+    };
+    plot: {
+      type: keyof typeof IPlotSortTypeEnum;
+      direction: SortDirectionType;
+    };
+  };
+  setMapUnitSortDirection: (unit: IMapUnit["type"], direction: SortDirectionType) => void;
 }
 
 const storeCreator: StateCreator<SettingsState> = (set, get) => ({
@@ -66,6 +95,16 @@ const storeCreator: StateCreator<SettingsState> = (set, get) => ({
   selectedMapUnit: undefined,
   selectedMarketPlot: undefined,
   walletAddress: null,
+  mapUnitSortType: {
+    house: {
+      type: "CREATED_TS",
+      direction: "DESC",
+    },
+    plot: {
+      type: "CREATED_TS",
+      direction: "DESC",
+    },
+  },
   setSelectedMapUnit: (coordinatesWithType) => {
     if (!coordinatesWithType) return set({ selectedMapUnit: undefined });
     set({ selectedMapUnit: { x: coordinatesWithType.x, y: coordinatesWithType.y, type: coordinatesWithType.type } });
@@ -81,6 +120,31 @@ const storeCreator: StateCreator<SettingsState> = (set, get) => ({
     set({ walletAddress });
   },
   setRefData: (refData: IRefData) => set({ refData }),
+  setMapUnitSortType: <T extends "house" | "plot">(
+    unit: T,
+    sortType: T extends "house" ? keyof typeof IHouseSortTypeEnum : keyof typeof IPlotSortTypeEnum
+  ) => {
+    set((state) => ({
+      mapUnitSortType: {
+        ...state.mapUnitSortType,
+        [unit]: {
+          type: sortType,
+          direction: state.mapUnitSortType[unit].direction,
+        },
+      },
+    }));
+  },
+  setMapUnitSortDirection: (unit: IMapUnit["type"], direction: SortDirectionType) => {
+    set((state) => ({
+      mapUnitSortType: {
+        ...state.mapUnitSortType,
+        [unit]: {
+          type: state.mapUnitSortType[unit].type,
+          direction,
+        },
+      },
+    }));
+  },
 });
 
 export const useSettingsStore = create<SettingsState>()(
@@ -110,4 +174,12 @@ export const setSelectedMapUnit = (coordinates: ICoordinatesWithType): void =>
   useSettingsStore.getState().setSelectedMapUnit(coordinates);
 
 export const setWalletAddress = (address: string): void => useSettingsStore.getState().setWalletAddress(address);
+
+export const setMapUnitSortType = (
+  unit: IMapUnit["type"],
+  sortType: keyof typeof IHouseSortTypeEnum | keyof typeof IPlotSortTypeEnum
+): void => useSettingsStore.getState().setMapUnitSortType(unit, sortType);
+
+export const setMapUnitSortDirection = (unit: IMapUnit["type"], direction: SortDirectionType): void =>
+  useSettingsStore.getState().setMapUnitSortDirection(unit, direction);
 
