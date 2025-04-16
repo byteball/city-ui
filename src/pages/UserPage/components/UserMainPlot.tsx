@@ -18,8 +18,10 @@ const getPlotMapAddress = (
   userMainPlot: IPlot | undefined,
   userMainPlotNum: number | undefined,
   mapUnits: IMapUnit[],
-  mayor: string
+  mayor?: string
 ) => {
+  if (!mayor) return "Mayor not found"; // need to generate roads list
+
   if (userMainPlot && userMainPlotNum) {
     const roads = getRoads(mapUnits, String(mayor));
     return (
@@ -44,7 +46,7 @@ export const UserMainPlot: FC<IUserMainPlotsProps> = ({ address }) => {
   return (
     <div className="flex items-center">
       {userMainPlot ? (
-        getPlotMapAddress(userMainPlot, userMainPlotNum, mapUnits, mayor!)
+        getPlotMapAddress(userMainPlot, userMainPlotNum, mapUnits, mayor)
       ) : (
         <div className="text-gray-500">Not set up yet</div>
       )}
