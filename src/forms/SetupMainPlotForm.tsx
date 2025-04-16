@@ -14,7 +14,6 @@ import { generateLink, getAddressFromNearestRoad } from "@/lib";
 import appConfig from "@/appConfig";
 
 interface ISetupMainPlotFormProps {
-  address: string;
   plotNum?: number;
 }
 

@@ -5,18 +5,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 
 interface ISetUserMainPlotDialogProps {
   children: React.ReactNode;
-  address: string;
   plotNum?: number;
 }
 
-export const SetUserMainPlotDialog: FC<ISetUserMainPlotDialogProps> = ({ children, plotNum, address }) => (
+export const SetUserMainPlotDialog: FC<ISetUserMainPlotDialogProps> = ({ children, plotNum }) => (
   <Dialog>
     <DialogTrigger asChild>{children}</DialogTrigger>
     <DialogContent className="z-50">
       <DialogHeader>
         <DialogTitle>Set up the main plot</DialogTitle>
       </DialogHeader>
-      <SetupMainPlotForm plotNum={plotNum} address={address} />
+      <SetupMainPlotForm plotNum={plotNum} />
     </DialogContent>
   </Dialog>
 );
