@@ -1,3 +1,4 @@
+import appConfig from "@/appConfig";
 import { getNearestRoads } from "@/game/utils/getNearestRoads";
 import { ICoordinates, IRoad } from "@/global";
 
@@ -29,7 +30,7 @@ export function getAddressCoordinate(
 
   const coordCode = `${mainCoordStr}/${direction}${offset}`;
 
-  return `#${plotOrHouseNumber} ${name}, ${coordCode}`;
+  return (appConfig.TESTNET ? `#${plotOrHouseNumber} ` : "") + `${name}, ${coordCode}`;
 }
 
 export function getAddressFromNearestRoad(roads: IRoad[], home: ICoordinates, plotOrHouseNumber: number): string[] {
