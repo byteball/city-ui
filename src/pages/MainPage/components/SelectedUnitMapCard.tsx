@@ -150,7 +150,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                 tooltipText="Shortcodes are used to send money via the wallet instead of using a full address"
                 loading={loading}
               >
-                {selectedMapUnit.shortcode}
+                {selectedMapUnit.shortcode.toLowerCase()}
               </InfoPanel.Item>
             ) : null}
 

@@ -19,7 +19,7 @@ interface IShortcodeFormProps {
 }
 
 export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
-  const currentShortcode = unitData.shortcode || "";
+  const currentShortcode = unitData.shortcode?.toLowerCase() || "";
   const [shortcode, setShortcode] = useState<string>(currentShortcode);
   const { plot_price } = useAaParams();
   const walletAddress = useSettingsStore((state) => state.walletAddress);
@@ -32,7 +32,7 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
   const isTaken = shortcode in existingShortcodes && existingShortcodes[shortcode] !== walletAddress;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^A-Za-z0-9_-]/g, "").toUpperCase();
+    const value = e.target.value.replace(/[^A-Za-z0-9_-]/g, "").toLowerCase();
     setShortcode(value);
   };
 
