@@ -12,8 +12,9 @@ import { useSettingsStore } from "@/store/settings-store";
 
 import { getRoads } from "@/game/utils/getRoads";
 import { ICity } from "@/global";
-import { asNonNegativeNumber, toLocalString } from "@/lib";
+import { asNonNegativeNumber, mapUnitsSortFunc, toLocalString } from "@/lib";
 import { getAddressFromNearestRoad } from "@/lib/getAddressCoordinate";
+import { MapUnitsSortSelect } from "./MapUnitsSortSelect";
 
 interface IUserHousesProps {
   address: string;
@@ -37,9 +38,16 @@ export const UserHouses: FC<IUserHousesProps> = ({ address }) => {
 
   return (
     <div className="mt-8">
-      <h2 className="text-xl font-semibold">Houses</h2>
+      <div className="flex flex-col items-start justify-between md:flex-row">
+        <div className="mb-4 md:mb-0">
+          <h2 className="text-xl font-semibold">Houses</h2>
+        </div>
+        <div>
+          <MapUnitsSortSelect type="house" />
+        </div>
+      </div>
       <div className="grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-4">
-        {userHouses.map(({ house_num, x, y, amount, ts, type = "house" }) => {
+        {userHouses.sort(mapUnitsSortFunc).map(({ house_num, x, y, amount, ts, type = "house" }) => {
           const [address] = getAddressFromNearestRoad(roads, { x, y }, house_num);
 
           return (
