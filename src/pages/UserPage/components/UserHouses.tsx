@@ -42,9 +42,11 @@ export const UserHouses: FC<IUserHousesProps> = ({ address }) => {
         <div className="mb-4 md:mb-0">
           <h2 className="text-xl font-semibold">Houses</h2>
         </div>
-        <div>
-          <MapUnitsSortSelect type="house" />
-        </div>
+        {userHouses.length > 1 ? (
+          <div>
+            <MapUnitsSortSelect type="house" />
+          </div>
+        ) : null}
       </div>
       <div className="grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-4">
         {userHouses.sort(mapUnitsSortFunc).map(({ house_num, x, y, amount, ts, type = "house" }) => {

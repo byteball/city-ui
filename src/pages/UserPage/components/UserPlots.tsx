@@ -41,9 +41,11 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
         <div className="mb-4 md:mb-0">
           <h2 className="text-xl font-semibold">Plots</h2>
         </div>
-        <div>
-          <MapUnitsSortSelect type="plot" />
-        </div>
+        {userPlots.length > 1 ? (
+          <div>
+            <MapUnitsSortSelect type="plot" />
+          </div>
+        ) : null}
       </div>
 
       <div className="grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-4">
