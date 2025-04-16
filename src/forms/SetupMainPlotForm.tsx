@@ -50,7 +50,7 @@ export const SetupMainPlotForm: FC<ISetupMainPlotFormProps> = ({ plotNum }) => {
           disabled={!inited}
         >
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select your house" />
+            <SelectValue placeholder="Select your plot" />
           </SelectTrigger>
           <SelectContent>
             {userPlots.map(({ plot_num, x, y }) => (
