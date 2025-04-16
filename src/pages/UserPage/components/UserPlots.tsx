@@ -12,9 +12,8 @@ import { useSettingsStore } from "@/store/settings-store";
 
 import { getRoads } from "@/game/utils/getRoads";
 import { ICity } from "@/global";
-import { asNonNegativeNumber, toLocalString } from "@/lib";
+import { asNonNegativeNumber, mapUnitsSortFunc, toLocalString } from "@/lib";
 import { getAddressFromNearestRoad } from "@/lib/getAddressCoordinate";
-import { mapUnitsSortFunc } from "@/lib/mapUnitsSortFunc";
 import { MapUnitsSortSelect } from "./MapUnitsSortSelect";
 
 interface IUserPlotsProps {

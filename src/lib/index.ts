@@ -6,6 +6,7 @@ export { getCountOfDecimals } from "./getCountOfDecimals";
 export { getExplorerUrl } from "./getExplorerUrl";
 export { getInformationPrefix } from "./getInformationPrefix";
 export { getRefDataFromSearch } from "./getRefDataFromSearch";
+export { mapUnitsSortFunc } from "./mapUnitsSortFunc";
 export { toLocalString } from "./toLocalString";
 export { numericInputParamNames, percentInputParamNames, validateParam } from "./validateParam";
 

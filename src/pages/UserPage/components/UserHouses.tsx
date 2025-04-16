@@ -12,7 +12,7 @@ import { useSettingsStore } from "@/store/settings-store";
 
 import { getRoads } from "@/game/utils/getRoads";
 import { ICity } from "@/global";
-import { asNonNegativeNumber, toLocalString } from "@/lib";
+import { asNonNegativeNumber, mapUnitsSortFunc, toLocalString } from "@/lib";
 import { getAddressFromNearestRoad } from "@/lib/getAddressCoordinate";
 import { MapUnitsSortSelect } from "./MapUnitsSortSelect";
 
@@ -47,7 +47,7 @@ export const UserHouses: FC<IUserHousesProps> = ({ address }) => {
         </div>
       </div>
       <div className="grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-4">
-        {userHouses.map(({ house_num, x, y, amount, ts, type = "house" }) => {
+        {userHouses.sort(mapUnitsSortFunc).map(({ house_num, x, y, amount, ts, type = "house" }) => {
           const [address] = getAddressFromNearestRoad(roads, { x, y }, house_num);
 
           return (
