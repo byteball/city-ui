@@ -29,7 +29,8 @@ const getPlotMapAddress = (
       `Plot ${userMainPlotNum}`
     );
   }
-  return `Plot ${userMainPlotNum}`;
+
+  return userMainPlotNum ? `Plot ${userMainPlotNum}` : "Not set up yet";
 };
 
 export const UserMainPlot: FC<IUserMainPlotsProps> = ({ address }) => {
