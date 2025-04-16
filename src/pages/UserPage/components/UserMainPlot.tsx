@@ -41,7 +41,9 @@ export const UserMainPlot: FC<IUserMainPlotsProps> = ({ address }) => {
   const mayor = useAaStore((state) => state.state.city_city?.mayor);
 
   const userMainPlot = userMainPlotNum
-    ? (userUnits.find((unit) => unit.type === "plot" && unit.plot_num === userMainPlotNum) as IPlot | undefined)
+    ? ((userUnits.length ? userUnits : mapUnits).find(
+        (unit) => unit.type === "plot" && unit.plot_num === userMainPlotNum
+      ) as IPlot | undefined)
     : undefined;
 
   return (
