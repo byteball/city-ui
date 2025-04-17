@@ -9,6 +9,7 @@ import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
 import { PhaserGame } from "@/game/PhaserGame";
+import { Link } from "react-router";
 import { SelectedPlotOnSale } from "./components/SelectedPlotOnSale";
 
 export default () => {
@@ -54,7 +55,13 @@ export default () => {
           <Card>
             <CardHeader>
               <h2 className="text-xl font-semibold">Shortcodes</h2>
-              <CardDescription>Lorem ipsum for shortcodes</CardDescription>
+              <CardDescription>
+                To sell a shortcode, select your house on the{" "}
+                <Link to="/" className="text-link">
+                  main map
+                </Link>{" "}
+                and click "Sell Shortcode" button.
+              </CardDescription>
             </CardHeader>
 
             <CardContent>
