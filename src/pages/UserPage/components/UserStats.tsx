@@ -1,6 +1,7 @@
-import { FC, memo } from "react";
+import { FC, memo, useEffect, useState } from "react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { TextScramble } from "@/components/ui/text-scramble";
 import { toLocalString } from "@/lib";
 import { calculateOverallProbability } from "@/lib/calculateOverallProbability";
@@ -8,50 +9,76 @@ import { useAaParams, useAaStore } from "@/store/aa-store";
 import { mapUnitsByOwnerAddressSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 
-const price = 2.8; // TODO: fix it
+import client from "@/services/obyteWsClient";
 
 interface IUserStatsProps {
   address: string;
 }
 
+interface IWalletBalance {
+  amount: number;
+  loaded: boolean;
+  loading: boolean;
+}
+
 export const UserStats: FC<IUserStatsProps> = memo(({ address }) => {
-  const decimals = useSettingsStore((state) => state.decimals);
-  const symbol = useSettingsStore((state) => state.symbol);
+  const [walletBalance, setWalletBalance] = useState<IWalletBalance>({ amount: 0, loaded: false, loading: false });
+  const { decimals, symbol, asset } = useSettingsStore((state) => state);
   const balance = useAaStore((state) => Number(state.state?.[`user_land_${address}`] ?? 0));
   const city = useAaStore((state) => state.state.city_city)!;
 
-  const balanceInUSDView = "$" + toLocalString(price * (balance / 10 ** (decimals ?? 0)));
-  const balanceView = toLocalString(balance / 10 ** (decimals ?? 0));
+  const balanceView = toLocalString((balance + walletBalance.amount) / 10 ** (decimals ?? 0));
+  const walletBalanceView = toLocalString(walletBalance.amount / 10 ** (decimals ?? 0));
   const userUnits = useAaStore((state) => mapUnitsByOwnerAddressSelector(state, address));
   const { matching_probability, referral_boost } = useAaParams();
-
   const overallProb = calculateOverallProbability(userUnits, city, matching_probability, referral_boost);
 
-  return (
-    <div className="grid gap-4 mt-8 md:grid-cols-2 lg:grid-cols-4">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-          <CardTitle className="text-sm font-medium">
-            <TextScramble>Balance</TextScramble>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <TextScramble className="text-2xl font-bold">{`${balanceView} ${symbol}`}</TextScramble>
-          <TextScramble className="text-xs text-muted-foreground">{balanceInUSDView}</TextScramble>
-        </CardContent>
-      </Card>
+  useEffect(() => {
+    let cancelled = false;
+    if (!address || !asset) return;
+    setWalletBalance({ amount: 0, loaded: false, loading: true });
+    client.api
+      .getBalances([address])
+      .then((balances: any) => {
+        const userBalance = balances[address];
+        return userBalance?.[asset]?.total ?? 0;
+      })
+      .then((amount) => {
+        if (!cancelled) {
+          setWalletBalance({ amount, loaded: true, loading: false });
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to fetch balances:", error);
+        if (!cancelled) {
+          setWalletBalance({ amount: 0, loaded: true, loading: false });
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [address, asset]);
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-          <CardTitle className="text-sm font-medium">
-            <TextScramble>Plots count</TextScramble>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <TextScramble className="text-2xl font-bold">{toLocalString(userUnits.length)}</TextScramble>
-          {/* <p className="text-xs text-muted-foreground"></p> */}
-        </CardContent>
-      </Card>
+  return (
+    <div className="grid gap-4 mt-8 md:grid-cols-2 lg:grid-cols-4 auto-rows-auto">
+      {walletBalance.loaded ? (
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+            <CardTitle className="text-sm font-medium">
+              <TextScramble>Balance</TextScramble>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <TextScramble className="text-2xl font-bold">{`${balanceView} ${symbol}`}</TextScramble>
+            <TextScramble className="text-xs text-muted-foreground">
+              {`including ${walletBalanceView} ${symbol!} in wallet`}
+            </TextScramble>
+          </CardContent>
+        </Card>
+      ) : (
+        <Skeleton className="w-full h-full" />
+      )}
+
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
           <CardTitle className="text-sm font-medium">
