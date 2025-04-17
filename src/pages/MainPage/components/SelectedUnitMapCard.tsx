@@ -1,13 +1,16 @@
 import cn from "classnames";
 import { CaseUpperIcon, DoorOpenIcon, ImageUpscaleIcon, PencilIcon, ShoppingBagIcon } from "lucide-react";
 import moment from "moment";
+import { FC } from "react";
 import { Link } from "react-router";
 
 import { LeaveUnbuiltPlotDialog } from "@/components/dialogs/LeaveUnbuiltPlotDialog";
 import { RentPlotDialog } from "@/components/dialogs/RentPlotDialog";
 import { SellPlotDialog } from "@/components/dialogs/SellPlotDialog";
 import { SettingsDialog } from "@/components/dialogs/SettingsDialog";
+import { ShortCodeSellDialog } from "@/components/dialogs/ShortCodeSellDialog";
 import { InfoPanel } from "@/components/ui/_info-panel";
+import { QRButton } from "@/components/ui/_qr-button";
 import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -25,9 +28,6 @@ import { generateLink, toLocalString } from "@/lib";
 import { getAddressFromNearestRoad } from "@/lib/getAddressCoordinate";
 
 import appConfig from "@/appConfig";
-import { ShortCodeSellDialog } from "@/components/dialogs/ShortCodeSellDialog";
-import { QRButton } from "@/components/ui/_qr-button";
-import { FC } from "react";
 
 interface ISelectedUnitMapCardProps {
   sceneType: "main" | "market";
@@ -121,7 +121,11 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
             <InfoPanel.Item textClamp label="Amount" loading={loading}>
               {formattedTotalAmount} {symbol} {rented_amount ? `(inc. ${formattedRentedAmount} rented ${symbol})` : ""}
             </InfoPanel.Item>
-
+            {selectedMapUnit?.type === "plot" && selectedMapUnit?.rental_expiry_ts ? (
+              <InfoPanel.Item textClamp label="Rental expiry" loading={loading}>
+                {moment.unix(selectedMapUnit?.rental_expiry_ts).format("YYYY-MM-DD HH:mm")}
+              </InfoPanel.Item>
+            ) : null}
             <InfoPanel.Item textClamp label="Coordinates" loading={loading}>
               <TooltipProvider>
                 <Tooltip>
@@ -138,11 +142,9 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                 </Tooltip>
               </TooltipProvider>
             </InfoPanel.Item>
-
             <InfoPanel.Item textClamp label="Address" loading={loading}>
               {addresses[0] ?? "No address"}
             </InfoPanel.Item>
-
             {selectedMapUnit?.type === "house" && selectedMapUnit?.shortcode ? (
               <InfoPanel.Item
                 label="Shortcode"
@@ -153,19 +155,16 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                 {selectedMapUnit.shortcode.toLowerCase()}
               </InfoPanel.Item>
             ) : null}
-
-            {selectedMapUnit?.ts ? (
+            {/* {selectedMapUnit?.ts ? (
               <InfoPanel.Item textClamp label="Created at" loading={loading}>
                 {moment.unix(selectedMapUnit?.ts).format("YYYY-MM-DD HH:mm")}
               </InfoPanel.Item>
-            ) : null}
-
+            ) : null} */}{" "}
             <InfoPanel.Item textClamp label="Owner" loading={loading || !owner}>
               <Link to={`/user/${owner}`} className="text-blue-400 block truncate max-w-[200px]">
                 {selectedMapUnit?.username ? `${selectedMapUnit?.username} - ${owner}` : owner}
               </Link>
             </InfoPanel.Item>
-
             {selectedMapUnit?.type === "house" ? (
               <InfoPanel.Item label="Contacts" loading={loading || !owner || ownerUsernameIsLoading}>
                 {attestations.length ? (
@@ -175,7 +174,6 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                 )}
               </InfoPanel.Item>
             ) : null}
-
             {sceneType === "market" && selectedMapUnit?.type === "plot" ? (
               <div className="mt-4 space-y-2">
                 {isOwner ? (
