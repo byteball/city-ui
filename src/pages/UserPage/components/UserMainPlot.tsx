@@ -1,3 +1,6 @@
+import { UserPenIcon } from "lucide-react";
+import { FC } from "react";
+
 import { SetUserMainPlotDialog } from "@/components/dialogs/SetUserMainPlotDialog";
 import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
 import { getRoads } from "@/game/utils/getRoads";
@@ -6,10 +9,8 @@ import { getAddressFromNearestRoad } from "@/lib";
 import { useAaStore } from "@/store/aa-store";
 import { mapUnitsByOwnerAddressSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
-import { UserPenIcon } from "lucide-react";
-import { FC } from "react";
 
-interface IUserMainPlotsProps {
+interface IUserMainPlotProps {
   /** Address of the user */
   address: string;
 }
@@ -33,7 +34,7 @@ const getPlotMapAddress = (
   return userMainPlotNum ? `Plot ${userMainPlotNum}` : "Not set up yet";
 };
 
-export const UserMainPlot: FC<IUserMainPlotsProps> = ({ address }) => {
+export const UserMainPlot: FC<IUserMainPlotProps> = ({ address }) => {
   const walletAddress = useSettingsStore((state) => state.walletAddress);
   const userMainPlotNum = useAaStore((state) => state.state[`user_main_plot_city_${address}`]) as number | undefined;
   const userUnits = useAaStore((state) => mapUnitsByOwnerAddressSelector(state, walletAddress));
