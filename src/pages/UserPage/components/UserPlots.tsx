@@ -1,5 +1,5 @@
 import moment from "moment";
-import { FC, useCallback } from "react";
+import { FC, useCallback, useMemo } from "react";
 import { Link } from "react-router";
 
 import { InfoPanel } from "@/components/ui/_info-panel";
@@ -26,7 +26,7 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
   const aaState = useAaStore((state) => state);
   const mapUnits = mapUnitsSelector(aaState);
   const cityStats = aaState.state.city_city as ICity;
-  const userPlots = userUnits.filter((u) => u.type === "plot");
+  const userPlots = useMemo(() => userUnits.filter((u) => u.type === "plot"), [userUnits]);
   const roads = getRoads(mapUnits, String(cityStats?.mayor));
 
   const changePlot = useCallback(({ x, y, type }: { x: number; y: number; type: "plot" | "house" }) => {
@@ -48,44 +48,68 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
         ) : null}
       </div>
 
-      <div className="grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-4">
-        {userPlots.sort(mapUnitsSortFunc).map(({ plot_num, x, y, amount, rented_amount = 0, ts, type = "plot" }) => {
-          const [address] = getAddressFromNearestRoad(roads, { x, y }, plot_num);
+      <div className="grid gap-4 mt-4 md:grid-cols-2 lg:grid-cols-4 auto-rows-auto">
+        {userPlots
+          .sort(mapUnitsSortFunc)
+          .map(({ plot_num, x, y, amount, rented_amount = 0, ts, type = "plot", info }) => {
+            const [address] = getAddressFromNearestRoad(roads, { x, y }, plot_num);
 
-          return (
-            <Link onClick={() => changePlot({ x, y, type })} to={`/?c=${x},${y},${type}`} key={plot_num}>
-              <Card>
-                <CardHeader className="pb-2 space-y-0 ">
-                  <CardTitle>
-                    <TextScramble className="text-sm font-semibold">{address ?? `Plot ${plot_num}`}</TextScramble>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <InfoPanel labelAnimated>
-                    <InfoPanel.Item label="Total amount">
-                      <TextScramble className="inline">
-                        {toLocalString((amount + rented_amount) / decimalsFactor)}
-                      </TextScramble>{" "}
-                      <small>
-                        <TextScramble className="inline">{symbol!}</TextScramble>{" "}
-                      </small>
-                    </InfoPanel.Item>
-                    <InfoPanel.Item label="Rented">
-                      <TextScramble className="inline">{toLocalString(rented_amount / decimalsFactor)}</TextScramble>
-                      <small>
-                        {" "}
-                        <TextScramble className="inline">{symbol!}</TextScramble>{" "}
-                      </small>
-                    </InfoPanel.Item>
-                    <InfoPanel.Item label="Created on">
-                      <TextScramble className="inline">{moment(ts * 1000).format("ll")}</TextScramble>
-                    </InfoPanel.Item>
-                  </InfoPanel>
-                </CardContent>
-              </Card>
-            </Link>
-          );
-        })}
+            return (
+              <Link
+                className="flex h-full"
+                onClick={() => changePlot({ x, y, type })}
+                to={`/?c=${x},${y},${type}`}
+                key={plot_num}
+              >
+                <Card className="flex flex-col flex-1">
+                  <CardHeader className="pb-2 space-y-0 ">
+                    <CardTitle>
+                      <TextScramble className="text-sm font-semibold">{address ?? `Plot ${plot_num}`}</TextScramble>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex-1">
+                    <InfoPanel labelAnimated>
+                      <InfoPanel.Item label="Total amount">
+                        <TextScramble className="inline">
+                          {toLocalString((amount + rented_amount) / decimalsFactor)}
+                        </TextScramble>{" "}
+                        <small>
+                          <TextScramble className="inline">{symbol!}</TextScramble>{" "}
+                        </small>
+                      </InfoPanel.Item>
+                      <InfoPanel.Item label="Rented">
+                        <TextScramble className="inline">{toLocalString(rented_amount / decimalsFactor)}</TextScramble>
+                        <small>
+                          {" "}
+                          <TextScramble className="inline">{symbol!}</TextScramble>{" "}
+                        </small>
+                      </InfoPanel.Item>
+                      {info ? (
+                        <>
+                          {typeof info === "string" ? (
+                            <InfoPanel.Item label="Information">
+                              <TextScramble className="inline">{info}</TextScramble>
+                            </InfoPanel.Item>
+                          ) : (
+                            Object.entries(info)
+                              .slice(0, x > 5e5 ? 3 : 1)
+                              .map(([key, value]) => (
+                                <InfoPanel.Item key={key} label={key}>
+                                  <TextScramble className="inline">{value?.toString() ?? ""}</TextScramble>
+                                </InfoPanel.Item>
+                              ))
+                          )}
+                        </>
+                      ) : null}
+                      <InfoPanel.Item label="Created on">
+                        <TextScramble className="inline">{moment(ts * 1000).format("ll")}</TextScramble>
+                      </InfoPanel.Item>
+                    </InfoPanel>
+                  </CardContent>
+                </Card>
+              </Link>
+            );
+          })}
       </div>
     </div>
   );
