@@ -32,7 +32,7 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
   const isTaken = shortcode in existingShortcodes && existingShortcodes[shortcode] !== walletAddress;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^A-Za-z0-9_-]/g, "").toLowerCase();
+    const value = e.target.value.replace(/[^A-Za-z0-9_.-]/g, "").toLowerCase();
     setShortcode(value);
   };
 
