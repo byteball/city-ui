@@ -29,7 +29,7 @@ export const UserHouses: FC<IUserHousesProps> = ({ address }) => {
   const roads = getRoads(mapUnits, String(cityStats?.mayor));
   const userHouses = useMemo(() => userUnits.filter((u) => u.type === "house"), [userUnits]);
 
-  const changeHouse = useCallback(({ x, y, type = "plot" }: { x: number; y: number; type: "house" | "plot" }) => {
+  const changeHouse = useCallback(({ x, y, type = "house" }: { x: number; y: number; type: "house" }) => {
     useSettingsStore.getState().setSelectedMapUnit({ x: asNonNegativeNumber(x), y: asNonNegativeNumber(y), type });
   }, []);
 
