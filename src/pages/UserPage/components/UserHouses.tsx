@@ -39,7 +39,9 @@ export const UserHouses: FC<IUserHousesProps> = ({ address }) => {
     <div className="mt-8">
       <div className="flex flex-col items-start justify-between md:flex-row">
         <div className="mb-4 md:mb-0">
-          <h2 className="text-xl font-semibold">Houses ({userHouses.length})</h2>
+          <h2 className="text-xl font-semibold">
+            Houses <span className="text-muted-foreground">({userHouses.length})</span>
+          </h2>
         </div>
         {userHouses.length > 1 ? (
           <div>

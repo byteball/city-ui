@@ -39,7 +39,9 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
     <div className="mt-8">
       <div className="flex flex-col items-start justify-between md:items-center md:flex-row">
         <div className="mb-4 md:mb-0">
-          <h2 className="text-xl font-semibold">Plots ({userPlots.length})</h2>
+          <h2 className="text-xl font-semibold">
+            Plots <span className="text-muted-foreground">({userPlots.length})</span>
+          </h2>
         </div>
         {userPlots.length > 1 ? (
           <div>
