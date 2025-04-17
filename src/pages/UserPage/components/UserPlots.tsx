@@ -92,7 +92,7 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
                             </InfoPanel.Item>
                           ) : (
                             Object.entries(info)
-                              .slice(0, x > 5e5 ? 3 : 1)
+                              .slice(0, 5)
                               .map(([key, value]) => (
                                 <InfoPanel.Item key={key} label={key}>
                                   <TextScramble className="inline">{value?.toString() ?? ""}</TextScramble>
