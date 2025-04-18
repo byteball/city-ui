@@ -165,6 +165,21 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                 {selectedMapUnit?.username ? `${selectedMapUnit?.username} - ${owner}` : owner}
               </Link>
             </InfoPanel.Item>
+            {selectedMapUnit?.info ? (
+              <>
+                {typeof selectedMapUnit.info === "string" ? (
+                  <InfoPanel.Item label="Information">{selectedMapUnit.info}</InfoPanel.Item>
+                ) : (
+                  Object.entries(selectedMapUnit.info)
+                    .slice(0, 5)
+                    .map(([key, value]) => (
+                      <InfoPanel.Item key={key} label={key}>
+                        {value?.toString() ?? ""}
+                      </InfoPanel.Item>
+                    ))
+                )}
+              </>
+            ) : null}
             {selectedMapUnit?.type === "house" ? (
               <InfoPanel.Item label="Contacts" loading={loading || !owner || ownerUsernameIsLoading}>
                 {attestations.length ? (
