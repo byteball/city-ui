@@ -27,7 +27,7 @@ export const UserStats: FC<IUserStatsProps> = memo(({ address }) => {
   const balance = useAaStore((state) => Number(state.state?.[`user_land_${address}`] ?? 0));
   const city = useAaStore((state) => state.state.city_city)!;
 
-  const balanceView = toLocalString((balance + walletBalance.amount) / 10 ** (decimals ?? 0));
+  const balanceView = toLocalString(balance / 10 ** (decimals ?? 0));
   const walletBalanceView = toLocalString(walletBalance.amount / 10 ** (decimals ?? 0));
   const userUnits = useAaStore((state) => mapUnitsByOwnerAddressSelector(state, address));
   const { matching_probability, referral_boost } = useAaParams();
@@ -71,7 +71,7 @@ export const UserStats: FC<IUserStatsProps> = memo(({ address }) => {
           <CardContent>
             <TextScramble className="text-2xl font-bold">{`${balanceView} ${symbol}`}</TextScramble>
             <TextScramble className="text-xs text-muted-foreground">
-              {`including ${walletBalanceView} ${symbol!} in wallet`}
+              {`Plus ${walletBalanceView} ${symbol!} in the wallet`}
             </TextScramble>
           </CardContent>
         </Card>
