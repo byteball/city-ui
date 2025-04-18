@@ -8,5 +8,9 @@ export default () => {
   if (!appConfig.MAP_SCALE || appConfig.MAP_SCALE > 1) {
     throw new Error("MAP_SCALE should be less than 1");
   }
+
+  if (!appConfig.LAUNCH_DATE) {
+    throw new Error("LAUNCH_DATE is not defined in env file. It should be same as in the AA");
+  }
 };
 
