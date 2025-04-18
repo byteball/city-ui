@@ -58,7 +58,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
 
   const decimalsPow = 10 ** (decimals ?? 0);
   const rented_amount = selectedMapUnit?.type === "plot" ? selectedMapUnit.rented_amount ?? 0 : 0;
-  const formattedTotalAmount = toLocalString((selectedMapUnit?.amount ?? 0 + rented_amount) / decimalsPow);
+  const formattedTotalAmount = toLocalString(((selectedMapUnit?.amount ?? 0) + (rented_amount ?? 0)) / decimalsPow);
   const formattedRentedAmount = rented_amount ? toLocalString(rented_amount / decimalsPow) : "";
   const isOwner = owner === walletAddress;
 
