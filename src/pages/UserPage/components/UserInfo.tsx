@@ -49,8 +49,16 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
           <UserMainPlot address={address} />
         </InfoPanel.Item>
 
-        <InfoPanel.Item label="Attested contacts">
-          <AttestationList data={attestations} />
+        <InfoPanel.Item
+          label="Attested contacts"
+          tooltipText="Please, use special bot for attestation"
+          loading={!loaded}
+        >
+          {attestations.length ? (
+            <AttestationList data={attestations} />
+          ) : (
+            <div className="text-gray-500">No attested contacts</div>
+          )}
         </InfoPanel.Item>
 
         <InfoPanel.Item>
