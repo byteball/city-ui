@@ -121,11 +121,6 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
             <InfoPanel.Item textClamp label="Amount" loading={loading}>
               {formattedTotalAmount} {symbol} {rented_amount ? `(inc. ${formattedRentedAmount} rented ${symbol})` : ""}
             </InfoPanel.Item>
-            {selectedMapUnit?.type === "plot" && selectedMapUnit?.rental_expiry_ts ? (
-              <InfoPanel.Item textClamp label="Rental expiry" loading={loading}>
-                {moment.unix(selectedMapUnit?.rental_expiry_ts).format("YYYY-MM-DD HH:mm")}
-              </InfoPanel.Item>
-            ) : null}
             <InfoPanel.Item textClamp label="Coordinates" loading={loading}>
               <TooltipProvider>
                 <Tooltip>
@@ -165,6 +160,11 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                 {selectedMapUnit?.username ? `${selectedMapUnit?.username} - ${owner}` : owner}
               </Link>
             </InfoPanel.Item>
+            {selectedMapUnit?.type === "plot" && selectedMapUnit?.rental_expiry_ts ? (
+              <InfoPanel.Item textClamp label="Rental expiry" loading={loading}>
+                {moment.unix(selectedMapUnit?.rental_expiry_ts).format("YYYY-MM-DD HH:mm")}
+              </InfoPanel.Item>
+            ) : null}
             {selectedMapUnit?.info ? (
               <>
                 {typeof selectedMapUnit.info === "string" ? (
