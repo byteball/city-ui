@@ -35,6 +35,8 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
 
   const decimalsFactor = 10 ** decimals!;
 
+  if (userPlots.length === 0) return null;
+
   return (
     <div className="mt-8">
       <div className="flex flex-col items-start justify-between md:items-center md:flex-row">
