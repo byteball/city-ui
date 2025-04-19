@@ -48,7 +48,7 @@ export const useSyncCoordinates = () => {
       }
       setInited(true);
     }
-  }, [selectedCoordinate, loaded, inited]);
+  }, [selectedCoordinate, loaded, inited, mapUnits]);
 
   useEffect(() => {
     if (inited && loaded && selectedMapUnit) {
