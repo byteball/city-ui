@@ -13,7 +13,7 @@ export default () => (
     <div className="md:col-span-2">
       <div className="grid grid-cols-1 gap-8">
         <SelectedUnitMapCard sceneType="main" />
-        {moment().isAfter(appConfig.LAUNCH_DATE) ? <BuyNewPlotCard /> : <PrelaunchCard />}
+        {moment().utc().isAfter(moment.utc(appConfig.LAUNCH_DATE)) ? <BuyNewPlotCard /> : <PrelaunchCard />}
       </div>
     </div>
   </div>
