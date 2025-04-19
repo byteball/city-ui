@@ -81,8 +81,13 @@ export const UserHouses: FC<IUserHousesProps> = ({ address }) => {
                       </InfoPanel.Item>
                     ) : null}
 
+                    <InfoPanel.Item label="Created on">
+                      <TextScramble className="inline">{moment(ts * 1000).format("ll")}</TextScramble>
+                    </InfoPanel.Item>
+
                     {info ? (
-                      <>
+                      <div className="text-sm">
+                        <div className="mt-4 mb-1 font-semibold">Additional information</div>
                         {typeof info === "string" ? (
                           <InfoPanel.Item label="Information">
                             <TextScramble className="inline">{info}</TextScramble>
@@ -96,11 +101,8 @@ export const UserHouses: FC<IUserHousesProps> = ({ address }) => {
                               </InfoPanel.Item>
                             ))
                         )}
-                      </>
+                      </div>
                     ) : null}
-                    <InfoPanel.Item label="Created on">
-                      <TextScramble className="inline">{moment(ts * 1000).format("ll")}</TextScramble>
-                    </InfoPanel.Item>
                   </InfoPanel>
                 </CardContent>
               </Card>

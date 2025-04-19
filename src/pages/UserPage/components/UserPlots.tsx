@@ -73,23 +73,27 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
                   </CardHeader>
                   <CardContent className="flex-1">
                     <InfoPanel labelAnimated>
-                      <InfoPanel.Item label="Total amount">
-                        <TextScramble className="inline">
-                          {toLocalString((amount + rented_amount) / decimalsFactor)}
-                        </TextScramble>{" "}
+                      <InfoPanel.Item label="Amount">
+                        <TextScramble className="inline">{toLocalString(amount / decimalsFactor)}</TextScramble>{" "}
                         <small>
                           <TextScramble className="inline">{symbol!}</TextScramble>{" "}
                         </small>
                       </InfoPanel.Item>
-                      <InfoPanel.Item label="Rented">
+                      <InfoPanel.Item label="Rented amount">
                         <TextScramble className="inline">{toLocalString(rented_amount / decimalsFactor)}</TextScramble>
                         <small>
                           {" "}
                           <TextScramble className="inline">{symbol!}</TextScramble>{" "}
                         </small>
                       </InfoPanel.Item>
+
+                      <InfoPanel.Item label="Created on">
+                        <TextScramble className="inline">{moment(ts * 1000).format("ll")}</TextScramble>
+                      </InfoPanel.Item>
+
                       {info ? (
-                        <>
+                        <div className="text-sm">
+                          <div className="mt-4 mb-1 font-semibold">Additional information</div>
                           {typeof info === "string" ? (
                             <InfoPanel.Item label="Information">
                               <TextScramble className="inline">{info}</TextScramble>
@@ -103,11 +107,8 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
                                 </InfoPanel.Item>
                               ))
                           )}
-                        </>
+                        </div>
                       ) : null}
-                      <InfoPanel.Item label="Created on">
-                        <TextScramble className="inline">{moment(ts * 1000).format("ll")}</TextScramble>
-                      </InfoPanel.Item>
                     </InfoPanel>
                   </CardContent>
                 </Card>
