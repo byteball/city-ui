@@ -165,8 +165,18 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                 {moment.unix(selectedMapUnit?.rental_expiry_ts).format("YYYY-MM-DD HH:mm")}
               </InfoPanel.Item>
             ) : null}
+            {selectedMapUnit?.type === "house" ? (
+              <InfoPanel.Item label="Contacts" loading={loading || !owner || ownerUsernameIsLoading}>
+                {attestations.length ? (
+                  <AttestationList data={attestations} blockDisplay={attestations.length > 1} />
+                ) : (
+                  <span>No attested contacts</span>
+                )}
+              </InfoPanel.Item>
+            ) : null}
             {selectedMapUnit?.info ? (
-              <>
+              <div className="text-sm">
+                <div className="mt-2 mb-1 font-semibold">Additional information</div>
                 {typeof selectedMapUnit.info === "string" ? (
                   <InfoPanel.Item label="Information">{selectedMapUnit.info}</InfoPanel.Item>
                 ) : (
@@ -178,16 +188,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                       </InfoPanel.Item>
                     ))
                 )}
-              </>
-            ) : null}
-            {selectedMapUnit?.type === "house" ? (
-              <InfoPanel.Item label="Contacts" loading={loading || !owner || ownerUsernameIsLoading}>
-                {attestations.length ? (
-                  <AttestationList data={attestations} blockDisplay={attestations.length > 1} />
-                ) : (
-                  <span>No attested contacts</span>
-                )}
-              </InfoPanel.Item>
+              </div>
             ) : null}
             {sceneType === "market" && selectedMapUnit?.type === "plot" ? (
               <div className="mt-4 space-y-2">
