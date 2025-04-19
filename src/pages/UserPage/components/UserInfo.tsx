@@ -63,7 +63,7 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
 
         <InfoPanel.Item>
           <h2 className="mt-4 text-xl font-semibold">
-            User information{" "}
+            Additional user information{" "}
             {address === walletAddress ? (
               <EditUserInfoDialog address={address} info={parsedUserInfo}>
                 <ButtonWithTooltip tooltipText="Edit user" variant="link" className="rounded-xl">
