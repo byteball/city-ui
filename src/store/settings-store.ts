@@ -9,7 +9,7 @@ import client from "@/services/obyteWsClient";
 import { ICityAaState } from "./aa-store";
 
 const LOCAL_STORAGE_KEY = "settings-store";
-const STORAGE_VERSION = 10; // change this to invalidate old persisted data
+const STORAGE_VERSION = 12; // change this to invalidate old persisted data
 
 export type SortDirectionType = "ASC" | "DESC";
 
