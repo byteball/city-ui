@@ -13,7 +13,7 @@ export const PrelaunchCard = () => {
         <CardTitle>Buy new plot (Prelaunch)</CardTitle>
         <CardDescription>
           You can purchase new plots of land during the pre-launch phase and earn {symbol} tokens. The pre-launch phase
-          ends on <b>{moment(appConfig.LAUNCH_DATE).format("LLL")}</b>, after which CITY will launch.
+          ends on <b>{moment.utc(appConfig.LAUNCH_DATE).format("LLL")}</b>, after which CITY will launch.
         </CardDescription>
       </CardHeader>
 
