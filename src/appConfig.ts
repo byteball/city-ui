@@ -1,7 +1,8 @@
 export default {
   AA_ADDRESS: import.meta.env.VITE_AA_ADDRESS,
   TESTNET: !!import.meta.env.VITE_TESTNET,
-  MAP_SCALE: 0.01, // 1:100,
+  LAUNCH_DATE: import.meta.env.VITE_LAUNCH_DATE, // YYYY-MM-DD
+  MAP_SCALE: 0.01, // 1:100, please do not change this value
   ATTESTORS: !!import.meta.env.VITE_TESTNET
     ? {
         discord: "EJC4A7WQGHEZEKW6RLO7F26SAR4LAQBU",
