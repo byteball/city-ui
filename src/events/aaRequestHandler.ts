@@ -5,7 +5,7 @@ import { useSettingsStore } from "@/store/settings-store";
 const showLogs = !!appConfig.TESTNET;
 
 export const aaRequestHandler = (err: string | null, result: any) => {
-  if (showLogs) console.error("log: aaRequestHandler error", err, result);
+  if (err && showLogs) console.error("log: aaRequestHandler error", err, result);
   if (err) return null;
 
   if (showLogs) console.log("log: aaRequestHandler", err, result);
