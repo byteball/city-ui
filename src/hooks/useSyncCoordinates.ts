@@ -31,23 +31,19 @@ export const useSyncCoordinates = () => {
   });
 
   useEffect(() => {
-    if (inited || !selectedCoordinate) return;
+    if (inited || !loaded) return;
 
-    if (loaded) {
-      if (mapUnits.find((unit) => unit.x === selectedMapUnit?.x && unit.y === selectedMapUnit?.y)) {
-        if (selectedCoordinate?.length) {
-          useSettingsStore.getState().setSelectedMapUnit({
-            x: asNonNegativeNumber(selectedCoordinate[0]),
-            y: asNonNegativeNumber(selectedCoordinate[1]),
-            type: selectedCoordinate[2],
-          });
-        }
+    if (selectedCoordinate) {
+      const [x, y, type] = selectedCoordinate;
+      const found = mapUnits.find((unit) => unit.x === x && unit.y === y && unit.type === type);
+      if (found) {
+        useSettingsStore.getState().setSelectedMapUnit({ x, y, type });
       } else {
-        console.error("We could not find map unit with coordinates", selectedCoordinate);
-        setSelectedCoordinate(null);
+        console.error("Could not find map unit with coordinates", selectedCoordinate);
       }
-      setInited(true);
     }
+
+    setInited(true);
   }, [selectedCoordinate, loaded, inited, mapUnits]);
 
   useEffect(() => {
@@ -56,6 +52,6 @@ export const useSyncCoordinates = () => {
         setSelectedCoordinate([selectedMapUnit.x, selectedMapUnit.y, selectedMapUnit.type]);
       }
     }
-  }, [selectedMapUnit, inited, loaded]);
+  }, [selectedMapUnit, inited, loaded, setSelectedCoordinate]);
 };
 
