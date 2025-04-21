@@ -1,6 +1,7 @@
-import appConfig from "@/appConfig";
 import { toast } from "@/hooks/use-toast";
 import { useSettingsStore } from "@/store/settings-store";
+
+import appConfig from "@/appConfig";
 
 const showLogs = !!appConfig.TESTNET;
 
@@ -11,7 +12,7 @@ export const aaRequestHandler = (err: string | null, result: any) => {
   if (showLogs) console.log("log: aaRequestHandler", err, result);
 
   const { body } = result[1];
-  const { aa_address, unit } = body;
+  const { unit } = body;
 
   const { walletAddress } = useSettingsStore.getState();
   if (!walletAddress) return;
