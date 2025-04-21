@@ -16,8 +16,8 @@ export const bootstrap = async () => {
     } else if (subject === "light/aa_response") {
       // aaResponseHandler(err, result);
     }
-
-    console.log("log: bootstrap done");
   });
+
+  console.log("log: bootstrap done");
 };
 
