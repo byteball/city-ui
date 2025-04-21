@@ -42,6 +42,7 @@ export interface AaStoreState {
   loaded: boolean;
   error: string | null;
   initStore: () => Promise<void>;
+  updateState: (type: "main" | "governance", diff: ICityAaState) => void;
 }
 
 const storeCreator: StateCreator<AaStoreState> = (set, _get) => ({
@@ -80,6 +81,27 @@ const storeCreator: StateCreator<AaStoreState> = (set, _get) => ({
       console.log("log: error loading AA store", err);
       set({ error: (err as Error).message, loading: false, loaded: true });
     }
+  },
+  updateState: (type: "main" | "governance", diff: ICityAaState) => {
+    set((state) => {
+      const newState = type === "main" ? { ...state.state } : { ...state.governanceState };
+
+      for (let var_name in diff) {
+        const value = diff[var_name];
+
+        if (typeof value === "boolean" && value === false) {
+          delete newState[var_name];
+        } else {
+          newState[var_name] = value;
+        }
+      }
+
+      if (type === "main") {
+        return { state: newState };
+      } else {
+        return { governanceState: newState };
+      }
+    });
   },
 });
 
