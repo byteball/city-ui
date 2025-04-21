@@ -8,6 +8,7 @@ import client from "@/services/obyteWsClient";
 import { asNonNegativeNumber } from "@/lib";
 
 import appConfig from "@/appConfig";
+import { getAllStateVarsByAddress } from "@/lib/getAllStateVarsByAddress";
 
 export const defaultAaParams: IAaParams = {
   matching_probability: asNonNegativeNumber(0.05),
@@ -59,34 +60,7 @@ const storeCreator: StateCreator<AaStoreState> = (set, _get) => ({
         aa: appConfig.AA_ADDRESS,
       });
 
-      let aaState: IAaStateVars = {};
-      let governanceState: IAaStateVars = {};
-
-      try {
-        let lastKey = "";
-
-        while (true) {
-          let chunkData: IAaStateVars = {};
-
-          chunkData = (await client.api.getAaStateVars({
-            address: appConfig.AA_ADDRESS,
-            // @ts-ignore
-            var_prefix_from: lastKey,
-          })) as IAaStateVars;
-
-          const keys = Object.keys(chunkData);
-
-          if (keys.length > 1) {
-            aaState = { ...aaState, ...chunkData };
-            lastKey = keys[keys.length - 1];
-          } else {
-            break;
-          }
-        }
-      } catch (e) {
-        console.log("Error: ", e);
-        throw new Error("Failed to load AA state vars");
-      }
+      const aaState: IAaStateVars = await getAllStateVarsByAddress(appConfig.AA_ADDRESS);
 
       // @ts-ignore
       const governanceAa = aaState.constants?.governance_aa as string | undefined;
@@ -97,31 +71,7 @@ const storeCreator: StateCreator<AaStoreState> = (set, _get) => ({
         aa: governanceAa,
       });
 
-      try {
-        let lastKey = "";
-
-        while (true) {
-          let chunkData: IAaStateVars = {};
-
-          chunkData = (await client.api.getAaStateVars({
-            address: governanceAa,
-            // @ts-ignore
-            var_prefix_from: lastKey,
-          })) as IAaStateVars;
-
-          const keys = Object.keys(chunkData);
-
-          if (keys.length > 1) {
-            governanceState = { ...governanceState, ...chunkData };
-            lastKey = keys[keys.length - 1];
-          } else {
-            break;
-          }
-        }
-      } catch (e) {
-        console.log("Error: ", e);
-        throw new Error("Failed to load AA state vars");
-      }
+      const governanceState: IAaStateVars = await getAllStateVarsByAddress(governanceAa);
 
       set({ state: aaState, governanceState, loading: false, loaded: true, error: null });
 
