@@ -7,8 +7,7 @@ export const bootstrap = async () => {
   await initializeStore();
   await initializeSettings();
 
-  // @ts-ignore
-  client.subscribe((err, result) => {
+  client.subscribe((err: string | null, result: any) => {
     if (err) return null;
     const { subject } = result[1];
 
