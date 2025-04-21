@@ -47,7 +47,7 @@ export const SuggestAnotherValueDialog: FC<ISuggestAnotherValueDialogProps> = ({
   name,
   value: defaultValue,
 }) => {
-  const { decimals, symbol } = useSettingsStore((state) => state);
+  const { decimals, symbol, walletAddress } = useSettingsStore((state) => state);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
   const [inputValue, setInputValue] = useState<string>(() => getInitialInputValue(defaultValue, name, decimals!));
   const governanceAA = useAaStore((state) => state.state.constants?.governance_aa);
@@ -110,6 +110,8 @@ export const SuggestAnotherValueDialog: FC<ISuggestAnotherValueDialogProps> = ({
     amount: 1e4,
     data: { name, value: transformValue(inputValue) },
     aa: governanceAA!,
+    from_address: walletAddress || undefined,
+    is_single: true,
   });
 
   return (
