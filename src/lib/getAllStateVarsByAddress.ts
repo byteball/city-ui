@@ -1,13 +1,20 @@
 import { IAaStateVars } from "@/global";
 import client from "@/services/obyteWsClient";
 
+const MAX_ITERATIONS = 100 as const; // Safety limit
+
 export const getAllStateVarsByAddress = async (address: string) => {
   let aaState: IAaStateVars = {};
+  let iteration = 0;
 
   try {
     let lastKey = "";
 
     while (true) {
+      if (iteration++ > MAX_ITERATIONS) {
+        throw new Error(`Reached maximum iterations (${MAX_ITERATIONS}) when fetching AA state vars`);
+      }
+
       let chunkData: IAaStateVars = {};
 
       chunkData = (await client.api.getAaStateVars({
@@ -32,3 +39,4 @@ export const getAllStateVarsByAddress = async (address: string) => {
 
   return aaState;
 };
+
