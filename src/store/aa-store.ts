@@ -8,6 +8,7 @@ import client from "@/services/obyteWsClient";
 import { asNonNegativeNumber } from "@/lib";
 
 import appConfig from "@/appConfig";
+import { getAllStateVarsByAddress } from "@/lib/getAllStateVarsByAddress";
 
 export const defaultAaParams: IAaParams = {
   matching_probability: asNonNegativeNumber(0.05),
@@ -55,11 +56,22 @@ const storeCreator: StateCreator<AaStoreState> = (set, _get) => ({
     console.log("log: loading AA store, for address", appConfig.AA_ADDRESS);
 
     try {
-      const aaState = (await client.api.getAaStateVars({ address: appConfig.AA_ADDRESS })) as ICityAaState;
+      await client.justsaying("light/new_aa_to_watch", {
+        aa: appConfig.AA_ADDRESS,
+      });
 
-      const governanceAa = aaState.constants?.governance_aa;
+      const aaState: IAaStateVars = await getAllStateVarsByAddress(appConfig.AA_ADDRESS);
+
+      // @ts-ignore
+      const governanceAa = aaState.constants?.governance_aa as string | undefined;
+
       if (!governanceAa) throw new Error("governance AA address not found");
-      const governanceState = (await client.api.getAaStateVars({ address: governanceAa })) as ICityAaState;
+
+      await client.justsaying("light/new_aa_to_watch", {
+        aa: governanceAa,
+      });
+
+      const governanceState: IAaStateVars = await getAllStateVarsByAddress(governanceAa);
 
       set({ state: aaState, governanceState, loading: false, loaded: true, error: null });
 
@@ -83,7 +95,8 @@ export const useAaParams = () =>
       const city = state.state?.[`city_${CITY_NAME}`] as ICity;
       const variables = state.state?.variables;
 
-      const matching_probability = city?.matching_probability ?? variables?.matching_probability ?? defaultAaParams.matching_probability;
+      const matching_probability =
+        city?.matching_probability ?? variables?.matching_probability ?? defaultAaParams.matching_probability;
 
       const plot_price = city?.plot_price ?? variables?.plot_price ?? defaultAaParams.plot_price;
 
