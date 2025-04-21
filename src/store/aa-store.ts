@@ -55,11 +55,73 @@ const storeCreator: StateCreator<AaStoreState> = (set, _get) => ({
     console.log("log: loading AA store, for address", appConfig.AA_ADDRESS);
 
     try {
-      const aaState = (await client.api.getAaStateVars({ address: appConfig.AA_ADDRESS })) as ICityAaState;
+      await client.justsaying("light/new_aa_to_watch", {
+        aa: appConfig.AA_ADDRESS,
+      });
 
-      const governanceAa = aaState.constants?.governance_aa;
+      let aaState: IAaStateVars = {};
+      let governanceState: IAaStateVars = {};
+
+      try {
+        let lastKey = "";
+
+        while (true) {
+          let chunkData: IAaStateVars = {};
+
+          chunkData = (await client.api.getAaStateVars({
+            address: appConfig.AA_ADDRESS,
+            // @ts-ignore
+            var_prefix_from: lastKey,
+          })) as IAaStateVars;
+
+          const keys = Object.keys(chunkData);
+
+          if (keys.length > 1) {
+            aaState = { ...aaState, ...chunkData };
+            lastKey = keys[keys.length - 1];
+          } else {
+            break;
+          }
+        }
+      } catch (e) {
+        console.log("Error: ", e);
+        throw new Error("Failed to load AA state vars");
+      }
+
+      // @ts-ignore
+      const governanceAa = aaState.constants?.governance_aa as string | undefined;
+
       if (!governanceAa) throw new Error("governance AA address not found");
-      const governanceState = (await client.api.getAaStateVars({ address: governanceAa })) as ICityAaState;
+
+      await client.justsaying("light/new_aa_to_watch", {
+        aa: governanceAa,
+      });
+
+      try {
+        let lastKey = "";
+
+        while (true) {
+          let chunkData: IAaStateVars = {};
+
+          chunkData = (await client.api.getAaStateVars({
+            address: governanceAa,
+            // @ts-ignore
+            var_prefix_from: lastKey,
+          })) as IAaStateVars;
+
+          const keys = Object.keys(chunkData);
+
+          if (keys.length > 1) {
+            governanceState = { ...governanceState, ...chunkData };
+            lastKey = keys[keys.length - 1];
+          } else {
+            break;
+          }
+        }
+      } catch (e) {
+        console.log("Error: ", e);
+        throw new Error("Failed to load AA state vars");
+      }
 
       set({ state: aaState, governanceState, loading: false, loaded: true, error: null });
 
@@ -83,7 +145,8 @@ export const useAaParams = () =>
       const city = state.state?.[`city_${CITY_NAME}`] as ICity;
       const variables = state.state?.variables;
 
-      const matching_probability = city?.matching_probability ?? variables?.matching_probability ?? defaultAaParams.matching_probability;
+      const matching_probability =
+        city?.matching_probability ?? variables?.matching_probability ?? defaultAaParams.matching_probability;
 
       const plot_price = city?.plot_price ?? variables?.plot_price ?? defaultAaParams.plot_price;
 
