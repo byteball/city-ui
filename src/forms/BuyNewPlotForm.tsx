@@ -24,7 +24,14 @@ export const BuyNewPlotForm: FC = memo(() => {
 
   // Get required state from stores
   const { loaded: stateLoaded, state } = useAaStore();
-  const { symbol, asset, decimals, inited, selectedMapUnit: selectedMapUnitCoordinates } = useSettingsStore();
+  const {
+    symbol,
+    asset,
+    decimals,
+    inited,
+    selectedMapUnit: selectedMapUnitCoordinates,
+    walletAddress,
+  } = useSettingsStore();
 
   const selectedMapUnit = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates!));
 
@@ -101,7 +108,7 @@ export const BuyNewPlotForm: FC = memo(() => {
         </InfoPanel.Item>
       </InfoPanel>
 
-      {!isEmpty(refData) ? (
+      {!isEmpty(refData) && (selectedMapUnit?.owner !== walletAddress || !walletAddress) ? (
         <div>
           <p className="mb-4 text-muted-foreground">
             You’re using{" "}
