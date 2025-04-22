@@ -252,7 +252,7 @@ export type IMapUnit = IPlot | IHouse;
 
 export interface IRefData {
   ref?: string;
-  ref_plot_num?: string;
+  ref_plot_num?: string | number;
 }
 
 export interface ITokenInfo {

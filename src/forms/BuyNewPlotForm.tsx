@@ -1,3 +1,4 @@
+import { isEmpty } from "lodash";
 import { FC, memo } from "react";
 
 import { getPlotPrice } from "@/aaLogic/getPlotPrice";
@@ -8,7 +9,11 @@ import { QRButton } from "@/components/ui/_qr-button";
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
-import { generateLink, toLocalString } from "@/lib";
+import { generateLink, getAddressFromNearestRoad, getExplorerUrl, toLocalString } from "@/lib";
+
+import { getRoads } from "@/game/utils/getRoads";
+import { IRefData } from "@/global";
+import { mapUnitsByCoordinatesSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 
 import appConfig from "@/appConfig";
 
@@ -18,8 +23,17 @@ export const BuyNewPlotForm: FC = memo(() => {
   const { price, fee, totalPrice } = getPlotPrice(params);
 
   // Get required state from stores
-  const { loaded: stateLoaded } = useAaStore();
-  const { symbol, asset, decimals, inited, refData } = useSettingsStore();
+  const { loaded: stateLoaded, state } = useAaStore();
+  const { symbol, asset, decimals, inited, selectedMapUnit: selectedMapUnitCoordinates } = useSettingsStore();
+
+  const selectedMapUnit = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates!));
+
+  const aaState = useAaStore((state) => state);
+  const mapUnits = mapUnitsSelector(aaState);
+
+  const mayor = aaState.state.city_city?.mayor!;
+
+  const roads = getRoads(mapUnits, String(mayor));
 
   // Check if data is still loading
   const isLoading = !inited || !stateLoaded || !asset || decimals === null;
@@ -32,6 +46,32 @@ export const BuyNewPlotForm: FC = memo(() => {
     fee: (fee * 100).toFixed(2),
     total: toLocalString(totalPrice / decimalsPow),
   };
+
+  let refData: IRefData = {};
+  let address: string | undefined;
+
+  if (selectedMapUnit) {
+    if (selectedMapUnit.type === "plot") {
+      refData.ref_plot_num = selectedMapUnit.plot_num;
+
+      address = getAddressFromNearestRoad(
+        roads,
+        {
+          x: selectedMapUnit.x,
+          y: selectedMapUnit.y,
+        },
+        selectedMapUnit.plot_num
+      )?.[0];
+    } else if (selectedMapUnit.type === "house") {
+      if (selectedMapUnit.owner) {
+        const refererMainPlot = state[`user_main_plot_city_${selectedMapUnit.owner}`];
+
+        if (refererMainPlot) {
+          refData.ref = selectedMapUnit.owner;
+        }
+      }
+    }
+  }
 
   // Generate payment link
   const buyUrl = generateLink({
@@ -60,6 +100,40 @@ export const BuyNewPlotForm: FC = memo(() => {
           {formattedValues.total} {symbol}
         </InfoPanel.Item>
       </InfoPanel>
+
+      {!isEmpty(refData) ? (
+        <div>
+          <p className="mb-4 text-muted-foreground">
+            You’re using{" "}
+            {refData.ref ? (
+              <a href={getExplorerUrl(refData.ref, "address")} target="_blank" rel="noopener" className="text-link">
+                {refData.ref}
+              </a>
+            ) : (
+              <>
+                <b
+                // className="text-link"
+                // to={`/?c=${selectedMapUnitCoordinates?.x},${selectedMapUnitCoordinates?.y},${selectedMapUnitCoordinates?.type}`}
+                >
+                  {address}
+                </b>{" "}
+                and its owner{" "}
+                {selectedMapUnit?.owner ? (
+                  <a
+                    href={getExplorerUrl(selectedMapUnit.owner, "address")}
+                    target="_blank"
+                    rel="noopener"
+                    className="text-link"
+                  >
+                    {selectedMapUnit.owner}
+                  </a>
+                ) : null}
+              </>
+            )}
+            , as your referrer, which gives you a higher chance of becoming his neighbor.
+          </p>
+        </div>
+      ) : null}
 
       <QRButton href={buyUrl} disabled={isLoading} variant="secondary">
         Buy
