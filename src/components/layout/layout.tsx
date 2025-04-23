@@ -10,7 +10,7 @@ interface ILayoutProps {
 }
 
 export const Layout: FC<ILayoutProps> = () => (
-  <div className="min-w-full min-h-full bg-background-dark">
+  <div className="w-full min-h-full overflow-hidden bg-background-dark">
     <Toaster />
 
     <div className="mb-8 border-b">
@@ -19,7 +19,7 @@ export const Layout: FC<ILayoutProps> = () => (
       </div>
     </div>
 
-    <div className="container mx-auto sm:px-4 lg:px-6">
+    <div className="container w-full mx-auto lg:px-6">
       <Outlet />
     </div>
 

@@ -10,7 +10,7 @@ interface IPageLayoutProps {
 
 export const PageLayout: FC<IPageLayoutProps> = ({ children, title, loading = false, description }) => {
   return (
-    <div className="min-h-[80vh]">
+    <div className="min-h-[80vh] px-4 md:px-0">
       <div className="mb-8">
         <h1 className="text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl">{title}</h1>
         {description ? <p className="max-w-4xl mt-4 text-xl text-muted-foreground">{description}</p> : null}
