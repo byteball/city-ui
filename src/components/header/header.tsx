@@ -20,7 +20,7 @@ export const Header: FC<IHeaderProps> = () => {
 
   return (
     <header>
-      <nav aria-label="Global" className="flex items-center justify-between py-6">
+      <nav aria-label="Global" className="flex items-center justify-between md:py-6">
         <div className="flex lg:flex-1">
           <NavLink to="/" className="-m-1.5 p-1.5 flex space-x-4 items-center">
             <span className="sr-only">Obyte City</span>
