@@ -35,7 +35,6 @@ interface SettingsState {
   governanceAa: string | null;
   refData: IRefData | null;
   walletAddress: string | null;
-  setRefData: (refData: IRefData) => void;
   setWalletAddress: (walletAddress: string) => void;
   selectedMapUnit?: ICoordinatesWithType;
   selectedMarketPlot?: ICoordinatesWithType;
@@ -119,7 +118,6 @@ const storeCreator: StateCreator<SettingsState> = (set, get) => ({
     console.log("log: set wallet address", walletAddress);
     set({ walletAddress });
   },
-  setRefData: (refData: IRefData) => set({ refData }),
   setMapUnitSortType: <T extends "house" | "plot">(
     unit: T,
     sortType: T extends "house" ? keyof typeof IHouseSortTypeEnum : keyof typeof IPlotSortTypeEnum
