@@ -114,17 +114,11 @@ export const BuyNewPlotForm: FC = memo(() => {
             You’re using{" "}
             {refData.ref ? (
               <a href={getExplorerUrl(refData.ref, "address")} target="_blank" rel="noopener" className="text-link">
-                {refData.ref}
+                {refData.ref!.slice(0, 5)}...{refData.ref!.slice(-5, refData.ref!.length)}
               </a>
             ) : (
               <>
-                <b
-                // className="text-link"
-                // to={`/?c=${selectedMapUnitCoordinates?.x},${selectedMapUnitCoordinates?.y},${selectedMapUnitCoordinates?.type}`}
-                >
-                  {address}
-                </b>{" "}
-                and its owner{" "}
+                <b>{address}</b> and its owner{" "}
                 {selectedMapUnit?.owner ? (
                   <a
                     href={getExplorerUrl(selectedMapUnit.owner, "address")}
