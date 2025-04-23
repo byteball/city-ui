@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router";
 import { getRefDataFromSearch } from "@/lib";
 import { useSettingsStore } from "@/store/settings-store";
 
+// TODO: remove this hook (it doesn't use any state from the store)
 export const useApplyRefData = () => {
   const location = useLocation();
   const navigate = useNavigate();
