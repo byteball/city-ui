@@ -2,6 +2,7 @@ import { FC } from "react";
 import { Link, NavLink } from "react-router";
 
 import { useSettingsStore } from "@/store/settings-store";
+import { Bars3Icon } from "@heroicons/react/24/outline";
 import { AddWalletAddress } from "../dialogs/AddWalletAddress";
 import { Button } from "../ui/button";
 
@@ -30,11 +31,11 @@ export const Header: FC<IHeaderProps> = () => {
         <div className="flex lg:hidden">
           <button
             type="button"
-            // onClick={() => setMobileMenuOpen(true)}
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-400"
+            // onClick={() => (setMobileMenuOpen)(true)}
+            className="inline-flex items-center justify-center p-4 text-gray-400 rounded-md"
           >
             <span className="sr-only">Open main menu</span>
-            {/* <Bars3Icon aria-hidden="true" className="size-6" /> */}
+            <Bars3Icon aria-hidden="true" className="size-8" />
           </button>
         </div>
         <div className="hidden lg:flex lg:gap-x-12">
