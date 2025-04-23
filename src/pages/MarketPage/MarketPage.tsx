@@ -27,7 +27,7 @@ export default () => {
       loading={false}
     >
       <div className="grid grid-cols-8 gap-8">
-        <div className="col-span-5">
+        <div className="col-span-8 md:col-span-5">
           <Card>
             <CardHeader>
               <h2 className="text-xl font-semibold">Plots on sale</h2>
@@ -47,7 +47,7 @@ export default () => {
           </Card>
         </div>
 
-        <div className="col-span-3">
+        <div className="col-span-8 md:col-span-3">
           <div className="mb-8">
             <SelectedPlotOnSale />
           </div>
