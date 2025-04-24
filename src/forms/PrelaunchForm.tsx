@@ -128,7 +128,7 @@ export const PrelaunchForm: FC = memo(() => {
             You’re using{" "}
             {refData.ref ? (
               <a href={getExplorerUrl(refData.ref, "address")} target="_blank" rel="noopener" className="text-link">
-                {refData.ref}
+                {refData.ref!.slice(0, 5)}...{refData.ref!.slice(-5, refData.ref!.length)}
               </a>
             ) : (
               <>
