@@ -141,7 +141,7 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
                         </DialogHeader>
 
                         <Table>
-                          <TableHeader>
+                          <TableHeader className="hidden md:table-header-group">
                             <TableRow>
                               <TableHead>Address</TableHead>
                               <TableHead>Amount</TableHead>
@@ -157,10 +157,13 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
                                     className="text-link"
                                     rel="noopener"
                                   >
-                                    {address}
+                                    {String(address).slice(0, 5)}...{String(address).slice(-5, String(address).length)}
                                   </a>
+                                  <div className="mt-2 md:hidden">
+                                    {toLocalString(balance / 10 ** decimals!)} {symbol}
+                                  </div>
                                 </TableCell>
-                                <TableCell>
+                                <TableCell className="hidden md:table-cell">
                                   {toLocalString(balance / 10 ** decimals!)} {symbol}
                                 </TableCell>
                               </TableRow>
