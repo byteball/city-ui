@@ -5,6 +5,7 @@ import { useSettingsStore } from "@/store/settings-store";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { AddWalletAddress } from "../dialogs/AddWalletAddress";
 import { Button } from "../ui/button";
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 
 interface IHeaderProps {}
 
@@ -29,14 +30,48 @@ export const Header: FC<IHeaderProps> = () => {
           </NavLink>
         </div>
         <div className="flex lg:hidden">
-          <button
-            type="button"
-            // onClick={() => (setMobileMenuOpen)(true)}
-            className="inline-flex items-center justify-center p-4 text-gray-400 rounded-md"
-          >
-            <span className="sr-only">Open main menu</span>
-            <Bars3Icon aria-hidden="true" className="size-8" />
-          </button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <button type="button" className="inline-flex items-center justify-center p-4 text-gray-400 rounded-md">
+                <span className="sr-only">Open main menu</span>
+                <Bars3Icon aria-hidden="true" className="size-8" />
+              </button>
+            </DialogTrigger>
+
+            <DialogContent className="max-w-[300px]">
+              <DialogHeader>
+                <DialogTitle>Menu</DialogTitle>
+              </DialogHeader>
+
+              {navigation.map((item) => (
+                <DialogClose asChild key={item.name}>
+                  <NavLink
+                    to={item.href}
+                    className="inline-block px-4 py-2 font-semibold text-white rounded-xl bg-foreground/10 text-sm/6"
+                  >
+                    {item.name}
+                  </NavLink>
+                </DialogClose>
+              ))}
+
+              <div className="flex flex-col gap-4 mt-8">
+                {walletAddress ? (
+                  <DialogClose asChild>
+                    <NavLink
+                      className="inline-block px-4 py-2 font-semibold text-white rounded-xl bg-foreground/10 text-sm/6"
+                      to={`/user/${walletAddress}`}
+                    >
+                      My profile
+                    </NavLink>
+                  </DialogClose>
+                ) : null}
+
+                <AddWalletAddress>
+                  <Button variant="default">Add wallet</Button>
+                </AddWalletAddress>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
         <div className="hidden lg:flex lg:gap-x-12">
           {navigation.map((item) => (
