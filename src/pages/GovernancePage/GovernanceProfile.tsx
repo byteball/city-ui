@@ -21,8 +21,13 @@ export const GovernanceProfile: FC<IGovernanceProfileProps> = () => {
         <ul>
           <li>
             Your voting address is{" "}
-            <a target="_blank" className="text-link" href={getExplorerUrl(walletAddress, "address")} rel="noopener noreferrer">
-              {walletAddress}
+            <a
+              target="_blank"
+              className="text-link"
+              href={getExplorerUrl(walletAddress, "address")}
+              rel="noopener noreferrer"
+            >
+              {String(walletAddress).slice(0, 5)}...{String(walletAddress).slice(-5, String(walletAddress).length)}
             </a>
           </li>
           <li>Locked balance: {formattedBalance}</li>

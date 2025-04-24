@@ -1,4 +1,5 @@
 import { Dialog } from "@radix-ui/react-dialog";
+import cn from "classnames";
 import { Info } from "lucide-react";
 import moment from "moment";
 import { FC } from "react";
@@ -60,8 +61,8 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
+        <CardTitle className="flex flex-col space-y-4 md:space-y-0 md:items-center md:justify-between md:flex-row">
+          <div className="flex items-center space-x-2 ">
             <div>{beautifyParamName(name)}</div>
             <TooltipProvider>
               <Tooltip>
@@ -75,13 +76,19 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
             </TooltipProvider>
           </div>
           {currentValue || defaultAaParams[name] ? (
-            <div>Current value: {beautifyParamValue(name, currentValue, tokenInfo)}</div>
+            <div>
+              <span className="inline-block mb-2 md:mb-0 md:inline">Current value:</span>{" "}
+              <span className={cn({ "text-base/4 md:text-lg": name === "attestors" || name === "randomness_aa" })}>
+                {beautifyParamValue(name, currentValue, tokenInfo)}
+              </span>
+            </div>
           ) : null}
         </CardTitle>
       </CardHeader>
-      <CardContent>
+
+      <CardContent className="p-0 px-6 pb-0 md:p-6 md:pt-0">
         {leader ? (
-          <div className="flex items-center justify-between space-x-4">
+          <div className="flex flex-col space-y-2 md:space-y-0 md:space-x-4 md:items-center md:justify-between md:flex-row">
             <div>Leader: {beautifyParamValue(name, leader, tokenInfo)}</div>
             <div>
               <QRButton href={commitUrl} disabled={commitDisabled} variant="link" className="p-0 text-link">
@@ -91,23 +98,37 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
             </div>
           </div>
         ) : null}
+
         {Object.entries(votes).length ? (
           <Table>
-            <TableHeader>
+            <TableHeader className="hidden md:table-header-group">
               <TableRow>
                 <TableHead>Value</TableHead>
                 <TableHead>Support</TableHead>
                 <TableHead>Vote for this value</TableHead>
               </TableRow>
             </TableHeader>
+
             <TableBody>
+              <TableRow className="mt-4 text-lg md:hidden">
+                <TableCell colSpan={999} className="w-full p-0">
+                  <span className="block mt-2">
+                    <b>Values</b>
+                  </span>
+                </TableCell>
+              </TableRow>
+
               {Object.entries(votes).map(([value, votesForValue]) => (
-                <TableRow key={value}>
-                  <TableCell>{beautifyParamValue(name, value, { decimals: decimals!, symbol: symbol! })}</TableCell>
-                  <TableCell>
+                <TableRow key={value} className="flex flex-col py-4 md:table-row md:py-0">
+                  <TableCell className="p-0 md:p-2">
+                    <span className="md:hidden">Value: </span>
+                    {beautifyParamValue(name, value, { decimals: decimals!, symbol: symbol! })}
+                  </TableCell>
+                  <TableCell className="p-0 md:p-2">
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button variant="link" className="p-0 text-link">
+                          <span className="md:hidden">Support: </span>{" "}
                           {toLocalString(
                             votesForValue.reduce((acc, { balance }) => acc + Number(balance ?? 0), 0) / 10 ** decimals!
                           )}{" "}
@@ -150,7 +171,7 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
                     </Dialog>
                   </TableCell>
 
-                  <TableCell>
+                  <TableCell className="p-0 md:p-2">
                     <SuggestAnotherValueDialog name={name} value={value}>
                       <Button variant="link" className="p-0 text-link">
                         vote for this value
