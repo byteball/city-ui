@@ -1,6 +1,5 @@
 import Phaser from "phaser";
 
-import appConfig from "@/appConfig";
 import { ICity, IGameOptions } from "@/global";
 import { useAaStore } from "@/store/aa-store";
 import { mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
@@ -29,24 +28,6 @@ export default class MapScene extends Phaser.Scene {
   }
 
   create() {
-    // Add background image and stretch it to fill the entire game world
-    const background = this.add.image(0, 0, "background");
-    background.setOrigin(0, 0); // Set origin to top-left corner
-
-    // Set the background size to match the world bounds
-    const worldView = this.cameras.main.getBounds();
-    background.displayWidth = worldView.width;
-    background.displayHeight = worldView.height;
-
-    // If world bounds aren't set yet, use a very large size to ensure full coverage
-    if (worldView.width === 0 || worldView.height === 0) {
-      const mapSize = 1_000_000 * (appConfig.MAP_SCALE || 1);
-      background.displayWidth = mapSize;
-      background.displayHeight = mapSize;
-    }
-
-    background.setDepth(-1); // Ensure background stays behind all other game objects
-
     const state = useAaStore.getState();
     const mapUnits = mapUnitsSelector(state);
     const cityStats = state.state.city_city as ICity;
