@@ -191,7 +191,7 @@ export default () => {
               <p>The formula, if you are interested, is</p>
 
               <p className="text-lg">
-                <span className="mr-2 font-semibold">fee&nbsp;=</span>
+                <span className="mr-2 italic font-semibold">fee&nbsp;=</span>
 
                 <span className="inline-flex flex-col items-center align-middle">
                   <span>
