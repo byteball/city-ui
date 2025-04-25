@@ -1,17 +1,20 @@
+import { getPlotPrice } from "@/aaLogic/getPlotPrice";
 import { PageLayout } from "@/components/layout/page-layout";
+import { toLocalString } from "@/lib";
+import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 import { FC, ReactNode } from "react";
 import { Link } from "react-router";
 
 export default () => {
-  const { symbol } = useSettingsStore((state) => state);
+  const { symbol, inited } = useSettingsStore((state) => state);
+  const params = useAaParams();
+  const { matching_probability, referral_boost, followup_reward_share, p2p_sale_fee, shortcode_sale_fee } = params;
+  const { fee } = getPlotPrice(params);
+  const loaded = useAaStore((state) => state.loaded);
 
   return (
-    <PageLayout
-      title="F.A.Q."
-      description="Have a different question and can’t find the answer you’re looking for? Reach out to our support team by sending us an email and we’ll get back to you as soon as we can."
-      loading={false}
-    >
+    <PageLayout title="F.A.Q." loading={!inited || !loaded}>
       <div className="max-w-5xl prose prose-xl">
         <div className="space-y-16 sm:grid sm:gap-x-6 sm:gap-y-16 sm:space-y-0 lg:gap-x-10">
           <FaqItem>
@@ -36,6 +39,7 @@ export default () => {
               </ul>
             </FaqContent>
           </FaqItem>
+
           <FaqItem>
             <FaqTitle>What am I supposed to do here?</FaqTitle>
             <FaqContent>
@@ -85,6 +89,7 @@ export default () => {
               <p>You can have as many plots and houses as you like.</p>
             </FaqContent>
           </FaqItem>
+
           <FaqItem>
             <FaqTitle>What’s the purpose of Obyte City?</FaqTitle>
             <FaqContent>
@@ -127,7 +132,8 @@ export default () => {
             <FaqTitle>How likely is it that my new plot immediately gets a neighbor?</FaqTitle>
             <FaqContent>
               <p>
-                It is currently 10%, and this number can be changed by <Link to="/governance">governance</Link>.
+                It is currently {toLocalString((matching_probability * 100).toFixed(2))}%, and this number can be
+                changed by <Link to="/governance">governance</Link>.
               </p>
               <p>
                 If you don’t get a neighbor immediately, every new plot that others buy is a potential neighbor for you.
@@ -148,7 +154,7 @@ export default () => {
             </FaqContent>
           </FaqItem>
           <FaqItem>
-            <FaqTitle>What are these green rectangles on the City map?</FaqTitle>
+            <FaqTitle>+What are these green rectangles on the City map?</FaqTitle>
             <FaqContent>
               <p>
                 They are the matching areas of the plots at the center of the rectangle. If a new plot’s coordinates
@@ -175,11 +181,12 @@ export default () => {
             <FaqTitle>What is the fee when buying a plot?</FaqTitle>
             <FaqContent>
               <p>
-                The current fee is 37%. It depends on the matching probability (currently, 10%) and on the referral
-                boost (currently, 10%), which are both set by <Link to="/governance">governance</Link>. The fee is
-                burned and decreases the total supply of {` ${symbol} `}. Its size is to make sure that the same amount
-                of {` ${symbol} `} is burned (on average) to the fee as the {` ${symbol} `} minted with reward plots
-                paid to neighbors.
+                The current fee is {toLocalString((fee * 100).toFixed(2))}%. It depends on the matching probability
+                (currently, 10%) and on the referral boost (currently,{" "}
+                {toLocalString((referral_boost * 100).toFixed(2))}%), which are both set by{" "}
+                <Link to="/governance">governance</Link>. The fee is burned and decreases the total supply of{" "}
+                {` ${symbol} `}. Its size is to make sure that the same amount of {` ${symbol} `} is burned (on average)
+                to the fee as the {` ${symbol} `} minted with reward plots paid to neighbors.
               </p>
               <p>The formula, if you are interested, is</p>
 
@@ -240,10 +247,12 @@ export default () => {
                 referrer, and there is an increased likelihood that they’ll become your neighbor.
               </p>
               <p>
-                Your plot’s matching area then increases by 10% of the total matching area of all plots (not 10% of your
-                plot’s area). This makes it slightly (by 10%) more likely that the new user finds a neighbor, thus
-                benefiting them too, and if they do find a neighbor, it is far more likely that it will be you. This 10%
-                variable is called referral boost and can be changed by governance.
+                Your plot’s matching area then increases by {toLocalString((referral_boost * 100).toFixed(2))}% of the
+                total matching area of all plots (not {toLocalString((referral_boost * 100).toFixed(2))}% of your plot’s
+                area). This makes it slightly (by {toLocalString((referral_boost * 100).toFixed(2))}%) more likely that
+                the new user finds a neighbor, thus benefiting them too, and if they do find a neighbor, it is far more
+                likely that it will be you. This {toLocalString((referral_boost * 100).toFixed(2))}% variable is called
+                referral boost and can be changed by <Link to="/governance">governance</Link>.
               </p>
               <p>You can put a link to one of your plots on your social profiles to drive referral traffic.</p>
             </FaqContent>
@@ -275,7 +284,8 @@ export default () => {
             <FaqContent>
               <ol>
                 <li>
-                  Buy more plots. Every time you buy a plot, you have a 10% chance to immediately find a neighbor. For
+                  Buy more plots. Every time you buy a plot, you have a{" "}
+                  {toLocalString((matching_probability * 100).toFixed(2))}% chance to immediately find a neighbor. For
                   your plots that did not immediately find a neighbor, the more such plots you own, the larger share of
                   the City’s land is yours, the larger the probability that another user’s new plot appears within one
                   of your plots.
@@ -291,11 +301,13 @@ export default () => {
                   decreases the total supply of {` ${symbol} `}.
                 </li>
                 <li>
-                  Use someone’s referral link to buy plots. This increases the probability of finding a neighbor by 10%.
+                  Use someone’s referral link to buy plots. This increases the probability of finding a neighbor by{" "}
+                  {toLocalString((referral_boost * 100).toFixed(2))}%.
                 </li>
                 <li>
-                  Encourage other, old and new, users to use your referral link. This adds 10% of the total occupied
-                  area to the matching area of one of your plots.
+                  Encourage other, old and new, users to use your referral link. This adds{" "}
+                  {toLocalString((matching_probability * 100).toFixed(2))}% of the total occupied area to the matching
+                  area of one of your plots.
                 </li>
               </ol>
             </FaqContent>
@@ -364,8 +376,8 @@ export default () => {
             <FaqTitle>What are follow-up rewards?</FaqTitle>
             <FaqContent>
               <p>
-                Follow-up rewards are 10% of the plot price and are paid to both neighbors some time after they become
-                neighbors.
+                Follow-up rewards are {toLocalString((followup_reward_share * 100).toFixed(2))}% of the plot price and
+                are paid to both neighbors some time after they become neighbors.
               </p>
               <p>
                 The first follow-up reward becomes available 60 days after the two users become neighbors. The second
@@ -475,8 +487,8 @@ export default () => {
                     Rental fee. It is designed to fully offset the inflation from the increased matching probability and
                     the additionally minted reward plots.
                   </li>
-                  <li>1% fee on P2P sales of plots.</li>
-                  <li>1% fee on P2P sales of shortcodes.</li>
+                  <li>{toLocalString((p2p_sale_fee * 100).toFixed(2))}% fee on P2P sales of plots.</li>
+                  <li>{toLocalString((shortcode_sale_fee * 100).toFixed(2))}% fee on P2P sales of shortcodes.</li>
                 </ol>
               </p>
 
