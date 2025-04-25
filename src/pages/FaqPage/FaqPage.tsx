@@ -1,8 +1,11 @@
 import { PageLayout } from "@/components/layout/page-layout";
+import { useSettingsStore } from "@/store/settings-store";
 import { FC, ReactNode } from "react";
 import { Link } from "react-router";
 
 export default () => {
+  const { symbol } = useSettingsStore((state) => state);
+
   return (
     <PageLayout
       title="F.A.Q."
@@ -16,8 +19,8 @@ export default () => {
             <FaqContent>
               <p>
                 Obyte City is a community space for Obyte. Here, Obyte community members can establish closer
-                connections with each other, while having their own place in the city and potentially making money in
-                CITY tokens.
+                connections with each other, while having their own place in the city and potentially making money in{" "}
+                {symbol} tokens.
               </p>
               <p>
                 Anyone can own a plot of land in the City. When buying a plot, it gets random coordinates, and if it
@@ -26,7 +29,8 @@ export default () => {
               <ul>
                 <li>houses on their plots;</li>
                 <li>
-                  two new plots for each owner at new random locations. The owners can leave the new plots and get CITY
+                  two new plots for each owner at new random locations. The owners can leave the new plots and get{" "}
+                  {` ${symbol} `}
                   tokens (worth two plots) in exchange, or wait for a new neighbor to appear.
                 </li>
               </ul>
@@ -36,8 +40,8 @@ export default () => {
             <FaqTitle>What am I supposed to do here?</FaqTitle>
             <FaqContent>
               <p>
-                First, you buy a plot of land for 1000 CITY plus a fee (see below). Initially, it is an empty plot
-                without a house.{" "}
+                First, you buy a plot of land for 1000 {` ${symbol} `} plus a fee (see below). Initially, it is an empty
+                plot without a house.{" "}
               </p>
               <p>In a few minutes after you buy a new plot, it gets assigned random coordinates in the City.</p>
               <p>
@@ -51,21 +55,21 @@ export default () => {
 
               <p>Those new plots can happen to be neighbors of someone else and trigger another round of rewards.</p>
               <p>
-                For every unbuilt plot you own, you can leave it at any time and get 1000 CITY (or whatever the plot
-                price was) back. This applies to both the plots you bought and those you received as rewards.
+                For every unbuilt plot you own, you can leave it at any time and get 1000 {` ${symbol} `} (or whatever
+                the plot price was) back. This applies to both the plots you bought and those you received as rewards.
               </p>
               <p>
                 If your newly bought plot immediately becomes a neighbor of another plot, you make a profit thanks to
                 the reward plots. Otherwise, your plot remains in the City and can become a neighbor with some new plot
                 later, triggering the same rewards for you and your new neighbor. If you don’t want to wait, you can
-                leave the plot and take your 1000 CITY back, but you’ll lose the fee paid when buying the plot. The fee
-                is burned and reduces the total supply of CITY.
+                leave the plot and take your 1000 {` ${symbol} `} back, but you’ll lose the fee paid when buying the
+                plot. The fee is burned and reduces the total supply of {` ${symbol} `}.
               </p>
               <p>While your plot is still unbuilt, you can also sell or transfer it to anyone.</p>
               <p>
-                Once a house is built on your plot, there are no CITY tokens associated with it anymore. You get two new
-                plots instead, each valued at 1000 CITY. The house has no monetary value, cannot be sold or transferred,
-                and this place in the City is forever yours.
+                Once a house is built on your plot, there are no {` ${symbol} `} tokens associated with it anymore. You
+                get two new plots instead, each valued at 1000 {` ${symbol} `}. The house has no monetary value, cannot
+                be sold or transferred, and this place in the City is forever yours.
               </p>
               <p>
                 Once you have a house, you can assign a unique shortcode to it. Shortcodes are given on a first come,
@@ -134,7 +138,7 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>Are CITY tokens locked in plots?</FaqTitle>
+            <FaqTitle>Are {` ${symbol} `} tokens locked in plots?</FaqTitle>
             <FaqContent>
               <p>No, you can take them back at any time.</p>
               <p>
@@ -172,9 +176,10 @@ export default () => {
             <FaqContent>
               <p>
                 The current fee is 37%. It depends on the matching probability (currently, 10%) and on the referral
-                boost (currently, 10%), which are both set by governance [link]. The fee is burned and decreases the
-                total supply of CITY. Its size is to make sure that the same amount of CITY is burned (on average) to
-                the fee as the CITY minted with reward plots paid to neighbors.
+                boost (currently, 10%), which are both set by <Link to="/governance">governance</Link>. The fee is
+                burned and decreases the total supply of {` ${symbol} `}. Its size is to make sure that the same amount
+                of {` ${symbol} `} is burned (on average) to the fee as the {` ${symbol} `} minted with reward plots
+                paid to neighbors.
               </p>
               <p>The formula, if you are interested, is</p>
 
@@ -218,8 +223,8 @@ export default () => {
                 </li>
               </ol>
               <p>
-                While engaging in these activities, you are holding CITY tokens which could appreciate as new users buy
-                them and due to deflationary burning of tokens when users pay fees.
+                While engaging in these activities, you are holding {` ${symbol} `} tokens which could appreciate as new
+                users buy them and due to deflationary burning of tokens when users pay fees.
               </p>
               <p>
                 Of course, there are no guarantees, and your outcomes might vary depending both on your own actions and
@@ -283,7 +288,7 @@ export default () => {
                   Rent additional land around your plot. This temporarily, for 1 year, extends the matching area around
                   your plot and increases the probability that a new plot gets into this area and becomes your neighbor.
                   So, you are casting a wider net to catch incoming new plots. The rental fee that you pay is burned and
-                  decreases the total supply of CITY.
+                  decreases the total supply of {` ${symbol} `}.
                 </li>
                 <li>
                   Use someone’s referral link to buy plots. This increases the probability of finding a neighbor by 10%.
@@ -414,7 +419,8 @@ export default () => {
             <FaqTitle>How is the plot price determined?</FaqTitle>
             <FaqContent>
               <p>
-                The initial price is 1000 CITY and it can be changed by <Link to="/governance">governance</Link>.
+                The initial price is 1000 {` ${symbol} `} and it can be changed by{" "}
+                <Link to="/governance">governance</Link>.
               </p>
             </FaqContent>
           </FaqItem>
@@ -433,25 +439,30 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>What is the initial supply of CITY tokens?</FaqTitle>
+            <FaqTitle>What is the initial supply of {` ${symbol} `} tokens?</FaqTitle>
             <FaqContent>
               <p>
-                The initial supply is 0. Tokens are minted at a fixed price 1000 CITY for 1 GBYTE during the initial
-                sale period, and then they are burned and minted in response to user actions, with burns most likely
-                exceeding emissions.
+                The initial supply is 0. Tokens are minted at a fixed price 1000 {` ${symbol} `} for 1 GBYTE during the
+                initial sale period, and then they are burned and minted in response to user actions, with burns most
+                likely exceeding emissions.
               </p>
             </FaqContent>
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>When are CITY tokens minted and burned? Are they inflationary or deflationary?</FaqTitle>
+            <FaqTitle>
+              When are {` ${symbol} `} tokens minted and burned? Are they inflationary or deflationary?
+            </FaqTitle>
             <FaqContent>
               <p>
                 Mints:
                 <ol>
                   <li>Reward plots.</li>
                   <li>Follow-up rewards.</li>
-                  <li>CITY bought during the initial sale period at the fixed rate 1 GBYTE = 1000 CITY.</li>
+                  <li>
+                    {` ${symbol} `} bought during the initial sale period at the fixed rate 1 GBYTE = 1000{" "}
+                    {` ${symbol} `}.
+                  </li>
                 </ol>
               </p>
               <p>
@@ -469,7 +480,9 @@ export default () => {
                 </ol>
               </p>
 
-              <p>Depending on the balance between mints and burns, CITY can be inflationary or deflationary.</p>
+              <p>
+                Depending on the balance between mints and burns, {` ${symbol} `} can be inflationary or deflationary.
+              </p>
 
               <p>
                 The only inflationary factor that is not guaranteed to be fully offset by fees is follow-up rewards.
@@ -478,11 +491,11 @@ export default () => {
               </p>
 
               <p>
-                On the other hand, the fees are set for the worst case (worst for the CITY supply) when all users keep
-                their plots until matching with a neighbor. Which also means CITY tokens are bound in plots and kept out
-                of free circulation. Whenever a user leaves a plot, they abandon the opportunity to receive reward plots
-                while not returning the fee they paid for this opportunity. If this happens often enough, it offsets the
-                inflation from the follow-up rewards and makes the token deflationary.
+                On the other hand, the fees are set for the worst case (worst for the {` ${symbol} `} supply) when all
+                users keep their plots until matching with a neighbor. Which also means {` ${symbol} `} tokens are bound
+                in plots and kept out of free circulation. Whenever a user leaves a plot, they abandon the opportunity
+                to receive reward plots while not returning the fee they paid for this opportunity. If this happens
+                often enough, it offsets the inflation from the follow-up rewards and makes the token deflationary.
               </p>
             </FaqContent>
           </FaqItem>
@@ -491,26 +504,30 @@ export default () => {
             <FaqTitle>What is the initial sale period?</FaqTitle>
             <FaqContent>
               <p>
-                It’s an initial period when CITY tokens can be bought at a fixed rate 1 GBYTE = 1000 CITY. During this
-                period, CITY tokens are minted. Thereafter, they can only be bought from other users or earned as
-                rewards.
+                It’s an initial period when {` ${symbol} `} tokens can be bought at a fixed rate 1 GBYTE = 1000{" "}
+                {` ${symbol} `}. During this period, {` ${symbol} `} tokens are minted. Thereafter, they can only be
+                bought from other users or earned as rewards.
               </p>
               <p>
-                To buy CITY tokens during the initial sale period one needs to buy a plot. Plots are paid in GBYTE
-                instead of CITY during this period, and the price in GBYTE is determined using the fixed exchange rate 1
-                GBYTE = 1000 CITY. When paying for a plot, you add 10% of the plot price (in GBYTE) and receive CITY
+                To buy {` ${symbol} `} tokens during the initial sale period one needs to buy a plot. Plots are paid in
+                GBYTE instead of {` ${symbol} `} during this period, and the price in GBYTE is determined using the
+                fixed exchange rate 1 GBYTE = 1000 {` ${symbol} `}. When paying for a plot, you add 10% of the plot
+                price (in GBYTE) and receive {` ${symbol} `}
                 tokens in exchange, along with the plot. So, you’ll need to buy $100 worth of plots in order to buy $10
-                worth of CITY.
+                worth of {` ${symbol} `}.
               </p>
 
-              <p>If you leave this plot (before or after the initial sale ends), you get the plot price in CITY.</p>
+              <p>
+                If you leave this plot (before or after the initial sale ends), you get the plot price in{" "}
+                {` ${symbol} `}.
+              </p>
             </FaqContent>
           </FaqItem>
           <FaqItem>
             <FaqTitle>What will happen to the money raised in the initial sale?</FaqTitle>
             <FaqContent>
               <p>
-                The GBYTEs paid for plots and CITY tokens during the initial sale will be withdrawn by the{" "}
+                The GBYTEs paid for plots and {` ${symbol} `} tokens during the initial sale will be withdrawn by the{" "}
                 <a href="https://obyte.org/" target="_blank" rel="noopener">
                   Obyte
                 </a>{" "}
@@ -679,8 +696,8 @@ export default () => {
                 There are several parameters that can be changed by <Link to="/governance">governance</Link>, such as
                 plot price, the probability of finding a neighbor when buying a new plot, referral boost, and randomness
                 oracles. Owners of empty plots, who are the stakeholders in the City, vote for changing these
-                parameters. Their vote weight is equal to the amount in CITY they hold in unbuilt plots (houses don’t
-                have any tokens associated with them).
+                parameters. Their vote weight is equal to the amount in {` ${symbol} `} they hold in unbuilt plots
+                (houses don’t have any tokens associated with them).
               </p>
 
               <p>
