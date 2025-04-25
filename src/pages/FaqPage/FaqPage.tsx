@@ -84,7 +84,7 @@ const FaqItem: FC<{ children: ReactNode }> = ({ children }) => {
 };
 
 const FaqTitle: FC<{ children: ReactNode }> = ({ children }) => {
-  return <div className="font-semibold text-white text-xl/7">{children}</div>;
+  return <div className="font-semibold text-white text-2xl/7">{children}</div>;
 };
 
 const FaqContent: FC<{ children: ReactNode }> = ({ children }) => {
