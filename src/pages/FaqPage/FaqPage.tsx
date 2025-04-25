@@ -154,7 +154,7 @@ export default () => {
             </FaqContent>
           </FaqItem>
           <FaqItem>
-            <FaqTitle>+What are these green rectangles on the City map?</FaqTitle>
+            <FaqTitle>What are these green rectangles on the City map?</FaqTitle>
             <FaqContent>
               <p>
                 They are the matching areas of the plots at the center of the rectangle. If a new plot’s coordinates
