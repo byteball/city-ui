@@ -88,6 +88,6 @@ const FaqTitle: FC<{ children: ReactNode }> = ({ children }) => {
 };
 
 const FaqContent: FC<{ children: ReactNode }> = ({ children }) => {
-  return <div className="mt-2 text-gray-300 text-base/7">{children}</div>;
+  return <div className="mt-2 text-gray-300 text-base/7 [&_a]:text-link">{children}</div>;
 };
 
