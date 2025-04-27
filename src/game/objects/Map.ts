@@ -98,7 +98,7 @@ export class Map {
 
       const totalAmount = getMapUnitSize(unitData);
 
-      const plotFraction = (totalAmount / this.totalSize) * 0.1; // TODO: fix it  * (1 + referralBoost); Этот бонус только если метчимся с реферрором
+      const plotFraction = (totalAmount / this.totalSize) * 0.1;
 
       const plotArea = plotFraction * MAP_WIDTH * MAP_HEIGHT;
       const plotSize = Math.sqrt(plotArea);

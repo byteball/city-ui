@@ -41,7 +41,7 @@ export const mapUnitsSelector = createSelector([getAaState], (aaState: ICityAaSt
           ...houseUnit,
           type,
           house_num: id,
-          amount: houseUnit.amount, // === 0 ? 10000000000 : houseUnit.amount, // TODO: fix it mayor created houses have 0 amount
+          amount: houseUnit.amount,
         } as IHouse;
       }
 
