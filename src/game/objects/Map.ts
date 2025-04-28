@@ -4,8 +4,7 @@ import { Decimal } from "decimal.js";
 import Phaser from "phaser";
 
 import { IGameOptions, IMapUnit, IRoad } from "@/global";
-import { asNonNegativeNumber } from "@/lib";
-import { defaultAaParams, useAaStore } from "@/store/aa-store";
+import { asNonNegativeNumber, getAddressFromNearestRoad } from "@/lib";
 import { useSettingsStore } from "@/store/settings-store";
 
 import { Plot } from "./Plot";
@@ -17,7 +16,7 @@ import { House } from "./House";
 
 import appConfig from "@/appConfig";
 
-export const ROAD_THICKNESS = 80;
+export const ROAD_THICKNESS = 180;
 
 export class Map {
   private scene: Phaser.Scene;
@@ -84,10 +83,6 @@ export class Map {
 
   private createMapUnits(MAP_WIDTH: number, MAP_HEIGHT: number, sceneType: IGameOptions["displayMode"]) {
     const thickness = asNonNegativeNumber(ROAD_THICKNESS);
-    const state = useAaStore.getState().state;
-
-    const referralBoost =
-      state.city_city?.referral_boost ?? state.variables?.referral_boost ?? defaultAaParams.referral_boost;
 
     this.unitsData.forEach((unitData) => {
       if (unitData.type === "plot" && unitData.status === "pending") return;
@@ -145,15 +140,28 @@ export class Map {
       // Создаем новый участок (unit)
       let unit: Plot | House;
 
+      const [address] =
+        unitData?.x !== undefined && unitData?.y !== undefined
+          ? getAddressFromNearestRoad(
+              this.roadsData,
+              {
+                x: unitData.x,
+                y: unitData.y,
+              },
+              unitData.type === "house" ? unitData.house_num ?? 0 : unitData.plot_num ?? 0
+            )
+          : [];
+
       if (type === "house") {
         unit = new House(
           this.scene,
           { ...unitData, x: finalX, y: finalY },
           plotSize,
-          this.gameOptions?.displayMode === "market"
+          this.gameOptions?.displayMode === "market",
+          address
         );
       } else if (type === "plot") {
-        unit = new Plot(this.scene, { ...unitData, x: finalX, y: finalY }, plotSize);
+        unit = new Plot(this.scene, { ...unitData, x: finalX, y: finalY }, plotSize, address);
       } else {
         throw new Error(`Unknown unit type: ${type}`);
       }
