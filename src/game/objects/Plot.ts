@@ -34,7 +34,7 @@ export class Plot {
       const div = document.createElement("div");
       div.innerText = this.address;
       Object.assign(div.style, {
-        position: "absolute",
+        position: "fixed",
         background: "#fff",
         color: "rgba(0,0,0,0.75)",
         padding: "4px 8px",

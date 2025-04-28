@@ -23,7 +23,7 @@ const config: Phaser.Types.Core.GameConfig = {
   },
   failIfMajorPerformanceCaveat: true,
   fps: {
-    target: 10,
+    target: 60,
   },
 };
 
