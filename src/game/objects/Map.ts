@@ -5,7 +5,6 @@ import Phaser from "phaser";
 
 import { IGameOptions, IMapUnit, IRoad } from "@/global";
 import { asNonNegativeNumber, getAddressFromNearestRoad } from "@/lib";
-import { defaultAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
 import { Plot } from "./Plot";
@@ -17,7 +16,7 @@ import { House } from "./House";
 
 import appConfig from "@/appConfig";
 
-export const ROAD_THICKNESS = 80;
+export const ROAD_THICKNESS = 180;
 
 export class Map {
   private scene: Phaser.Scene;
@@ -84,10 +83,6 @@ export class Map {
 
   private createMapUnits(MAP_WIDTH: number, MAP_HEIGHT: number, sceneType: IGameOptions["displayMode"]) {
     const thickness = asNonNegativeNumber(ROAD_THICKNESS);
-    const state = useAaStore.getState().state;
-
-    const referralBoost =
-      state.city_city?.referral_boost ?? state.variables?.referral_boost ?? defaultAaParams.referral_boost;
 
     this.unitsData.forEach((unitData) => {
       if (unitData.type === "plot" && unitData.status === "pending") return;
