@@ -4,7 +4,7 @@ import { Decimal } from "decimal.js";
 import Phaser from "phaser";
 
 import { IGameOptions, IMapUnit, IRoad } from "@/global";
-import { asNonNegativeNumber } from "@/lib";
+import { asNonNegativeNumber, getAddressFromNearestRoad } from "@/lib";
 import { defaultAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
@@ -145,15 +145,28 @@ export class Map {
       // Создаем новый участок (unit)
       let unit: Plot | House;
 
+      const [address] =
+        unitData?.x !== undefined && unitData?.y !== undefined
+          ? getAddressFromNearestRoad(
+              this.roadsData,
+              {
+                x: unitData.x,
+                y: unitData.y,
+              },
+              unitData.type === "house" ? unitData.house_num ?? 0 : unitData.plot_num ?? 0
+            )
+          : [];
+
       if (type === "house") {
         unit = new House(
           this.scene,
           { ...unitData, x: finalX, y: finalY },
           plotSize,
-          this.gameOptions?.displayMode === "market"
+          this.gameOptions?.displayMode === "market",
+          address
         );
       } else if (type === "plot") {
-        unit = new Plot(this.scene, { ...unitData, x: finalX, y: finalY }, plotSize);
+        unit = new Plot(this.scene, { ...unitData, x: finalX, y: finalY }, plotSize, address);
       } else {
         throw new Error(`Unknown unit type: ${type}`);
       }

@@ -6,24 +6,61 @@ export class Plot {
   private scene: Phaser.Scene;
   private data: IMapUnit;
   private plotSize: number;
+  private address: string;
 
   private plotImage: Phaser.GameObjects.Image;
   private outline?: Phaser.GameObjects.Graphics;
+  private tooltipDom?: HTMLDivElement;
 
-  constructor(scene: Phaser.Scene, data: IMapUnit, plotSize: number) {
+  constructor(scene: Phaser.Scene, data: IMapUnit, plotSize: number, address: string) {
     this.scene = scene;
     this.data = data;
     this.plotSize = plotSize;
+    this.address = address;
+
     this.createPlot();
   }
 
   private createPlot() {
     const { x, y } = this.data;
 
-    // Use the loaded "plot" SVG asset for the plot
     this.plotImage = this.scene.add.image(x, y, "plot");
     this.plotImage.setDisplaySize(this.plotSize, this.plotSize);
     this.plotImage.setInteractive();
+
+    // Use DOM-based block tooltip
+    this.plotImage.on("pointerover", (pointer: Phaser.Input.Pointer) => {
+      if (this.tooltipDom) return;
+      const div = document.createElement("div");
+      div.innerText = this.address;
+      Object.assign(div.style, {
+        position: "absolute",
+        background: "#fff",
+        color: "rgba(0,0,0,0.75)",
+        padding: "4px 8px",
+        borderRadius: "4px",
+        whiteSpace: "pre-wrap",
+        maxWidth: "240px",
+        pointerEvents: "none",
+        zIndex: "1000",
+      });
+      document.body.appendChild(div);
+      this.tooltipDom = div;
+      div.style.left = pointer.event.clientX + "px";
+      div.style.top = pointer.event.clientY + "px";
+    });
+    this.plotImage.on("pointermove", (pointer: Phaser.Input.Pointer) => {
+      if (this.tooltipDom) {
+        this.tooltipDom.style.left = pointer.event.clientX + "px";
+        this.tooltipDom.style.top = pointer.event.clientY + "px";
+      }
+    });
+    this.plotImage.on("pointerout", () => {
+      if (this.tooltipDom) {
+        document.body.removeChild(this.tooltipDom);
+        this.tooltipDom = undefined;
+      }
+    });
   }
 
   public setSelected(selected: boolean) {
