@@ -184,7 +184,15 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                     .slice(0, 5)
                     .map(([key, value]) => (
                       <InfoPanel.Item key={key} label={key}>
-                        {value?.toString() ?? ""}
+                        <div className="inline">
+                          {String(value).startsWith("https://") || String(value).startsWith("https://") ? (
+                            <a href={value?.toString()} rel="nofollow" className="text-link" target="_blank">
+                              {value}
+                            </a>
+                          ) : (
+                            value ?? ""
+                          )}
+                        </div>
                       </InfoPanel.Item>
                     ))
                 )}

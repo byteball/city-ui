@@ -103,7 +103,15 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
                               .slice(0, 5)
                               .map(([key, value]) => (
                                 <InfoPanel.Item key={key} label={key}>
-                                  <TextScramble className="inline">{value?.toString() ?? ""}</TextScramble>
+                                  <div className="inline">
+                                    {String(value).startsWith("https://") || String(value).startsWith("https://") ? (
+                                      <a href={value?.toString()} rel="nofollow" className="text-link" target="_blank">
+                                        {value}
+                                      </a>
+                                    ) : (
+                                      value ?? ""
+                                    )}
+                                  </div>
                                 </InfoPanel.Item>
                               ))
                           )}

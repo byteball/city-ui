@@ -168,7 +168,15 @@ const ClaimRedirectPage = () => {
                       .slice(0, 5)
                       .map(([key, value]) => (
                         <InfoPanel.Item key={key} label={key}>
-                          <div className="inline">{value?.toString() ?? ""}</div>
+                          <div className="inline">
+                            {String(value).startsWith("https://") || String(value).startsWith("https://") ? (
+                              <a href={value?.toString()} rel="nofollow" className="text-link" target="_blank">
+                                {value}
+                              </a>
+                            ) : (
+                              value ?? ""
+                            )}
+                          </div>
                         </InfoPanel.Item>
                       ))
                   )}
@@ -256,7 +264,15 @@ const ClaimRedirectPage = () => {
                       .slice(0, 5)
                       .map(([key, value]) => (
                         <InfoPanel.Item key={key} label={key}>
-                          <div className="inline">{value?.toString() ?? ""}</div>
+                          <div className="inline">
+                            {String(value).startsWith("https://") || String(value).startsWith("https://") ? (
+                              <a href={value?.toString()} rel="nofollow" className="text-link" target="_blank">
+                                {value}
+                              </a>
+                            ) : (
+                              value ?? ""
+                            )}
+                          </div>
                         </InfoPanel.Item>
                       ))
                   )}
