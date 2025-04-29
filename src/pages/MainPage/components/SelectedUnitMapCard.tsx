@@ -28,6 +28,7 @@ import { generateLink, toLocalString } from "@/lib";
 import { getAddressFromNearestRoad } from "@/lib/getAddressCoordinate";
 
 import appConfig from "@/appConfig";
+import { Helmet } from "react-helmet-async";
 
 interface ISelectedUnitMapCardProps {
   sceneType: "main" | "market";
@@ -109,175 +110,180 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
       : "#";
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Selected {selectedMapUnit?.type}</CardTitle>
-        <CardDescription>Click on the house or plot to see all the information about it.</CardDescription>
-      </CardHeader>
+    <>
+      <Helmet>
+        <title>Obyte City — {addresses.length ? addresses[0] : "map"}</title>
+      </Helmet>
 
-      {selectedMapUnitCoordinates ? (
-        <CardContent className="text-sm">
-          <InfoPanel>
-            <InfoPanel.Item textClamp label="Amount" loading={loading}>
-              {formattedAmount} {symbol} {rented_amount ? `(Plus ${formattedRentedAmount} rented ${symbol})` : ""}
-            </InfoPanel.Item>
-            <InfoPanel.Item textClamp label="Coordinates" loading={loading}>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger className="cursor-text">
-                    <div className="font-mono">
-                      ({selectedMapUnit?.x},{selectedMapUnit?.y})
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <div>
-                      X: {selectedMapUnit?.x}, Y: {selectedMapUnit?.y}
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </InfoPanel.Item>
-            <InfoPanel.Item textClamp label="Address" loading={loading}>
-              {addresses[0] ?? "No address"}
-            </InfoPanel.Item>
-            {selectedMapUnit?.type === "house" && selectedMapUnit?.shortcode ? (
-              <InfoPanel.Item
-                label="Shortcode"
-                textClamp
-                tooltipText="Shortcodes are used to send money via the wallet instead of using a full address"
-                loading={loading}
-              >
-                {selectedMapUnit.shortcode.toLowerCase()}
-              </InfoPanel.Item>
-            ) : null}
-            {/* {selectedMapUnit?.ts ? (
-              <InfoPanel.Item textClamp label="Created at" loading={loading}>
-                {moment.unix(selectedMapUnit?.ts).format("YYYY-MM-DD HH:mm")}
-              </InfoPanel.Item>
-            ) : null} */}{" "}
-            <InfoPanel.Item textClamp label="Owner" loading={loading || !owner}>
-              <Link to={`/user/${owner}`} className="text-blue-400 block truncate max-w-[200px]">
-                {selectedMapUnit?.username ? `${selectedMapUnit?.username} - ${owner}` : owner}
-              </Link>
-            </InfoPanel.Item>
-            {selectedMapUnit?.type === "plot" && selectedMapUnit?.rental_expiry_ts ? (
-              <InfoPanel.Item textClamp label="Rental expiry" loading={loading}>
-                {moment.unix(selectedMapUnit?.rental_expiry_ts).format("YYYY-MM-DD HH:mm")}
-              </InfoPanel.Item>
-            ) : null}
-            {selectedMapUnit?.type === "house" ? (
-              <InfoPanel.Item label="Contacts" loading={loading || !owner || ownerUsernameIsLoading}>
-                {attestations.length ? (
-                  <AttestationList data={attestations} blockDisplay={attestations.length > 1} />
-                ) : (
-                  <span>No attested contacts</span>
-                )}
-              </InfoPanel.Item>
-            ) : null}
-            {selectedMapUnit?.info ? (
-              <div className="text-sm">
-                <div className="mt-2 mb-1 font-semibold">Additional information</div>
-                {typeof selectedMapUnit.info === "string" ? (
-                  <InfoPanel.Item label="Information">{selectedMapUnit.info}</InfoPanel.Item>
-                ) : (
-                  Object.entries(selectedMapUnit.info)
-                    .slice(0, 5)
-                    .map(([key, value]) => (
-                      <InfoPanel.Item key={key} label={key}>
-                        <div className="inline">
-                          {String(value).startsWith("https://") || String(value).startsWith("https://") ? (
-                            <a href={value?.toString()} rel="nofollow" className="text-link" target="_blank">
-                              {value}
-                            </a>
-                          ) : (
-                            value ?? ""
-                          )}
-                        </div>
-                      </InfoPanel.Item>
-                    ))
-                )}
-              </div>
-            ) : null}
-            {sceneType === "market" && selectedMapUnit?.type === "plot" ? (
-              <div className="mt-4 space-y-2">
-                {isOwner ? (
-                  <QRButton href={p2pWithdrawFromSale}>Withdraw from sale</QRButton>
-                ) : (
-                  <QRButton href={p2pBuyLink}>
-                    Buy for {toLocalString(selectedMapUnit?.sale_price / decimalsPow)} {symbol}
-                  </QRButton>
-                )}
-              </div>
-            ) : null}
-          </InfoPanel>
+      <Card>
+        <CardHeader>
+          <CardTitle>Selected {selectedMapUnit?.type}</CardTitle>
+          <CardDescription>Click on the house or plot to see all the information about it.</CardDescription>
+        </CardHeader>
 
-          {loading && sceneType === "main" ? (
-            <div className="flex flex-wrap gap-4 mt-4">
-              <Skeleton className="rounded-xl w-[48px] h-[36px]" />
-              <Skeleton className="rounded-xl w-[48px] h-[36px]" />
+        {selectedMapUnitCoordinates ? (
+          <CardContent className="text-sm">
+            <InfoPanel>
+              <InfoPanel.Item textClamp label="Amount" loading={loading}>
+                {formattedAmount} {symbol} {rented_amount ? `(Plus ${formattedRentedAmount} rented ${symbol})` : ""}
+              </InfoPanel.Item>
+              <InfoPanel.Item textClamp label="Coordinates" loading={loading}>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger className="cursor-text">
+                      <div className="font-mono">
+                        ({selectedMapUnit?.x},{selectedMapUnit?.y})
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <div>
+                        X: {selectedMapUnit?.x}, Y: {selectedMapUnit?.y}
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </InfoPanel.Item>
+              <InfoPanel.Item textClamp label="Address" loading={loading}>
+                {addresses[0] ?? "No address"}
+              </InfoPanel.Item>
+              {selectedMapUnit?.type === "house" && selectedMapUnit?.shortcode ? (
+                <InfoPanel.Item
+                  label="Shortcode"
+                  textClamp
+                  tooltipText="Shortcodes are used to send money via the wallet instead of using a full address"
+                  loading={loading}
+                >
+                  {selectedMapUnit.shortcode.toLowerCase()}
+                </InfoPanel.Item>
+              ) : null}
+              <InfoPanel.Item textClamp label="Owner" loading={loading || !owner}>
+                <Link to={`/user/${owner}`} className="text-blue-400 block truncate max-w-[200px]">
+                  {selectedMapUnit?.username ? `${selectedMapUnit?.username} - ${owner}` : owner}
+                </Link>
+              </InfoPanel.Item>
+              {selectedMapUnit?.type === "plot" && selectedMapUnit?.rental_expiry_ts ? (
+                <InfoPanel.Item textClamp label="Rental expiry" loading={loading}>
+                  {moment.unix(selectedMapUnit?.rental_expiry_ts).format("YYYY-MM-DD HH:mm")}
+                </InfoPanel.Item>
+              ) : null}
               {selectedMapUnit?.type === "house" ? (
-                <>
-                  <Skeleton className="rounded-xl w-[48px] h-[36px]" />
-                  <Skeleton className="rounded-xl w-[48px] h-[36px]" />
-                </>
+                <InfoPanel.Item label="Contacts" loading={loading || !owner || ownerUsernameIsLoading}>
+                  {attestations.length ? (
+                    <AttestationList data={attestations} blockDisplay={attestations.length > 1} />
+                  ) : (
+                    <span>No attested contacts</span>
+                  )}
+                </InfoPanel.Item>
               ) : null}
-            </div>
-          ) : null}
-
-          {sceneType === "main" ? (
-            <div className={cn("flex flex-wrap gap-4", { "mt-4": isOwner })}>
-              {isOwner && selectedMapUnit ? (
-                <SettingsDialog unitData={selectedMapUnit}>
-                  <ButtonWithTooltip
-                    tooltipText={`Edit ${selectedMapUnit.type}`}
-                    variant="secondary"
-                    className="rounded-xl"
-                  >
-                    <PencilIcon className="w-4 h-4" />
-                  </ButtonWithTooltip>
-                </SettingsDialog>
+              {selectedMapUnit?.info ? (
+                <div className="text-sm">
+                  <div className="mt-2 mb-1 font-semibold">Additional information</div>
+                  {typeof selectedMapUnit.info === "string" ? (
+                    <InfoPanel.Item label="Information">{selectedMapUnit.info}</InfoPanel.Item>
+                  ) : (
+                    Object.entries(selectedMapUnit.info)
+                      .slice(0, 5)
+                      .map(([key, value]) => (
+                        <InfoPanel.Item key={key} label={key}>
+                          <div className="inline">
+                            {String(value).startsWith("https://") || String(value).startsWith("https://") ? (
+                              <a href={value?.toString()} rel="nofollow" className="text-link" target="_blank">
+                                {value}
+                              </a>
+                            ) : (
+                              value ?? ""
+                            )}
+                          </div>
+                        </InfoPanel.Item>
+                      ))
+                  )}
+                </div>
               ) : null}
-
-              {isOwner && !loading && selectedMapUnit?.type === "plot" && (
-                <>
-                  <SellPlotDialog>
-                    <ButtonWithTooltip tooltipText="Sell" variant="secondary" className="rounded-xl">
-                      <ShoppingBagIcon className="w-4 h-4" />
-                    </ButtonWithTooltip>
-                  </SellPlotDialog>
-                  <RentPlotDialog>
-                    <ButtonWithTooltip tooltipText="Rent additional land" variant="secondary" className="rounded-xl">
-                      <ImageUpscaleIcon className="w-4 h-4" />
-                    </ButtonWithTooltip>
-                  </RentPlotDialog>
-
-                  <LeaveUnbuiltPlotDialog leaveUrl={leaveUrl} amount={selectedMapUnit.amount}>
-                    <ButtonWithTooltip tooltipText="Leave the unbuilt plot" variant="secondary" className="rounded-xl">
-                      <DoorOpenIcon className="w-4 h-4" />
-                    </ButtonWithTooltip>
-                  </LeaveUnbuiltPlotDialog>
-                </>
-              )}
-
-              {selectedMapUnit?.type === "house" && isOwner && selectedMapUnit.shortcode ? (
-                <ShortCodeSellDialog plot_num={selectedMapUnit.plot_num} shortcode={selectedMapUnit.shortcode}>
-                  <ButtonWithTooltip
-                    disabled={!selectedMapUnit.shortcode}
-                    tooltipText="Sell shortcode"
-                    variant="secondary"
-                    className="rounded-xl"
-                  >
-                    <CaseUpperIcon className="w-4 h-4" />
-                  </ButtonWithTooltip>
-                </ShortCodeSellDialog>
+              {sceneType === "market" && selectedMapUnit?.type === "plot" ? (
+                <div className="mt-4 space-y-2">
+                  {isOwner ? (
+                    <QRButton href={p2pWithdrawFromSale}>Withdraw from sale</QRButton>
+                  ) : (
+                    <QRButton href={p2pBuyLink}>
+                      Buy for {toLocalString(selectedMapUnit?.sale_price / decimalsPow)} {symbol}
+                    </QRButton>
+                  )}
+                </div>
               ) : null}
-            </div>
-          ) : null}
-        </CardContent>
-      ) : (
-        <CardContent className="text-primary">No selected</CardContent>
-      )}
-    </Card>
+            </InfoPanel>
+
+            {loading && sceneType === "main" ? (
+              <div className="flex flex-wrap gap-4 mt-4">
+                <Skeleton className="rounded-xl w-[48px] h-[36px]" />
+                <Skeleton className="rounded-xl w-[48px] h-[36px]" />
+                {selectedMapUnit?.type === "house" ? (
+                  <>
+                    <Skeleton className="rounded-xl w-[48px] h-[36px]" />
+                    <Skeleton className="rounded-xl w-[48px] h-[36px]" />
+                  </>
+                ) : null}
+              </div>
+            ) : null}
+
+            {sceneType === "main" ? (
+              <div className={cn("flex flex-wrap gap-4", { "mt-4": isOwner })}>
+                {isOwner && selectedMapUnit ? (
+                  <SettingsDialog unitData={selectedMapUnit}>
+                    <ButtonWithTooltip
+                      tooltipText={`Edit ${selectedMapUnit.type}`}
+                      variant="secondary"
+                      className="rounded-xl"
+                    >
+                      <PencilIcon className="w-4 h-4" />
+                    </ButtonWithTooltip>
+                  </SettingsDialog>
+                ) : null}
+
+                {isOwner && !loading && selectedMapUnit?.type === "plot" && (
+                  <>
+                    <SellPlotDialog>
+                      <ButtonWithTooltip tooltipText="Sell" variant="secondary" className="rounded-xl">
+                        <ShoppingBagIcon className="w-4 h-4" />
+                      </ButtonWithTooltip>
+                    </SellPlotDialog>
+                    <RentPlotDialog>
+                      <ButtonWithTooltip tooltipText="Rent additional land" variant="secondary" className="rounded-xl">
+                        <ImageUpscaleIcon className="w-4 h-4" />
+                      </ButtonWithTooltip>
+                    </RentPlotDialog>
+
+                    <LeaveUnbuiltPlotDialog leaveUrl={leaveUrl} amount={selectedMapUnit.amount}>
+                      <ButtonWithTooltip
+                        tooltipText="Leave the unbuilt plot"
+                        variant="secondary"
+                        className="rounded-xl"
+                      >
+                        <DoorOpenIcon className="w-4 h-4" />
+                      </ButtonWithTooltip>
+                    </LeaveUnbuiltPlotDialog>
+                  </>
+                )}
+
+                {selectedMapUnit?.type === "house" && isOwner && selectedMapUnit.shortcode ? (
+                  <ShortCodeSellDialog plot_num={selectedMapUnit.plot_num} shortcode={selectedMapUnit.shortcode}>
+                    <ButtonWithTooltip
+                      disabled={!selectedMapUnit.shortcode}
+                      tooltipText="Sell shortcode"
+                      variant="secondary"
+                      className="rounded-xl"
+                    >
+                      <CaseUpperIcon className="w-4 h-4" />
+                    </ButtonWithTooltip>
+                  </ShortCodeSellDialog>
+                ) : null}
+              </div>
+            ) : null}
+          </CardContent>
+        ) : (
+          <CardContent className="text-primary">No selected</CardContent>
+        )}
+      </Card>
+    </>
   );
 };
 
