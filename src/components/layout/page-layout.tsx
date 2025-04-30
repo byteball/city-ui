@@ -20,6 +20,7 @@ export const PageLayout: FC<IPageLayoutProps> = ({ children, title, loading = fa
         <title>Obyte City — {title}</title>
         <meta name="description" content={description} />
         {ogImageKey && <meta property="og:image" content={`${appConfig.OG_IMAGE_URL}/og/${ogImageKey}`} />}
+        <meta name="og:title" content={`Obyte City — ${title}`} />
       </Helmet>
 
       <div className="min-h-[80vh] px-4 md:px-0">
