@@ -3,6 +3,7 @@ export default {
   TESTNET: !!import.meta.env.VITE_TESTNET,
   LAUNCH_DATE: import.meta.env.VITE_LAUNCH_DATE, // YYYY-MM-DD
   MAP_SCALE: 0.01, // 1:100, please do not change this value
+  OG_IMAGE_URL: import.meta.env.VITE_OG_IMAGE_URL ?? "https://og-test.obby.space",
   ATTESTORS: !!import.meta.env.VITE_TESTNET
     ? {
         discord: "EJC4A7WQGHEZEKW6RLO7F26SAR4LAQBU",

@@ -14,7 +14,7 @@ export default () => {
   const loaded = useAaStore((state) => state.loaded);
 
   return (
-    <PageLayout title="F.A.Q." loading={!inited || !loaded}>
+    <PageLayout title="F.A.Q." ogImageKey="faq" loading={!inited || !loaded}>
       <div className="max-w-5xl prose prose-xl">
         <div className="space-y-16 sm:grid sm:gap-x-6 sm:gap-y-16 sm:space-y-0 lg:gap-x-10">
           <FaqItem>

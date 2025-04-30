@@ -2,6 +2,7 @@ import { Decimal } from "decimal.js";
 import { NuqsAdapter } from "nuqs/adapters/react";
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { HelmetProvider } from "react-helmet-async";
 import { BrowserRouter } from "react-router";
 
 import { AppRouter } from "./AppRouter";
@@ -27,11 +28,13 @@ Decimal.set({
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <NuqsAdapter>
-        <AppRouter />
-      </NuqsAdapter>
-    </BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter>
+        <NuqsAdapter>
+          <AppRouter />
+        </NuqsAdapter>
+      </BrowserRouter>
+    </HelmetProvider>
   </React.StrictMode>
 );
 
