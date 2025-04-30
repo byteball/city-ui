@@ -113,6 +113,14 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
     <>
       <Helmet>
         <title>Obyte City — {addresses.length ? addresses[0] : "map"}</title>
+        {selectedMapUnit ? (
+          <meta
+            property="og:image"
+            content={`${appConfig.OG_IMAGE_URL}/og/unit?type=${selectedMapUnit.type}&number=${
+              selectedMapUnit.type === "house" ? selectedMapUnit.house_num : selectedMapUnit.plot_num
+            }`}
+          />
+        ) : null}
       </Helmet>
 
       <Card>
