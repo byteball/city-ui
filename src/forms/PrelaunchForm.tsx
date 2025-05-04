@@ -86,6 +86,23 @@ export const PrelaunchForm: FC = memo(() => {
 
         if (refererMainPlot) {
           refData.ref = selectedMapUnit.owner;
+        } else {
+          const plot = mapUnits.find(
+            (unit) => unit.owner === selectedMapUnit.owner && unit.type === "plot" && unit.status === "land"
+          );
+
+          if (plot !== undefined) {
+            refData.ref_plot_num = plot.plot_num;
+
+            address = getAddressFromNearestRoad(
+              roads,
+              {
+                x: plot.x,
+                y: plot.y,
+              },
+              plot.plot_num
+            )?.[0];
+          }
         }
       }
     }
