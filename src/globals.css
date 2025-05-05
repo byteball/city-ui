@@ -31,7 +31,8 @@
     @apply border-border;
   }
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    font-family: "Inter", sans-serif;
+    @apply antialiased bg-background text-foreground;
   }
 }
 
