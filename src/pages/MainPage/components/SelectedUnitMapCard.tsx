@@ -12,7 +12,7 @@ import { ShortCodeSellDialog } from "@/components/dialogs/ShortCodeSellDialog";
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { QRButton } from "@/components/ui/_qr-button";
 import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AttestationList } from "@/pages/UserPage/components";
@@ -125,8 +125,11 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
 
       <Card>
         <CardHeader>
-          <CardTitle>Selected {selectedMapUnit?.type}</CardTitle>
-          <CardDescription>Click on the house or plot to see all the information about it.</CardDescription>
+          {selectedMapUnit ? (
+            <CardTitle>Selected {selectedMapUnit?.type}</CardTitle>
+          ) : (
+            <CardTitle>Click on the house or plot to see all the information about it.</CardTitle>
+          )}
         </CardHeader>
 
         {selectedMapUnitCoordinates ? (
@@ -287,9 +290,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
               </div>
             ) : null}
           </CardContent>
-        ) : (
-          <CardContent className="text-primary">No selected</CardContent>
-        )}
+        ) : null}
       </Card>
     </>
   );

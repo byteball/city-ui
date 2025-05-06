@@ -64,12 +64,14 @@ export class House {
       div.style.left = pointer.event.clientX + "px";
       div.style.top = pointer.event.clientY + "px";
     });
+
     this.houseImage.on("pointermove", (pointer: Phaser.Input.Pointer) => {
       if (this.tooltipDom) {
         this.tooltipDom.style.left = pointer.event.clientX + "px";
         this.tooltipDom.style.top = pointer.event.clientY + "px";
       }
     });
+
     this.houseImage.on("pointerout", () => {
       if (this.tooltipDom) {
         document.body.removeChild(this.tooltipDom);
