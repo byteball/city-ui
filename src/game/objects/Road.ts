@@ -1,5 +1,6 @@
-import { IRoad } from "@/global";
 import Phaser from "phaser";
+
+import { IRoad } from "@/global";
 import { ROAD_THICKNESS } from "./Map";
 
 const BASE_LABEL_STEP = 650;
@@ -34,7 +35,7 @@ export class Road {
 
         roadText.setOrigin(0);
         roadText.setAngle(-90);
-        roadText.setDepth(0);
+        roadText.setDepth(1);
 
         this.labels.push(roadText);
       }
@@ -50,7 +51,7 @@ export class Road {
 
         roadText.setOrigin(0);
         roadText.setAngle(0);
-        roadText.setDepth(0);
+        roadText.setDepth(1);
 
         this.labels.push(roadText);
       }
