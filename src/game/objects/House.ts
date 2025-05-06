@@ -31,11 +31,20 @@ export class House {
     this.houseImage.setDisplaySize(this.plotSize, this.plotSize);
     this.houseImage.setInteractive();
 
-    // Remove Phaser tooltip and add DOM tooltip handlers
     this.houseImage.on("pointerover", (pointer: Phaser.Input.Pointer) => {
       if (this.tooltipDom) return;
       const div = document.createElement("div");
-      div.innerText = this.address;
+
+      let name = "";
+
+      if (this.data.info && typeof this.data.info === "object") {
+        name = this.data.info.name;
+      } else if (typeof this.data.info === "string") {
+        name = this.data.info;
+      }
+
+      div.innerHTML = (name ? `<b>${name}</b><br>` : "") + `Address: ${this.address}`;
+
       Object.assign(div.style, {
         position: "fixed",
         background: "#fff",
