@@ -41,7 +41,7 @@ export class Map {
 
   public createMap(options: IGameOptions) {
     this.gameOptions = options;
-    // 1) Считаем общую толщину вертикальных и горизонтальных дорог
+    // 1) Calculate the total thickness of vertical and horizontal roads
     let totalVerticalThickness = 0;
     let totalHorizontalThickness = 0;
 
@@ -55,15 +55,13 @@ export class Map {
 
     const BASE_MAP_SIZE = Decimal(1_000_000).mul(appConfig.MAP_SCALE);
 
-    // 2) Базовые размеры 1 000 000 х 1 000 000
+    // 2) Base sizes 1,000,000 x 1,000,000
     const MAP_WIDTH = BASE_MAP_SIZE.plus(totalVerticalThickness).toNumber();
     const MAP_HEIGHT = BASE_MAP_SIZE.plus(totalHorizontalThickness).toNumber();
 
     this.scene.cameras.main.setBounds(0, 0, MAP_WIDTH, MAP_HEIGHT);
 
-    // this.scene.add.rectangle(0, 0, MAP_WIDTH, MAP_HEIGHT, 0x282826).setOrigin(0).setDepth(-10);
-
-    // 3) Передаём их в функции, создающие дороги и участки
+    // 3) Pass them to the functions that create roads and plots
     this.createRoads(MAP_WIDTH, MAP_HEIGHT);
     this.createMapUnits(MAP_WIDTH, MAP_HEIGHT, options.displayMode || "main");
     this.updateMapUnitSelection();
@@ -88,7 +86,6 @@ export class Map {
       if (unitData.type === "plot" && unitData.status === "pending") return;
       if (sceneType === "market" && !(unitData.type === "plot" ? unitData.sale_price : true)) return; // Only plots with sale price
 
-      // 1) Вычисляем размер участка
       const { x, y, type } = unitData;
 
       const totalAmount = getMapUnitSize(unitData);
@@ -98,12 +95,12 @@ export class Map {
       const plotArea = plotFraction * MAP_WIDTH * MAP_HEIGHT;
       const plotSize = Math.sqrt(plotArea);
 
-      // 2) Начальная позиция
+      // 2) Initial coordinates of the plot
       let finalX = asNonNegativeNumber(Decimal(x).mul(appConfig.MAP_SCALE).toNumber());
       let finalY = asNonNegativeNumber(Decimal(y).mul(appConfig.MAP_SCALE).toNumber());
       let overlapping = true;
 
-      // Цикл для поиска не пересекающейся позиции
+      // Loop to find a non-overlapping position
       while (overlapping) {
         overlapping = false;
         const leftEdge = finalX - plotSize / 2;
@@ -111,10 +108,10 @@ export class Map {
         const topEdge = finalY - plotSize / 2;
         const bottomEdge = finalY + plotSize / 2;
 
-        // Проходим по всем дорогам
+        // Check all roads
         for (const road of this.roadsData) {
           if (road.orientation === "vertical") {
-            // Используем координату x дороги
+            // use x coordinate of the road
             const roadStart = road.x;
             const roadEnd = road.x + thickness;
 
@@ -124,7 +121,7 @@ export class Map {
               break;
             }
           } else {
-            // Горизонтальная дорога: используем координату y дороги
+            // Horizontal road: use y coordinate of the road
             const roadStart = road.y;
             const roadEnd = road.y + thickness;
 
@@ -135,9 +132,9 @@ export class Map {
             }
           }
         }
-      } // конец while
+      } // end while
 
-      // Создаем новый участок (unit)
+      // creating new plot
       let unit: Plot | House;
 
       const [address] =
@@ -153,10 +150,14 @@ export class Map {
           : [];
 
       if (type === "house") {
+        const houseFraction = ((this.gameOptions?.params?.plot_price ?? 0 * 0.25) / this.totalSize) * 0.1;
+        const houseArea = houseFraction * MAP_WIDTH * MAP_HEIGHT;
+        const houseSize = Math.sqrt(houseArea);
+
         unit = new House(
           this.scene,
           { ...unitData, x: finalX, y: finalY },
-          plotSize,
+          houseSize,
           this.gameOptions?.displayMode === "market",
           address
         );
@@ -178,7 +179,7 @@ export class Map {
       unitImage.setInteractive({ cursor: "pointer" });
 
       unitImage.on("pointerdown", () => {
-        // Сбрасываем выбранный участок, если он уже был выбран
+        // Reset the selected plot if it was already selected
         if (this.selectedMapUnit) {
           this.selectedMapUnit.setSelected(false);
         }
@@ -212,7 +213,6 @@ export class Map {
     });
   }
 
-  // Метод для обновления выделения на основе состояния из SettingsState
   public updateMapUnitSelection() {
     const settingsState = useSettingsStore.getState();
 
@@ -220,7 +220,7 @@ export class Map {
       this.gameOptions?.displayMode === "market" ? settingsState.selectedMarketPlot : settingsState.selectedMapUnit;
 
     if (!storeSelected) {
-      // Сбрасываем выделение, если ничего не выбрано
+      // Reset selection if nothing is selected
       if (this.selectedMapUnit) {
         this.selectedMapUnit.setSelected(false);
         this.selectedMapUnit = null;
@@ -228,7 +228,7 @@ export class Map {
       return;
     }
 
-    // Ищем среди созданных участков тот, у которого координаты совпадают со значениями из стора
+    // Find among created plots the one whose coordinates match the values from the store
     const foundMapUnit = this.MapUnits.find((plotOrHouse) => {
       const data = plotOrHouse.getData();
 
@@ -240,7 +240,7 @@ export class Map {
     });
 
     if (foundMapUnit) {
-      // Сбрасываем выделение предыдущего участка, если он есть
+      // Reset selection of the previous unit if it exists
       if (this.selectedMapUnit && this.selectedMapUnit !== foundMapUnit) {
         this.selectedMapUnit.setSelected(false);
       }
