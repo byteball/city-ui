@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { BuyNewPlotForm } from "@/forms/BuyNewPlotForm";
 
 export const BuyNewPlotCard = () => (
-  <Card>
+  <Card highlight>
     <CardHeader>
       <CardTitle>Buy new plot</CardTitle>
       <CardDescription>When you buy a plot, it is created in a random location.</CardDescription>
