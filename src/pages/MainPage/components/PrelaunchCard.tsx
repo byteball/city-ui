@@ -8,7 +8,7 @@ export const PrelaunchCard = () => {
   const { symbol } = useSettingsStore((state) => state);
 
   return (
-    <Card>
+    <Card highlight>
       <CardHeader>
         <CardTitle>Buy new plot (Prelaunch)</CardTitle>
         <CardDescription>
