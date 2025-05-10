@@ -9,7 +9,7 @@ import client from "@/services/obyteWsClient";
 import { ICityAaState } from "./aa-store";
 
 const LOCAL_STORAGE_KEY = "settings-store";
-const STORAGE_VERSION = 12; // change this to invalidate old persisted data
+const STORAGE_VERSION = 13; // change this to invalidate old persisted data
 
 export type SortDirectionType = "ASC" | "DESC";
 
@@ -38,7 +38,7 @@ interface SettingsState {
   setWalletAddress: (walletAddress: string) => void;
   selectedMapUnit?: ICoordinatesWithType;
   selectedMarketPlot?: ICoordinatesWithType;
-  setSelectedMapUnit: (coordinatesWithType: ICoordinatesWithType) => void;
+  setSelectedMapUnit: (coordinatesWithType: ICoordinatesWithType | null) => void;
   setSelectedMarketPlot: (coordinatesWithType: ICoordinatesWithType) => void;
   setMapUnitSortType: <T extends "house" | "plot">(
     unit: T,
@@ -148,6 +148,10 @@ const storeCreator: StateCreator<SettingsState> = (set, get) => ({
 export const useSettingsStore = create<SettingsState>()(
   devtools(
     persist(storeCreator, {
+      partialize: (state) => {
+        const { selectedMapUnit, selectedMarketPlot, ...rest } = state;
+        return rest;
+      },
       name: LOCAL_STORAGE_KEY,
       version: STORAGE_VERSION,
       migrate: (persistedState, version) => {

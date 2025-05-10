@@ -1,5 +1,6 @@
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 
 import { NonNegativeNumber } from "@/global";
 import { asNonNegativeNumber } from "@/lib";
@@ -10,13 +11,14 @@ import { useSettingsStore } from "@/store/settings-store";
 type TCoordinatesWithType = [NonNegativeNumber, NonNegativeNumber, "plot" | "house"];
 
 export const useSyncCoordinates = () => {
+  const location = useLocation();
   const [inited, setInited] = useState(false);
   const loaded = useAaStore((state) => state.loaded);
   const aaState = useAaStore((state) => state);
   const selectedMapUnit = useSettingsStore((state) => state.selectedMapUnit);
   const mapUnits = mapUnitsSelector(aaState);
 
-  const [selectedCoordinate, setSelectedCoordinate] = useQueryState<TCoordinatesWithType>("c", {
+  const [selectedCoordinate, setSelectedCoordinate] = useQueryState<TCoordinatesWithType | null>("c", {
     parse: (value) => {
       const result = parseAsArrayOf(parseAsString).parse(value);
 
@@ -28,8 +30,11 @@ export const useSyncCoordinates = () => {
           ] as TCoordinatesWithType)
         : null;
     },
+    clearOnDefault: true,
+    defaultValue: null,
   });
 
+  // initialization effect
   useEffect(() => {
     if (inited || !loaded) return;
 
@@ -46,6 +51,7 @@ export const useSyncCoordinates = () => {
     setInited(true);
   }, [selectedCoordinate, loaded, inited, mapUnits]);
 
+  // Effect to update selectedCoordinate when selectedMapUnit changes
   useEffect(() => {
     if (inited && loaded && selectedMapUnit) {
       if (selectedMapUnit) {
@@ -53,5 +59,14 @@ export const useSyncCoordinates = () => {
       }
     }
   }, [selectedMapUnit, inited, loaded, setSelectedCoordinate]);
+
+  useEffect(() => {
+    if (inited && loaded) {
+      const params = new URLSearchParams(location.search);
+      if (!params.has("c")) {
+        useSettingsStore.getState().setSelectedMapUnit(null);
+      }
+    }
+  }, [location]);
 };
 
