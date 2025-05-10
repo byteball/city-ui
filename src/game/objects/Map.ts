@@ -150,7 +150,7 @@ export class Map {
           : [];
 
       if (type === "house") {
-        const houseFraction = (((this.gameOptions?.params?.plot_price ?? 0) * 0.25) / this.totalSize) * 0.1;
+        const houseFraction = ((this.gameOptions?.params?.plot_price ?? 0) / this.totalSize) * 0.1;
         const houseArea = houseFraction * MAP_WIDTH * MAP_HEIGHT;
         const houseSize = Math.sqrt(houseArea);
 

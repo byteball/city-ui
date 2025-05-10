@@ -128,7 +128,15 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
           {selectedMapUnit ? (
             <CardTitle>Selected {selectedMapUnit?.type}</CardTitle>
           ) : (
-            <CardTitle>Click on the house or plot to see all the information about it.</CardTitle>
+            <CardTitle>
+              {stateLoaded ? (
+                <span className="text-muted-foreground">
+                  Click on the house or plot to see all the information about it.
+                </span>
+              ) : (
+                <Skeleton className="w-full h-24" />
+              )}
+            </CardTitle>
           )}
         </CardHeader>
 
@@ -167,17 +175,20 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                   {selectedMapUnit.shortcode.toLowerCase()}
                 </InfoPanel.Item>
               ) : null}
-              <InfoPanel.Item textClamp label="Owner" loading={loading || !owner}>
-                <Link to={`/user/${owner}`} className="text-blue-400 block truncate max-w-[200px]">
-                  {selectedMapUnit?.username ? `${selectedMapUnit?.username} - ${owner}` : owner}
-                </Link>
-              </InfoPanel.Item>
+              {loading || owner ? (
+                <InfoPanel.Item textClamp label="Owner" loading={loading}>
+                  <Link to={`/user/${owner}`} className="text-blue-400 block truncate max-w-[200px]">
+                    {selectedMapUnit?.username ? `${selectedMapUnit?.username} - ${owner}` : owner}
+                  </Link>
+                </InfoPanel.Item>
+              ) : null}
               {selectedMapUnit?.type === "plot" && selectedMapUnit?.rental_expiry_ts ? (
                 <InfoPanel.Item textClamp label="Rental expiry" loading={loading}>
                   {moment.unix(selectedMapUnit?.rental_expiry_ts).format("YYYY-MM-DD HH:mm")}
                 </InfoPanel.Item>
               ) : null}
-              {selectedMapUnit?.type === "house" ? (
+
+              {(owner || loading) && selectedMapUnit?.type === "house" ? (
                 <InfoPanel.Item label="Contacts" loading={loading || !owner || ownerUsernameIsLoading}>
                   {attestations.length ? (
                     <AttestationList data={attestations} blockDisplay={attestations.length > 1} />
@@ -186,6 +197,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                   )}
                 </InfoPanel.Item>
               ) : null}
+
               {selectedMapUnit?.info ? (
                 <div className="text-sm">
                   <div className="mt-2 mb-1 font-semibold">Additional information</div>
