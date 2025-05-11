@@ -45,7 +45,7 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
           </a>
         </InfoPanel.Item>
 
-        <InfoPanel.Item label="The main plot">
+        <InfoPanel.Item label="Main plot">
           <UserMainPlot address={address} />
         </InfoPanel.Item>
 

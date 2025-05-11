@@ -1,5 +1,6 @@
 import { isEmpty } from "lodash";
 import { FC, memo } from "react";
+import { Link } from "react-router";
 
 import { getPlotPrice } from "@/aaLogic/getPlotPrice";
 
@@ -124,7 +125,15 @@ export const PrelaunchForm: FC = memo(() => {
         </InfoPanel.Item>
 
         <InfoPanel.Item
-          tooltipText="A fee applies to prevent misuse. See the governance page for details."
+          tooltipText={
+            <span>
+              The fee is burned to offset emissions from reward plots (
+              <Link className="text-link" to="faq">
+                see the FAQ
+              </Link>
+              ).
+            </span>
+          }
           label="Fee"
           loading={isLoading}
         >
@@ -149,7 +158,7 @@ export const PrelaunchForm: FC = memo(() => {
               </a>
             ) : (
               <>
-                <b>{address}</b> and its owner{" "}
+                a plot belonging to{" "}
                 {selectedMapUnit?.owner ? (
                   <a
                     href={getExplorerUrl(selectedMapUnit.owner, "address")}
@@ -162,7 +171,7 @@ export const PrelaunchForm: FC = memo(() => {
                 ) : null}
               </>
             )}
-            , as your referrer, which gives you a higher chance of becoming his neighbor.
+            as your referrer, which gives you a higher chance of becoming their neighbor.
           </p>
         </div>
       ) : null}

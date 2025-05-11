@@ -20,7 +20,7 @@ export const GameCard = memo(() => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>City map</CardTitle>
+        <CardTitle>Your space in the decentralized future</CardTitle>
       </CardHeader>
       <CardContent>
         {!shownSkeleton ? (

@@ -1,5 +1,3 @@
-import moment from "moment";
-
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { PrelaunchForm } from "@/forms/PrelaunchForm";
 import { useSettingsStore } from "@/store/settings-store";
@@ -12,10 +10,10 @@ export const PrelaunchCard = () => {
   return (
     <Card highlight>
       <CardHeader>
-        <CardTitle>Buy new plot (Prelaunch)</CardTitle>
+        <CardTitle>Buy a new plot (Initial sale)</CardTitle>
         <CardDescription>
-          You can purchase new plots of land during the pre-launch phase and earn {symbol} tokens. The pre-launch phase
-          ends on <b>{moment.utc(appConfig.LAUNCH_DATE).format("LLL")}</b>, after which CITY will launch.
+          During the initial sale, while buying a plot, you also buy {symbol} at the fixed rate 1 GBYTE = 1000 {symbol}{" "}
+          for 10% of the plot price.
         </CardDescription>
       </CardHeader>
 

@@ -28,18 +28,18 @@ export const ShortcodesOnSaleList: FC<IShortcodesOnSaleListProps> = ({}) => {
 
   const decimalsPow = 10 ** (decimals ?? 0);
 
-  if (sellOrders.length === 0) return <div className="text-muted-foreground">No any shortcodes for sale</div>;
+  if (sellOrders.length === 0) return <div className="text-muted-foreground">No shortcodes for sale</div>;
 
   return (
     <ScrollArea className="h-full min-h-[400px]" type="always">
       <Tabs defaultValue="all" className="w-full">
         <TabsList className="flex justify-between w-full mb-4">
           <TabsTrigger className="w-[50%]" value="all">
-            All orders
+            All shortcodes
           </TabsTrigger>
 
           <TabsTrigger disabled={!walletAddress} className="w-[50%]" value="my">
-            My orders
+            My shortcodes
           </TabsTrigger>
         </TabsList>
 

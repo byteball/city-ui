@@ -121,12 +121,7 @@ export const ShortCodeSellDialog: FC<IShortCodeManageDialog> = ({ children, plot
               </InfoPanel.Item>
             ) : null}
 
-            <InfoPanel.Item
-              label="p2p fee"
-              tooltipText={`This value can be changed on governance page. Not it's ${p2p_sale_fee * 100}%`}
-              loading={!inited}
-              textClamp
-            >
+            <InfoPanel.Item label="p2p fee" loading={!inited} textClamp>
               {toLocalString(fee / decimalsFactor)} {symbol}
             </InfoPanel.Item>
 
@@ -136,7 +131,7 @@ export const ShortCodeSellDialog: FC<IShortCodeManageDialog> = ({ children, plot
           </InfoPanel>
 
           <QRButton ref={putBtnRef} href={url}>
-            Put for sale
+            Put on sale
           </QRButton>
         </div>
       </DialogContent>

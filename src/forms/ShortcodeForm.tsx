@@ -81,8 +81,8 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
       <div className="mb-6">
         <h3 className="text-lg font-medium">Edit shortcode</h3>
         <p className="text-sm text-muted-foreground">
-          You can edit or set up shortcode here, which will be <b>publicly published</b> in the DAG and linked to this
-          house.
+          Assign a unique shortcode to your house. It can be used instead of your Obyte address to send tokens to you,
+          or you can sell the shortcode for profit.
         </p>
       </div>
 
@@ -127,7 +127,7 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
 
           <div>
             <QRButton ref={btnRef} href={url} disabled={disabled}>
-              Create new
+              Assign
             </QRButton>
           </div>
         </div>

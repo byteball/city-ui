@@ -130,9 +130,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
           ) : (
             <CardTitle>
               {stateLoaded ? (
-                <span className="text-muted-foreground">
-                  Click on the house or plot to see all the information about it.
-                </span>
+                <span className="text-muted-foreground">Click on the house or plot to see information about it.</span>
               ) : (
                 <Skeleton className="w-full h-24" />
               )}
@@ -143,7 +141,14 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
         {selectedMapUnitCoordinates ? (
           <CardContent className="text-sm">
             <InfoPanel>
-              <InfoPanel.Item textClamp label="Amount" loading={loading}>
+              <InfoPanel.Item
+                textClamp
+                tooltipText={
+                  selectedMapUnit?.type === "plot" ? "Amount deposited on the plot " : "Amount paid for the house"
+                }
+                label="Amount"
+                loading={loading}
+              >
                 {formattedAmount} {symbol} {rented_amount ? `(Plus ${formattedRentedAmount} rented ${symbol})` : ""}
               </InfoPanel.Item>
               <InfoPanel.Item textClamp label="Coordinates" loading={loading}>
@@ -169,7 +174,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                 <InfoPanel.Item
                   label="Shortcode"
                   textClamp
-                  tooltipText="Shortcodes are used to send money via the wallet instead of using a full address"
+                  tooltipText="Shortcodes are unique names used to send money via the wallet instead of using a full address. They are given out on first come, first served basis and are available only to house owners."
                   loading={loading}
                 >
                   {selectedMapUnit.shortcode.toLowerCase()}

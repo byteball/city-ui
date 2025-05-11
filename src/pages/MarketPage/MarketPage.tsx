@@ -9,7 +9,6 @@ import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
 import { PhaserGame } from "@/game/PhaserGame";
-import { Link } from "react-router";
 import { SelectedPlotOnSale } from "./components/SelectedPlotOnSale";
 
 export default () => {
@@ -21,17 +20,13 @@ export default () => {
   const shownSkeleton = loading || !!error || !settingsInited || !loaded;
 
   return (
-    <PageLayout
-      title="Market"
-      description="lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat."
-      loading={false}
-    >
+    <PageLayout title="P2P Market" description="Buy plots and shortcodes from other users here" loading={false}>
       <div className="grid grid-cols-8 gap-8">
         <div className="col-span-8 md:col-span-5">
           <Card>
             <CardHeader>
-              <h2 className="text-xl font-semibold">Plots on sale</h2>
-              <CardDescription>Click on the plot you want to purchase.</CardDescription>
+              <h2 className="text-xl font-semibold">Plots for sale</h2>
+              <CardDescription>Click the plot you want to purchase.</CardDescription>
             </CardHeader>
             <CardContent>
               <div ref={gameColumnRef}>
@@ -54,14 +49,7 @@ export default () => {
 
           <Card>
             <CardHeader>
-              <h2 className="text-xl font-semibold">Shortcodes</h2>
-              <CardDescription>
-                To sell a shortcode, select your house on the{" "}
-                <Link to="/" className="text-link">
-                  main map
-                </Link>{" "}
-                and click "Sell Shortcode" button.
-              </CardDescription>
+              <h2 className="text-xl font-semibold">Shortcodes for sale</h2>
             </CardHeader>
 
             <CardContent>

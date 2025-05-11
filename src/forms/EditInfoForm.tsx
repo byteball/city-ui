@@ -225,8 +225,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
       <div className="mb-6">
         <h3 className="text-lg font-medium">Edit Information</h3>
         <p className="text-sm text-muted-foreground">
-          You can edit the information here, which will be <b>publicly published</b> in the DAG and linked to this{" "}
-          {unitData.type}.
+          Anything you want to say about this {unitData.type} and its owner (you).
         </p>
       </div>
 
@@ -302,7 +301,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
       )}
 
       <Button size="sm" variant="link" onClick={addObjectField} className="flex items-center gap-1 p-0">
-        <Plus size={16} /> Add custom field
+        <Plus size={16} /> Add a custom field
       </Button>
 
       <QRButton href={url} ref={btnRef} disabled={disabled} className="w-full">

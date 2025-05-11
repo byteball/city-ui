@@ -31,7 +31,7 @@ const InfoPanel: FC<InfoPanelProps> & { Item: typeof InfoPanelItem } = ({
 interface InfoPanelItemProps {
   label?: string;
   children: ReactNode;
-  tooltipText?: string;
+  tooltipText?: string | ReactNode;
   loading?: boolean;
   labelAnimated?: boolean;
   textClamp?: boolean;

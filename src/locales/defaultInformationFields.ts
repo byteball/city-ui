@@ -21,7 +21,7 @@ export const defaultInformationFields: { [name: string]: IDefaultInformationHint
       let trimmedValue = value.trim().replace("@", "");
       return !!trimmedValue && trimmedValue.length >= 3 && trimmedValue.length <= 20;
     },
-    hint: "This is the name of the owner of the map unit. It will be displayed on the map. It can be a nickname or a real name.",
+    hint: "How do you want to name your plot/house",
   },
   homepage: {
     placeholder: "ex. https://obyte.org",
@@ -38,42 +38,42 @@ export const defaultInformationFields: { [name: string]: IDefaultInformationHint
       );
       return urlPattern.test(value);
     },
-    hint: "The website of the map unit owner.",
+    hint: "Your blog or social profile. It’ll be linked from your plot/house page.",
   },
   twitter: {
     placeholder: "ex. @obyteOrg",
     validationRule: "Must be 3-20 characters long. Just the username without URL.",
     type: "socialNetwork",
     validationFunc: validateSocialNetworkUsername,
-    hint: "Twitter username of the map unit owner.",
+    hint: "Your twitter (X) username.",
   },
   telegram: {
     placeholder: "ex. @obyteOrg",
     validationRule: "Must be 3-20 characters long. Just the username without URL.",
     type: "socialNetwork",
     validationFunc: validateSocialNetworkUsername,
-    hint: "Telegram username of the map unit owner (personal account or group).",
+    hint: "Your telegram username (personal account or group).",
   },
   facebook: {
     placeholder: "ex. @obyteOrg",
     validationRule: "Must be 3-20 characters long. Just the username without URL.",
     type: "socialNetwork",
     validationFunc: validateSocialNetworkUsername,
-    hint: "Facebook username of the map unit owner (personal account or page).",
+    hint: "Your facebook username (personal account or page).",
   },
   instagram: {
     placeholder: "ex. @obyteOrg",
     validationRule: "Must be 3-20 characters long. Just the username without URL.",
     type: "socialNetwork",
     validationFunc: validateSocialNetworkUsername,
-    hint: "Instagram username of the map unit owner.",
+    hint: "Your instagram username.",
   },
   discord: {
     placeholder: "ex. @obyteOrg",
     validationRule: "Must be 3-20 characters long. Just the username without URL.",
     type: "socialNetwork",
     validationFunc: validateSocialNetworkUsername,
-    hint: "Discord username of the map unit owner.",
+    hint: "Your discord username.",
   },
 } as const;
 
