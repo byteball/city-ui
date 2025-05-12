@@ -27,6 +27,7 @@ import { generateLink, toLocalString } from "@/lib";
 import { getAddressFromNearestRoad } from "@/lib/getAddressCoordinate";
 
 import appConfig from "@/appConfig";
+import { getContactUrlByUsername } from "@/lib/getContactUrlByUsername";
 import { Helmet } from "react-helmet-async";
 import { SocialIcons } from "./SocialIcons";
 
@@ -45,7 +46,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
   const selectedMapUnit = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates!));
   const owner = selectedMapUnit?.owner;
 
-  const { data: attestations, loaded } = useAttestations(selectedMapUnit?.type === "house" ? owner : undefined);
+  const { data: attestations, loaded } = useAttestations(owner);
 
   const ownerUsernameIsLoading = selectedMapUnit?.type === "house" && !loaded;
 
@@ -203,11 +204,25 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                 <InfoPanel.Item label="Contacts" loading={loading || !owner || ownerUsernameIsLoading}>
                   {attestations.length ? (
                     <div className="flex gap-4">
-                      {attestations.map((a) => (
-                        <div className="flex items-center justify-between gap-2" key={a.name}>
-                          <SocialIcons type={a.name} /> <div>{a.value}</div>
-                        </div>
-                      ))}
+                      {attestations.map((a) => {
+                        const url = getContactUrlByUsername(a.value, a.name, a.userId);
+
+                        return (
+                          <div
+                            className="flex items-center justify-between gap-1"
+                            key={a.name + "-" + a.value + "-" + owner}
+                          >
+                            <SocialIcons type={a.name} />{" "}
+                            {url ? (
+                              <a href={url} className="text-link">
+                                {a.value}
+                              </a>
+                            ) : (
+                              <div>{a.value}</div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   ) : (
                     <span>No attested contacts</span>
