@@ -9,7 +9,7 @@ const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElemen
       className={cn(
         "rounded-xl border bg-card text-card-foreground transition-shadow duration-200 ease-in-out",
         className,
-        highlight ? "border-green-300/30 shadow-[0_0_15px_rgba(72,187,120,0.3)]" : ""
+        highlight ? "border-[#45628f]/80" : ""
       )}
       {...props}
     />
