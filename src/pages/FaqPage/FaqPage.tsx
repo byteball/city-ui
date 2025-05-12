@@ -1,10 +1,12 @@
+import { FC, ReactNode } from "react";
+import { Link } from "react-router";
+import { Element, Link as ScrollLink } from "react-scroll";
+
 import { getPlotPrice } from "@/aaLogic/getPlotPrice";
 import { PageLayout } from "@/components/layout/page-layout";
 import { toLocalString } from "@/lib";
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
-import { FC, ReactNode } from "react";
-import { Link } from "react-router";
 
 export default () => {
   const { symbol, inited } = useSettingsStore((state) => state);
@@ -18,8 +20,8 @@ export default () => {
       <div className="max-w-5xl prose prose-xl">
         <div className="space-y-16 sm:grid sm:gap-x-6 sm:gap-y-16 sm:space-y-0 lg:gap-x-10">
           <FaqItem>
-            <FaqTitle>What is Obyte City?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="what-is-obyte-city">What is Obyte City?</FaqTitle>
+            <FaqContent scrollId="what-is-obyte-city">
               <p>
                 Obyte City is a community space for Obyte. Here, Obyte community members can establish closer
                 connections with each other, while having their own place in the city and potentially making money in{" "}
@@ -41,8 +43,8 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>What am I supposed to do here?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="what-am-i-supposed-to-do-here">What am I supposed to do here?</FaqTitle>
+            <FaqContent scrollId="what-am-i-supposed-to-do-here">
               <p>
                 First, you buy a plot of land for 1000 {` ${symbol} `} plus a fee (see below). Initially, it is an empty
                 plot without a house.{" "}
@@ -91,8 +93,8 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>What’s the purpose of Obyte City?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="whats-the-purpose-of-obyte-city">What’s the purpose of Obyte City?</FaqTitle>
+            <FaqContent scrollId="whats-the-purpose-of-obyte-city">
               <p>
                 The purpose is to encourage{" "}
                 <a target="_blank" href="https://obyte.org/" rel="noopener">
@@ -104,8 +106,10 @@ export default () => {
             </FaqContent>
           </FaqItem>
           <FaqItem>
-            <FaqTitle>How close do two plots need to be to become neighbors?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="how-close-do-two-plots-need-to-be-to-become-neighbors">
+              How close do two plots need to be to become neighbors?
+            </FaqTitle>
+            <FaqContent scrollId="how-close-do-two-plots-need-to-be-to-become-neighbors">
               <p>
                 Every plot has its coordinates in the City and an amount that was paid to buy the plot. Both horizontal
                 and vertical coordinates range from 0 to 1,000,000. Then, we draw a square area around the plot, with
@@ -129,8 +133,10 @@ export default () => {
             </FaqContent>
           </FaqItem>
           <FaqItem>
-            <FaqTitle>How likely is it that my new plot immediately gets a neighbor?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="how-likely-is-it-that-my-new-plot-immediately-gets-a-neighbor">
+              How likely is it that my new plot immediately gets a neighbor?
+            </FaqTitle>
+            <FaqContent scrollId="how-likely-is-it-that-my-new-plot-immediately-gets-a-neighbor">
               <p>
                 It is currently {toLocalString((matching_probability * 100).toFixed(2))}%, and this number can be
                 changed by <Link to="/governance">governance</Link>.
@@ -144,8 +150,8 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>Are {` ${symbol} `} tokens locked in plots?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="are-tokens-locked-in-plots">Are {` ${symbol} `} tokens locked in plots?</FaqTitle>
+            <FaqContent scrollId="are-tokens-locked-in-plots">
               <p>No, you can take them back at any time.</p>
               <p>
                 However, in this case you lose the fee you paid when buying the plot – if this is a plot you bought.
@@ -154,8 +160,10 @@ export default () => {
             </FaqContent>
           </FaqItem>
           <FaqItem>
-            <FaqTitle>What are these green rectangles on the City map?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="what-are-these-green-rectangles-on-the-city-map">
+              What are these green rectangles on the City map?
+            </FaqTitle>
+            <FaqContent scrollId="what-are-these-green-rectangles-on-the-city-map">
               <p>
                 They are the matching areas of the plots at the center of the rectangle. If a new plot’s coordinates
                 fall within this rectangle, they become neighbors. Neighbors can claim rewards: houses on their plots
@@ -164,8 +172,10 @@ export default () => {
             </FaqContent>
           </FaqItem>
           <FaqItem>
-            <FaqTitle>Why did the green rectangle around my plot become smaller than it was a month ago?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="why-did-the-green-rectangle-around-my-plot-become-smaller-than-it-was-a-month-ago">
+              Why did the green rectangle around my plot become smaller than it was a month ago?
+            </FaqTitle>
+            <FaqContent scrollId="why-did-the-green-rectangle-around-my-plot-become-smaller-than-it-was-a-month-ago">
               <p>
                 Because new plots were bought in the City and the area of each plot was decreased so that their total
                 area is still 10% of the City area.
@@ -178,8 +188,8 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>What is the fee when buying a plot?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="what-is-the-fee-when-buying-a-plot">What is the fee when buying a plot?</FaqTitle>
+            <FaqContent scrollId="what-is-the-fee-when-buying-a-plot">
               <p>
                 The current fee is {toLocalString((fee * 100).toFixed(2))}%. It depends on the matching probability
                 (currently, 10%) and on the referral boost (currently,{" "}
@@ -216,8 +226,8 @@ export default () => {
             </FaqContent>
           </FaqItem>
           <FaqItem>
-            <FaqTitle>How can I make money in the City?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="how-can-I-make-money-in-the-city">How can I make money in the City?</FaqTitle>
+            <FaqContent scrollId="how-can-I-make-money-in-the-city">
               <ol>
                 <li>By finding neighbors and receiving reward plots, which double your investment.</li>
                 <li>
@@ -240,8 +250,10 @@ export default () => {
             </FaqContent>
           </FaqItem>
           <FaqItem>
-            <FaqTitle>Can I earn by referring users to the City?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="can-I-earn-by-referring-users-to-the-city">
+              Can I earn by referring users to the City?
+            </FaqTitle>
+            <FaqContent scrollId="can-I-earn-by-referring-users-to-the-city">
               <p>
                 Yes, you can. When users buy a plot from your plot or house page on city.obyte.org, you become their
                 referrer, and there is an increased likelihood that they’ll become your neighbor.
@@ -258,11 +270,11 @@ export default () => {
             </FaqContent>
           </FaqItem>
           <FaqItem>
-            <FaqTitle>
+            <FaqTitle scrollId="how-can-I-be-sure-the-rules-are-actually-whats-described-here">
               How can I be sure the rules are actually what’s described here, can’t be changed, and my money can’t be
               stolen?
             </FaqTitle>
-            <FaqContent>
+            <FaqContent scrollId="how-can-I-be-sure-the-rules-are-actually-whats-described-here">
               <p>
                 The rules are implemented by{" "}
                 <a href="https://obyte.org/platform/autonomous-agents" target="_blank" rel="noopener">
@@ -280,8 +292,8 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>How can I get a neighbor faster?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="how-can-I-get-a-neighbor-faster">How can I get a neighbor faster?</FaqTitle>
+            <FaqContent scrollId="how-can-I-get-a-neighbor-faster">
               <ol>
                 <li>
                   Buy more plots. Every time you buy a plot, you have a{" "}
@@ -314,8 +326,10 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>How do I claim rewards when my plot becomes a neighbor with someone?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="how-do-I-claim-rewards-when-my-plot-becomes-a-neighbor">
+              How do I claim rewards when my plot becomes a neighbor with someone?
+            </FaqTitle>
+            <FaqContent scrollId="how-do-I-claim-rewards-when-my-plot-becomes-a-neighbor">
               <p>
                 When you become a neighbor with someone, you both get notified via telegram and/or discord depending on
                 what accounts you linked to your Obyte address.
@@ -346,8 +360,10 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>Why do the rewards need to be claimed and are not just paid automatically?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="why-do-the-rewards-need-to-be-claimed-and-are-not-just-paid-automatically">
+              Why do the rewards need to be claimed and are not just paid automatically?
+            </FaqTitle>
+            <FaqContent scrollId="why-do-the-rewards-need-to-be-claimed-and-are-not-just-paid-automatically">
               <p>
                 They could be paid automatically, there is no technical reason why they couldn’t. If the purpose were
                 just to get the rewards into one’s bag and go away, then all this chat and claiming “dance” would indeed
@@ -373,8 +389,8 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>What are follow-up rewards?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="what-are-follow-up-rewards">What are follow-up rewards?</FaqTitle>
+            <FaqContent scrollId="what-are-follow-up-rewards">
               <p>
                 Follow-up rewards are {toLocalString((followup_reward_share * 100).toFixed(2))}% of the plot price and
                 are paid to both neighbors some time after they become neighbors.
@@ -412,8 +428,10 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>Why is it required to link my account to discord or telegram?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="why-is-it-required-to-link-my-account-to-discord-or-telegram">
+              Why is it required to link my account to discord or telegram?
+            </FaqTitle>
+            <FaqContent scrollId="why-is-it-required-to-link-my-account-to-discord-or-telegram">
               <p>
                 By attesting your discord and telegram accounts you link them to your Obyte address, which is your only
                 identifier in the City. Having that link allows us to notify you when you get a neighbor and become
@@ -428,8 +446,8 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>How is the plot price determined?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="how-is-the-plot-price-determined">How is the plot price determined?</FaqTitle>
+            <FaqContent scrollId="how-is-the-plot-price-determined">
               <p>
                 The initial price is 1000 {` ${symbol} `} and it can be changed by{" "}
                 <Link to="/governance">governance</Link>.
@@ -438,8 +456,8 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>Is it a game?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="is-it-a-game">Is it a game?</FaqTitle>
+            <FaqContent scrollId="is-it-a-game">
               <p>
                 City has some similarities with games but we (the developers) prefer not to present it as a game as
                 people have certain expectations about games that City doesn’t attempt to meet. While there are some
@@ -451,8 +469,10 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>What is the initial supply of {` ${symbol} `} tokens?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="what-is-the-initial-supply-of-tokens">
+              What is the initial supply of {` ${symbol} `} tokens?
+            </FaqTitle>
+            <FaqContent scrollId="what-is-the-initial-supply-of-tokens">
               <p>
                 The initial supply is 0. Tokens are minted at a fixed price 1000 {` ${symbol} `} for 1 GBYTE during the
                 initial sale period, and then they are burned and minted in response to user actions, with burns most
@@ -462,10 +482,10 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>
+            <FaqTitle scrollId="when-are-tokens-minted-and-burned">
               When are {` ${symbol} `} tokens minted and burned? Are they inflationary or deflationary?
             </FaqTitle>
-            <FaqContent>
+            <FaqContent scrollId="when-are-tokens-minted-and-burned">
               <p>
                 Mints:
                 <ol>
@@ -513,8 +533,8 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>What is the initial sale period?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="what-is-the-initial-sale-period">What is the initial sale period?</FaqTitle>
+            <FaqContent scrollId="what-is-the-initial-sale-period">
               <p>
                 It’s an initial period when {` ${symbol} `} tokens can be bought at a fixed rate 1 GBYTE = 1000{" "}
                 {` ${symbol} `}. During this period, {` ${symbol} `} tokens are minted. Thereafter, they can only be
@@ -536,8 +556,10 @@ export default () => {
             </FaqContent>
           </FaqItem>
           <FaqItem>
-            <FaqTitle>What will happen to the money raised in the initial sale?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="what-will-happen-to-the-money-raised-in-the-initial-sale">
+              What will happen to the money raised in the initial sale?
+            </FaqTitle>
+            <FaqContent scrollId="what-will-happen-to-the-money-raised-in-the-initial-sale">
               <p>
                 The GBYTEs paid for plots and {` ${symbol} `} tokens during the initial sale will be withdrawn by the{" "}
                 <a href="https://obyte.org/" target="_blank" rel="noopener">
@@ -551,8 +573,10 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>Who are these people the City’s streets and avenues are named after?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="who-are-these-people-the-citys-streets-and-avenues-are-named-after">
+              Who are these people the City’s streets and avenues are named after?
+            </FaqTitle>
+            <FaqContent scrollId="who-are-these-people-the-citys-streets-and-avenues-are-named-after">
               <p>
                 They are cypherpunks.{" "}
                 <a href="https://obyte.org/" target="_blank" rel="noopener">
@@ -565,8 +589,10 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>How do plots and houses get their addresses and coordinates?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="how-do-plots-and-houses-get-their-addresses-and-coordinates">
+              How do plots and houses get their addresses and coordinates?
+            </FaqTitle>
+            <FaqContent scrollId="how-do-plots-and-houses-get-their-addresses-and-coordinates">
               <p>
                 First, there are special, mayor-owned houses named after some famous cypherpunks. They are not earned
                 like normal houses but created by the City’s mayor (who can be replaced by{" "}
@@ -592,8 +618,8 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>Who is the mayor?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="who-is-the-mayor">Who is the mayor?</FaqTitle>
+            <FaqContent scrollId="who-is-the-mayor">
               <p>
                 The mayor’s job is to create special houses to have a street/avenue grid in the City. The streets and
                 avenues go through these special mayor-managed houses and are named after them. The mayor can edit the
@@ -608,11 +634,11 @@ export default () => {
             </FaqContent>
           </FaqItem>
           <FaqItem>
-            <FaqTitle>
+            <FaqTitle scrollId="what-happens-if-plot-price-is-changed-by-governance-and-then-a-new-plot-bought-for-the-new-price">
               What happens if plot price is changed by governance and then a new plot bought for the new price becomes a
               neighbor of an old plot bought for an old price?
             </FaqTitle>
-            <FaqContent>
+            <FaqContent scrollId="what-happens-if-plot-price-is-changed-by-governance-and-then-a-new-plot-bought-for-the-new-price">
               <p>
                 In this case, the reward plots are worth the price of the smaller plot. Also, while both plots get a
                 house, the bigger empty plot still stays there but with the amount equal to the difference of the
@@ -623,10 +649,10 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>
+            <FaqTitle scrollId="what-happens-if-a-new-plot-becomes-a-neighbor-of-two-or-more-other-plots-at-the-same-time">
               What happens if a new plot becomes a neighbor of two or more other plots at the same time?
             </FaqTitle>
-            <FaqContent>
+            <FaqContent scrollId="what-happens-if-a-new-plot-becomes-a-neighbor-of-two-or-more-other-plots-at-the-same-time">
               <p>
                 In this case, the new plot can pair and claim rewards with any of the two eligible neighbors. Once
                 claimed, the other neighboring plot is not eligible any more as it has no neighboring empty plot any
@@ -636,8 +662,10 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>What if my two plots happen to be close to each other?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="what-if-my-two-plots-happen-to-be-close-to-each-other">
+              What if my two plots happen to be close to each other?
+            </FaqTitle>
+            <FaqContent scrollId="what-if-my-two-plots-happen-to-be-close-to-each-other">
               <p>
                 They are not considered neighbors. Only neighboring plots owned by different people are eligible for
                 rewards.
@@ -646,8 +674,8 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>What are shortcodes?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="what-are-shortcodes">What are shortcodes?</FaqTitle>
+            <FaqContent scrollId="what-are-shortcodes">
               <p>
                 Shortcodes are unique names assigned to houses. They are like domain names and are given out on a first
                 come, first served basis. Only house owners can have shortcodes, one shortcode per house (except mayor
@@ -662,11 +690,8 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>
-              How can I be sure that the coordinates of a newly bought plot are really random and can’t be manipulated
-              by anyone?
-            </FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="how-can-I-get-a-shortcode">How can I get a shortcode?</FaqTitle>
+            <FaqContent scrollId="how-can-I-get-a-shortcode">
               <p>
                 How can I be sure that the coordinates of a newly bought plot are really random and can’t be manipulated
                 by anyone?
@@ -702,8 +727,8 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>How does governance work?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="how-does-governance-work">How does governance work?</FaqTitle>
+            <FaqContent scrollId="how-does-governance-work">
               <p>
                 There are several parameters that can be changed by <Link to="/governance">governance</Link>, such as
                 plot price, the probability of finding a neighbor when buying a new plot, referral boost, and randomness
@@ -728,8 +753,8 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle>Who develops and supports Obyte City?</FaqTitle>
-            <FaqContent>
+            <FaqTitle scrollId="who-develops-and-supports-obyte-city">Who develops and supports Obyte City?</FaqTitle>
+            <FaqContent scrollId="who-develops-and-supports-obyte-city">
               <p>
                 The{" "}
                 <a href="https://obyte.org/" target="_blank" rel="noopener">
@@ -769,11 +794,28 @@ const FaqItem: FC<{ children: ReactNode }> = ({ children }) => {
   return <div>{children}</div>;
 };
 
-const FaqTitle: FC<{ children: ReactNode }> = ({ children }) => {
-  return <div className="font-semibold text-white text-2xl/7">{children}</div>;
+const FaqTitle: FC<{ children: ReactNode; scrollId: string }> = ({ children, scrollId }) => {
+  return (
+    <ScrollLink
+      hashSpy
+      spy
+      smooth
+      saveHashHistory={true}
+      offset={-80}
+      duration={500}
+      to={scrollId}
+      className="font-semibold text-white cursor-pointer text-2xl/7"
+    >
+      {children}
+    </ScrollLink>
+  );
 };
 
-const FaqContent: FC<{ children: ReactNode }> = ({ children }) => {
-  return <div className="mt-2 text-gray-300 text-base/7 [&_a]:text-link">{children}</div>;
+const FaqContent: FC<{ children: ReactNode; scrollId: string }> = ({ children, scrollId }) => {
+  return (
+    <Element name={scrollId} id={scrollId} className="mt-2 text-gray-300 text-base/7 [&_a]:text-link">
+      {children}
+    </Element>
+  );
 };
 
