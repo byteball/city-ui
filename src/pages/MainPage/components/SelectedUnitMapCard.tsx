@@ -15,7 +15,6 @@ import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { AttestationList } from "@/pages/UserPage/components";
 
 import { useAaStore } from "@/store/aa-store";
 import { mapUnitsByCoordinatesSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
@@ -29,6 +28,7 @@ import { getAddressFromNearestRoad } from "@/lib/getAddressCoordinate";
 
 import appConfig from "@/appConfig";
 import { Helmet } from "react-helmet-async";
+import { SocialIcons } from "./SocialIcons";
 
 interface ISelectedUnitMapCardProps {
   sceneType: "main" | "market";
@@ -202,7 +202,13 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
               {(owner || loading) && selectedMapUnit?.type === "house" ? (
                 <InfoPanel.Item label="Contacts" loading={loading || !owner || ownerUsernameIsLoading}>
                   {attestations.length ? (
-                    <AttestationList data={attestations} blockDisplay={attestations.length > 1} />
+                    <div className="flex gap-4">
+                      {attestations.map((a) => (
+                        <div className="flex items-center justify-between gap-2" key={a.name}>
+                          <SocialIcons type={a.name} /> <div>{a.value}</div>
+                        </div>
+                      ))}
+                    </div>
                   ) : (
                     <span>No attested contacts</span>
                   )}
