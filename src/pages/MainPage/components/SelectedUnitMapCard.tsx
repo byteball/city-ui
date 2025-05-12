@@ -130,7 +130,9 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
           ) : (
             <CardTitle>
               {stateLoaded ? (
-                <span className="text-muted-foreground">Click on the house or plot to see information about it.</span>
+                <span className="text-lg text-muted-foreground">
+                  Click on the house or plot to see information about it
+                </span>
               ) : (
                 <Skeleton className="w-full h-24" />
               )}
