@@ -167,14 +167,12 @@ export class Map {
         throw new Error(`Unknown unit type: ${type}`);
       }
 
-      // const
       this.MapUnits.push(unit);
 
       if (this.gameOptions?.displayMode === "market" && type === "house") {
         return;
       }
 
-      // Настраиваем интерактивность
       const unitImage = unit.getMapUnitImage();
       unitImage.setInteractive({ cursor: "pointer" });
 
