@@ -182,13 +182,17 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                   {selectedMapUnit.shortcode.toLowerCase()}
                 </InfoPanel.Item>
               ) : null}
+
               {loading || owner ? (
-                <InfoPanel.Item textClamp label="Owner" loading={loading}>
-                  <Link to={`/user/${owner}`} className="text-blue-400 block truncate max-w-[200px]">
-                    {selectedMapUnit?.username ? `${selectedMapUnit?.username} - ${owner}` : owner}
-                  </Link>
+                <InfoPanel.Item label="Owner" loading={loading}>
+                  <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+                    <Link to={`/user/${owner}`} className="truncate text-link">
+                      {owner}
+                    </Link>
+                  </div>
                 </InfoPanel.Item>
               ) : null}
+
               {selectedMapUnit?.type === "plot" && selectedMapUnit?.rental_expiry_ts ? (
                 <InfoPanel.Item textClamp label="Rental expiry" loading={loading}>
                   {moment.unix(selectedMapUnit?.rental_expiry_ts).format("YYYY-MM-DD HH:mm")}
