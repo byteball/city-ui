@@ -48,7 +48,7 @@ const InfoPanelItem: FC<InfoPanelItemProps> = ({
   const LabelWrapper = labelAnimated ? TextScramble : "div";
 
   return (
-    <div className="flex flex-col flex-grow-0 flex-shrink-0 w-full mb-2 last:mb-0 lg:mb-0 lg:space-x-2 lg:items-center lg:flex-row">
+    <div className="flex flex-col mb-2 last:mb-0 lg:mb-0 lg:space-x-2 lg:items-center lg:flex-row">
       {label ? (
         <div className="flex text-muted-foreground lg:text-white">
           <LabelWrapper className="font-medium text-muted-foreground">{label}</LabelWrapper>
@@ -71,7 +71,7 @@ const InfoPanelItem: FC<InfoPanelItemProps> = ({
       {loading ? (
         <Skeleton className="h-[1.125rem] w-[150px]" />
       ) : (
-        <div className={cn({ "line-clamp-1 w-full": textClamp })}>{children}</div>
+        <div className={cn({ "line-clamp-1": textClamp })}>{children}</div>
       )}
     </div>
   );
