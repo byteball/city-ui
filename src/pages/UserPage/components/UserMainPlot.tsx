@@ -57,7 +57,7 @@ export const UserMainPlot: FC<IUserMainPlotProps> = ({ address }) => {
 
       {address === walletAddress ? (
         <SetUserMainPlotDialog plotNum={userMainPlotNum}>
-          <ButtonWithTooltip tooltipText="Set up the main plot" variant="link" className="rounded-xl">
+          <ButtonWithTooltip tooltipText="Set up the main plot" variant="link" className="h-auto py-0 rounded-xl">
             <UserPenIcon className="w-4 h-4" />
           </ButtonWithTooltip>
         </SetUserMainPlotDialog>

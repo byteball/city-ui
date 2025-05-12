@@ -45,10 +45,6 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
           </a>
         </InfoPanel.Item>
 
-        <InfoPanel.Item label="Main plot">
-          <UserMainPlot address={address} />
-        </InfoPanel.Item>
-
         <InfoPanel.Item
           label="Linked accounts"
           tooltipText="Use attestation bots to link your telegram and discord accounts to your Obyte address and receive notifications when you get a neighbor."
@@ -57,9 +53,13 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
           <AttestationList isOwner={address === walletAddress} data={attestations} />
         </InfoPanel.Item>
 
+        <InfoPanel.Item label="Main plot">
+          <UserMainPlot address={address} />
+        </InfoPanel.Item>
+
         <InfoPanel.Item>
           <h2 className="mt-4 text-xl font-semibold">
-            Additional user information{" "}
+            Additional information{" "}
             {address === walletAddress ? (
               <EditUserInfoDialog address={address} info={parsedUserInfo}>
                 <ButtonWithTooltip tooltipText="Edit user" variant="link" className="rounded-xl">
@@ -87,7 +87,7 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
             )}
           </>
         ) : (
-          <div className="text-gray-500">No information available</div>
+          <div className="text-gray-500">No information provided</div>
         )}
       </InfoPanel>
     </div>
