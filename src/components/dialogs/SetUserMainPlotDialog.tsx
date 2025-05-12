@@ -13,7 +13,7 @@ export const SetUserMainPlotDialog: FC<ISetUserMainPlotDialogProps> = ({ childre
     <DialogTrigger asChild>{children}</DialogTrigger>
     <DialogContent className="z-50">
       <DialogHeader>
-        <DialogTitle>Set up the main plot</DialogTitle>
+        <DialogTitle>Set up main plot</DialogTitle>
       </DialogHeader>
       <SetupMainPlotForm plotNum={plotNum} />
     </DialogContent>

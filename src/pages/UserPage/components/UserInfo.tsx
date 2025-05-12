@@ -50,15 +50,11 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
         </InfoPanel.Item>
 
         <InfoPanel.Item
-          label="Attested contacts"
-          tooltipText="Please, use special bot for attestation"
+          label="Linked accounts"
+          tooltipText="Use attestation bots to link your telegram and discord accounts to your Obyte address and receive notifications when you get a neighbor."
           loading={!loaded}
         >
-          {attestations.length ? (
-            <AttestationList data={attestations} />
-          ) : (
-            <div className="text-gray-500">No attested contacts</div>
-          )}
+          <AttestationList isOwner={address === walletAddress} data={attestations} />
         </InfoPanel.Item>
 
         <InfoPanel.Item>
