@@ -51,9 +51,9 @@ export const BuyShortcodeDialog: FC<IBuyShortcodeDialogProps> = ({ children, pri
 
       <DialogContent className="z-50">
         <DialogHeader>
-          <DialogTitle>Buy shortcode</DialogTitle>
+          <DialogTitle>Buy shortcode {shortcode}</DialogTitle>
           <DialogDescription>
-            <p className="text-sm text-muted-foreground">You can buy a shortcode only for your house</p>
+            <p className="text-sm text-muted-foreground">Please choose your house this shortcode will be attached to</p>
           </DialogDescription>
         </DialogHeader>
         {loaded && userHouses.length > 0 ? (

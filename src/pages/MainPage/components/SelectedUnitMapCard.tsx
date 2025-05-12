@@ -214,7 +214,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                           >
                             <SocialIcons type={a.name} />{" "}
                             {url ? (
-                              <a href={url} className="text-link">
+                              <a href={url} target="_blank" className="text-link">
                                 {a.value}
                               </a>
                             ) : (

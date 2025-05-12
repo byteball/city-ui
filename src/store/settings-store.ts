@@ -17,7 +17,7 @@ export enum IPlotSortTypeEnum {
   CREATED_TS = "By created on",
   AMOUNT = "By amount",
   RENTED_AMOUNT = "By rented amount",
-  TOTAL_AMOUNT = "By plot size",
+  TOTAL_AMOUNT = "By total (own + rented) amount",
 }
 
 export enum IHouseSortTypeEnum {

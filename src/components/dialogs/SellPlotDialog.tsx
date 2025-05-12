@@ -84,7 +84,7 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Put your land up for sale</DialogTitle>
+          <DialogTitle>Put your land on sale</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="flex flex-col space-y-2">
@@ -106,12 +106,7 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
             </InfoPanel.Item>
           ) : null}
 
-          <InfoPanel.Item
-            label="p2p fee"
-            tooltipText={`This value can be changed on governance page. Not it's ${p2p_sale_fee * 100}%`}
-            loading={!inited}
-            textClamp
-          >
+          <InfoPanel.Item label="p2p fee 1%" loading={!inited} textClamp>
             {toLocalString(fee / decimalsFactor)} {symbol}
           </InfoPanel.Item>
 
@@ -121,7 +116,7 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
         </InfoPanel>
         <DialogFooter>
           <QRButton ref={putBtnRef} disabled={!inited || !!error || !amount} className="w-full" href={url}>
-            Put up
+            Put on sale
           </QRButton>
         </DialogFooter>
       </DialogContent>

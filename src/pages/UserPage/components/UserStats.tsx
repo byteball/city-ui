@@ -82,14 +82,13 @@ export const UserStats: FC<IUserStatsProps> = memo(({ address }) => {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
           <CardTitle className="text-sm font-medium">
-            <TextScramble>Match overall chance</TextScramble>
+            <TextScramble>Probability of matching</TextScramble>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
             <TextScramble>{toLocalString((overallProb * 100).toFixed(4)) + "%"}</TextScramble>
           </div>
-          {/* <TextScramble className="text-xs text-muted-foreground">{`Including ${toLocalString(0.123)}% for referrals`}</TextScramble> */}
         </CardContent>
       </Card>
     </div>

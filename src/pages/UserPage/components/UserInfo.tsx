@@ -1,14 +1,19 @@
-import { UserPenIcon } from "lucide-react";
-import { FC, useMemo } from "react";
+import { CheckIcon, CopyIcon, UserPenIcon } from "lucide-react";
+import { FC, useMemo, useState } from "react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import { EditUserInfoDialog } from "@/components/dialogs/EditUserInfoDialog";
+import { SetUserMainPlotDialog } from "@/components/dialogs/SetUserMainPlotDialog";
 import { InfoPanel } from "@/components/ui/_info-panel";
+import { Button } from "@/components/ui/button";
 import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
-import { IMapUnitInfo } from "@/global";
+import { IMapUnitInfo, IPlot } from "@/global";
 import { useAttestations } from "@/hooks/useAttestations";
 import { getExplorerUrl } from "@/lib";
+import { getReferralUrl } from "@/lib/getReferralUrl";
 import { useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
+import cn from "classnames";
 import { AttestationList } from "./AttestationList";
 import { UserMainPlot } from "./UserMainPlot";
 
@@ -35,6 +40,25 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
   const walletAddress = useSettingsStore((state) => state.walletAddress);
   const { data: attestations, loaded } = useAttestations(address);
   const parsedUserInfo = useMemo(() => getParsedUserInfo(userInfo), [userInfo]);
+  const userMainPlotNum = useAaStore((state) => state.state[`user_main_plot_city_${address}`]) as number | undefined;
+  const mainPlot = useAaStore((state) =>
+    userMainPlotNum ? state.state[`plot_${userMainPlotNum}`] : null
+  ) as IPlot | null;
+
+  const [copied, setCopied] = useState(false);
+
+  const referralUrl = getReferralUrl(mainPlot);
+
+  const copy = () => {
+    if (copied) return;
+
+    setCopied(() => {
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+      return true;
+    });
+  };
 
   return (
     <div>
@@ -55,6 +79,28 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
 
         <InfoPanel.Item label="Main plot">
           <UserMainPlot address={address} />
+        </InfoPanel.Item>
+
+        <InfoPanel.Item
+          label="Referral link"
+          tooltipText="When other users use your referral link to buy a new plot, your main plot’s matching area expands by 10% of the total matching area of all plots. This increases the probability that the new user will become your neighbor."
+        >
+          {referralUrl ? (
+            <CopyToClipboard text={referralUrl} onCopy={copy}>
+              <div className={cn("flex items-center space-x-2 cursor-pointer", { "text-green-400": copied })}>
+                <div className="underline underline-offset-4">{referralUrl}</div>{" "}
+                {copied ? <CheckIcon className="w-4 h-4 stroke-green-400" /> : <CopyIcon className="w-4 h-4" />}
+              </div>
+            </CopyToClipboard>
+          ) : walletAddress === address ? (
+            <SetUserMainPlotDialog plotNum={userMainPlotNum}>
+              <Button variant="link" className="h-auto p-0 rounded-xl">
+                Please set up your main plot first
+              </Button>
+            </SetUserMainPlotDialog>
+          ) : (
+            <div className="text-gray-500">Main plot not set up yet</div>
+          )}
         </InfoPanel.Item>
 
         <InfoPanel.Item>
