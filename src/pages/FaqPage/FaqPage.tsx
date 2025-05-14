@@ -1,12 +1,11 @@
-import { FC, ReactNode } from "react";
 import { Link } from "react-router";
-import { Element, Link as ScrollLink } from "react-scroll";
 
 import { getPlotPrice } from "@/aaLogic/getPlotPrice";
 import { PageLayout } from "@/components/layout/page-layout";
 import { toLocalString } from "@/lib";
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
+import { FaqContent, FaqItem, FaqTitle } from "./components";
 
 export default () => {
   const { symbol, inited } = useSettingsStore((state) => state);
@@ -787,35 +786,6 @@ export default () => {
         </a>
       </div>
     </PageLayout>
-  );
-};
-
-const FaqItem: FC<{ children: ReactNode }> = ({ children }) => {
-  return <div>{children}</div>;
-};
-
-const FaqTitle: FC<{ children: ReactNode; scrollId: string }> = ({ children, scrollId }) => {
-  return (
-    <ScrollLink
-      hashSpy
-      spy
-      smooth
-      saveHashHistory={true}
-      offset={-80}
-      duration={500}
-      to={scrollId}
-      className="font-semibold text-white cursor-pointer text-2xl/7"
-    >
-      {children}
-    </ScrollLink>
-  );
-};
-
-const FaqContent: FC<{ children: ReactNode; scrollId: string }> = ({ children, scrollId }) => {
-  return (
-    <Element name={scrollId} id={scrollId} className="mt-2 text-gray-300 text-base/7 [&_a]:text-link">
-      {children}
-    </Element>
   );
 };
 
