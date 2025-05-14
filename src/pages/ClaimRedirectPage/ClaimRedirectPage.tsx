@@ -54,7 +54,7 @@ const ClaimRedirectPage = () => {
     );
   }
 
-  const mayor = aaState.state.city_city?.mayor!;
+  const mayor: string = aaState.state.city_city?.mayor!;
 
   const roads = getRoads(mapUnits, String(mayor));
 
@@ -108,7 +108,7 @@ const ClaimRedirectPage = () => {
                 <div>
                   <a
                     className="underline text-link"
-                    href={`/?c=${plot1.x},${plot1.y},plot`}
+                    href={`/?unit=${plot1.plot_num},plot`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -204,7 +204,7 @@ const ClaimRedirectPage = () => {
                 <div>
                   <a
                     className="underline text-link"
-                    href={`/?c=${plot2.x},${plot2.y},plot`}
+                    href={`/?unit=${plot2.plot_num},plot`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

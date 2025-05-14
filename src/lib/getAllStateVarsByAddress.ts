@@ -19,7 +19,7 @@ export const getAllStateVarsByAddress = async (address: string) => {
 
       chunkData = (await client.api.getAaStateVars({
         address,
-        // @ts-ignore
+        // @ts-expect-error
         var_prefix_from: lastKey,
       })) as IAaStateVars;
 

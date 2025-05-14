@@ -17,7 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { useAaStore } from "@/store/aa-store";
-import { mapUnitsByCoordinatesSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
+import { mapUnitsByUniqDataSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 
 import { getRoads } from "@/game/utils/getRoads";
@@ -36,14 +36,14 @@ interface ISelectedUnitMapCardProps {
 }
 
 export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType = "main" }) => {
-  const selectedMapUnitCoordinates = useSettingsStore((state) =>
+  const selectedMapUnitUniqData = useSettingsStore((state) =>
     sceneType === "market" ? state.selectedMarketPlot : state.selectedMapUnit
   );
 
   const stateLoaded = useAaStore((state) => state.loaded);
   const aaState = useAaStore((state) => state);
 
-  const selectedMapUnit = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates!));
+  const selectedMapUnit = useAaStore((state) => mapUnitsByUniqDataSelector(state, selectedMapUnitUniqData || null));
   const owner = selectedMapUnit?.owner;
 
   const { data: attestations, loaded } = useAttestations(owner);
@@ -72,12 +72,12 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
   });
 
   const addresses =
-    selectedMapUnitCoordinates?.x !== undefined && selectedMapUnitCoordinates?.y !== undefined
+    selectedMapUnit?.x !== undefined && selectedMapUnit?.y !== undefined
       ? getAddressFromNearestRoad(
           roads,
           {
-            x: selectedMapUnitCoordinates.x,
-            y: selectedMapUnitCoordinates.y,
+            x: selectedMapUnit.x,
+            y: selectedMapUnit.y,
           },
           selectedMapUnit?.type === "house" ? selectedMapUnit?.house_num ?? 0 : selectedMapUnit?.plot_num ?? 0
         )
@@ -87,14 +87,14 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
     selectedMapUnit?.type === "plot" && selectedMapUnit.sale_price
       ? generateLink({
           aa: appConfig.AA_ADDRESS,
-          amount: selectedMapUnit?.sale_price!,
+          amount: selectedMapUnit?.sale_price || 0,
           data: {
             p2p_buy: 1,
             plot_num: selectedMapUnit?.plot_num,
           },
-          asset: asset!,
+          asset: asset as string,
         })
-      : "#";
+      : null;
 
   const p2pWithdrawFromSale =
     selectedMapUnit?.type === "plot" && selectedMapUnit.sale_price
@@ -108,7 +108,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
           },
           asset: asset!,
         })
-      : "#";
+      : null;
 
   return (
     <>
@@ -141,7 +141,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
           )}
         </CardHeader>
 
-        {selectedMapUnitCoordinates ? (
+        {selectedMapUnitUniqData ? (
           <CardContent className="text-sm">
             <InfoPanel>
               <InfoPanel.Item
@@ -257,9 +257,9 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
               {sceneType === "market" && selectedMapUnit?.type === "plot" ? (
                 <div className="mt-4 space-y-2">
                   {isOwner ? (
-                    <QRButton href={p2pWithdrawFromSale}>Withdraw from sale</QRButton>
+                    <QRButton href={p2pWithdrawFromSale || "#"}>Withdraw from sale</QRButton>
                   ) : (
-                    <QRButton href={p2pBuyLink}>
+                    <QRButton href={p2pBuyLink || "#"}>
                       Buy for {toLocalString(selectedMapUnit?.sale_price / decimalsPow)} {symbol}
                     </QRButton>
                   )}
@@ -320,7 +320,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                 )}
 
                 {selectedMapUnit?.type === "house" && isOwner && selectedMapUnit.shortcode ? (
-                  <ShortCodeSellDialog plot_num={selectedMapUnit.plot_num} shortcode={selectedMapUnit.shortcode}>
+                  <ShortCodeSellDialog>
                     <ButtonWithTooltip
                       disabled={!selectedMapUnit.shortcode}
                       tooltipText="Sell shortcode"

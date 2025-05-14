@@ -8,12 +8,11 @@ import { InfoPanel } from "@/components/ui/_info-panel";
 import { QRButton } from "@/components/ui/_qr-button";
 
 import { useAaParams, useAaStore } from "@/store/aa-store";
-import { mapUnitsByCoordinatesSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
+import { mapUnitsByUniqDataSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 
-import { generateLink, getAddressFromNearestRoad, getExplorerUrl, toLocalString } from "@/lib";
+import { generateLink, getExplorerUrl, toLocalString } from "@/lib";
 
-import { getRoads } from "@/game/utils/getRoads";
 import { IRefData } from "@/global";
 
 import appConfig from "@/appConfig";
@@ -35,17 +34,13 @@ export const PrelaunchForm: FC = memo(() => {
     asset,
     inited,
     walletAddress,
-    selectedMapUnit: selectedMapUnitCoordinates,
+    selectedMapUnit: selectedMapUnitUniqData,
   } = useSettingsStore();
 
-  const selectedMapUnit = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates!));
+  const selectedMapUnit = useAaStore((state) => mapUnitsByUniqDataSelector(state, selectedMapUnitUniqData || null));
 
   const aaState = useAaStore((state) => state);
   const mapUnits = mapUnitsSelector(aaState);
-
-  const mayor = aaState.state.city_city?.mayor!;
-
-  const roads = getRoads(mapUnits, String(mayor));
 
   const boughtTokens = Math.floor(price * 0.1); // Updated to use 'price' instead of '$plot_price'
 
@@ -66,21 +61,11 @@ export const PrelaunchForm: FC = memo(() => {
 
   const amount = Math.round((totalPrice + boughtTokens) / 1000);
 
-  let refData: IRefData = {};
-  let address: string | undefined;
+  const refData: IRefData = {};
 
   if (selectedMapUnit) {
     if (selectedMapUnit.type === "plot") {
       refData.ref_plot_num = selectedMapUnit.plot_num;
-
-      address = getAddressFromNearestRoad(
-        roads,
-        {
-          x: selectedMapUnit.x,
-          y: selectedMapUnit.y,
-        },
-        selectedMapUnit.plot_num
-      )?.[0];
     } else if (selectedMapUnit.type === "house") {
       if (selectedMapUnit.owner) {
         const refererMainPlot = state[`user_main_plot_city_${selectedMapUnit.owner}`];
@@ -94,15 +79,6 @@ export const PrelaunchForm: FC = memo(() => {
 
           if (plot !== undefined) {
             refData.ref_plot_num = plot.plot_num;
-
-            address = getAddressFromNearestRoad(
-              roads,
-              {
-                x: plot.x,
-                y: plot.y,
-              },
-              plot.plot_num
-            )?.[0];
           }
         }
       }

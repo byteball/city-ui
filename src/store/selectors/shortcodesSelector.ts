@@ -12,6 +12,7 @@ export const shortcodesSelector = createSelector(
 
     Object.entries(aaState).forEach(([key, data]) => {
       if (key.startsWith("shortcode_")) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const [_, shortcode] = key.split("_");
         shortcodes[shortcode] = data as string;
       }

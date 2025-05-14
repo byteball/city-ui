@@ -29,8 +29,8 @@ export const UserHouses: FC<IUserHousesProps> = ({ address }) => {
   const roads = getRoads(mapUnits, String(cityStats?.mayor));
   const userHouses = useMemo(() => userUnits.filter((u) => u.type === "house"), [userUnits]);
 
-  const changeHouse = useCallback(({ x, y, type = "house" }: { x: number; y: number; type: "house" }) => {
-    useSettingsStore.getState().setSelectedMapUnit({ x: asNonNegativeNumber(x), y: asNonNegativeNumber(y), type });
+  const changeHouse = useCallback(({ house_num, type = "house" }: { house_num: number; type: "house" }) => {
+    useSettingsStore.getState().setSelectedMapUnit({ num: asNonNegativeNumber(house_num), type });
   }, []);
 
   if (userHouses.length === 0) return null;
@@ -55,8 +55,8 @@ export const UserHouses: FC<IUserHousesProps> = ({ address }) => {
 
           return (
             <Link
-              onClick={() => changeHouse({ x, y, type })}
-              to={`/?c=${x},${y},${type}`}
+              onClick={() => changeHouse({ house_num, type })}
+              to={`/?unit=${house_num},${type}`}
               key={house_num}
               className="flex h-full"
             >

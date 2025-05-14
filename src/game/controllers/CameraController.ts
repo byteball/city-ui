@@ -40,7 +40,14 @@ export default class CameraController {
 
     this.scene.input.on(
       "wheel",
-      (pointer: Phaser.Input.Pointer, currentlyOver: Phaser.GameObjects.GameObject[], deltaX: number, deltaY: number, deltaZ: number) => {
+      (
+        _pointer: Phaser.Input.Pointer,
+        _currentlyOver: Phaser.GameObjects.GameObject[],
+        _deltaX: number,
+        deltaY: number,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        _deltaZ: number
+      ) => {
         const zoomFactor = 0.001;
         this.camera.zoom -= deltaY * zoomFactor;
 

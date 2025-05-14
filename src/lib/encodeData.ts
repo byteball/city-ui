@@ -1,4 +1,4 @@
-export const encodeData = (data: any) => {
+export const encodeData = (data: object) => {
   try {
     const sData = JSON.stringify(data);
     const encodedData = new TextEncoder().encode(sData);
@@ -7,3 +7,4 @@ export const encodeData = (data: any) => {
     throw new Error("Failed to encode data");
   }
 };
+

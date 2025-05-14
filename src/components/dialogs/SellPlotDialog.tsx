@@ -2,7 +2,7 @@ import { FC, KeyboardEvent, useCallback, useMemo, useRef, useState } from "react
 
 import { generateLink, getCountOfDecimals, toLocalString } from "@/lib";
 import { useAaParams, useAaStore } from "@/store/aa-store";
-import { mapUnitsByCoordinatesSelector } from "@/store/selectors/mapUnitsSelector";
+import { mapUnitsByUniqDataSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 import { InfoPanel } from "../ui/_info-panel";
 import { QRButton } from "../ui/_qr-button";
@@ -26,9 +26,9 @@ export const SellPlotDialog: FC<ISellPlotDialogProps> = ({ children }) => {
   const decimalsFactor = 10 ** decimals!;
 
   const walletAddressFromStore = useSettingsStore((state) => state.walletAddress);
-  const selectedMapUnitCoordinates = useSettingsStore((state) => state.selectedMapUnit);
+  const selectedMapUnitUniqData = useSettingsStore((state) => state.selectedMapUnit);
 
-  const selectedMapUnit = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates!));
+  const selectedMapUnit = useAaStore((state) => mapUnitsByUniqDataSelector(state, selectedMapUnitUniqData || null));
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {

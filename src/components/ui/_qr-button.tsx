@@ -12,7 +12,7 @@ interface IQRButtonProps extends ButtonProps {
 }
 
 export const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(
-  ({ className, children, href, disabled = false, ...props }, ref) => (
+  ({ children, href, disabled = false, ...props }, ref) => (
     <div className="flex">
       <Dialog>
         <TooltipProvider>

@@ -3,12 +3,12 @@ import moment from "moment";
 import { BuyNewPlotCard, GameCard, SelectedUnitMapCard } from "./components";
 import { PrelaunchCard } from "./components/PrelaunchCard";
 
-import { useSyncCoordinates } from "@/hooks/useSyncCoordinates";
+import { useSyncSelectedUnitQueryParams } from "@/hooks/useSyncSelectedUnitQueryParams";
 
 import appConfig from "@/appConfig";
 
 export default () => {
-  useSyncCoordinates();
+  useSyncSelectedUnitQueryParams();
 
   return (
     <div className="grid grid-cols-5 gap-6 px-4 md:px-0">

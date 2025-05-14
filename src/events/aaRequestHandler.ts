@@ -5,7 +5,10 @@ import appConfig from "@/appConfig";
 
 const showLogs = !!appConfig.TESTNET;
 
-export const aaRequestHandler = (err: string | null, result: any) => {
+export const aaRequestHandler = (
+  err: string | null,
+  result: [unknown, { body: { unit?: { authors: { address: string }[] } } }]
+) => {
   if (err && showLogs) console.error("log: aaRequestHandler error", err, result);
   if (err) return null;
 

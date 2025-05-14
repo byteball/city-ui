@@ -29,8 +29,8 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
   const userPlots = useMemo(() => userUnits.filter((u) => u.type === "plot"), [userUnits]);
   const roads = getRoads(mapUnits, String(cityStats?.mayor));
 
-  const changePlot = useCallback(({ x, y, type }: { x: number; y: number; type: "plot" | "house" }) => {
-    useSettingsStore.getState().setSelectedMapUnit({ x: asNonNegativeNumber(x), y: asNonNegativeNumber(y), type });
+  const changePlot = useCallback(({ plot_num, type }: { plot_num: number; type: "plot" }) => {
+    useSettingsStore.getState().setSelectedMapUnit({ num: asNonNegativeNumber(plot_num), type });
   }, []);
 
   const decimalsFactor = 10 ** decimals!;
@@ -61,8 +61,8 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
             return (
               <Link
                 className="flex h-full"
-                onClick={() => changePlot({ x, y, type })}
-                to={`/?c=${x},${y},${type}`}
+                onClick={() => changePlot({ plot_num, type })}
+                to={`/?unit=${plot_num},${type}`}
                 key={plot_num}
               >
                 <Card className="flex flex-col flex-1">

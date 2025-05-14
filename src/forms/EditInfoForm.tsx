@@ -154,7 +154,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
   };
 
   // Convert array of key-value pairs back to object
-  let obj = newInfo.reduce((acc, { key, value }) => {
+  const obj = newInfo.reduce((acc, { key, value }) => {
     // Skip empty default fields and fields with no key or with prefix
     if ((key in defaultInformationFields && (value === "" || value === getInformationPrefix(key))) || !key) {
       return acc; // Skip this field
@@ -163,7 +163,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
     // Sanitize the value - trim any whitespace
     acc[key] = typeof value === "string" ? value.trim() : value;
     return acc;
-  }, {} as Record<string, any>);
+  }, {} as Record<string, number | string | boolean | object>);
 
   // Convert to JSON string with error handling
   let objString = "";
@@ -217,7 +217,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
         btnRef.current?.click();
       }
     },
-    [btnRef.current, disabled]
+    [btnRef, disabled]
   );
 
   return (

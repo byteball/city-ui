@@ -7,7 +7,7 @@ import { SetUserMainPlotDialog } from "@/components/dialogs/SetUserMainPlotDialo
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { Button } from "@/components/ui/button";
 import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
-import { IMapUnitInfo, IPlot } from "@/global";
+import { IMapUnitInfo } from "@/global";
 import { useAttestations } from "@/hooks/useAttestations";
 import { getExplorerUrl } from "@/lib";
 import { getReferralUrl } from "@/lib/getReferralUrl";
@@ -41,13 +41,10 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
   const { data: attestations, loaded } = useAttestations(address);
   const parsedUserInfo = useMemo(() => getParsedUserInfo(userInfo), [userInfo]);
   const userMainPlotNum = useAaStore((state) => state.state[`user_main_plot_city_${address}`]) as number | undefined;
-  const mainPlot = useAaStore((state) =>
-    userMainPlotNum ? state.state[`plot_${userMainPlotNum}`] : null
-  ) as IPlot | null;
 
   const [copied, setCopied] = useState(false);
 
-  const referralUrl = getReferralUrl(mainPlot);
+  const referralUrl = getReferralUrl(userMainPlotNum || null);
 
   const copy = () => {
     if (copied) return;

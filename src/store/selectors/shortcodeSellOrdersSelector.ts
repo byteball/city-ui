@@ -21,7 +21,7 @@ export const shortcodeSellOrdersSelector = createSelector([getAaState], (aaState
       const houseData = house as IHouse;
 
       if (!houseData || !houseData.shortcode || !houseData.shortcode_price) return null;
-
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [_, house_num] = _houseKey.split("_");
 
       if (!house_num) throw new Error("House number is not defined");

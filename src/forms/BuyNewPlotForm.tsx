@@ -13,7 +13,7 @@ import { generateLink, getAddressFromNearestRoad, getExplorerUrl, toLocalString 
 
 import { getRoads } from "@/game/utils/getRoads";
 import { IRefData } from "@/global";
-import { mapUnitsByCoordinatesSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
+import { mapUnitsByUniqDataSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 
 import appConfig from "@/appConfig";
 
@@ -29,11 +29,11 @@ export const BuyNewPlotForm: FC = memo(() => {
     asset,
     decimals,
     inited,
-    selectedMapUnit: selectedMapUnitCoordinates,
+    selectedMapUnit: selectedMapUnitUniqData,
     walletAddress,
   } = useSettingsStore();
 
-  const selectedMapUnit = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates!));
+  const selectedMapUnit = useAaStore((state) => mapUnitsByUniqDataSelector(state, selectedMapUnitUniqData || null));
 
   const aaState = useAaStore((state) => state);
   const mapUnits = mapUnitsSelector(aaState);
@@ -54,7 +54,7 @@ export const BuyNewPlotForm: FC = memo(() => {
     total: toLocalString(totalPrice / decimalsPow),
   };
 
-  let refData: IRefData = {};
+  const refData: IRefData = {};
   let address: string | undefined;
 
   if (selectedMapUnit) {
