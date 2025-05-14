@@ -16,7 +16,7 @@ import appConfig from "@/appConfig";
 
 interface IShortcodesOnSaleListProps {}
 
-export const ShortcodesOnSaleList: FC<IShortcodesOnSaleListProps> = ({}) => {
+export const ShortcodesOnSaleList: FC<IShortcodesOnSaleListProps> = () => {
   const walletAddress = useSettingsStore((state) => state.walletAddress);
   const sellOrders = useAaStore(shortcodeSellOrdersSelector);
   const mySellOrders = useMemo(

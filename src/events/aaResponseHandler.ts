@@ -13,12 +13,12 @@ export const aaResponseHandler = (err: string | null, result: any) => {
   if (showLogs) console.log("log: aaResponseHandler", err, result);
 
   const { body } = result[1];
-  const { aa_address, updatedStateVars } = body;
+  const { updatedStateVars } = body;
 
   const { governanceAa } = useSettingsStore.getState();
 
-  const diff: any = {};
-  const governanceDiff: any = {};
+  const diff: object = {};
+  const governanceDiff: object = {};
 
   if (updatedStateVars) {
     for (const address in updatedStateVars) {

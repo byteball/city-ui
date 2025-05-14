@@ -61,6 +61,13 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
     rental_surcharge_factor: rentalSurchargeFactor,
   } = useAaParams();
 
+  let error = useMemo(() => {
+    if (rentalAmount !== "" && Number(rentalAmount) <= 0) {
+      return `Amount should be greater than 0`;
+    }
+    return false;
+  }, [rentalAmount]);
+
   if (!selectedMapUnit) return null;
 
   const cityData = aaState.city_city!;
@@ -81,13 +88,6 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   const incomePerPurchase = (2 * +plotPrice * +matchingProbability * rentalAmountSmallestUnit) / totalEffectiveSupply;
   const annualIncome = incomePerPurchase * expectedPurchasesNextYear;
   const rentalFee = Math.ceil(+rentalSurchargeFactor * annualIncome);
-
-  let error = useMemo(() => {
-    if (rentalAmount !== "" && Number(rentalAmount) <= 0) {
-      return `Amount should be greater than 0`;
-    }
-    return false;
-  }, [rentalAmount]);
 
   const { unusedRentalCredit, rentalExpiryFormatted } =
     selectedMapUnit.type === "plot"

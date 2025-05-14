@@ -94,7 +94,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
           },
           asset: asset!,
         })
-      : "#";
+      : null;
 
   const p2pWithdrawFromSale =
     selectedMapUnit?.type === "plot" && selectedMapUnit.sale_price
@@ -108,7 +108,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
           },
           asset: asset!,
         })
-      : "#";
+      : null;
 
   return (
     <>
@@ -257,9 +257,9 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
               {sceneType === "market" && selectedMapUnit?.type === "plot" ? (
                 <div className="mt-4 space-y-2">
                   {isOwner ? (
-                    <QRButton href={p2pWithdrawFromSale}>Withdraw from sale</QRButton>
+                    <QRButton href={p2pWithdrawFromSale || "#"}>Withdraw from sale</QRButton>
                   ) : (
-                    <QRButton href={p2pBuyLink}>
+                    <QRButton href={p2pBuyLink || "#"}>
                       Buy for {toLocalString(selectedMapUnit?.sale_price / decimalsPow)} {symbol}
                     </QRButton>
                   )}

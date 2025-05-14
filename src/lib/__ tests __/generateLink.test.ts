@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { encodeData } from "@/lib/encodeData";
@@ -81,3 +82,4 @@ describe("generateLink", () => {
     expect(link).toBe("obyte:AA_ADDRESS?amount=1000&asset=base");
   });
 });
+

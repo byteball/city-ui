@@ -39,8 +39,9 @@ export const UserStats: FC<IUserStatsProps> = memo(({ address }) => {
     setWalletBalance({ amount: 0, loaded: false, loading: true });
     client.api
       .getBalances([address])
-      .then((balances: any) => {
-        const userBalance = balances[address];
+      .then((balances) => {
+        const typedBalances = balances as Record<string, Record<string, { total: number }>>;
+        const userBalance = typedBalances[address];
         return userBalance?.[asset]?.total ?? 0;
       })
       .then((amount) => {

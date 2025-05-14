@@ -45,6 +45,7 @@ export interface AaStoreState {
   updateState: (type: "main" | "governance", diff: ICityAaState) => void;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const storeCreator: StateCreator<AaStoreState> = (set, _get) => ({
   state: {},
   governanceState: {},
