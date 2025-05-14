@@ -70,6 +70,14 @@ export class Plot {
         this.tooltipDom = undefined;
       }
     });
+
+    // Remove tooltip when mouse leaves the canvas
+    this.scene.game.canvas.addEventListener("mouseleave", () => {
+      if (this.tooltipDom) {
+        document.body.removeChild(this.tooltipDom);
+        this.tooltipDom = undefined;
+      }
+    });
   }
 
   public setSelected(selected: boolean) {
