@@ -13,7 +13,6 @@ import { useSettingsStore } from "@/store/settings-store";
 
 import { generateLink, getExplorerUrl, toLocalString } from "@/lib";
 
-import { getRoads } from "@/game/utils/getRoads";
 import { IRefData } from "@/global";
 
 import appConfig from "@/appConfig";
@@ -42,10 +41,6 @@ export const PrelaunchForm: FC = memo(() => {
 
   const aaState = useAaStore((state) => state);
   const mapUnits = mapUnitsSelector(aaState);
-
-  const mayor = aaState.state.city_city?.mayor!;
-
-  const roads = getRoads(mapUnits, String(mayor));
 
   const boughtTokens = Math.floor(price * 0.1); // Updated to use 'price' instead of '$plot_price'
 

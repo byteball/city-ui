@@ -54,7 +54,7 @@ const ClaimRedirectPage = () => {
     );
   }
 
-  const mayor = aaState.state.city_city?.mayor!;
+  const mayor: string = aaState.state.city_city?.mayor!;
 
   const roads = getRoads(mapUnits, String(mayor));
 

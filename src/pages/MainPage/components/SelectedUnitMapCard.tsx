@@ -87,12 +87,12 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
     selectedMapUnit?.type === "plot" && selectedMapUnit.sale_price
       ? generateLink({
           aa: appConfig.AA_ADDRESS,
-          amount: selectedMapUnit?.sale_price!,
+          amount: selectedMapUnit?.sale_price || 0,
           data: {
             p2p_buy: 1,
             plot_num: selectedMapUnit?.plot_num,
           },
-          asset: asset!,
+          asset: asset as string,
         })
       : null;
 

@@ -163,7 +163,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
     // Sanitize the value - trim any whitespace
     acc[key] = typeof value === "string" ? value.trim() : value;
     return acc;
-  }, {} as Record<string, any>);
+  }, {} as Record<string, number | string | boolean | object>);
 
   // Convert to JSON string with error handling
   let objString = "";
@@ -217,7 +217,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
         btnRef.current?.click();
       }
     },
-    [btnRef.current, disabled]
+    [btnRef, disabled]
   );
 
   return (
