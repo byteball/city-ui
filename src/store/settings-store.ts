@@ -151,6 +151,7 @@ export const useSettingsStore = create<SettingsState>()(
   devtools(
     persist(storeCreator, {
       partialize: (state) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { selectedMapUnit, selectedMarketPlot, ...rest } = state;
         return rest;
       },
