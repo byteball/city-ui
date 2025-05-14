@@ -127,7 +127,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
       <Card>
         <CardHeader>
           {selectedMapUnit ? (
-            <CardTitle>Selected {selectedMapUnit?.type}</CardTitle>
+            <CardTitle>Selected {selectedMapUnit.type}</CardTitle>
           ) : (
             <CardTitle>
               {stateLoaded ? (
