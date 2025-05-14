@@ -47,7 +47,7 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
 
   const [copied, setCopied] = useState(false);
 
-  const referralUrl = getReferralUrl(mainPlot);
+  const referralUrl = getReferralUrl(userMainPlotNum);
 
   const copy = () => {
     if (copied) return;

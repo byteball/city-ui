@@ -2,14 +2,15 @@ import obyte from "obyte";
 import { create, StateCreator } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
-import appConfig from "@/appConfig";
-import { ICoordinatesWithType, IMapUnit, IRefData } from "@/global";
+import { IMapUnit, IRefData, IUnitUniqData } from "@/global";
 import { toast } from "@/hooks/use-toast";
 import client from "@/services/obyteWsClient";
 import { ICityAaState } from "./aa-store";
 
+import appConfig from "@/appConfig";
+
 const LOCAL_STORAGE_KEY = "settings-store";
-const STORAGE_VERSION = 13; // change this to invalidate old persisted data
+const STORAGE_VERSION = 14; // change this to invalidate old persisted data
 
 export type SortDirectionType = "ASC" | "DESC";
 
@@ -36,10 +37,10 @@ interface SettingsState {
   refData: IRefData | null;
   walletAddress: string | null;
   setWalletAddress: (walletAddress: string) => void;
-  selectedMapUnit?: ICoordinatesWithType;
-  selectedMarketPlot?: ICoordinatesWithType;
-  setSelectedMapUnit: (coordinatesWithType: ICoordinatesWithType | null) => void;
-  setSelectedMarketPlot: (coordinatesWithType: ICoordinatesWithType) => void;
+  selectedMapUnit?: IUnitUniqData;
+  selectedMarketPlot?: IUnitUniqData;
+  setSelectedMapUnit: (unitUniqData: IUnitUniqData | null) => void;
+  setSelectedMarketPlot: (unitUniqData: IUnitUniqData) => void;
   setMapUnitSortType: <T extends "house" | "plot">(
     unit: T,
     sortType: T extends "house" ? keyof typeof IHouseSortTypeEnum : keyof typeof IPlotSortTypeEnum
@@ -104,14 +105,15 @@ const storeCreator: StateCreator<SettingsState> = (set, get) => ({
       direction: "DESC",
     },
   },
-  setSelectedMapUnit: (coordinatesWithType) => {
-    if (!coordinatesWithType) return set({ selectedMapUnit: undefined });
-    set({ selectedMapUnit: { x: coordinatesWithType.x, y: coordinatesWithType.y, type: coordinatesWithType.type } });
+  setSelectedMapUnit: (unitUniqData: IUnitUniqData | null) => {
+    if (!unitUniqData) return set({ selectedMapUnit: undefined });
+    set({ selectedMapUnit: unitUniqData });
   },
-  setSelectedMarketPlot: (coordinatesWithType) => {
-    if (!coordinatesWithType) return set({ selectedMarketPlot: undefined });
-    if (coordinatesWithType.type !== "plot") throw new Error("Invalid type for market plot");
-    set({ selectedMarketPlot: { x: coordinatesWithType.x, y: coordinatesWithType.y, type: coordinatesWithType.type } });
+  setSelectedMarketPlot: (unitUniqData: IUnitUniqData) => {
+    if (!unitUniqData) return set({ selectedMarketPlot: undefined });
+    if (unitUniqData.type !== "plot") throw new Error("Invalid type for market plot");
+
+    set({ selectedMarketPlot: unitUniqData });
   },
   setWalletAddress: (walletAddress: string) => {
     if (!obyte.utils.isValidAddress(walletAddress)) throw new Error("Invalid wallet address");
@@ -172,8 +174,8 @@ export const useSettingsStore = create<SettingsState>()(
 
 export const initializeSettings = (): void => useSettingsStore.getState().firstInit();
 
-export const setSelectedMapUnit = (coordinates: ICoordinatesWithType): void =>
-  useSettingsStore.getState().setSelectedMapUnit(coordinates);
+export const setSelectedMapUnit = (unitUniqData: IUnitUniqData): void =>
+  useSettingsStore.getState().setSelectedMapUnit(unitUniqData);
 
 export const setWalletAddress = (address: string): void => useSettingsStore.getState().setWalletAddress(address);
 

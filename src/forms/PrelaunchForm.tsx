@@ -8,7 +8,7 @@ import { InfoPanel } from "@/components/ui/_info-panel";
 import { QRButton } from "@/components/ui/_qr-button";
 
 import { useAaParams, useAaStore } from "@/store/aa-store";
-import { mapUnitsByCoordinatesSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
+import { mapUnitsByUniqDataSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 
 import { generateLink, getAddressFromNearestRoad, getExplorerUrl, toLocalString } from "@/lib";
@@ -35,10 +35,10 @@ export const PrelaunchForm: FC = memo(() => {
     asset,
     inited,
     walletAddress,
-    selectedMapUnit: selectedMapUnitCoordinates,
+    selectedMapUnit: selectedMapUnitUniqData,
   } = useSettingsStore();
 
-  const selectedMapUnit = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates!));
+  const selectedMapUnit = useAaStore((state) => mapUnitsByUniqDataSelector(state, selectedMapUnitUniqData || null));
 
   const aaState = useAaStore((state) => state);
   const mapUnits = mapUnitsSelector(aaState);

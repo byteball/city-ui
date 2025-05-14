@@ -184,18 +184,20 @@ export class Map {
 
         this.selectedMapUnit = unit;
         unit.setSelected(true);
-        const { x, y, type } = unit.getData();
+        const unitData = unit.getData();
+
+        const { type } = unitData;
 
         if (this.gameOptions?.displayMode === "main") {
           useSettingsStore.getState().setSelectedMapUnit({
-            x: asNonNegativeNumber(Decimal(x).div(appConfig.MAP_SCALE).toNumber()),
-            y: asNonNegativeNumber(Decimal(y).div(appConfig.MAP_SCALE).toNumber()),
+            num: asNonNegativeNumber(
+              type === "plot" ? unitData.plot_num : (unitData.type === "house" && unitData.house_num) || 0
+            ),
             type,
           });
-        } else if (this.gameOptions?.displayMode === "market" && type === "plot") {
+        } else if (this.gameOptions?.displayMode === "market" && unitData.type === "plot") {
           useSettingsStore.getState().setSelectedMarketPlot({
-            x: asNonNegativeNumber(Decimal(x).div(appConfig.MAP_SCALE).toNumber()),
-            y: asNonNegativeNumber(Decimal(y).div(appConfig.MAP_SCALE).toNumber()),
+            num: asNonNegativeNumber(unitData.plot_num || 0),
             type,
           });
         }
@@ -231,8 +233,7 @@ export class Map {
       const data = plotOrHouse.getData();
 
       return (
-        Decimal(data.x).div(appConfig.MAP_SCALE).toNumber() === Number(storeSelected.x) &&
-        Decimal(data.y).div(appConfig.MAP_SCALE).toNumber() === Number(storeSelected.y) &&
+        (data.type === "plot" ? data.plot_num : data.house_num) === Number(storeSelected.num) &&
         data.type === storeSelected.type
       );
     });

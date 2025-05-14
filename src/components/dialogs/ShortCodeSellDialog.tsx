@@ -3,7 +3,7 @@ import { FC, KeyboardEvent, useCallback, useMemo, useRef, useState } from "react
 import appConfig from "@/appConfig";
 import { generateLink, getCountOfDecimals, toLocalString } from "@/lib";
 import { useAaParams, useAaStore } from "@/store/aa-store";
-import { mapUnitsByCoordinatesSelector } from "@/store/selectors/mapUnitsSelector";
+import { mapUnitsByUniqDataSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 import { Link } from "react-router";
 import { InfoPanel } from "../ui/_info-panel";
@@ -27,9 +27,9 @@ export const ShortCodeSellDialog: FC<IShortCodeManageDialog> = ({ children, plot
   const decimalsFactor = 10 ** decimals!;
 
   const walletAddressFromStore = useSettingsStore((state) => state.walletAddress);
-  const selectedMapUnitCoordinates = useSettingsStore((state) => state.selectedMapUnit);
+  const selectedMapUnitUniqData = useSettingsStore((state) => state.selectedMapUnit);
 
-  const selectedMapUnit = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates!));
+  const selectedMapUnit = useAaStore((state) => mapUnitsByUniqDataSelector(state, selectedMapUnitUniqData || null));
 
   if (selectedMapUnit?.type !== "house") throw new Error("Selected map unit is not a house");
 

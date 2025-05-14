@@ -17,8 +17,9 @@ interface ICoordinates {
   y: NonNegativeNumber;
 }
 
-interface ICoordinatesWithType extends ICoordinates {
+interface IUnitUniqData {
   type: "plot" | "house";
+  num: NonNegativeNumber;
 }
 
 interface IMapUnitInfo {

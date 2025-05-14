@@ -1,7 +1,7 @@
 import obyte from "obyte";
 import { createSelector } from "reselect";
 
-import { ICoordinatesWithType, IHouse, IMapUnit, IPlot } from "@/global";
+import { IHouse, IMapUnit, IPlot, IUnitUniqData } from "@/global";
 import { asNonNegativeNumber } from "@/lib";
 import { AaStoreState, ICityAaState } from "../aa-store";
 
@@ -49,15 +49,15 @@ export const mapUnitsSelector = createSelector([getAaState], (aaState: ICityAaSt
     });
 });
 
-export const mapUnitsByCoordinatesSelector = createSelector(
-  [mapUnitsSelector, (_state: AaStoreState, coordinatesWithType: ICoordinatesWithType | null) => coordinatesWithType],
-  (units: IMapUnit[], coordinatesWithType) => {
-    if (coordinatesWithType === null || !coordinatesWithType) return null;
+export const mapUnitsByUniqDataSelector = createSelector(
+  [mapUnitsSelector, (_state: AaStoreState, uniqData: IUnitUniqData | null) => uniqData],
+  (units: IMapUnit[], uniqData) => {
+    if (uniqData === null || !uniqData) return null;
 
-    return (
-      units
-        .filter((unit) => unit.x === coordinatesWithType.x && unit.y === coordinatesWithType.y)
-        .find((unit) => unit.type === coordinatesWithType.type) ?? null
+    return units.find((unit) =>
+      uniqData.type === "plot"
+        ? unit.plot_num === uniqData.num
+        : unit.type === "house" && unit.house_num === uniqData.num
     );
   }
 );

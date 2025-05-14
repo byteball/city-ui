@@ -8,7 +8,7 @@ import { useAaStore } from "@/store/aa-store";
 import { mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 
-type TCoordinatesWithType = [NonNegativeNumber, NonNegativeNumber, "plot" | "house"];
+type TSelectedUnitType = [NonNegativeNumber, "plot" | "house"];
 
 export const useSyncCoordinates = () => {
   const location = useLocation();
@@ -18,16 +18,12 @@ export const useSyncCoordinates = () => {
   const selectedMapUnit = useSettingsStore((state) => state.selectedMapUnit);
   const mapUnits = mapUnitsSelector(aaState);
 
-  const [selectedCoordinate, setSelectedCoordinate] = useQueryState<TCoordinatesWithType | null>("c", {
+  const [selectedUnit, setSelectedUnit] = useQueryState<TSelectedUnitType | null>("unit", {
     parse: (value) => {
       const result = parseAsArrayOf(parseAsString).parse(value);
 
-      return result && result.length === 3 && (result[2] === "plot" || result[2] === "house")
-        ? ([
-            asNonNegativeNumber(Number(result[0])),
-            asNonNegativeNumber(Number(result[1])),
-            result[2] ?? "plot",
-          ] as TCoordinatesWithType)
+      return result && result.length === 2 && (result[1] === "plot" || result[1] === "house")
+        ? ([asNonNegativeNumber(Number(result[0])), result[1] ?? "plot"] as TSelectedUnitType)
         : null;
     },
     clearOnDefault: true,
@@ -38,32 +34,34 @@ export const useSyncCoordinates = () => {
   useEffect(() => {
     if (inited || !loaded) return;
 
-    if (selectedCoordinate) {
-      const [x, y, type] = selectedCoordinate;
-      const found = mapUnits.find((unit) => unit.x === x && unit.y === y && unit.type === type);
+    if (selectedUnit) {
+      const [num, type] = selectedUnit;
+      const found = mapUnits.find((unit) =>
+        type === "plot" ? unit.plot_num === num : unit.type === "house" && unit.house_num === num
+      );
       if (found) {
-        useSettingsStore.getState().setSelectedMapUnit({ x, y, type });
+        useSettingsStore.getState().setSelectedMapUnit({ num, type });
       } else {
-        console.error("Could not find map unit with coordinates", selectedCoordinate);
+        console.error("Could not find map unit with coordinates", selectedUnit);
       }
     }
 
     setInited(true);
-  }, [selectedCoordinate, loaded, inited, mapUnits]);
+  }, [selectedUnit, loaded, inited, mapUnits]);
 
   // Effect to update selectedCoordinate when selectedMapUnit changes
   useEffect(() => {
     if (inited && loaded && selectedMapUnit) {
       if (selectedMapUnit) {
-        setSelectedCoordinate([selectedMapUnit.x, selectedMapUnit.y, selectedMapUnit.type]);
+        setSelectedUnit([selectedMapUnit.num, selectedMapUnit.type]);
       }
     }
-  }, [selectedMapUnit, inited, loaded, setSelectedCoordinate]);
+  }, [selectedMapUnit, inited, loaded, setSelectedUnit]);
 
   useEffect(() => {
     if (inited && loaded) {
       const params = new URLSearchParams(location.search);
-      if (!params.has("c")) {
+      if (!params.has("unit")) {
         useSettingsStore.getState().setSelectedMapUnit(null);
       }
     }

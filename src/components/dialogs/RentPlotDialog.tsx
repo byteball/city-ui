@@ -2,7 +2,7 @@ import moment from "moment";
 import { FC, KeyboardEvent, useCallback, useMemo, useRef, useState } from "react";
 
 import { useAaParams, useAaStore } from "@/store/aa-store";
-import { mapUnitsByCoordinatesSelector } from "@/store/selectors/mapUnitsSelector";
+import { mapUnitsByUniqDataSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 import { InfoPanel } from "../ui/_info-panel";
 import { QRButton } from "../ui/_qr-button";
@@ -34,8 +34,8 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
   const aaState = useAaStore((state) => state.state);
   const { symbol, decimals, asset, inited } = useSettingsStore();
   const walletAddressFromStore = useSettingsStore((state) => state.walletAddress);
-  const selectedMapUnitCoordinates = useSettingsStore((state) => state.selectedMapUnit);
-  const selectedMapUnit = useAaStore((state) => mapUnitsByCoordinatesSelector(state, selectedMapUnitCoordinates!));
+  const selectedMapUnitUniqData = useSettingsStore((state) => state.selectedMapUnit);
+  const selectedMapUnit = useAaStore((state) => mapUnitsByUniqDataSelector(state, selectedMapUnitUniqData || null));
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
