@@ -10,7 +10,7 @@ import { useSettingsStore } from "@/store/settings-store";
 
 type TSelectedUnitType = [NonNegativeNumber, "plot" | "house"];
 
-export const useSyncCoordinates = () => {
+export const useSyncSelectedUnitQueryParams = () => {
   const location = useLocation();
   const [inited, setInited] = useState(false);
   const loaded = useAaStore((state) => state.loaded);
@@ -42,14 +42,14 @@ export const useSyncCoordinates = () => {
       if (found) {
         useSettingsStore.getState().setSelectedMapUnit({ num, type });
       } else {
-        console.error("Could not find map unit with coordinates", selectedUnit);
+        console.error("Could not find map unit with uniq data", selectedUnit);
       }
     }
 
     setInited(true);
   }, [selectedUnit, loaded, inited, mapUnits]);
 
-  // Effect to update selectedCoordinate when selectedMapUnit changes
+  // Effect to update selectedUnit when selectedMapUnit changes
   useEffect(() => {
     if (inited && loaded && selectedMapUnit) {
       if (selectedMapUnit) {
