@@ -320,7 +320,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                 )}
 
                 {selectedMapUnit?.type === "house" && isOwner && selectedMapUnit.shortcode ? (
-                  <ShortCodeSellDialog plot_num={selectedMapUnit.plot_num} shortcode={selectedMapUnit.shortcode}>
+                  <ShortCodeSellDialog>
                     <ButtonWithTooltip
                       disabled={!selectedMapUnit.shortcode}
                       tooltipText="Sell shortcode"

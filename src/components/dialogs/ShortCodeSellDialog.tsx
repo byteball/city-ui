@@ -14,10 +14,8 @@ import { Label } from "../ui/label";
 
 interface IShortCodeManageDialog {
   children: React.ReactNode;
-  plot_num: number;
-  shortcode: string;
 }
-export const ShortCodeSellDialog: FC<IShortCodeManageDialog> = ({ children, plot_num, shortcode }) => {
+export const ShortCodeSellDialog: FC<IShortCodeManageDialog> = ({ children }) => {
   const [amount, setAmount] = useState<string>("");
   const putBtnRef = useRef<HTMLButtonElement>(null);
 

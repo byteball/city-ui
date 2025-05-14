@@ -7,7 +7,7 @@ interface IDefaultInformationHints {
 }
 
 const validateSocialNetworkUsername = (username: string) => {
-  let trimmedUserName = username.trim().replace("@", "");
+  const trimmedUserName = username.trim().replace("@", "");
 
   return !!trimmedUserName && trimmedUserName.length >= 3 && trimmedUserName.length <= 20;
 };
@@ -18,7 +18,7 @@ export const defaultInformationFields: { [name: string]: IDefaultInformationHint
     validationRule: "Must be 3-20 characters long.",
     type: "default",
     validationFunc: (value) => {
-      let trimmedValue = value.trim().replace("@", "");
+      const trimmedValue = value.trim().replace("@", "");
       return !!trimmedValue && trimmedValue.length >= 3 && trimmedValue.length <= 20;
     },
     hint: "How do you want to name your plot/house",

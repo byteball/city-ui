@@ -11,7 +11,7 @@ import { useAaParams, useAaStore } from "@/store/aa-store";
 import { mapUnitsByUniqDataSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 
-import { generateLink, getAddressFromNearestRoad, getExplorerUrl, toLocalString } from "@/lib";
+import { generateLink, getExplorerUrl, toLocalString } from "@/lib";
 
 import { getRoads } from "@/game/utils/getRoads";
 import { IRefData } from "@/global";
@@ -66,21 +66,11 @@ export const PrelaunchForm: FC = memo(() => {
 
   const amount = Math.round((totalPrice + boughtTokens) / 1000);
 
-  let refData: IRefData = {};
-  let address: string | undefined;
+  const refData: IRefData = {};
 
   if (selectedMapUnit) {
     if (selectedMapUnit.type === "plot") {
       refData.ref_plot_num = selectedMapUnit.plot_num;
-
-      address = getAddressFromNearestRoad(
-        roads,
-        {
-          x: selectedMapUnit.x,
-          y: selectedMapUnit.y,
-        },
-        selectedMapUnit.plot_num
-      )?.[0];
     } else if (selectedMapUnit.type === "house") {
       if (selectedMapUnit.owner) {
         const refererMainPlot = state[`user_main_plot_city_${selectedMapUnit.owner}`];
@@ -94,15 +84,6 @@ export const PrelaunchForm: FC = memo(() => {
 
           if (plot !== undefined) {
             refData.ref_plot_num = plot.plot_num;
-
-            address = getAddressFromNearestRoad(
-              roads,
-              {
-                x: plot.x,
-                y: plot.y,
-              },
-              plot.plot_num
-            )?.[0];
           }
         }
       }

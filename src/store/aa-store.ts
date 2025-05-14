@@ -86,7 +86,7 @@ const storeCreator: StateCreator<AaStoreState> = (set, _get) => ({
     set((state) => {
       const newState = type === "main" ? { ...state.state } : { ...state.governanceState };
 
-      for (let var_name in diff) {
+      for (const var_name in diff) {
         const value = diff[var_name];
 
         if (typeof value === "boolean" && value === false) {

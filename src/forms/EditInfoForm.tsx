@@ -154,7 +154,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
   };
 
   // Convert array of key-value pairs back to object
-  let obj = newInfo.reduce((acc, { key, value }) => {
+  const obj = newInfo.reduce((acc, { key, value }) => {
     // Skip empty default fields and fields with no key or with prefix
     if ((key in defaultInformationFields && (value === "" || value === getInformationPrefix(key))) || !key) {
       return acc; // Skip this field
