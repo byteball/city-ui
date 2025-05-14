@@ -1,12 +1,13 @@
-import appConfig from "@/appConfig";
 import { encodeData } from "./encodeData";
+
+import appConfig from "@/appConfig";
 
 const suffixes = {
   livenet: "",
   testnet: "-tn",
 };
 
-const suffix = suffixes[appConfig?.TESTNET ? "testnet" : "livenet"];
+const suffix = suffixes[appConfig.TESTNET ? "testnet" : "livenet"];
 
 interface IGenerateLink {
   amount: number;
@@ -19,7 +20,7 @@ interface IGenerateLink {
   is_single?: boolean;
 }
 
-export const generateLink = ({ amount, data, from_address, aa, asset = "base", is_single }: IGenerateLink) => {
+export const generateLink = ({ amount, data, from_address, aa, asset = "base", is_single }: IGenerateLink): string => {
   let link = `obyte${suffix}:${aa}?amount=${Math.round(amount)}&asset=${encodeURIComponent(asset)}`;
   const encodedData = encodeData(data);
 
