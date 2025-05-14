@@ -54,7 +54,7 @@ export const BuyNewPlotForm: FC = memo(() => {
     total: toLocalString(totalPrice / decimalsPow),
   };
 
-  let refData: IRefData = {};
+  const refData: IRefData = {};
   let address: string | undefined;
 
   if (selectedMapUnit) {
