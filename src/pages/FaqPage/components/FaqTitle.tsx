@@ -10,7 +10,7 @@ export const FaqTitle: FC<{ children: ReactNode; scrollId: string }> = ({ childr
     offset={-80}
     duration={500}
     to={scrollId}
-    className="font-semibold text-white cursor-pointer text-2xl/7"
+    className="font-semibold text-white pointer-events-none text-2xl/7 faq-title"
   >
     {children}
   </ScrollLink>
