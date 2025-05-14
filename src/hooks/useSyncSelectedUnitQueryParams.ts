@@ -37,7 +37,9 @@ export const useSyncSelectedUnitQueryParams = () => {
     if (selectedUnit) {
       const [num, type] = selectedUnit;
       const found = mapUnits.find((unit) =>
-        type === "plot" ? unit.plot_num === num : unit.type === "house" && unit.house_num === num
+        type === "plot"
+          ? unit.type === "plot" && unit.plot_num === num
+          : unit.type === "house" && unit.house_num === num
       );
       if (found) {
         useSettingsStore.getState().setSelectedMapUnit({ num, type });
