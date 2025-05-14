@@ -24,7 +24,9 @@ export const mapUnitsSelector = createSelector([getAaState], (aaState: ICityAaSt
         try {
           const infoJSON = JSON.parse(unitInfo);
           mapUnit.info = infoJSON;
-        } catch {}
+        } catch {
+          console.error("Failed to parse unit info JSON", unitInfo);
+        }
       }
 
       if (type === "plot") {
