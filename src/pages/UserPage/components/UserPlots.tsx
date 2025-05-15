@@ -62,7 +62,7 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
               <Link
                 className="flex h-full"
                 onClick={() => changePlot({ plot_num, type })}
-                to={`/?unit=${plot_num},${type}`}
+                to={`/?plot=${plot_num}`}
                 key={plot_num}
               >
                 <Card className="flex flex-col flex-1">
