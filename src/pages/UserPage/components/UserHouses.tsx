@@ -56,7 +56,7 @@ export const UserHouses: FC<IUserHousesProps> = ({ address }) => {
           return (
             <Link
               onClick={() => changeHouse({ house_num, type })}
-              to={`/?unit=${house_num},${type}`}
+              to={`/?house=${house_num}`}
               key={house_num}
               className="flex h-full"
             >

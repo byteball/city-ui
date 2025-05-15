@@ -3,6 +3,6 @@ export const getReferralUrl = (plotNum: number | null): string | null => {
 
   return `${window.location.protocol}//${window.location.hostname}${
     window.location.port ? `:${window.location.port}` : ""
-  }/?unit=${plotNum},plot`;
+  }/?plot=${plotNum}`;
 };
 

@@ -108,7 +108,7 @@ const ClaimRedirectPage = () => {
                 <div>
                   <a
                     className="underline text-link"
-                    href={`/?unit=${plot1.plot_num},plot`}
+                    href={`/?plot=${plot1.plot_num}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -204,7 +204,7 @@ const ClaimRedirectPage = () => {
                 <div>
                   <a
                     className="underline text-link"
-                    href={`/?unit=${plot2.plot_num},plot`}
+                    href={`/?plot=${plot2.plot_num}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
