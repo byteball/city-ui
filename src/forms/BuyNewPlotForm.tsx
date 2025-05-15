@@ -58,7 +58,7 @@ export const BuyNewPlotForm: FC = memo(() => {
   let address: string | undefined;
 
   if (selectedMapUnit) {
-    if (selectedMapUnit.type === "plot") {
+    if (selectedMapUnit.type === "plot" && selectedMapUnit.owner !== walletAddress) {
       refData.ref_plot_num = selectedMapUnit.plot_num;
 
       address = getAddressFromNearestRoad(
@@ -70,7 +70,7 @@ export const BuyNewPlotForm: FC = memo(() => {
         selectedMapUnit.plot_num
       )?.[0];
     } else if (selectedMapUnit.type === "house") {
-      if (selectedMapUnit.owner) {
+      if (selectedMapUnit.owner && selectedMapUnit.owner !== walletAddress) {
         const refererMainPlot = state[`user_main_plot_city_${selectedMapUnit.owner}`];
 
         if (refererMainPlot) {
