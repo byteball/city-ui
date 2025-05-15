@@ -91,6 +91,7 @@ export const PrelaunchForm: FC = memo(() => {
     asset: reserveAsset,
     data: { buy: 1, ...refData },
     aa: appConfig.AA_ADDRESS,
+    is_single: true,
   });
 
   return (

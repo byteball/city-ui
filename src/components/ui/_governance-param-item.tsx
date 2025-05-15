@@ -45,6 +45,7 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
     data: { name, commit: 1 },
     asset: "base",
     aa: governanceAA!,
+    is_single: true,
     from_address: walletAddress || undefined,
   });
 

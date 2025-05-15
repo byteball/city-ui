@@ -103,6 +103,7 @@ export const BuyNewPlotForm: FC = memo(() => {
     asset: asset ?? "",
     data: { buy: 1, ...refData },
     aa: appConfig.AA_ADDRESS,
+    is_single: true,
   });
 
   return (

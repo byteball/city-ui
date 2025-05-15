@@ -93,6 +93,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
             plot_num: selectedMapUnit?.plot_num,
           },
           asset: asset as string,
+          is_single: true,
         })
       : null;
 
@@ -107,6 +108,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
             sale_price: 0,
           },
           asset: asset!,
+          is_single: true,
         })
       : null;
 

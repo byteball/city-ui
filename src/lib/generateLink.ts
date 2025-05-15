@@ -14,7 +14,7 @@ interface IGenerateLink {
   aa: string;
   asset?: string;
   data: {
-    [key: string]: number | string | boolean | object;
+    [key: string]: number | string | boolean | object | undefined;
   };
   from_address?: string;
   is_single?: boolean;
