@@ -12,7 +12,9 @@ export const mapUnitsSelector = createSelector([getAaState], (aaState: ICityAaSt
   if (!aaState) return [];
 
   return Object.entries(aaState)
-    .filter(([key, unit]) => key.startsWith("plot_") || (key.startsWith("house_") && typeof unit === "object"))
+    .filter(
+      ([key, unit]) => (key.startsWith("plot_") || key.startsWith("house_")) && typeof unit === "object" && "x" in unit
+    )
     .map(([key, unit]) => {
       const [type, idStr] = key.split("_");
       const id = asNonNegativeNumber(Number(idStr));

@@ -59,7 +59,7 @@ const getDefaultFields = (currentInfo: IMapUnit["info"]): IField[] => {
     const currentInfoFields = Object.entries(currentInfo).map(([key, value]) => ({
       key,
       value: value?.toString().startsWith(getInformationPrefix(key))
-        ? value.toString()
+        ? value?.toString()
         : getInformationPrefix(key) + value,
       isDefault: key in defaultInformationFields,
       isModified: true,
