@@ -155,7 +155,7 @@ const ClaimRedirectPage = () => {
                     loading={!loaded || !plot1AttestationLoaded}
                   >
                     {attestations1.length ? (
-                      <AttestationList data={attestations1} />
+                      <AttestationList blockDisplay data={attestations1} />
                     ) : (
                       <div className="text-gray-500">No attested contacts</div>
                     )}
@@ -251,7 +251,7 @@ const ClaimRedirectPage = () => {
                     loading={!loaded || !plot2AttestationLoaded}
                   >
                     {attestations2.length ? (
-                      <AttestationList data={attestations2} />
+                      <AttestationList blockDisplay data={attestations2} />
                     ) : (
                       <div className="text-gray-500">No attested contacts</div>
                     )}
