@@ -25,7 +25,7 @@ export function getAddressCoordinate(
     direction = offsetValue >= 0 ? "E" : "W";
   }
 
-  const mainCoordStr = alongCoord.toString().padStart(6, "0");
+  const mainCoordStr = alongCoord?.toString().padStart(6, "0");
   const offset = Math.abs(Math.round(offsetValue));
 
   const coordCode = `${mainCoordStr}/${direction}${offset}`;
