@@ -12,6 +12,7 @@ interface IPageLayoutProps {
   loading?: boolean; // show loader
   ogImageKey?: string; // for og:image
   seoTitle?: string; // for SEO title
+  seoDescription?: string; // for SEO description
 }
 
 export const PageLayout: FC<IPageLayoutProps> = ({
@@ -20,13 +21,14 @@ export const PageLayout: FC<IPageLayoutProps> = ({
   seoTitle,
   loading = false,
   description,
+  seoDescription,
   ogImageKey,
 }) => {
   return (
     <>
       <Helmet>
         <title>Obyte City — {seoTitle || title}</title>
-        <meta name="description" content={description} />
+        <meta name="description" content={seoDescription || description} />
         {ogImageKey && <meta property="og:image" content={`${appConfig.OG_IMAGE_URL}/og/${ogImageKey}`} />}
         <meta name="og:title" content={`Obyte City — ${seoTitle || title}`} />
       </Helmet>
