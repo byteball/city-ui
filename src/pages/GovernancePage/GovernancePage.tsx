@@ -33,7 +33,7 @@ export default () => {
       title="Governance"
       ogImageKey="governance"
       loading={!inited || !asset || decimals === null || !stateVarsLoaded}
-      description="Governance of Obyte City, a community engagement space for Obyte"
+      seoDescription="Governance of Obyte City, a community engagement space for Obyte"
     >
       <div className="max-w-4xl">
         <GovernanceProfile />
