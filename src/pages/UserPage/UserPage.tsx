@@ -23,6 +23,7 @@ const UserPage: FC<UserPageProps> = () => {
   const loading = !inited || !stateLoaded;
 
   return (
+    // Helmet in UserInfo component
     <PageLayout title="User page" loading={loading}>
       <UserInfo address={address} />
       <UserStats address={address} />
