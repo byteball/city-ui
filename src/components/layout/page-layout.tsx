@@ -28,9 +28,15 @@ export const PageLayout: FC<IPageLayoutProps> = ({
     <>
       <Helmet>
         <title>Obyte City — {seoTitle || title}</title>
-        <meta name="description" content={seoDescription || description} />
-        {ogImageKey && <meta property="og:image" content={`${appConfig.OG_IMAGE_URL}/og/${ogImageKey}`} />}
         <meta name="og:title" content={`Obyte City — ${seoTitle || title}`} />
+        <meta name="twitter:title" content={`Obyte City — ${seoTitle || title}`} />
+
+        <meta name="og:description" content={seoDescription || description} />
+        <meta name="description" content={seoDescription || description} />
+        <meta name="twitter:description" content={seoDescription || description} />
+
+        {ogImageKey && <meta name="twitter:image" content={`${appConfig.OG_IMAGE_URL}/og/${ogImageKey}`} />}
+        {ogImageKey && <meta property="og:image" content={`${appConfig.OG_IMAGE_URL}/og/${ogImageKey}`} />}
       </Helmet>
 
       <div className="min-h-[80vh] px-4 md:px-0">
