@@ -2,6 +2,7 @@ import { CheckIcon, CopyIcon, UserPenIcon } from "lucide-react";
 import { FC, useMemo, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
+import appConfig from "@/appConfig";
 import { EditUserInfoDialog } from "@/components/dialogs/EditUserInfoDialog";
 import { SetUserMainPlotDialog } from "@/components/dialogs/SetUserMainPlotDialog";
 import { InfoPanel } from "@/components/ui/_info-panel";
@@ -14,6 +15,7 @@ import { getReferralUrl } from "@/lib/getReferralUrl";
 import { useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 import cn from "classnames";
+import { Helmet } from "react-helmet-async";
 import { AttestationList } from "./AttestationList";
 import { UserMainPlot } from "./UserMainPlot";
 
@@ -57,8 +59,40 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
     });
   };
 
+  let title = "";
+  let description = "";
+
+  if (loaded) {
+    const discordAttestation = attestations.find((att) => att.name === "discord")?.value;
+    const tgAttestation = attestations.find((att) => att.name === "telegram")?.value;
+    const infoName = typeof parsedUserInfo === "object" ? parsedUserInfo?.name : "";
+    const name = infoName || tgAttestation || discordAttestation;
+
+    title = `Obyte City — User ${name}, ${walletAddress}`;
+    description = `Personal page of citizen  ${name}, ${walletAddress} in Obyte City, a community engagement space for Obyte`;
+  }
+
   return (
     <div>
+      {/* for User page */}
+      <Helmet>
+        {title ? (
+          <>
+            <title>{title}</title>
+            <meta name="og:title" content={title} />
+            <meta name="twitter:title" content={title} />
+          </>
+        ) : null}
+
+        {description ? (
+          <>
+            <meta name="og:description" content={description} />
+            <meta name="twitter:description" content={description} />
+            <meta name="description" content={description} />
+          </>
+        ) : null}
+        <meta property="og:image" content={`${appConfig.OG_IMAGE_URL}/og/user`} />
+      </Helmet>
       <InfoPanel>
         <InfoPanel.Item label="Address">
           <a className="text-link" target="_blank" rel="noopener" href={getExplorerUrl(address, "address")}>

@@ -20,7 +20,13 @@ export default () => {
   const shownSkeleton = loading || !!error || !settingsInited || !loaded;
 
   return (
-    <PageLayout title="P2P Market" description="Buy plots and shortcodes from other users here" loading={false}>
+    <PageLayout
+      title="P2P Market"
+      seoTitle="buy and sell plots of land"
+      description="Buy plots and shortcodes from other users here"
+      seoDescription="P2P market where existing plots of land can be bought and sold"
+      loading={false}
+    >
       <div className="grid grid-cols-8 gap-8">
         <div className="col-span-8 md:col-span-5">
           <Card>

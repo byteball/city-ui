@@ -112,18 +112,46 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
         })
       : null;
 
+  const title = `Obyte City — ${addresses.length ? addresses[0] : "A community engagement space for Obyte"}`;
+
+  const discordContact = attestations.find((a) => a.name === "discord")?.value;
+  const telegramContact = attestations.find((a) => a.name === "telegram")?.value;
+
+  // @ts-ignore
+  const name = selectedMapUnit?.info?.name || telegramContact || discordContact || "unknown";
+
+  let description =
+    "A community engagement space where Obyte community members establish closer connections with each other and receive rewards after becoming neighbors in the City";
+
+  if (selectedMapUnit) {
+    description = `Plot/House at ${addresses[0]} owned by ${name || walletAddress} in Obyte City`;
+  }
+
   return (
     <>
       <Helmet>
-        <title>Obyte City — {addresses.length ? addresses[0] : "map"}</title>
+        <title>{title}</title>
+        <meta name="og:title" content={title} />
+        <meta name="twitter:title" content={title} />
+
+        <meta name="og:description" content={description} />
+        <meta name="twitter:description" content={description} />
+        <meta name="description" content={description} />
+
         {selectedMapUnit ? (
-          <meta
-            property="og:image"
-            content={`${appConfig.OG_IMAGE_URL}/og/unit?type=${selectedMapUnit.type}&number=${
-              selectedMapUnit.type === "house" ? selectedMapUnit.house_num : selectedMapUnit.plot_num
-            }`}
-          />
-        ) : null}
+          <>
+            <meta
+              property="og:image"
+              content={`${appConfig.OG_IMAGE_URL}/og/unit?${selectedMapUnit.type}=${
+                selectedMapUnit.type === "house" ? selectedMapUnit.house_num : selectedMapUnit.plot_num
+              }`}
+            />
+          </>
+        ) : (
+          <>
+            <meta property="og:image" content={`${appConfig.OG_IMAGE_URL}/og/unit`} />
+          </>
+        )}
       </Helmet>
 
       <Card>

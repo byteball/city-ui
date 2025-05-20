@@ -84,10 +84,32 @@ const ClaimRedirectPage = () => {
     from_address: walletAddress || undefined,
   });
 
+  const seoDescription =
+    "You became neighbors and can claim your reward house and plot — while getting to know your neighbor";
+
+  const discordAttestation1 = attestations1.find((att) => att.name === "discord")?.value;
+  const discordAttestation2 = attestations2.find((att) => att.name === "discord")?.value;
+  const tgAttestation1 = attestations1.find((att) => att.name === "telegram")?.value;
+  const tgAttestation2 = attestations2.find((att) => att.name === "telegram")?.value;
+  const infoName1 = typeof plot1.info === "object" ? plot1.info?.name : "";
+  const infoName2 = typeof plot2.info === "object" ? plot2.info?.name : "";
+
+  const seoTitle = `Obyte City — You are neighbors: ${infoName1 || tgAttestation1 || discordAttestation1} and ${
+    infoName2 || tgAttestation2 || discordAttestation2
+  }`;
+
   return (
     <>
       <Helmet>
-        <title>Obyte City — You are neighbors</title>
+        <title>{seoTitle}</title>
+        <meta name="og:title" content={seoTitle} />
+        <meta name="twitter:title" content={seoTitle} />
+
+        <meta name="og:description" content={seoDescription} />
+        <meta name="twitter:description" content={seoDescription} />
+        <meta name="description" content={seoDescription} />
+
+        <meta property="og:image" content={`${appConfig.OG_IMAGE_URL}/og/claim`} />
       </Helmet>
 
       <div className="text-lg min-h-[75vh] mt-10">

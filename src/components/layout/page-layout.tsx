@@ -11,16 +11,32 @@ interface IPageLayoutProps {
   description?: string;
   loading?: boolean; // show loader
   ogImageKey?: string; // for og:image
+  seoTitle?: string; // for SEO title
+  seoDescription?: string; // for SEO description
 }
 
-export const PageLayout: FC<IPageLayoutProps> = ({ children, title, loading = false, description, ogImageKey }) => {
+export const PageLayout: FC<IPageLayoutProps> = ({
+  children,
+  title,
+  seoTitle,
+  loading = false,
+  description,
+  seoDescription,
+  ogImageKey,
+}) => {
   return (
     <>
       <Helmet>
-        <title>Obyte City — {title}</title>
-        <meta name="description" content={description} />
+        <title>Obyte City — {seoTitle || title}</title>
+        <meta name="og:title" content={`Obyte City — ${seoTitle || title}`} />
+        <meta name="twitter:title" content={`Obyte City — ${seoTitle || title}`} />
+
+        <meta name="og:description" content={seoDescription || description} />
+        <meta name="description" content={seoDescription || description} />
+        <meta name="twitter:description" content={seoDescription || description} />
+
+        {ogImageKey && <meta name="twitter:image" content={`${appConfig.OG_IMAGE_URL}/og/${ogImageKey}`} />}
         {ogImageKey && <meta property="og:image" content={`${appConfig.OG_IMAGE_URL}/og/${ogImageKey}`} />}
-        <meta name="og:title" content={`Obyte City — ${title}`} />
       </Helmet>
 
       <div className="min-h-[80vh] px-4 md:px-0">
