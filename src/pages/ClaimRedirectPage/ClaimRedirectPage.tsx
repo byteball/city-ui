@@ -1,27 +1,36 @@
-import { CircleXIcon, HandshakeIcon, Loader } from "lucide-react";
+import { CircleXIcon, Loader } from "lucide-react";
+import { useRef } from "react";
+import { Helmet } from "react-helmet-async";
 import { useParams } from "react-router";
 
 import { generateLink, getAddressFromNearestRoad, getExplorerUrl } from "@/lib";
 import { useSettingsStore } from "@/store/settings-store";
 
+import { getRoads } from "@/game/utils/getRoads";
+import { useAttestations } from "@/hooks/useAttestations";
+import { useAaParams, useAaStore } from "@/store/aa-store";
+import { mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
+
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { IRefPhaserGame, PhaserGame } from "@/game/PhaserGame";
+
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { QRButton } from "@/components/ui/_qr-button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { getRoads } from "@/game/utils/getRoads";
-import { useAttestations } from "@/hooks/useAttestations";
-import { useAaStore } from "@/store/aa-store";
-import { mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import { AttestationList } from "../UserPage/components";
 
 import appConfig from "@/appConfig";
-import { Helmet } from "react-helmet-async";
 
 const ClaimRedirectPage = () => {
-  const walletAddress = useSettingsStore((state) => state.walletAddress);
+  const { walletAddress, inited } = useSettingsStore((state) => state);
+
   const aaState = useAaStore((state) => state);
   const { nums } = useParams<{ nums: string }>();
   const mapUnits = mapUnitsSelector(aaState);
-
+  const gameColumnRef = useRef<HTMLDivElement>(null);
+  const phaserRef = useRef<IRefPhaserGame | null>(null);
+  const params = useAaParams();
   const { loaded, loading } = aaState;
 
   const [plot1_num, plot2_num] = nums?.split("-").map(Number) || [];
@@ -35,7 +44,7 @@ const ClaimRedirectPage = () => {
   const { data: attestations1, loaded: plot1AttestationLoaded } = useAttestations(plot1?.owner);
   const { data: attestations2, loaded: plot2AttestationLoaded } = useAttestations(plot2?.owner);
 
-  if (loading || !loaded) {
+  if (loading || !loaded || !inited) {
     return (
       <div className="text-lg text-center min-h-[75vh] mt-10">
         <Loader className="mx-auto mb-5 w-14 h-14 animate-spin" />
@@ -98,6 +107,8 @@ const ClaimRedirectPage = () => {
     infoName2 || tgAttestation2 || discordAttestation2
   }`;
 
+  const shownSkeleton = loading || !loaded || !inited;
+
   return (
     <>
       <Helmet>
@@ -112,35 +123,49 @@ const ClaimRedirectPage = () => {
         <meta property="og:image" content={`${appConfig.OG_IMAGE_URL}/og/claim`} />
       </Helmet>
 
-      <div className="text-lg min-h-[75vh] mt-10">
-        <h1 className="mt-12 mb-5 text-4xl font-extrabold tracking-tight text-center scroll-m-20 lg:text-5xl">
-          You are neighbors
-        </h1>
-
-        <div className="mb-10 text-sm text-center text-muted-foreground">
-          Both neighbors must submit their claims within <b>10 minutes</b> of each other.
-          <div>Please contact with one another.</div>
-        </div>
-
-        <div className="flex flex-col gap-8 mt-12 xl:justify-between xl:flex-row">
-          <div className="flex-grow-0 flex-shrink-0 h-full p-4 bg-gray-800 xl:w-1/3 xl:bg-transparent xl:p-0 rounded-xl xl:rounded-none">
-            <div>
-              <div className="gap-4 mb-8">
-                <div className="text-2xl">{address1}</div>
-                <div>
-                  <a
-                    className="underline text-link"
-                    href={`/?plot=${plot1.plot_num}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    (View on the map)
-                  </a>
-                </div>
+      <div className="grid grid-cols-5 gap-6 px-4 md:px-0">
+        <div className="col-span-5 md:col-span-3">
+          <Card>
+            <CardHeader>
+              <h2 className="text-xl font-semibold">Your neighboring plots</h2>
+            </CardHeader>
+            <CardContent>
+              <div ref={gameColumnRef}>
+                {!shownSkeleton ? (
+                  <PhaserGame
+                    ref={phaserRef}
+                    gameOptions={{ displayMode: "claim", params, claimNeighborPlotNumbers: [plot1_num, plot2_num] }}
+                  />
+                ) : (
+                  <div className="game-container-placeholder">
+                    <Skeleton className="w-full h-[80vh] rounded-xl" />
+                  </div>
+                )}
               </div>
+            </CardContent>
+          </Card>
+        </div>
+        <div className="col-span-5 md:col-span-2">
+          <div className="grid grid-cols-1 gap-8">
+            <Card>
+              <CardHeader>
+                <h2 className="text-xl font-semibold">Claim your reward</h2>
+                <CardDescription>
+                  Both neighbors must submit their claims within 10 minutes of each other. Please contact with one
+                  another.
+                </CardDescription>
+              </CardHeader>
 
-              <div>
-                <InfoPanel>
+              <CardContent>
+                <QRButton href={url}>Claim</QRButton>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <h2 className="text-xl font-semibold">{address1}</h2>
+              </CardHeader>
+              <CardContent className="flex flex-col items-center">
+                <InfoPanel className="w-full">
                   <InfoPanel.Item label="Owner">
                     <a
                       href={getExplorerUrl(plot1.owner!, "address")}
@@ -154,6 +179,7 @@ const ClaimRedirectPage = () => {
                       <span className="hidden xl:inline-block">{plot1.owner}</span>
                     </a>
                   </InfoPanel.Item>
+
                   <InfoPanel.Item label="Coordinates">
                     <TooltipProvider>
                       <Tooltip>
@@ -182,67 +208,49 @@ const ClaimRedirectPage = () => {
                       <div className="text-gray-500">No attested contacts</div>
                     )}
                   </InfoPanel.Item>
+
+                  {plot1.info ? (
+                    <div className="text-sm">
+                      <div className="mt-4 mb-1 font-semibold">Additional information</div>
+                      {typeof plot1.info === "string" ? (
+                        <InfoPanel.Item label="Information">
+                          <div className="inline">{plot1.info}</div>
+                        </InfoPanel.Item>
+                      ) : (
+                        Object.entries(plot1.info)
+                          .slice(0, 5)
+                          .map(([key, value]) => (
+                            <InfoPanel.Item key={key} label={key}>
+                              <div className="inline">
+                                {String(value).startsWith("https://") || String(value).startsWith("https://") ? (
+                                  <a href={value?.toString()} rel="nofollow" className="text-link" target="_blank">
+                                    {value}
+                                  </a>
+                                ) : (
+                                  value ?? ""
+                                )}
+                              </div>
+                            </InfoPanel.Item>
+                          ))
+                      )}
+                    </div>
+                  ) : null}
                 </InfoPanel>
+              </CardContent>
+            </Card>
 
-                {plot1.info ? (
-                  <div className="text-sm">
-                    <div className="mt-4 mb-1 font-semibold">Additional information</div>
-                    {typeof plot1.info === "string" ? (
-                      <InfoPanel.Item label="Information">
-                        <div className="inline">{plot1.info}</div>
-                      </InfoPanel.Item>
-                    ) : (
-                      Object.entries(plot1.info)
-                        .slice(0, 5)
-                        .map(([key, value]) => (
-                          <InfoPanel.Item key={key} label={key}>
-                            <div className="inline">
-                              {String(value).startsWith("https://") || String(value).startsWith("https://") ? (
-                                <a href={value?.toString()} rel="nofollow" className="text-link" target="_blank">
-                                  {value}
-                                </a>
-                              ) : (
-                                value ?? ""
-                              )}
-                            </div>
-                          </InfoPanel.Item>
-                        ))
-                    )}
-                  </div>
-                ) : null}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center order-first gap-4 xl:items-start xl:justify-center xl:order-none">
-            <HandshakeIcon className="mx-auto mb-2 xl:mb-5 w-14 h-14" />
-            <QRButton href={url}>Claim</QRButton>
-          </div>
-
-          <div className="flex-grow-0 flex-shrink-0 h-full p-4 bg-gray-800 xl:w-1/3 xl:bg-transparent xl:p-0 rounded-xl xl:rounded-none">
-            <div className="h-full">
-              <div className="gap-4 mb-8">
-                <div className="text-2xl">{address2}</div>
-                <div>
-                  <a
-                    className="underline text-link"
-                    href={`/?plot=${plot2.plot_num}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    (View on the map)
-                  </a>
-                </div>
-              </div>
-
-              <div>
-                <InfoPanel>
+            <Card>
+              <CardHeader>
+                <h2 className="text-xl font-semibold">{address2}</h2>
+              </CardHeader>
+              <CardContent className="flex flex-col items-center">
+                <InfoPanel className="w-full">
                   <InfoPanel.Item label="Owner">
                     <a
                       href={getExplorerUrl(plot2.owner!, "address")}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="line-clamp-1 text-link"
+                      className="text-link"
                     >
                       <span className="inline-block xl:hidden">
                         {plot2.owner!.slice(0, 5)}...{plot2.owner!.slice(-5, plot2.owner!.length)}
@@ -250,6 +258,7 @@ const ClaimRedirectPage = () => {
                       <span className="hidden xl:inline-block">{plot2.owner}</span>
                     </a>
                   </InfoPanel.Item>
+
                   <InfoPanel.Item label="Coordinates">
                     <TooltipProvider>
                       <Tooltip>
@@ -278,39 +287,38 @@ const ClaimRedirectPage = () => {
                       <div className="text-gray-500">No attested contacts</div>
                     )}
                   </InfoPanel.Item>
-                </InfoPanel>
 
-                {plot2.info ? (
-                  <div className="text-sm">
-                    <div className="mt-4 mb-1 font-semibold">Additional information</div>
-                    {typeof plot2.info === "string" ? (
-                      <InfoPanel.Item label="Information">
-                        <div className="inline">{plot2.info}</div>
-                      </InfoPanel.Item>
-                    ) : (
-                      Object.entries(plot2.info)
-                        .slice(0, 5)
-                        .map(([key, value]) => (
-                          <InfoPanel.Item key={key} label={key}>
-                            <div className="inline">
-                              {String(value).startsWith("https://") || String(value).startsWith("https://") ? (
-                                <a href={value?.toString()} rel="nofollow" className="text-link" target="_blank">
-                                  {value}
-                                </a>
-                              ) : (
-                                value ?? ""
-                              )}
-                            </div>
-                          </InfoPanel.Item>
-                        ))
-                    )}
-                  </div>
-                ) : null}
-              </div>
-            </div>
+                  {plot2.info ? (
+                    <div className="text-sm">
+                      <div className="mt-4 mb-1 font-semibold">Additional information</div>
+                      {typeof plot2.info === "string" ? (
+                        <InfoPanel.Item label="Information">
+                          <div className="inline">{plot2.info}</div>
+                        </InfoPanel.Item>
+                      ) : (
+                        Object.entries(plot2.info)
+                          .slice(0, 5)
+                          .map(([key, value]) => (
+                            <InfoPanel.Item key={key} label={key}>
+                              <div className="inline">
+                                {String(value).startsWith("https://") || String(value).startsWith("https://") ? (
+                                  <a href={value?.toString()} rel="nofollow" className="text-link" target="_blank">
+                                    {value}
+                                  </a>
+                                ) : (
+                                  value ?? ""
+                                )}
+                              </div>
+                            </InfoPanel.Item>
+                          ))
+                      )}
+                    </div>
+                  ) : null}
+                </InfoPanel>
+              </CardContent>
+            </Card>
           </div>
         </div>
-        <div className="flex justify-center mt-5"></div>
       </div>
     </>
   );
