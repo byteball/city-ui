@@ -134,7 +134,7 @@ const ClaimRedirectPage = () => {
         <div className="col-span-5 md:col-span-3">
           <Card>
             <CardHeader>
-              <h2 className="text-xl font-semibold">Your neighboring plots</h2>
+              <h2 className="text-xl font-semibold">You became neighbors!</h2>
             </CardHeader>
             <CardContent>
               <div ref={gameColumnRef}>
@@ -161,7 +161,7 @@ const ClaimRedirectPage = () => {
           <div className="grid grid-cols-1 gap-8">
             <Card>
               <CardHeader>
-                <h2 className="text-xl font-semibold">Claim your reward</h2>
+                <h2 className="text-xl font-semibold">Claim your rewards</h2>
                 <CardDescription>
                   Both neighbors must submit their claims within 10 minutes of each other. Please contact with one
                   another.
