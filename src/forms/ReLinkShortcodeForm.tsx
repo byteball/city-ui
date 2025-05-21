@@ -30,7 +30,7 @@ export const ReLinkShortcodeForm: FC<ReLinkShortcodeFormProps> = ({
 
   const url = generateLink({
     amount: 10000,
-    data: { edit_house: 1, shortcode, house_num: Number(houseNum), to: address },
+    data: { edit_house: 1, shortcode, house_num: houseNum, to: address },
     from_address: walletAddress!,
     aa: appConfig.AA_ADDRESS,
     asset: "base",
