@@ -262,7 +262,8 @@ export interface ITokenInfo {
 }
 
 export interface IGameOptions {
-  displayMode?: "main" | "market";
+  displayMode?: "main" | "market" | "claim";
   params?: IAaParams;
+  claimNeighborPlotNumbers?: [number, number];
 }
 
