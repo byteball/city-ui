@@ -1,3 +1,4 @@
+import obyte from "obyte";
 import { ChangeEvent, FC, KeyboardEvent, useCallback, useRef, useState } from "react";
 import { Link } from "react-router";
 
@@ -24,6 +25,7 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
   const [shortcode, setShortcode] = useState<string>(currentShortcode);
   const { plot_price } = useAaParams();
   const walletAddress = useSettingsStore((state) => state.walletAddress);
+  const [address, setAddress] = useState<string | null>(walletAddress);
   const btnRef = useRef<HTMLButtonElement>(null);
   const existingShortcodes = useAaStore((state) => shortcodesSelector(state.state));
 
@@ -37,6 +39,15 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
     setShortcode(value);
   };
 
+  let to;
+  const newShortcodeAddressIsValid = address && obyte.utils.isValidAddress(address);
+
+  if (shortcode && shortcode.length > 0 && newShortcodeAddressIsValid) {
+    if (address !== walletAddress) {
+      to = address;
+    }
+  }
+
   const url = generateLink({
     amount: 10000,
     data: {
@@ -44,6 +55,7 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
       edit_house: 1,
       house_num: unitData.house_num,
       release_shortcode: shortcode.length === 0 ? 1 : undefined,
+      to,
     },
     from_address: walletAddress!,
     aa: appConfig.AA_ADDRESS,
@@ -52,7 +64,12 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
   });
 
   const disabled =
-    currentShortcode === shortcode || shortcodeMoreThan20Characters || mayorHouse || isTooCheap || isTaken;
+    currentShortcode === shortcode ||
+    shortcodeMoreThan20Characters ||
+    mayorHouse ||
+    isTooCheap ||
+    isTaken ||
+    (address && !newShortcodeAddressIsValid);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
@@ -126,7 +143,7 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
           Shortcode
         </Label>
 
-        <div className="space-y-8">
+        <div className="space-y-4">
           <Input
             id="shortcode"
             autoFocus
@@ -142,16 +159,34 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
             onChange={handleChange}
           />
 
-          {shortcode.length === 0 && currentShortcode ? (
-            <p className="text-sm text-red-800 text-muted-foreground">
-              You have left the field empty. Are you certain you wish to delete the current shortcode?
-            </p>
-          ) : null}
-
           <div>
-            <QRButton ref={btnRef} href={url} disabled={disabled}>
-              Assign
-            </QRButton>
+            <Label htmlFor="address" className="text-sm font-medium">
+              Address
+            </Label>
+
+            <Input
+              id="address"
+              error={!!address && !obyte.utils.isValidAddress(address)}
+              onKeyDown={handleKeyDown}
+              onChange={(e) => setAddress(e.target.value)}
+              value={address || ""}
+            />
+          </div>
+
+          <div className="mt-8">
+            {shortcode.length === 0 && currentShortcode ? (
+              <div className="mb-4">
+                <p className="text-sm text-red-800 text-muted-foreground">
+                  You have left the field empty. Are you certain you wish to delete the current shortcode?
+                </p>
+              </div>
+            ) : null}
+
+            <div>
+              <QRButton ref={btnRef} href={url} disabled={disabled}>
+                Assign
+              </QRButton>
+            </div>
           </div>
         </div>
       </div>
