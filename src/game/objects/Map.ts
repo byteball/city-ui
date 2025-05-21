@@ -182,7 +182,7 @@ export class Map {
           address,
           this.gameOptions?.claimNeighborPlotNumbers?.[1] &&
           this.gameOptions?.claimNeighborPlotNumbers?.[1] === unitData.plot_num
-            ? "pin"
+            ? "plus"
             : "plot"
         );
       } else {

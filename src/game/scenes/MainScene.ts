@@ -22,7 +22,7 @@ export default class MapScene extends Phaser.Scene {
   preload() {
     // Use absolute paths to correctly load assets regardless of current URL path
     this.load.svg("plot", "/assets/plot.svg", { width: 150, height: 150 });
-    this.load.svg("pin", "/assets/pin.svg", { width: 150, height: 150 });
+    this.load.svg("plus", "/assets/plus.svg", { width: 150, height: 150 });
     this.load.svg("house", "/assets/house.svg", { width: 150, height: 150 });
     this.load.svg("road-vertical", "/assets/road-vertical.svg", { width: 180, height: 180 });
     this.load.svg("road-horizontal", "/assets/road-horizontal.svg", { width: 180, height: 180 });

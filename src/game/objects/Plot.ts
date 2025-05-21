@@ -2,7 +2,7 @@
 import { IMapUnit } from "@/global";
 import Phaser from "phaser";
 
-const PIN_SIZE = 150;
+const PLUS_SIZE = 150;
 export class Plot {
   private scene: Phaser.Scene;
   private data: IMapUnit;
@@ -27,9 +27,9 @@ export class Plot {
   private createPlot() {
     const { x, y } = this.data;
 
-    if (this.view === "pin") {
-      this.plotImage = this.scene.add.image(x, y - PIN_SIZE / 2, "pin");
-      this.plotImage.setDisplaySize(PIN_SIZE, PIN_SIZE);
+    if (this.view === "plus") {
+      this.plotImage = this.scene.add.image(x, y, "plus");
+      this.plotImage.setDisplaySize(PLUS_SIZE, PLUS_SIZE);
       this.plotImage.setDepth(this.plotImage.depth + 20);
 
       // const redDot = this.scene.add.graphics();
