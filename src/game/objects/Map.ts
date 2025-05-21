@@ -86,7 +86,11 @@ export class Map {
       if (unitData.type === "plot" && unitData.status === "pending") return;
 
       if (this.gameOptions?.displayMode === "claim") {
-        if (unitData.type === "plot" && !this.gameOptions.claimNeighborPlotNumbers?.includes(unitData.plot_num)) return;
+        if (
+          unitData.type === "house" ||
+          (unitData.type === "plot" && !this.gameOptions.claimNeighborPlotNumbers?.includes(unitData.plot_num))
+        )
+          return;
       }
 
       if (sceneType === "market" && !(unitData.type === "plot" ? unitData.sale_price : true)) return; // Only plots with sale price
