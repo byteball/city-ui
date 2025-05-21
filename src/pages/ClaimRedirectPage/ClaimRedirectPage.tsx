@@ -1,7 +1,7 @@
 import { CircleXIcon, Loader } from "lucide-react";
 import { useRef } from "react";
 import { Helmet } from "react-helmet-async";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 import { generateLink, getAddressFromNearestRoad, getExplorerUrl } from "@/lib";
 import { useSettingsStore } from "@/store/settings-store";
@@ -31,6 +31,8 @@ const ClaimRedirectPage = () => {
   const gameColumnRef = useRef<HTMLDivElement>(null);
   const phaserRef = useRef<IRefPhaserGame | null>(null);
   const params = useAaParams();
+  const navigation = useNavigate();
+
   const { loaded, loading } = aaState;
 
   const [plot1_num, plot2_num] = nums?.split("-").map(Number) || [];
@@ -50,6 +52,10 @@ const ClaimRedirectPage = () => {
         <Loader className="mx-auto mb-5 w-14 h-14 animate-spin" />
       </div>
     );
+  }
+
+  if (inited && loaded && (plot1 === undefined || plot2 === undefined)) {
+    navigation("/");
   }
 
   if (!isValidPlotNumbers || plot1 === undefined || plot2 === undefined) {
