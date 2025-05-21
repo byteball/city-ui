@@ -11,7 +11,7 @@ const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   width: 1800,
   height: 1800,
-  banner: appConfig.TESTNET,
+  banner: !!appConfig.TESTNET,
   resizeInterval: 10,
   render: {
     antialias: true,

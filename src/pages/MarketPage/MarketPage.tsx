@@ -25,7 +25,7 @@ export default () => {
       seoTitle="buy and sell plots of land"
       description="Buy plots and shortcodes from other users here"
       seoDescription="P2P market where existing plots of land can be bought and sold"
-      loading={false}
+      loading={!settingsInited}
     >
       <div className="grid grid-cols-8 gap-8">
         <div className="col-span-8 md:col-span-5">

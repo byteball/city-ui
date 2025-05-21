@@ -84,6 +84,11 @@ export class Map {
 
     this.unitsData.forEach((unitData) => {
       if (unitData.type === "plot" && unitData.status === "pending") return;
+
+      if (this.gameOptions?.displayMode === "claim") {
+        if (unitData.type === "plot" && !this.gameOptions.claimNeighborPlotNumbers?.includes(unitData.plot_num)) return;
+      }
+
       if (sceneType === "market" && !(unitData.type === "plot" ? unitData.sale_price : true)) return; // Only plots with sale price
 
       const { x, y, type } = unitData;
@@ -93,7 +98,7 @@ export class Map {
       const plotFraction = (totalAmount / this.totalSize) * 0.1;
 
       const plotArea = plotFraction * MAP_WIDTH * MAP_HEIGHT;
-      const plotSize = Math.sqrt(plotArea);
+      let plotSize = Math.sqrt(plotArea);
 
       // 2) Initial coordinates of the plot
       let finalX = asNonNegativeNumber(Decimal(x).mul(appConfig.MAP_SCALE).toNumber());
@@ -158,18 +163,38 @@ export class Map {
           this.scene,
           { ...unitData, x: finalX, y: finalY },
           houseSize,
-          this.gameOptions?.displayMode === "market",
+          this.gameOptions?.displayMode && ["market", "claim"].includes(this.gameOptions?.displayMode),
           address
         );
       } else if (type === "plot") {
-        unit = new Plot(this.scene, { ...unitData, x: finalX, y: finalY }, plotSize, address);
+        if (this.gameOptions?.isReferral) {
+          if (
+            this.gameOptions?.claimNeighborPlotNumbers?.[1] !== unitData.plot_num &&
+            this.gameOptions?.params?.referral_boost
+          ) {
+            plotSize *= 1 + this.gameOptions?.params?.referral_boost;
+          }
+        }
+        unit = new Plot(
+          this.scene,
+          { ...unitData, x: finalX, y: finalY },
+          plotSize,
+          address,
+          this.gameOptions?.claimNeighborPlotNumbers?.[1] &&
+          this.gameOptions?.claimNeighborPlotNumbers?.[1] === unitData.plot_num
+            ? "pin"
+            : "plot"
+        );
       } else {
         throw new Error(`Unknown unit type: ${type}`);
       }
 
       this.MapUnits.push(unit);
 
-      if (this.gameOptions?.displayMode === "market" && type === "house") {
+      if (
+        (this.gameOptions?.displayMode === "market" && type === "house") ||
+        this.gameOptions?.displayMode === "claim"
+      ) {
         return;
       }
 

@@ -2,21 +2,24 @@
 import { IMapUnit } from "@/global";
 import Phaser from "phaser";
 
+const PIN_SIZE = 150;
 export class Plot {
   private scene: Phaser.Scene;
   private data: IMapUnit;
   private plotSize: number;
   private address: string;
+  private view?: string;
 
   private plotImage: Phaser.GameObjects.Image;
   private outline?: Phaser.GameObjects.Graphics;
   private tooltipDom?: HTMLDivElement;
 
-  constructor(scene: Phaser.Scene, data: IMapUnit, plotSize: number, address: string) {
+  constructor(scene: Phaser.Scene, data: IMapUnit, plotSize: number, address: string, view = "plot") {
     this.scene = scene;
     this.data = data;
     this.plotSize = plotSize;
     this.address = address;
+    this.view = view;
 
     this.createPlot();
   }
@@ -24,9 +27,21 @@ export class Plot {
   private createPlot() {
     const { x, y } = this.data;
 
-    this.plotImage = this.scene.add.image(x, y, "plot");
-    this.plotImage.setDisplaySize(this.plotSize, this.plotSize);
-    this.plotImage.setInteractive();
+    if (this.view === "pin") {
+      this.plotImage = this.scene.add.image(x, y - PIN_SIZE / 2, "pin");
+      this.plotImage.setDisplaySize(PIN_SIZE, PIN_SIZE);
+      this.plotImage.setDepth(this.plotImage.depth + 20);
+
+      // const redDot = this.scene.add.graphics();
+      // redDot.fillStyle(0xff0000, 1);
+      // redDot.fillCircle(x, y, 10);
+      // redDot.setDepth(this.plotImage.depth + 30);
+    } else {
+      this.plotImage = this.scene.add.image(x, y, this.view ?? "plot");
+      this.plotImage.setDepth(this.plotImage.depth + (this.view === "plot" ? 0 : 20));
+      this.plotImage.setDisplaySize(this.plotSize, this.plotSize);
+      this.plotImage.setInteractive();
+    }
 
     // Use DOM-based block tooltip
     this.plotImage.on("pointerover", (pointer: Phaser.Input.Pointer) => {
@@ -82,16 +97,12 @@ export class Plot {
 
   public setSelected(selected: boolean) {
     if (selected) {
-      // Применяем tint к изображению
-      // this.plotImage.setTint(0x60a5fa);
-
-      // Добавляем контур с нужной толщиной
       if (!this.outline) {
         this.outline = this.scene.add.graphics();
       }
 
       this.outline.clear();
-      this.outline.lineStyle(20, 0x60a5fa); // здесь 20 - толщина контура
+      this.outline.lineStyle(20, 0x60a5fa);
       this.outline.strokeRect(
         this.plotImage.x - this.plotImage.displayWidth / 2,
         this.plotImage.y - this.plotImage.displayHeight / 2,
@@ -99,8 +110,7 @@ export class Plot {
         this.plotImage.displayHeight
       );
 
-      // Устанавливаем depth выше чем у plotImage
-      this.outline.setDepth(this.plotImage.depth + 1);
+      this.outline.setDepth(this.plotImage.depth);
     } else {
       this.plotImage.clearTint();
 
