@@ -13,6 +13,7 @@ import { IHouse } from "@/global";
 import { generateLink } from "@/lib";
 
 import appConfig from "@/appConfig";
+import { ReLinkShortcodeForm } from "./ReLinkShortcodeForm";
 
 interface IShortcodeFormProps {
   unitData: IHouse;
@@ -87,14 +88,36 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
       </div>
 
       {currentShortcode ? (
-        <div>
+        <div className="space-y-1">
           <div>
             Your current shortcode is: <b>{currentShortcode}</b>.
-          </div>{" "}
-          If you want to sell your shortcode, please go to the{" "}
-          <Link to="/market" className="text-link">
-            shortcode market page
-          </Link>{" "}
+          </div>
+
+          <div className="space-x-2">
+            <div>
+              Address linked to the shortcode:{" "}
+              <b>
+                <span>
+                  {existingShortcodes[currentShortcode].slice(0, 4)}...
+                  {existingShortcodes[currentShortcode].slice(-4)}
+                </span>
+              </b>{" "}
+              <ReLinkShortcodeForm
+                currentAddress={existingShortcodes[currentShortcode]}
+                houseNum={unitData.house_num}
+                shortcode={currentShortcode}
+              >
+                <span className="text-xs text-link">(Change)</span>
+              </ReLinkShortcodeForm>
+            </div>
+          </div>
+
+          <div>
+            If you want to sell your shortcode, please go to the{" "}
+            <Link to="/market" className="text-link">
+              shortcode market page
+            </Link>
+          </div>
         </div>
       ) : null}
 
