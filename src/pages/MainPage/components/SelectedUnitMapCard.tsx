@@ -69,6 +69,8 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
     data: { leave: 1, plot_num: selectedMapUnit?.plot_num },
     asset: "base",
     aa: appConfig.AA_ADDRESS,
+    from_address: walletAddress!,
+    is_single: true,
   });
 
   const addresses =
@@ -93,6 +95,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
             plot_num: selectedMapUnit?.plot_num,
           },
           asset: asset as string,
+          from_address: walletAddress!,
           is_single: true,
         })
       : null;
@@ -108,6 +111,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
             sale_price: 0,
           },
           asset: asset!,
+          from_address: walletAddress!,
           is_single: true,
         })
       : null;
