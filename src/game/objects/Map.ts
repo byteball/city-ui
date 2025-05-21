@@ -98,7 +98,7 @@ export class Map {
       const plotFraction = (totalAmount / this.totalSize) * 0.1;
 
       const plotArea = plotFraction * MAP_WIDTH * MAP_HEIGHT;
-      const plotSize = Math.sqrt(plotArea);
+      let plotSize = Math.sqrt(plotArea);
 
       // 2) Initial coordinates of the plot
       let finalX = asNonNegativeNumber(Decimal(x).mul(appConfig.MAP_SCALE).toNumber());
@@ -167,6 +167,14 @@ export class Map {
           address
         );
       } else if (type === "plot") {
+        if (this.gameOptions?.isReferral) {
+          if (
+            this.gameOptions?.claimNeighborPlotNumbers?.[1] !== unitData.plot_num &&
+            this.gameOptions?.params?.referral_boost
+          ) {
+            plotSize *= 1 + this.gameOptions?.params?.referral_boost;
+          }
+        }
         unit = new Plot(
           this.scene,
           { ...unitData, x: finalX, y: finalY },

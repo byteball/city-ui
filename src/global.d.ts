@@ -131,6 +131,7 @@ interface ICityState {
  *   last_transfer_ts: 1678901235,
  *   last_rental_ts: 1678901236,
  *   ref_plot_num: 2,
+ *   ref: "WVO7PWJUAIEGJM7HY25SX6UPXSTCN...",
  *   rental_expiry_ts: 1678901237,
  *   x: 1,
  *   y: 2
@@ -151,6 +152,7 @@ export interface IPlot extends ICoordinates {
   last_transfer_ts?: NonNegativeNumber;
   last_rental_ts?: NonNegativeNumber;
   ref_plot_num?: NonNegativeNumber;
+  ref?: string;
   rented_amount?: NonNegativeNumber;
   rental_expiry_ts?: NonNegativeNumber;
 }
@@ -265,5 +267,6 @@ export interface IGameOptions {
   displayMode?: "main" | "market" | "claim";
   params?: IAaParams;
   claimNeighborPlotNumbers?: [number, number];
+  isReferral?: boolean;
 }
 

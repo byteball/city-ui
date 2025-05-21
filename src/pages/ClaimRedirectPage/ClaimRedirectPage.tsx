@@ -21,6 +21,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { AttestationList } from "../UserPage/components";
 
 import appConfig from "@/appConfig";
+import { IPlot } from "@/global";
 
 const ClaimRedirectPage = () => {
   const { walletAddress, inited } = useSettingsStore((state) => state);
@@ -40,8 +41,8 @@ const ClaimRedirectPage = () => {
   const isValidPlotNumbers =
     nums && !isNaN(plot1_num) && !isNaN(plot2_num) && Number.isInteger(plot1_num) && Number.isInteger(plot2_num);
 
-  const plot1 = mapUnits.find((unit) => unit.type === "plot" && unit.plot_num === plot1_num);
-  const plot2 = mapUnits.find((unit) => unit.type === "plot" && unit.plot_num === plot2_num);
+  const plot1 = mapUnits.find((unit) => unit.type === "plot" && unit.plot_num === plot1_num) as IPlot;
+  const plot2 = mapUnits.find((unit) => unit.type === "plot" && unit.plot_num === plot2_num) as IPlot;
 
   const { data: attestations1, loaded: plot1AttestationLoaded } = useAttestations(plot1?.owner);
   const { data: attestations2, loaded: plot2AttestationLoaded } = useAttestations(plot2?.owner);
@@ -140,7 +141,12 @@ const ClaimRedirectPage = () => {
                 {!shownSkeleton ? (
                   <PhaserGame
                     ref={phaserRef}
-                    gameOptions={{ displayMode: "claim", params, claimNeighborPlotNumbers: [plot1_num, plot2_num] }}
+                    gameOptions={{
+                      displayMode: "claim",
+                      params,
+                      claimNeighborPlotNumbers: [plot1_num, plot2_num],
+                      isReferral: plot2.ref_plot_num === plot1.plot_num || plot2.ref == plot1.owner,
+                    }}
                   />
                 ) : (
                   <div className="game-container-placeholder">
