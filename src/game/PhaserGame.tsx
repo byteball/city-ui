@@ -56,7 +56,6 @@ export const PhaserGame = memo(
       };
     }, [currentActiveScene, ref]);
 
-    // Добавляем обработку обновления параметров игры
     useEffect(() => {
       if (game.current) {
         EventBus.emit("update-game-options", gameOptions);
