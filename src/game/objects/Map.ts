@@ -167,7 +167,16 @@ export class Map {
           address
         );
       } else if (type === "plot") {
-        unit = new Plot(this.scene, { ...unitData, x: finalX, y: finalY }, plotSize, address);
+        unit = new Plot(
+          this.scene,
+          { ...unitData, x: finalX, y: finalY },
+          plotSize,
+          address,
+          this.gameOptions?.claimNeighborPlotNumbers?.[1] &&
+          this.gameOptions?.claimNeighborPlotNumbers?.[1] === unitData.plot_num
+            ? "pin"
+            : "plot"
+        );
       } else {
         throw new Error(`Unknown unit type: ${type}`);
       }
