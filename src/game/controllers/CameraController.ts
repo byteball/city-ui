@@ -13,10 +13,8 @@ export default class CameraController {
 
     this.BASE_MAP_SIZE = Decimal(1_000_000).mul(appConfig.MAP_SCALE);
 
-    // Устанавливаем границы камеры
     this.camera.setBounds(0, 0, this.BASE_MAP_SIZE.toNumber(), this.BASE_MAP_SIZE.toNumber());
 
-    // Центрируем камеру на центре карты
     this.camera.centerOn(this.BASE_MAP_SIZE.div(2).toNumber(), this.BASE_MAP_SIZE.div(2).toNumber());
 
     this.initDrag();

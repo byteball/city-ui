@@ -84,16 +84,14 @@ export class House {
     if (this.disabled) return;
 
     if (selected) {
-      // Применяем tint к изображению
       this.houseImage.setTint(0xffff00);
 
-      // Добавляем контур с нужной толщиной
       if (!this.outline) {
         this.outline = this.scene.add.graphics();
       }
 
       this.outline.clear();
-      this.outline.lineStyle(4, 0xffff00); // здесь 4 - толщина контура
+      this.outline.lineStyle(4, 0xffff00);
       this.outline.strokeRect(
         this.houseImage.x - this.houseImage.displayWidth / 2,
         this.houseImage.y - this.houseImage.displayHeight / 2,
@@ -101,7 +99,6 @@ export class House {
         this.houseImage.displayHeight
       );
 
-      // Устанавливаем depth выше чем у houseImage
       this.outline.setDepth(this.houseImage.depth + 1);
     } else {
       this.houseImage.clearTint();
