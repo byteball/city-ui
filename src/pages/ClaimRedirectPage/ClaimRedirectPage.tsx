@@ -18,11 +18,11 @@ import { IRefPhaserGame, PhaserGame } from "@/game/PhaserGame";
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { QRButton } from "@/components/ui/_qr-button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { AttestationList } from "../UserPage/components";
 
 import appConfig from "@/appConfig";
 import { IPlot } from "@/global";
 import { getContactUrlByUsername } from "@/lib/getContactUrlByUsername";
+import { SocialIcons } from "../MainPage/components/SocialIcons";
 
 const ClaimRedirectPage = () => {
   const { walletAddress, inited, decimals, symbol } = useSettingsStore((state) => state);
@@ -281,15 +281,31 @@ const ClaimRedirectPage = () => {
                     </TooltipProvider>
                   </InfoPanel.Item>
 
-                  <InfoPanel.Item
-                    label="Attested contacts"
-                    tooltipText="Please, use special bot for attestation"
-                    loading={!loaded || !plot1AttestationLoaded}
-                  >
+                  <InfoPanel.Item label="Contacts" loading={loading || !plot1AttestationLoaded}>
                     {attestations1.length ? (
-                      <AttestationList blockDisplay data={attestations1} />
+                      <div className="flex gap-4">
+                        {attestations1.map((a) => {
+                          const url = getContactUrlByUsername(a.value, a.name, a.userId);
+
+                          return (
+                            <div
+                              className="flex items-center justify-between gap-1"
+                              key={a.name + "-" + a.value + "-" + plot1.owner}
+                            >
+                              <SocialIcons type={a.name} />{" "}
+                              {url ? (
+                                <a href={url} target="_blank" className="text-link">
+                                  {a.value}
+                                </a>
+                              ) : (
+                                <div>{a.value}</div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
                     ) : (
-                      <div className="text-gray-500">No attested contacts</div>
+                      <span>No attested contacts</span>
                     )}
                   </InfoPanel.Item>
                 </InfoPanel>
@@ -328,15 +344,31 @@ const ClaimRedirectPage = () => {
                     </TooltipProvider>
                   </InfoPanel.Item>
 
-                  <InfoPanel.Item
-                    label="Attested contacts"
-                    tooltipText="Please, use special bot for attestation"
-                    loading={!loaded || !plot2AttestationLoaded}
-                  >
+                  <InfoPanel.Item label="Contacts" loading={loading || !plot2AttestationLoaded}>
                     {attestations2.length ? (
-                      <AttestationList blockDisplay data={attestations2} />
+                      <div className="flex gap-4">
+                        {attestations2.map((a) => {
+                          const url = getContactUrlByUsername(a.value, a.name, a.userId);
+
+                          return (
+                            <div
+                              className="flex items-center justify-between gap-1"
+                              key={a.name + "-" + a.value + "-" + plot2.owner}
+                            >
+                              <SocialIcons type={a.name} />{" "}
+                              {url ? (
+                                <a href={url} target="_blank" className="text-link">
+                                  {a.value}
+                                </a>
+                              ) : (
+                                <div>{a.value}</div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
                     ) : (
-                      <div className="text-gray-500">No attested contacts</div>
+                      <span>No attested contacts</span>
                     )}
                   </InfoPanel.Item>
                 </InfoPanel>
