@@ -3,22 +3,20 @@ import { Link } from "react-router";
 import { getPlotPrice } from "@/aaLogic/getPlotPrice";
 import { PageLayout } from "@/components/layout/page-layout";
 import { toLocalString } from "@/lib";
-import { useAaParams, useAaStore } from "@/store/aa-store";
+import { useAaParams } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 import { FaqContent, FaqItem, FaqTitle } from "./components";
 
 export default () => {
-  const { symbol, inited } = useSettingsStore((state) => state);
+  const { symbol } = useSettingsStore((state) => state);
   const params = useAaParams();
   const { matching_probability, referral_boost, followup_reward_share, p2p_sale_fee, shortcode_sale_fee } = params;
   const { fee } = getPlotPrice(params);
-  const loaded = useAaStore((state) => state.loaded);
 
   return (
     <PageLayout
       title="F.A.Q."
       ogImageKey="faq"
-      loading={!inited || !loaded}
       seoTitle="Frequently asked questions"
       seoDescription="Frequently asked questions about Obyte City, a community engagement space for Obyte"
     >
