@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, useParams } from "react-router";
 
-import { generateLink, getAddressFromNearestRoad, getExplorerUrl, toLocalString } from "@/lib";
+import { generateLink, getAddressFromNearestRoad, toLocalString } from "@/lib";
 import { useSettingsStore } from "@/store/settings-store";
 
 import { getRoads } from "@/game/utils/getRoads";
@@ -253,12 +253,7 @@ const ClaimRedirectPage = () => {
               <CardContent className="flex flex-col items-center">
                 <InfoPanel className="w-full">
                   <InfoPanel.Item label="Owner">
-                    <a
-                      href={getExplorerUrl(plot1.owner!, "address")}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-link"
-                    >
+                    <a href={`/user/${plot1.owner}`} className="text-link">
                       <span className="inline-block xl:hidden">
                         {plot1.owner!.slice(0, 5)}...{plot1.owner!.slice(-5, plot1.owner!.length)}
                       </span>
@@ -294,33 +289,6 @@ const ClaimRedirectPage = () => {
                       <div className="text-gray-500">No attested contacts</div>
                     )}
                   </InfoPanel.Item>
-
-                  {plot1.info ? (
-                    <div className="text-sm">
-                      <div className="mt-4 mb-1 font-semibold">Additional information</div>
-                      {typeof plot1.info === "string" ? (
-                        <InfoPanel.Item label="Information">
-                          <div className="inline">{plot1.info}</div>
-                        </InfoPanel.Item>
-                      ) : (
-                        Object.entries(plot1.info)
-                          .slice(0, 5)
-                          .map(([key, value]) => (
-                            <InfoPanel.Item key={key} label={key}>
-                              <div className="inline">
-                                {String(value).startsWith("https://") || String(value).startsWith("https://") ? (
-                                  <a href={value?.toString()} rel="nofollow" className="text-link" target="_blank">
-                                    {value}
-                                  </a>
-                                ) : (
-                                  value ?? ""
-                                )}
-                              </div>
-                            </InfoPanel.Item>
-                          ))
-                      )}
-                    </div>
-                  ) : null}
                 </InfoPanel>
               </CardContent>
             </Card>
@@ -332,12 +300,7 @@ const ClaimRedirectPage = () => {
               <CardContent className="flex flex-col items-center">
                 <InfoPanel className="w-full">
                   <InfoPanel.Item label="Owner">
-                    <a
-                      href={getExplorerUrl(plot2.owner!, "address")}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-link"
-                    >
+                    <a href={`/user/${plot2.owner}`} className="text-link">
                       <span className="inline-block xl:hidden">
                         {plot2.owner!.slice(0, 5)}...{plot2.owner!.slice(-5, plot2.owner!.length)}
                       </span>
@@ -373,33 +336,6 @@ const ClaimRedirectPage = () => {
                       <div className="text-gray-500">No attested contacts</div>
                     )}
                   </InfoPanel.Item>
-
-                  {plot2.info ? (
-                    <div className="text-sm">
-                      <div className="mt-4 mb-1 font-semibold">Additional information</div>
-                      {typeof plot2.info === "string" ? (
-                        <InfoPanel.Item label="Information">
-                          <div className="inline">{plot2.info}</div>
-                        </InfoPanel.Item>
-                      ) : (
-                        Object.entries(plot2.info)
-                          .slice(0, 5)
-                          .map(([key, value]) => (
-                            <InfoPanel.Item key={key} label={key}>
-                              <div className="inline">
-                                {String(value).startsWith("https://") || String(value).startsWith("https://") ? (
-                                  <a href={value?.toString()} rel="nofollow" className="text-link" target="_blank">
-                                    {value}
-                                  </a>
-                                ) : (
-                                  value ?? ""
-                                )}
-                              </div>
-                            </InfoPanel.Item>
-                          ))
-                      )}
-                    </div>
-                  ) : null}
                 </InfoPanel>
               </CardContent>
             </Card>
