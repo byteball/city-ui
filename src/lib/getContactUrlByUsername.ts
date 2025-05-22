@@ -1,4 +1,4 @@
-export const getContactUrlByUsername = (username: string, resource: string, userId?: string): string => {
+export const getContactUrlByUsername = (username?: string, resource?: string, userId?: string): string => {
   if (!username) return "";
 
   if (resource === "discord" && userId) {

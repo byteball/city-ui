@@ -22,6 +22,8 @@ import { AttestationList } from "../UserPage/components";
 
 import appConfig from "@/appConfig";
 import { IPlot } from "@/global";
+import { getContactUrlByUsername } from "@/lib/getContactUrlByUsername";
+import { SocialIcons } from "../MainPage/components/SocialIcons";
 
 const ClaimRedirectPage = () => {
   const { walletAddress, inited, decimals, symbol } = useSettingsStore((state) => state);
@@ -103,16 +105,38 @@ const ClaimRedirectPage = () => {
   const seoDescription =
     "You became neighbors and can claim your reward house and plot — while getting to know your neighbor";
 
-  const discordAttestation1 = attestations1.find((att) => att.name === "discord")?.value;
-  const discordAttestation2 = attestations2.find((att) => att.name === "discord")?.value;
-  const tgAttestation1 = attestations1.find((att) => att.name === "telegram")?.value;
-  const tgAttestation2 = attestations2.find((att) => att.name === "telegram")?.value;
+  const discordAttestation1 = attestations1.find((att) => att.name === "discord");
+  const discordAttestation2 = attestations2.find((att) => att.name === "discord");
+  const tgAttestation1 = attestations1.find((att) => att.name === "telegram");
+  const tgAttestation2 = attestations2.find((att) => att.name === "telegram");
   const infoName1 = typeof plot1.info === "object" ? plot1.info?.name : "";
   const infoName2 = typeof plot2.info === "object" ? plot2.info?.name : "";
 
-  const seoTitle = `Obyte City — You are neighbors: ${infoName1 || tgAttestation1 || discordAttestation1} and ${
-    infoName2 || tgAttestation2 || discordAttestation2
-  }`;
+  const discordAttestation1Url = getContactUrlByUsername(
+    discordAttestation1?.value,
+    discordAttestation1?.name,
+    discordAttestation1?.userId
+  );
+  const discordAttestation2Url = getContactUrlByUsername(
+    discordAttestation2?.value,
+    discordAttestation2?.name,
+    discordAttestation2?.userId
+  );
+
+  const telegramAttestation1Url = getContactUrlByUsername(
+    tgAttestation1?.value,
+    tgAttestation1?.name,
+    tgAttestation1?.userId
+  );
+  const telegramAttestation2Url = getContactUrlByUsername(
+    tgAttestation2?.value,
+    tgAttestation2?.name,
+    tgAttestation2?.userId
+  );
+
+  const seoTitle = `Obyte City — You are neighbors: ${
+    infoName1 || tgAttestation1?.value || discordAttestation1?.value
+  } and ${infoName2 || tgAttestation2?.value || discordAttestation2?.value}`;
 
   const shownSkeleton = loading || !loaded || !inited;
 
@@ -163,12 +187,58 @@ const ClaimRedirectPage = () => {
               <CardHeader>
                 <h2 className="text-xl font-semibold">Claim your rewards</h2>
                 <CardDescription>
-                  You and your neighbor receive houses on your plots and 2 new plots with{" "}
-                  <b>
-                    {toLocalString(Math.min(plot1.amount, plot2.amount) / 10 ** decimals!)} {symbol!}
-                  </b>{" "}
-                  on each of them. Please contact your neighbor over discord or telegram and send your claim requests
-                  within 10 minutes of each other.
+                  <div>
+                    You and your neighbor receive houses on your plots and 2 new plots with{" "}
+                    <b>
+                      {toLocalString(Math.min(plot1.amount, plot2.amount) / 10 ** decimals!)} {symbol!}
+                    </b>{" "}
+                    on each of them. Please contact your neighbor over discord or telegram and send your claim requests
+                    within 10 minutes of each other.
+                  </div>
+
+                  <div>
+                    <div className="flex mt-4 space-x-2 ">
+                      <div>Discord</div> <SocialIcons type="discord" />
+                      <span className="text-white">
+                        {discordAttestation1Url ? (
+                          <a href={discordAttestation1Url} target="_blank" className="text-link">
+                            {discordAttestation1?.value ?? "Not attested"}
+                          </a>
+                        ) : (
+                          <span>{discordAttestation1?.value ?? "Not attested"}</span>
+                        )}{" "}
+                        and{" "}
+                        {discordAttestation2Url ? (
+                          <a href={discordAttestation2Url} target="_blank" className="text-link">
+                            {discordAttestation2?.value ?? "Not attested"}
+                          </a>
+                        ) : (
+                          <span>{discordAttestation2?.value ?? "Not attested"}</span>
+                        )}
+                      </span>
+                    </div>
+
+                    <div className="flex mt-2 space-x-2 ">
+                      <div>Telegram</div> <SocialIcons type="telegram" />
+                      <span className="text-white">
+                        {telegramAttestation1Url ? (
+                          <a href={telegramAttestation1Url} target="_blank" className="text-link">
+                            {tgAttestation1?.value ?? "?"}
+                          </a>
+                        ) : (
+                          <span>{tgAttestation1?.value ?? "?"}</span>
+                        )}{" "}
+                        and{" "}
+                        {telegramAttestation2Url ? (
+                          <a href={telegramAttestation2Url} target="_blank" className="text-link">
+                            {tgAttestation2?.value ?? "?"}
+                          </a>
+                        ) : (
+                          <span>{tgAttestation2?.value ?? "?"}</span>
+                        )}
+                      </span>
+                    </div>
+                  </div>
                 </CardDescription>
               </CardHeader>
 
