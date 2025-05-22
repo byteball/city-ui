@@ -33,30 +33,45 @@ export default class CameraController {
   private initZoom(): void {
     const zoomX = this.camera.width / this.BASE_MAP_SIZE.toNumber();
     const zoomY = this.camera.height / this.BASE_MAP_SIZE.toNumber();
-    const zoom = Math.min(zoomX, zoomY);
-    this.camera.setZoom(zoom);
+    const minZoom = Math.min(zoomX, zoomY);
+    const maxZoom = 1.5;
 
-    this.scene.input.on(
-      "wheel",
-      (
-        _pointer: Phaser.Input.Pointer,
-        _currentlyOver: Phaser.GameObjects.GameObject[],
-        _deltaX: number,
-        deltaY: number,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        _deltaZ: number
-      ) => {
-        const zoomFactor = 0.001;
-        this.camera.zoom -= deltaY * zoomFactor;
+    this.camera.setZoom(minZoom);
 
-        const zoomX = (this.scene.cameras.main.width / this.BASE_MAP_SIZE.toNumber()) as number;
-        const zoomY = (this.scene.cameras.main.height / this.BASE_MAP_SIZE.toNumber()) as number;
+    this.scene.input.on("wheel", (pointer: Phaser.Input.Pointer, _, __, deltaY) => {
+      const oldZoom = this.camera.zoom;
+      const zoomChange = deltaY > 0 ? -0.04 : 0.04;
+      const newZoom = Phaser.Math.Clamp(oldZoom + zoomChange, minZoom, maxZoom);
 
-        const minZoom = Math.min(zoomX, zoomY);
+      // Center of the screen
+      const cx = this.camera.width / 2;
+      const cy = this.camera.height / 2;
 
-        this.camera.zoom = Phaser.Math.Clamp(this.camera.zoom, minZoom, 1.5);
-      }
-    );
+      // World width/height of the area visible by the camera
+      const oldWorldWidth = this.camera.width / oldZoom;
+      const newWorldWidth = this.camera.width / newZoom;
+      const oldWorldHeight = this.camera.height / oldZoom;
+      const newWorldHeight = this.camera.height / newZoom;
+
+      // Mouse offset from the center (in screen pixels)
+      const dxScreen = pointer.x - cx;
+      const dyScreen = pointer.y - cy;
+
+      // Offset ratios from the center
+      const rx = dxScreen / this.camera.width;
+      const ry = dyScreen / this.camera.height;
+
+      // Change in the world that "appeared" along the axes
+      const dw = oldWorldWidth - newWorldWidth;
+      const dh = oldWorldHeight - newWorldHeight;
+
+      // Adjust scroll so the point stays under the cursor
+      this.camera.scrollX += dw * rx;
+      this.camera.scrollY += dh * ry;
+
+      // Apply the new zoom
+      this.camera.setZoom(newZoom);
+    });
   }
 }
 
