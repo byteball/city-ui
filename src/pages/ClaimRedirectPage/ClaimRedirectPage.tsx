@@ -194,55 +194,49 @@ const ClaimRedirectPage = () => {
                     on each of them. Please contact your neighbor over discord or telegram and send your claim requests
                     within 10 minutes of each other.
                   </div>
-
-                  {plot1AttestationLoaded && plot2AttestationLoaded ? (
-                    <div>
-                      <div className="flex mt-4 space-x-2 ">
-                        <div>Discord</div>
-                        <span className="text-white">
-                          {discordAttestation1Url ? (
-                            <a href={discordAttestation1Url} target="_blank" className="text-link">
-                              {discordAttestation1?.value ?? "Not attested"}
-                            </a>
-                          ) : (
-                            <span>{discordAttestation1?.value ?? "Not attested"}</span>
-                          )}{" "}
-                          and{" "}
-                          {discordAttestation2Url ? (
-                            <a href={discordAttestation2Url} target="_blank" className="text-link">
-                              {discordAttestation2?.value ?? "Not attested"}
-                            </a>
-                          ) : (
-                            <span>{discordAttestation2?.value ?? "Not attested"}</span>
-                          )}
-                        </span>
-                      </div>
-
-                      <div className="flex mt-2 space-x-2 ">
-                        <div>Telegram</div>
-                        <span className="text-white">
-                          {telegramAttestation1Url ? (
-                            <a href={telegramAttestation1Url} target="_blank" className="text-link">
-                              {tgAttestation1?.value ?? "?"}
-                            </a>
-                          ) : (
-                            <span>{tgAttestation1?.value ?? "?"}</span>
-                          )}{" "}
-                          and{" "}
-                          {telegramAttestation2Url ? (
-                            <a href={telegramAttestation2Url} target="_blank" className="text-link">
-                              {tgAttestation2?.value ?? "?"}
-                            </a>
-                          ) : (
-                            <span>{tgAttestation2?.value ?? "?"}</span>
-                          )}
-                        </span>
-                      </div>
-                    </div>
-                  ) : (
-                    <Skeleton className="w-full h-12 mt-4" />
-                  )}
                 </CardDescription>
+
+                <InfoPanel>
+                  <InfoPanel.Item loading={!plot1AttestationLoaded || !plot2AttestationLoaded} label="Discord">
+                    <span className="text-white">
+                      {discordAttestation1Url ? (
+                        <a href={discordAttestation1Url} target="_blank" className="text-link">
+                          {discordAttestation1?.value ?? "Not attested"}
+                        </a>
+                      ) : (
+                        <span>{discordAttestation1?.value ?? "Not attested"}</span>
+                      )}{" "}
+                      and{" "}
+                      {discordAttestation2Url ? (
+                        <a href={discordAttestation2Url} target="_blank" className="text-link">
+                          {discordAttestation2?.value ?? "Not attested"}
+                        </a>
+                      ) : (
+                        <span>{discordAttestation2?.value ?? "Not attested"}</span>
+                      )}
+                    </span>
+                  </InfoPanel.Item>
+
+                  <InfoPanel.Item loading={!plot1AttestationLoaded || !plot2AttestationLoaded} label="Telegram">
+                    <span className="text-white">
+                      {telegramAttestation1Url ? (
+                        <a href={telegramAttestation1Url} target="_blank" className="text-link">
+                          {tgAttestation1?.value ?? "?"}
+                        </a>
+                      ) : (
+                        <span>{tgAttestation1?.value ?? "?"}</span>
+                      )}{" "}
+                      and{" "}
+                      {telegramAttestation2Url ? (
+                        <a href={telegramAttestation2Url} target="_blank" className="text-link">
+                          {tgAttestation2?.value ?? "?"}
+                        </a>
+                      ) : (
+                        <span>{tgAttestation2?.value ?? "?"}</span>
+                      )}
+                    </span>
+                  </InfoPanel.Item>
+                </InfoPanel>
               </CardHeader>
 
               <CardContent>
