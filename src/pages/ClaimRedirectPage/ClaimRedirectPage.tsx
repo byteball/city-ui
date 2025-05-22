@@ -249,15 +249,6 @@ const ClaimRedirectPage = () => {
               </CardHeader>
               <CardContent className="flex flex-col items-center">
                 <InfoPanel className="w-full">
-                  <InfoPanel.Item label="Owner">
-                    <a href={`/user/${plot1.owner}`} className="text-link">
-                      <span className="inline-block xl:hidden">
-                        {plot1.owner!.slice(0, 5)}...{plot1.owner!.slice(-5, plot1.owner!.length)}
-                      </span>
-                      <span className="hidden xl:inline-block">{plot1.owner}</span>
-                    </a>
-                  </InfoPanel.Item>
-
                   <InfoPanel.Item label="Coordinates">
                     <TooltipProvider>
                       <Tooltip>
@@ -273,6 +264,15 @@ const ClaimRedirectPage = () => {
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
+                  </InfoPanel.Item>
+
+                  <InfoPanel.Item label="Owner">
+                    <a href={`/user/${plot1.owner}`} className="text-link">
+                      <span className="inline-block xl:hidden">
+                        {plot1.owner!.slice(0, 5)}...{plot1.owner!.slice(-5, plot1.owner!.length)}
+                      </span>
+                      <span className="hidden xl:inline-block">{plot1.owner}</span>
+                    </a>
                   </InfoPanel.Item>
 
                   <InfoPanel.Item label="Contacts" loading={loading || !plot1AttestationLoaded}>
@@ -310,17 +310,9 @@ const ClaimRedirectPage = () => {
               <CardHeader>
                 <h2 className="text-xl font-semibold">{address2}</h2>
               </CardHeader>
+
               <CardContent className="flex flex-col items-center">
                 <InfoPanel className="w-full">
-                  <InfoPanel.Item label="Owner">
-                    <a href={`/user/${plot2.owner}`} className="text-link">
-                      <span className="inline-block xl:hidden">
-                        {plot2.owner!.slice(0, 5)}...{plot2.owner!.slice(-5, plot2.owner!.length)}
-                      </span>
-                      <span className="hidden xl:inline-block">{plot2.owner}</span>
-                    </a>
-                  </InfoPanel.Item>
-
                   <InfoPanel.Item label="Coordinates">
                     <TooltipProvider>
                       <Tooltip>
@@ -336,6 +328,15 @@ const ClaimRedirectPage = () => {
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
+                  </InfoPanel.Item>
+
+                  <InfoPanel.Item label="Owner">
+                    <a href={`/user/${plot2.owner}`} className="text-link">
+                      <span className="inline-block xl:hidden">
+                        {plot2.owner!.slice(0, 5)}...{plot2.owner!.slice(-5, plot2.owner!.length)}
+                      </span>
+                      <span className="hidden xl:inline-block">{plot2.owner}</span>
+                    </a>
                   </InfoPanel.Item>
 
                   <InfoPanel.Item label="Contacts" loading={loading || !plot2AttestationLoaded}>
