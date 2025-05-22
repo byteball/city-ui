@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, useParams } from "react-router";
 
-import { generateLink, getAddressFromNearestRoad, getExplorerUrl } from "@/lib";
+import { generateLink, getAddressFromNearestRoad, getExplorerUrl, toLocalString } from "@/lib";
 import { useSettingsStore } from "@/store/settings-store";
 
 import { getRoads } from "@/game/utils/getRoads";
@@ -24,7 +24,7 @@ import appConfig from "@/appConfig";
 import { IPlot } from "@/global";
 
 const ClaimRedirectPage = () => {
-  const { walletAddress, inited } = useSettingsStore((state) => state);
+  const { walletAddress, inited, decimals, symbol } = useSettingsStore((state) => state);
 
   const aaState = useAaStore((state) => state);
   const { nums } = useParams<{ nums: string }>();
@@ -163,8 +163,12 @@ const ClaimRedirectPage = () => {
               <CardHeader>
                 <h2 className="text-xl font-semibold">Claim your rewards</h2>
                 <CardDescription>
-                  Both neighbors must submit their claims within 10 minutes of each other. Please contact with one
-                  another.
+                  You and your neighbor receive houses on your plots and 2 new plots with{" "}
+                  <b>
+                    {toLocalString(Math.min(plot1.amount, plot2.amount) / 10 ** decimals!)} {symbol!}
+                  </b>{" "}
+                  on each of them. Please contact your neighbor over discord or telegram and send your claim requests
+                  within 10 minutes of each other.
                 </CardDescription>
               </CardHeader>
 
