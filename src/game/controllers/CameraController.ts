@@ -38,9 +38,9 @@ export default class CameraController {
 
     this.camera.setZoom(minZoom);
 
-    this.scene.input.on("wheel", (pointer: Phaser.Input.Pointer, _, __, deltaY) => {
+    this.scene.input.on("wheel", (pointer: Phaser.Input.Pointer, _: any, __: any, deltaY: number) => {
       const oldZoom = this.camera.zoom;
-      const zoomChange = deltaY > 0 ? -0.04 : 0.04;
+      const zoomChange = deltaY > 0 ? -0.02 : 0.01;
       const newZoom = Phaser.Math.Clamp(oldZoom + zoomChange, minZoom, maxZoom);
 
       // Center of the screen
