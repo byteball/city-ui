@@ -14,7 +14,6 @@ import { IHouse } from "@/global";
 import { generateLink } from "@/lib";
 
 import appConfig from "@/appConfig";
-import { ReLinkShortcodeForm } from "./ReLinkShortcodeForm";
 
 interface IShortcodeFormProps {
   unitData: IHouse;
@@ -64,12 +63,7 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
   });
 
   const disabled =
-    currentShortcode === shortcode ||
-    shortcodeMoreThan20Characters ||
-    mayorHouse ||
-    isTooCheap ||
-    isTaken ||
-    (address && !newShortcodeAddressIsValid);
+    shortcodeMoreThan20Characters || mayorHouse || isTooCheap || isTaken || (address && !newShortcodeAddressIsValid);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
@@ -118,14 +112,7 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
                   {existingShortcodes[currentShortcode].slice(0, 4)}...
                   {existingShortcodes[currentShortcode].slice(-4)}
                 </span>
-              </b>{" "}
-              <ReLinkShortcodeForm
-                currentAddress={existingShortcodes[currentShortcode]}
-                houseNum={unitData.house_num}
-                shortcode={currentShortcode}
-              >
-                <span className="text-xs text-link">(Change)</span>
-              </ReLinkShortcodeForm>
+              </b>
             </div>
           </div>
 
@@ -183,7 +170,7 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
             ) : null}
 
             <div>
-              <QRButton ref={btnRef} href={url} disabled={disabled}>
+              <QRButton ref={btnRef} href={url} disabled={!!disabled}>
                 Assign
               </QRButton>
             </div>
