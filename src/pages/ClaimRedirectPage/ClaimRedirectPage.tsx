@@ -23,7 +23,6 @@ import { AttestationList } from "../UserPage/components";
 import appConfig from "@/appConfig";
 import { IPlot } from "@/global";
 import { getContactUrlByUsername } from "@/lib/getContactUrlByUsername";
-import { SocialIcons } from "../MainPage/components/SocialIcons";
 
 const ClaimRedirectPage = () => {
   const { walletAddress, inited, decimals, symbol } = useSettingsStore((state) => state);
@@ -196,49 +195,53 @@ const ClaimRedirectPage = () => {
                     within 10 minutes of each other.
                   </div>
 
-                  <div>
-                    <div className="flex mt-4 space-x-2 ">
-                      <div>Discord</div> <SocialIcons type="discord" />
-                      <span className="text-white">
-                        {discordAttestation1Url ? (
-                          <a href={discordAttestation1Url} target="_blank" className="text-link">
-                            {discordAttestation1?.value ?? "Not attested"}
-                          </a>
-                        ) : (
-                          <span>{discordAttestation1?.value ?? "Not attested"}</span>
-                        )}{" "}
-                        and{" "}
-                        {discordAttestation2Url ? (
-                          <a href={discordAttestation2Url} target="_blank" className="text-link">
-                            {discordAttestation2?.value ?? "Not attested"}
-                          </a>
-                        ) : (
-                          <span>{discordAttestation2?.value ?? "Not attested"}</span>
-                        )}
-                      </span>
-                    </div>
+                  {plot1AttestationLoaded && plot2AttestationLoaded ? (
+                    <div>
+                      <div className="flex mt-4 space-x-2 ">
+                        <div>Discord</div>
+                        <span className="text-white">
+                          {discordAttestation1Url ? (
+                            <a href={discordAttestation1Url} target="_blank" className="text-link">
+                              {discordAttestation1?.value ?? "Not attested"}
+                            </a>
+                          ) : (
+                            <span>{discordAttestation1?.value ?? "Not attested"}</span>
+                          )}{" "}
+                          and{" "}
+                          {discordAttestation2Url ? (
+                            <a href={discordAttestation2Url} target="_blank" className="text-link">
+                              {discordAttestation2?.value ?? "Not attested"}
+                            </a>
+                          ) : (
+                            <span>{discordAttestation2?.value ?? "Not attested"}</span>
+                          )}
+                        </span>
+                      </div>
 
-                    <div className="flex mt-2 space-x-2 ">
-                      <div>Telegram</div> <SocialIcons type="telegram" />
-                      <span className="text-white">
-                        {telegramAttestation1Url ? (
-                          <a href={telegramAttestation1Url} target="_blank" className="text-link">
-                            {tgAttestation1?.value ?? "?"}
-                          </a>
-                        ) : (
-                          <span>{tgAttestation1?.value ?? "?"}</span>
-                        )}{" "}
-                        and{" "}
-                        {telegramAttestation2Url ? (
-                          <a href={telegramAttestation2Url} target="_blank" className="text-link">
-                            {tgAttestation2?.value ?? "?"}
-                          </a>
-                        ) : (
-                          <span>{tgAttestation2?.value ?? "?"}</span>
-                        )}
-                      </span>
+                      <div className="flex mt-2 space-x-2 ">
+                        <div>Telegram</div>
+                        <span className="text-white">
+                          {telegramAttestation1Url ? (
+                            <a href={telegramAttestation1Url} target="_blank" className="text-link">
+                              {tgAttestation1?.value ?? "?"}
+                            </a>
+                          ) : (
+                            <span>{tgAttestation1?.value ?? "?"}</span>
+                          )}{" "}
+                          and{" "}
+                          {telegramAttestation2Url ? (
+                            <a href={telegramAttestation2Url} target="_blank" className="text-link">
+                              {tgAttestation2?.value ?? "?"}
+                            </a>
+                          ) : (
+                            <span>{tgAttestation2?.value ?? "?"}</span>
+                          )}
+                        </span>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <Skeleton className="w-full h-12 mt-4" />
+                  )}
                 </CardDescription>
               </CardHeader>
 
