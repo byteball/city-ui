@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { PageLayout } from "@/components/layout/page-layout";
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
@@ -18,6 +18,10 @@ export default () => {
   const params = useAaParams();
 
   const shownSkeleton = loading || !!error || !settingsInited || !loaded;
+
+  useEffect(() => {
+    useSettingsStore.getState().setSelectedMarketPlot(null);
+  }, []);
 
   return (
     <PageLayout

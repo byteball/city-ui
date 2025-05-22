@@ -40,7 +40,7 @@ interface SettingsState {
   selectedMapUnit?: IUnitUniqData;
   selectedMarketPlot?: IUnitUniqData;
   setSelectedMapUnit: (unitUniqData: IUnitUniqData | null) => void;
-  setSelectedMarketPlot: (unitUniqData: IUnitUniqData) => void;
+  setSelectedMarketPlot: (unitUniqData: IUnitUniqData | null) => void;
   setMapUnitSortType: <T extends "house" | "plot">(
     unit: T,
     sortType: T extends "house" ? keyof typeof IHouseSortTypeEnum : keyof typeof IPlotSortTypeEnum
@@ -105,11 +105,11 @@ const storeCreator: StateCreator<SettingsState> = (set, get) => ({
       direction: "DESC",
     },
   },
-  setSelectedMapUnit: (unitUniqData: IUnitUniqData | null) => {
+  setSelectedMapUnit: (unitUniqData) => {
     if (!unitUniqData) return set({ selectedMapUnit: undefined });
     set({ selectedMapUnit: unitUniqData });
   },
-  setSelectedMarketPlot: (unitUniqData: IUnitUniqData) => {
+  setSelectedMarketPlot: (unitUniqData) => {
     if (!unitUniqData) return set({ selectedMarketPlot: undefined });
     if (unitUniqData.type !== "plot") throw new Error("Invalid type for market plot");
 
