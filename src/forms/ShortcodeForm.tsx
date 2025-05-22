@@ -130,7 +130,7 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
           </div>
 
           <div>
-            If you want to sell your shortcode, please go to the{" "}
+            If you want to buy a shortcode, please go to the{" "}
             <Link to="/market" className="text-link">
               shortcode market page
             </Link>
