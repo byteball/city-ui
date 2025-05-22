@@ -4,12 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EditInfoForm } from "@/forms/EditInfoForm";
 import { ShortcodeForm } from "@/forms/ShortcodeForm";
 import { IMapUnit } from "@/global";
-import {
-  DialogWithConfirmation,
-  DialogWithConfirmationContent,
-  DialogWithConfirmationHeader,
-  DialogWithConfirmationTrigger,
-} from "../ui/dialogWithConfirmation";
+import { Dialog, DialogContent, DialogHeader, DialogTrigger } from "../ui/dialog";
 
 interface ISettingsDialogProps {
   children: React.ReactNode;
@@ -17,10 +12,10 @@ interface ISettingsDialogProps {
 }
 
 export const SettingsDialog: FC<ISettingsDialogProps> = ({ children, unitData }) => (
-  <DialogWithConfirmation>
-    <DialogWithConfirmationTrigger asChild>{children}</DialogWithConfirmationTrigger>
-    <DialogWithConfirmationContent className="z-50">
-      <DialogWithConfirmationHeader />
+  <Dialog>
+    <DialogTrigger asChild>{children}</DialogTrigger>
+    <DialogContent className="z-50">
+      <DialogHeader />
 
       {unitData.type === "house" ? (
         <Tabs defaultValue="info" className="w-full">
@@ -48,7 +43,7 @@ export const SettingsDialog: FC<ISettingsDialogProps> = ({ children, unitData })
       ) : (
         <EditInfoForm unitData={unitData} />
       )}
-    </DialogWithConfirmationContent>
-  </DialogWithConfirmation>
+    </DialogContent>
+  </Dialog>
 );
 

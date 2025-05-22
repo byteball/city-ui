@@ -1,6 +1,5 @@
 import obyte from "obyte";
 import { ChangeEvent, FC, KeyboardEvent, useCallback, useRef, useState } from "react";
-import { Link } from "react-router";
 
 import { QRButton } from "@/components/ui/_qr-button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +13,7 @@ import { IHouse } from "@/global";
 import { generateLink } from "@/lib";
 
 import appConfig from "@/appConfig";
+import { Link } from "react-router";
 
 interface IShortcodeFormProps {
   unitData: IHouse;
@@ -98,33 +98,6 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
         </p>
       </div>
 
-      {currentShortcode ? (
-        <div className="space-y-1">
-          <div>
-            Your current shortcode is: <b>{currentShortcode}</b>.
-          </div>
-
-          <div className="space-x-2">
-            <div>
-              Address linked to the shortcode:{" "}
-              <b>
-                <span>
-                  {existingShortcodes[currentShortcode].slice(0, 4)}...
-                  {existingShortcodes[currentShortcode].slice(-4)}
-                </span>
-              </b>
-            </div>
-          </div>
-
-          <div>
-            If you want to buy a shortcode, please go to the{" "}
-            <Link to="/market" className="text-link">
-              shortcode market page
-            </Link>
-          </div>
-        </div>
-      ) : null}
-
       <div>
         <Label htmlFor="shortcode" className="text-sm font-medium">
           Shortcode
@@ -174,6 +147,16 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
                 Assign
               </QRButton>
             </div>
+          </div>
+
+          <div>
+            <p className="text-xs text-muted-foreground">
+              If you want to use a shortcode that is already taken, you might be able to buy it on the{" "}
+              <Link to="/market" className="text-link">
+                market page
+              </Link>
+              .
+            </p>
           </div>
         </div>
       </div>
