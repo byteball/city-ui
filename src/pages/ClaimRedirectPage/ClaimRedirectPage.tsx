@@ -1,7 +1,7 @@
 import { CircleXIcon, Loader } from "lucide-react";
 import { useRef } from "react";
 import { Helmet } from "react-helmet-async";
-import { useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 
 import { generateLink, getAddressFromNearestRoad, toLocalString } from "@/lib";
 import { useSettingsStore } from "@/store/settings-store";
@@ -17,7 +17,6 @@ import { IRefPhaserGame, PhaserGame } from "@/game/PhaserGame";
 
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { QRButton } from "@/components/ui/_qr-button";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 import appConfig from "@/appConfig";
 import { IPlot } from "@/global";
@@ -245,27 +244,14 @@ const ClaimRedirectPage = () => {
             </Card>
             <Card>
               <CardHeader>
-                <h2 className="text-xl font-semibold">{address1}</h2>
+                <h2 className="text-xl font-semibold">
+                  <Link to={`/?plot=${plot1.plot_num}`} className="text-link">
+                    {address1}
+                  </Link>
+                </h2>
               </CardHeader>
               <CardContent className="flex flex-col items-center">
                 <InfoPanel className="w-full">
-                  <InfoPanel.Item label="Coordinates">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger className="cursor-text">
-                          <div className="font-mono">
-                            ({plot1?.x},{plot1?.y})
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <div>
-                            X: {plot1?.x}, Y: {plot1?.y}
-                          </div>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </InfoPanel.Item>
-
                   <InfoPanel.Item label="Owner">
                     <a href={`/user/${plot1.owner}`} className="text-link">
                       <span className="inline-block xl:hidden">
@@ -308,28 +294,15 @@ const ClaimRedirectPage = () => {
 
             <Card>
               <CardHeader>
-                <h2 className="text-xl font-semibold">{address2}</h2>
+                <h2 className="text-xl font-semibold">
+                  <Link to={`/?plot=${plot2.plot_num}`} className="text-link">
+                    {address2}
+                  </Link>
+                </h2>
               </CardHeader>
 
               <CardContent className="flex flex-col items-center">
                 <InfoPanel className="w-full">
-                  <InfoPanel.Item label="Coordinates">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger className="cursor-text">
-                          <div className="font-mono">
-                            ({plot2?.x},{plot2?.y})
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <div>
-                            X: {plot2?.x}, Y: {plot2?.y}
-                          </div>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </InfoPanel.Item>
-
                   <InfoPanel.Item label="Owner">
                     <a href={`/user/${plot2.owner}`} className="text-link">
                       <span className="inline-block xl:hidden">
