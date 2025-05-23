@@ -21,7 +21,7 @@ import { QRButton } from "@/components/ui/_qr-button";
 import appConfig from "@/appConfig";
 import { IPlot } from "@/global";
 import { getContactUrlByUsername } from "@/lib/getContactUrlByUsername";
-import { SocialIcons } from "../MainPage/components/SocialIcons";
+import { SocialIcon } from "../MainPage/components/SocialIcon";
 
 const ClaimRedirectPage = () => {
   const { walletAddress, inited, decimals, symbol } = useSettingsStore((state) => state);
@@ -272,7 +272,7 @@ const ClaimRedirectPage = () => {
                               className="flex items-center justify-between gap-1"
                               key={a.name + "-" + a.value + "-" + plot1.owner}
                             >
-                              <SocialIcons type={a.name} />{" "}
+                              <SocialIcon type={a.name} />{" "}
                               {url ? (
                                 <a href={url} target="_blank" className="text-link">
                                   {a.value}
@@ -323,7 +323,7 @@ const ClaimRedirectPage = () => {
                               className="flex items-center justify-between gap-1"
                               key={a.name + "-" + a.value + "-" + plot2.owner}
                             >
-                              <SocialIcons type={a.name} />{" "}
+                              <SocialIcon type={a.name} />{" "}
                               {url ? (
                                 <a href={url} target="_blank" className="text-link">
                                   {a.value}

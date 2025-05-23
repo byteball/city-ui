@@ -13,7 +13,7 @@ import { useAttestations } from "@/hooks/useAttestations";
 import { getExplorerUrl } from "@/lib";
 import { getContactUrlByUsername } from "@/lib/getContactUrlByUsername";
 import { getReferralUrl } from "@/lib/getReferralUrl";
-import { SocialIcons } from "@/pages/MainPage/components/SocialIcons";
+import { SocialIcon } from "@/pages/MainPage/components/SocialIcon";
 import { useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 import cn from "classnames";
@@ -113,7 +113,7 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
 
                 return (
                   <div className="flex items-center justify-between gap-1" key={a.name + "-" + a.value + "-" + address}>
-                    <SocialIcons type={a.name} />{" "}
+                    <SocialIcon type={a.name} />{" "}
                     {url ? (
                       <a href={url} target="_blank" className="text-link">
                         {a.value}

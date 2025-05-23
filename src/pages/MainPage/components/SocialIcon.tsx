@@ -1,13 +1,15 @@
 import { FC } from "react";
 
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
 interface SocialIconsProps {
   type: string;
 }
 
 const commonClassNames = "h-5 fill-muted-foreground/50";
 
-export const SocialIcons: FC<SocialIconsProps> = ({ type }) => {
-  switch (type) {
+const getIcon = (name: "telegram" | "discord") => {
+  switch (name) {
     case "telegram":
       return (
         <svg className={commonClassNames} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
@@ -21,7 +23,22 @@ export const SocialIcons: FC<SocialIconsProps> = ({ type }) => {
         </svg>
       );
     default:
-      return <div>{type} </div>;
+      return <div>{name} </div>;
   }
+};
+
+export const SocialIcon: FC<SocialIconsProps> = ({ type }) => {
+  const iconElement = getIcon(type as "telegram" | "discord");
+
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger className="cursor-default">
+          <div>{iconElement}</div>
+        </TooltipTrigger>
+        <TooltipContent>{type}</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
 };
 

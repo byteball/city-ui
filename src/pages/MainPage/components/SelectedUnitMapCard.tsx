@@ -29,7 +29,7 @@ import { getAddressFromNearestRoad } from "@/lib/getAddressCoordinate";
 import appConfig from "@/appConfig";
 import { getContactUrlByUsername } from "@/lib/getContactUrlByUsername";
 import { Helmet } from "react-helmet-async";
-import { SocialIcons } from "./SocialIcons";
+import { SocialIcon } from "./SocialIcon";
 
 interface ISelectedUnitMapCardProps {
   sceneType: "main" | "market";
@@ -246,7 +246,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                             className="flex items-center justify-between gap-1"
                             key={a.name + "-" + a.value + "-" + owner}
                           >
-                            <SocialIcons type={a.name} />{" "}
+                            <SocialIcon type={a.name} />{" "}
                             {url ? (
                               <a href={url} target="_blank" className="text-link">
                                 {a.value}
