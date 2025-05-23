@@ -121,7 +121,7 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
 
           <div>
             <Label htmlFor="address" className="text-sm font-medium">
-              Address
+              Address (leave empty to use your profile address {walletAddress?.slice(0, 4)}...)
             </Label>
 
             <Input
