@@ -179,7 +179,7 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
               ? "Covered by unused credit"
               : `${toLocalString(rentalFee / decimalsFactor)} ${symbol}`}
           </InfoPanel.Item>
-          <InfoPanel.Item label="Total balance (inc. rented)">
+          <InfoPanel.Item label="New total balance (inc. rented)">
             {toLocalString(selectedMapUnit.amount / decimalsFactor + Number(rentalAmount))} {symbol}
           </InfoPanel.Item>
           {rentalAmount && Number(rentalAmount) > 0 && (
