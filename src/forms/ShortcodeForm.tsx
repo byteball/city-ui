@@ -144,7 +144,7 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
 
             <div>
               <QRButton ref={btnRef} href={url} disabled={!!disabled}>
-                Assign
+                {currentShortcode ? "Release shortcode" : "Assign"}
               </QRButton>
             </div>
           </div>
