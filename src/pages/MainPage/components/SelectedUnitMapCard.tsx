@@ -1,5 +1,5 @@
 import cn from "classnames";
-import { DoorOpenIcon, ImageUpscaleIcon, PencilIcon, ShoppingBagIcon } from "lucide-react";
+import { DollarSignIcon, DoorOpenIcon, ImageUpscaleIcon, PencilIcon, ShoppingBagIcon } from "lucide-react";
 import moment from "moment";
 import { FC } from "react";
 import { Link } from "react-router";
@@ -361,7 +361,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                       variant="secondary"
                       className="rounded-xl"
                     >
-                      <ShoppingBagIcon className="w-4 h-4" />
+                      <DollarSignIcon className="w-4 h-4" />
                     </ButtonWithTooltip>
                   </ShortCodeSellDialog>
                 ) : null}
