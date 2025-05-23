@@ -1,5 +1,6 @@
 import { isEmpty } from "lodash";
 import { FC, memo } from "react";
+import { Link } from "react-router";
 
 import { getPlotPrice } from "@/aaLogic/getPlotPrice";
 
@@ -13,6 +14,7 @@ import { generateLink, getAddressFromNearestRoad, getExplorerUrl, toLocalString 
 
 import { getRoads } from "@/game/utils/getRoads";
 import { IRefData } from "@/global";
+
 import { mapUnitsByUniqDataSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 
 import appConfig from "@/appConfig";
@@ -114,7 +116,15 @@ export const BuyNewPlotForm: FC = memo(() => {
         </InfoPanel.Item>
 
         <InfoPanel.Item
-          tooltipText="A fee applies to prevent misuse. See the governance page for details."
+          tooltipText={
+            <span>
+              The fee is burned to offset emissions from reward plots (
+              <Link to="/faq#what-is-the-fee-when-buying-a-plot" className="text-link">
+                see the FAQ
+              </Link>
+              ).
+            </span>
+          }
           label="Fee"
           loading={isLoading}
         >

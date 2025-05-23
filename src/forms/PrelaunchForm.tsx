@@ -105,7 +105,7 @@ export const PrelaunchForm: FC = memo(() => {
           tooltipText={
             <span>
               The fee is burned to offset emissions from reward plots (
-              <Link className="text-link" to="faq">
+              <Link to="/faq#what-is-the-fee-when-buying-a-plot" className="text-link">
                 see the FAQ
               </Link>
               ).
