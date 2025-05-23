@@ -265,7 +265,7 @@ export const EditInfoForm: FC<EditInfoFormProps> = ({ unitData }) => {
                   <TooltipProvider delayDuration={100}>
                     <Tooltip>
                       <TooltipContent className="max-w-xs">
-                        <div>{defaultInformationFields[item.key]?.hint}</div>
+                        <div>{defaultInformationFields[item.key]?.hint?.replaceAll("plot/house", unitData.type)}</div>
                         <div className="mt-2 italic">{defaultInformationFields[item.key]?.validationRule}</div>
                       </TooltipContent>
                       <TooltipTrigger className="flex items-center justify-center">
