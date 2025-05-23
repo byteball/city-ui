@@ -11,12 +11,13 @@ import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
 import { IMapUnitInfo } from "@/global";
 import { useAttestations } from "@/hooks/useAttestations";
 import { getExplorerUrl } from "@/lib";
+import { getContactUrlByUsername } from "@/lib/getContactUrlByUsername";
 import { getReferralUrl } from "@/lib/getReferralUrl";
+import { SocialIcons } from "@/pages/MainPage/components/SocialIcons";
 import { useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 import cn from "classnames";
 import { Helmet } from "react-helmet-async";
-import { AttestationList } from "./AttestationList";
 import { UserMainPlot } from "./UserMainPlot";
 
 const getParsedUserInfo = (userInfo?: string | object) => {
@@ -105,7 +106,28 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
           tooltipText="Use attestation bots to link your telegram and discord accounts to your Obyte address and receive notifications when you get a neighbor."
           loading={!loaded}
         >
-          <AttestationList isOwner={address === walletAddress} data={attestations} />
+          {attestations.length ? (
+            <div className="flex gap-4">
+              {attestations.map((a) => {
+                const url = getContactUrlByUsername(a.value, a.name, a.userId);
+
+                return (
+                  <div className="flex items-center justify-between gap-1" key={a.name + "-" + a.value + "-" + address}>
+                    <SocialIcons type={a.name} />{" "}
+                    {url ? (
+                      <a href={url} target="_blank" className="text-link">
+                        {a.value}
+                      </a>
+                    ) : (
+                      <div>{a.value}</div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <span>No attested contacts</span>
+          )}
         </InfoPanel.Item>
 
         <InfoPanel.Item label="Main plot">
