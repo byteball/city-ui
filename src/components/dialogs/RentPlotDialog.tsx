@@ -39,7 +39,12 @@ export const RentPlotDialog: FC<IRentPlotDialogProps> = ({ children }) => {
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value ?? "";
+      let value = e.target.value ?? "";
+
+      if (value.startsWith(".") || value.startsWith(",")) {
+        value = "0" + value;
+      }
+
       if (!value || (decimals && getCountOfDecimals(value) <= decimals && Number(value) <= 100000000)) {
         setRentalAmount(value === "." || value === "," ? "0." : !isNaN(Number(value)) ? value : rentalAmount);
       }
