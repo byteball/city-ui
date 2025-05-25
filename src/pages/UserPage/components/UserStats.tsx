@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TextScramble } from "@/components/ui/text-scramble";
 import { toLocalString } from "@/lib";
-import { calculateOverallProbability } from "@/lib/calculateOverallProbability";
+import { calculateUserProbability } from "@/lib/calculateUserProbability";
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { mapUnitsByOwnerAddressSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
@@ -31,7 +31,12 @@ export const UserStats: FC<IUserStatsProps> = memo(({ address }) => {
   const walletBalanceView = toLocalString(walletBalance.amount / 10 ** (decimals ?? 0));
   const userUnits = useAaStore((state) => mapUnitsByOwnerAddressSelector(state, address));
   const { matching_probability, referral_boost } = useAaParams();
-  const overallProb = calculateOverallProbability(userUnits, city, matching_probability, referral_boost);
+  const overallProb = calculateUserProbability(
+    userUnits.filter((unit) => unit.type === "plot"),
+    city,
+    matching_probability,
+    referral_boost
+  );
 
   useEffect(() => {
     let cancelled = false;
