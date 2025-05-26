@@ -4,7 +4,18 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-const Dialog = DialogPrimitive.Root;
+const _DialogRoot = DialogPrimitive.Root;
+const Dialog = ({ children, onOpenChange, ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) => {
+  const handleOpenChange = (open: boolean) => {
+    (window as any).isDialogOpen = open;
+    onOpenChange?.(open);
+  };
+  return (
+    <_DialogRoot {...props} onOpenChange={handleOpenChange}>
+      {children}
+    </_DialogRoot>
+  );
+};
 
 const DialogTrigger = DialogPrimitive.Trigger;
 

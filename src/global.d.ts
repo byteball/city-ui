@@ -270,3 +270,9 @@ export interface IGameOptions {
   isReferral?: boolean;
 }
 
+declare global {
+  interface Window {
+    isDialogOpen?: boolean;
+  }
+}
+
