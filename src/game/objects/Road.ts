@@ -29,7 +29,7 @@ export class Road {
       for (let posY = 0; posY < this.mapHeight; posY += BASE_LABEL_STEP) {
         const roadText = this.scene.add.text(x + thickness / 2 + thickness + 10, posY, name, {
           fontSize: "26px",
-          color: "#89a4a6",
+          color: "#fff",
           fontFamily: "Inter",
         });
 
@@ -46,7 +46,7 @@ export class Road {
         const roadText = this.scene.add.text(posX, y + thickness / 2 + thickness + 10, name, {
           fontSize: "26px",
           fontFamily: "Inter",
-          color: "#89a4a6",
+          color: "#fff",
         });
 
         roadText.setOrigin(0);
