@@ -62,10 +62,12 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
 
   let title = "";
   let description = "";
+  let discordAttestation;
+  let tgAttestation;
 
   if (loaded) {
-    const discordAttestation = attestations.find((att) => att.name === "discord")?.value;
-    const tgAttestation = attestations.find((att) => att.name === "telegram")?.value;
+    discordAttestation = attestations.find((att) => att.name === "discord")?.value;
+    tgAttestation = attestations.find((att) => att.name === "telegram")?.value;
     const infoName = typeof parsedUserInfo === "object" ? parsedUserInfo?.name : "";
     const name = infoName || tgAttestation || discordAttestation;
 
@@ -106,7 +108,7 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
           tooltipText="Use attestation bots to link your telegram and discord accounts to your Obyte address and receive notifications when you get a neighbor."
           loading={!loaded}
         >
-          {attestations.length ? (
+          {attestations.length || walletAddress === address ? (
             <div className="flex gap-4">
               {attestations.map((a) => {
                 const url = getContactUrlByUsername(a.value, a.name, a.userId);
@@ -124,6 +126,24 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
                   </div>
                 );
               })}
+
+              {!discordAttestation && walletAddress === address ? (
+                <div className="flex items-center justify-between gap-1">
+                  <SocialIcon type="discord" />{" "}
+                  <a href={appConfig.DISCORD_BOT_URL} className="text-link">
+                    Set up
+                  </a>
+                </div>
+              ) : null}
+
+              {!tgAttestation && walletAddress === address ? (
+                <div className="flex items-center justify-between gap-1">
+                  <SocialIcon type="telegram" />{" "}
+                  <a href={appConfig.TELEGRAM_BOT_URL} className="text-link">
+                    Set up
+                  </a>
+                </div>
+              ) : null}
             </div>
           ) : (
             <span>No attested contacts</span>
