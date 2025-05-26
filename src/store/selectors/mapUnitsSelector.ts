@@ -60,7 +60,7 @@ export const mapUnitsByUniqDataSelector = createSelector(
 
     return units.find((unit) =>
       uniqData.type === "plot"
-        ? unit.plot_num === uniqData.num
+        ? unit.plot_num === uniqData.num && unit.type === "plot"
         : unit.type === "house" && unit.house_num === uniqData.num
     );
   }
