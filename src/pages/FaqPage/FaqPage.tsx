@@ -1,13 +1,25 @@
-import { Link } from "react-router";
+import { useEffect } from "react";
+import { Link, useLocation } from "react-router";
+import { scroller } from "react-scroll";
 
 import { getPlotPrice } from "@/aaLogic/getPlotPrice";
 import { PageLayout } from "@/components/layout/page-layout";
 import { toLocalString } from "@/lib";
 import { useAaParams } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
+
 import { FaqContent, FaqItem, FaqTitle } from "./components";
 
 export default () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    const hash = location.hash.replace("#", "");
+    if (hash) {
+      scroller.scrollTo(hash, { smooth: true, offset: -80, duration: 500 });
+    }
+  }, [location.hash]);
+
   const { symbol } = useSettingsStore((state) => state);
   const params = useAaParams();
   const { matching_probability, referral_boost, followup_reward_share, p2p_sale_fee, shortcode_sale_fee } = params;
@@ -229,8 +241,8 @@ export default () => {
             </FaqContent>
           </FaqItem>
           <FaqItem>
-            <FaqTitle scrollId="how-can-I-make-money-in-the-city">How can I make money in the City?</FaqTitle>
-            <FaqContent scrollId="how-can-I-make-money-in-the-city">
+            <FaqTitle scrollId="how-can-i-make-money-in-the-city">How can I make money in the City?</FaqTitle>
+            <FaqContent scrollId="how-can-i-make-money-in-the-city">
               <ol>
                 <li>By finding neighbors and receiving reward plots, which double your investment.</li>
                 <li>
