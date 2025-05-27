@@ -180,7 +180,22 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
             <InfoPanel>
               {selectedMapUnit?.type === "house" && !selectedMapUnit.owner ? (
                 <InfoPanel.Item textClamp loading={loading}>
-                  Mayor house <img className="inline ml-2 size-6" src="./obyte-city-flag.svg" />
+                  Mayor house{" "}
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <img className="inline ml-2 size-6" src="./obyte-city-flag.svg" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <div className="max-w-[150px]">
+                          This house was built by the City mayor to create the street grid of the City.{" "}
+                          <Link to="/faq#who-is-the-mayor" className="text-link">
+                            See more details in the FAQ.
+                          </Link>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </InfoPanel.Item>
               ) : null}
               <InfoPanel.Item
