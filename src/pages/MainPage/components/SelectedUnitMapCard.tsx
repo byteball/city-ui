@@ -178,6 +178,11 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
         {selectedMapUnitUniqData ? (
           <CardContent className="text-sm">
             <InfoPanel>
+              {selectedMapUnit?.type === "house" && !selectedMapUnit.owner ? (
+                <InfoPanel.Item textClamp loading={loading}>
+                  Mayor house <img className="inline ml-2 size-6" src="./obyte-city-flag.svg" />
+                </InfoPanel.Item>
+              ) : null}
               <InfoPanel.Item
                 textClamp
                 tooltipText={
