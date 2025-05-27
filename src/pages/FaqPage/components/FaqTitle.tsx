@@ -6,7 +6,8 @@ export const FaqTitle: FC<{ children: ReactNode; scrollId: string }> = ({ childr
     hashSpy
     spy
     smooth
-    saveHashHistory={true}
+    // replace history entry on hash change instead of pushing new one
+    onSetActive={() => window.history.replaceState(null, "", `#${scrollId}`)}
     offset={-80}
     duration={500}
     to={scrollId}

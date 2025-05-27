@@ -16,7 +16,13 @@ export default () => {
   useEffect(() => {
     const hash = location.hash.replace("#", "");
     if (hash) {
-      scroller.scrollTo(hash, { smooth: true, offset: -80, duration: 500 });
+      scroller.scrollTo(hash, {
+        smooth: true,
+        offset: -80,
+        duration: 500,
+        spy: true,
+        hashSpy: true,
+      });
     }
   }, [location.hash]);
 
