@@ -32,7 +32,7 @@ export class House {
     this.houseImage.setInteractive();
 
     this.houseImage.on("pointerover", (pointer: Phaser.Input.Pointer) => {
-      if (this.tooltipDom) return;
+      if (this.tooltipDom || !this.address) return;
       const div = document.createElement("div");
 
       let name = "";

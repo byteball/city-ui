@@ -47,7 +47,7 @@ export class Plot {
     this.plotImage.on("pointerover", (pointer: Phaser.Input.Pointer) => {
       // do not show tooltip when a dialog is open
       if ((window as any).isDialogOpen) return;
-      if (this.tooltipDom) return;
+      if (this.tooltipDom || !this.address) return;
       const div = document.createElement("div");
       let name = "";
 
