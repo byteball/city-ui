@@ -104,6 +104,39 @@ export class Map {
       // 2) Initial coordinates of the plot
       let finalX = asNonNegativeNumber(Decimal(x).mul(appConfig.MAP_SCALE).toNumber());
       let finalY = asNonNegativeNumber(Decimal(y).mul(appConfig.MAP_SCALE).toNumber());
+      let overlapping = true;
+
+      // Loop to find a non-overlapping position
+      while (overlapping) {
+        overlapping = false;
+        const leftEdge = finalX - plotSize / 2;
+        const rightEdge = finalX + plotSize / 2;
+        const topEdge = finalY - plotSize / 2;
+        const bottomEdge = finalY + plotSize / 2;
+
+        // Check all roads
+        for (const road of this.roadsData) {
+          if (road.orientation === "vertical") {
+            // use x coordinate of the road
+            const roadStart = road.x;
+            const roadEnd = road.x + thickness;
+
+            if (rightEdge >= roadStart && leftEdge < roadEnd) {
+              overlapping = true;
+              break;
+            }
+          } else {
+            // Horizontal road: use y coordinate of the road
+            const roadStart = road.y;
+            const roadEnd = road.y + thickness;
+
+            if (bottomEdge >= roadStart && topEdge < roadEnd) {
+              overlapping = true;
+              break;
+            }
+          }
+        }
+      } // end while
 
       // creating new plot
       let unit: Plot | House;
