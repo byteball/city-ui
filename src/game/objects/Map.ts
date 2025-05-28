@@ -122,7 +122,6 @@ export class Map {
             const roadEnd = road.x + thickness;
 
             if (rightEdge >= roadStart && leftEdge < roadEnd) {
-              finalX = asNonNegativeNumber(finalX + thickness);
               overlapping = true;
               break;
             }
@@ -132,7 +131,6 @@ export class Map {
             const roadEnd = road.y + thickness;
 
             if (bottomEdge >= roadStart && topEdge < roadEnd) {
-              finalY = asNonNegativeNumber(finalY + thickness);
               overlapping = true;
               break;
             }

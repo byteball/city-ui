@@ -25,9 +25,9 @@ export class House {
   }
 
   private createHouse() {
-    const { x, y } = this.data;
+    const { x, y, owner, amount } = this.data;
 
-    this.houseImage = this.scene.add.image(x, y, "house");
+    this.houseImage = this.scene.add.image(x, y, owner && amount !== 0 ? "house" : "mayor-house");
     this.houseImage.setDisplaySize(this.plotSize, this.plotSize);
     this.houseImage.setInteractive();
 
