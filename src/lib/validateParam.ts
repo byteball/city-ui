@@ -23,7 +23,7 @@ export const validateParam: (name: paramName, value: string | number) => [boolea
     )
       return [false, "must be less than 100%"];
   } else if (numericInputParamNames.includes(name)) {
-    if (name === "rental_surcharge_factor" && Number(value) < 1) return [false, "must be more than 0"];
+    if (name === "rental_surcharge_factor" && Number(value) < 1) return [false, "must be equal or more than 1"];
   } else if (name === "randomness_aa" || name === "mayor") {
     // addresses
     if (!obyte.utils.isValidAddress(String(value))) return [false, "must be a valid address"];
