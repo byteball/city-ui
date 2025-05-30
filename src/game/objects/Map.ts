@@ -65,6 +65,24 @@ export class Map {
     this.createRoads(MAP_WIDTH, MAP_HEIGHT);
     this.createMapUnits(MAP_WIDTH, MAP_HEIGHT, options.displayMode || "main");
     this.updateMapUnitSelection();
+
+    // Add click handler to clear selection when clicking on empty space
+    this.scene.input.on(
+      "pointerdown",
+      (_pointer: Phaser.Input.Pointer, gameObjects: Phaser.GameObjects.GameObject[]) => {
+        if (!gameObjects || gameObjects.length === 0) {
+          if (this.selectedMapUnit) {
+            this.selectedMapUnit.setSelected(false);
+            this.selectedMapUnit = null;
+          }
+          if (this.gameOptions?.displayMode === "main") {
+            useSettingsStore.getState().setSelectedMapUnit(null);
+          } else if (this.gameOptions?.displayMode === "market") {
+            useSettingsStore.getState().setSelectedMarketPlot(null);
+          }
+        }
+      }
+    );
   }
 
   private createRoads(mapWidth: number, mapHeight: number) {
