@@ -9,6 +9,7 @@ export class House {
   private plotSize: number;
   private disabled: boolean;
   private address: string;
+  private isMayorHouse: boolean = false;
 
   private houseImage: Phaser.GameObjects.Image;
   private outline?: Phaser.GameObjects.Graphics;
@@ -26,9 +27,16 @@ export class House {
 
   private createHouse() {
     const { x, y, owner, amount } = this.data;
+    this.isMayorHouse = !owner && amount === 0;
 
-    this.houseImage = this.scene.add.image(x, y, owner && amount !== 0 ? "house" : "mayor-house");
-    this.houseImage.setDisplaySize(this.plotSize, this.plotSize);
+    this.houseImage = this.scene.add.image(x, y, this.isMayorHouse ? "mayor-house" : "house");
+
+    if (this.isMayorHouse) {
+      this.houseImage.setDisplaySize(this.plotSize, this.plotSize * 1.2);
+    } else {
+      this.houseImage.setDisplaySize(this.plotSize, this.plotSize);
+    }
+
     this.houseImage.setInteractive();
 
     this.houseImage.on("pointerover", (pointer: Phaser.Input.Pointer) => {
