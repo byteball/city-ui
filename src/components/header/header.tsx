@@ -19,11 +19,26 @@ const navigation = [
 export const Header: FC<IHeaderProps> = () => {
   const walletAddress = useSettingsStore((state) => state.walletAddress);
 
+  const resetSelectedUnit = (href: string) => {
+    console.log("href", href);
+    if (href === "/") {
+      useSettingsStore.getState().setSelectedMapUnit(null);
+    } else if (href === "/market") {
+      useSettingsStore.getState().setSelectedMarketPlot(null);
+    }
+  };
+
   return (
     <header>
       <nav aria-label="Global" className="flex items-center justify-between md:py-6">
         <div className="flex lg:flex-1">
-          <NavLink to="/" className="-m-1.5 p-1.5 flex space-x-4 items-center">
+          <NavLink
+            to="/"
+            onClick={() => resetSelectedUnit("/")}
+            replace
+            end
+            className="-m-1.5 p-1.5 flex space-x-4 items-center"
+          >
             <span className="sr-only">Obyte City</span>
             <img alt="City AA" src="/logo-inv.svg" className="w-auto h-8" />
             <span className="font-semibold text-white text-sm/6">Obyte City</span>
@@ -47,6 +62,7 @@ export const Header: FC<IHeaderProps> = () => {
                 <DialogClose asChild key={item.name}>
                   <NavLink
                     to={item.href}
+                    onClick={() => resetSelectedUnit(item.href)}
                     className="inline-block px-4 py-2 font-semibold text-white rounded-xl bg-foreground/10 text-sm/6"
                   >
                     {item.name}
@@ -75,7 +91,12 @@ export const Header: FC<IHeaderProps> = () => {
         </div>
         <div className="hidden lg:flex lg:gap-x-12">
           {navigation.map((item) => (
-            <NavLink key={item.name} to={item.href} className="font-semibold text-white text-sm/6">
+            <NavLink
+              key={item.name}
+              onClick={() => resetSelectedUnit(item.href)}
+              to={item.href}
+              className="font-semibold text-white text-sm/6"
+            >
               {item.name}
             </NavLink>
           ))}

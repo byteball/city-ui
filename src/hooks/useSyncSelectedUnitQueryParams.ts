@@ -64,8 +64,11 @@ export const useSyncSelectedUnitQueryParams = () => {
 
   // Effect to update selectedUnit when selectedMapUnit changes
   useEffect(() => {
-    if (inited && loaded && selectedMapUnit) {
-      if (selectedMapUnit.type === "house") {
+    if (inited && loaded) {
+      if (!selectedMapUnit) {
+        setSelectedPlot(null);
+        setSelectedHouse(null);
+      } else if (selectedMapUnit.type === "house") {
         setSelectedHouse(selectedMapUnit.num);
         setSelectedPlot(null); // clear plot selection if house is selected
       } else {
