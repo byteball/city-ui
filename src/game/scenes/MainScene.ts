@@ -4,6 +4,7 @@ import { ICity, IGameOptions } from "@/global";
 import { useAaStore } from "@/store/aa-store";
 import { mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import CameraController from "../controllers/CameraController";
+import { EventBus } from "../EventBus";
 import { Map as GameMap } from "../objects/Map";
 import { getRoads } from "../utils/getRoads";
 
@@ -42,6 +43,10 @@ export default class MapScene extends Phaser.Scene {
 
     this.map.createMap(this.options);
     this.setHousesOnTop();
+    // Clear selection when reset-selection event is emitted from React
+    EventBus.on("reset-selection", () => {
+      this.map.updateMapUnitSelection();
+    });
 
     const unsubscribe = useAaStore.subscribe((newState) => {
       const mapUnits = mapUnitsSelector(newState);
@@ -58,7 +63,10 @@ export default class MapScene extends Phaser.Scene {
       this.setHousesOnTop();
     });
 
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => unsubscribe());
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      unsubscribe();
+      EventBus.off("reset-selection");
+    });
 
     new CameraController(this, this.cameras.main);
   }

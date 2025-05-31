@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { Link, NavLink } from "react-router";
 
+import { EventBus } from "@/game/EventBus";
 import { useSettingsStore } from "@/store/settings-store";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { AddWalletAddress } from "../dialogs/AddWalletAddress";
@@ -23,8 +24,10 @@ export const Header: FC<IHeaderProps> = () => {
     console.log("href", href);
     if (href === "/") {
       useSettingsStore.getState().setSelectedMapUnit(null);
+      EventBus.emit("reset-selection");
     } else if (href === "/market") {
       useSettingsStore.getState().setSelectedMarketPlot(null);
+      EventBus.emit("reset-selection");
     }
   };
 
