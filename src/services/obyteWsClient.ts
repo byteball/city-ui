@@ -1,9 +1,10 @@
+import appConfig from '@/appConfig';
 import obyte from "obyte";
 
 import { bootstrap } from "@/bootstrap";
 
-const client = new obyte.Client(`wss://obyte.org/bb${true ? "-test" : ""}`, {
-    testnet: true,
+const client = new obyte.Client(`wss://obyte.org/bb${appConfig.TESTNET ? "-test" : ""}`, {
+    testnet: !!appConfig.TESTNET,
     reconnect: true,
 });
 
