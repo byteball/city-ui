@@ -11,6 +11,9 @@ export default {
         discord: "EJC4A7WQGHEZEKW6RLO7F26SAR4LAQBU",
         telegram: "WMFLGI2GLAB2MDF2KQAH37VNRRMK7A5N",
       }
-    : {},
+    : {
+        discord: "5KM36CFPBD2QJLVD65PHZG34WEM4RPY2",
+        telegram: "JBW7HT5CRBSF7J7RD26AYLQG6GZDPFPS",
+    },
 } as const;
 
