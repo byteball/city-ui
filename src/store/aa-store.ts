@@ -11,16 +11,16 @@ import appConfig from "@/appConfig";
 import { getAllStateVarsByAddress } from "@/lib/getAllStateVarsByAddress";
 
 export const defaultAaParams: IAaParams = {
-  matching_probability: asNonNegativeNumber(0.05),
+  matching_probability: appConfig.TESTNET ? asNonNegativeNumber(0.05) : asNonNegativeNumber(0.1),
   plot_price: asNonNegativeNumber(1000e9),
   referral_boost: asNonNegativeNumber(0.1),
-  randomness_aa: "",
+  randomness_aa: appConfig.TESTNET ? "" : "R2OVZFLVPBY65CNRL4W6GKK34XGOOQJS",
   randomness_price: asNonNegativeNumber(0.001),
   p2p_sale_fee: asNonNegativeNumber(0.01),
   shortcode_sale_fee: asNonNegativeNumber(0.01),
   rental_surcharge_factor: asNonNegativeNumber(1),
   followup_reward_share: asNonNegativeNumber(0.1),
-  attestors: "",
+  attestors: appConfig.TESTNET ? "" : "JBW7HT5CRBSF7J7RD26AYLQG6GZDPFPS:5KM36CFPBD2QJLVD65PHZG34WEM4RPY2",
   mayor: "",
 };
 
