@@ -30,7 +30,7 @@ export const PrelaunchForm: FC = memo(() => {
   const { loaded: stateLoaded, state } = useAaStore();
   const {
     symbol,
-    decimals,
+    decimals = 0,
     asset,
     inited,
     walletAddress,
@@ -55,8 +55,8 @@ export const PrelaunchForm: FC = memo(() => {
     price: toLocalString(price / 1000 / decimalsPow),
     // Simplify fee formatting: toFixed(2) already returns a string.
     fee: (fee * 100).toFixed(2),
-    total: toLocalString(totalPrice / 1000 / decimalsPow),
-    boughtTokens: toLocalString(boughtTokens / reserveDecimalsPow),
+    total: toLocalString(totalPrice / 1000 / reserveDecimalsPow),
+    boughtTokens: toLocalString(boughtTokens / decimalsPow),
   };
 
   const amount = Math.round((totalPrice + boughtTokens) / 1000);

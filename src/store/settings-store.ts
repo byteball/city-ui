@@ -77,7 +77,7 @@ const storeCreator: StateCreator<SettingsState> = (set, get) => ({
     const tokenRegistry = client.api.getOfficialTokenRegistryAddress();
 
     const [decimals, symbol, challengingPeriod] = await Promise.all([
-      client.api.getDecimalsBySymbolOrAsset(tokenRegistry, asset),
+      client.api.getDecimalsBySymbolOrAsset(tokenRegistry, asset).catch(() => 0),
       client.api.getSymbolByAsset(tokenRegistry, asset),
       client.api.getDefinition(governanceAa).then((def) => def[1]?.params?.challenging_period || 3 * 24 * 3600),
     ]);
