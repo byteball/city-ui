@@ -52,7 +52,7 @@ export const PrelaunchForm: FC = memo(() => {
   const reserveDecimalsPow = 10 ** (reserveDecimals ?? 0);
 
   const formattedValues = {
-    price: toLocalString(price / 1000 / decimalsPow),
+    price: toLocalString(price / 1000 / reserveDecimalsPow),
     // Simplify fee formatting: toFixed(2) already returns a string.
     fee: (fee * 100).toFixed(2),
     total: toLocalString(totalPrice / 1000 / reserveDecimalsPow),
