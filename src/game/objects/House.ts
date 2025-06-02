@@ -26,8 +26,8 @@ export class House {
   }
 
   private createHouse() {
-    const { x, y, owner, amount } = this.data;
-    this.isMayorHouse = !owner && amount === 0;
+    const { x, y, amount } = this.data;
+    this.isMayorHouse = amount === 0;
 
     this.houseImage = this.scene.add.image(x, y, this.isMayorHouse ? "mayor-house" : "house");
 
