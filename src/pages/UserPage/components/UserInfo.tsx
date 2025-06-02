@@ -117,7 +117,7 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
                   <div className="flex items-center justify-between gap-1" key={a.name + "-" + a.value + "-" + address}>
                     <SocialIcon type={a.name} />{" "}
                     {url ? (
-                      <a href={url} target="_blank" className="text-link">
+                      <a href={url} target="_blank" rel="noopener" className="text-link">
                         {a.value}
                       </a>
                     ) : (
@@ -197,7 +197,7 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
               <>
                 {Object.entries(parsedUserInfo).map(([key, value]) => {
                   return (
-                    <InfoPanel.Item key={key} label={key} loading={!loaded}>
+                    <InfoPanel.Item key={key} label={key === "homepage" ? "" : key} loading={!loaded}>
                       {value}
                     </InfoPanel.Item>
                   );

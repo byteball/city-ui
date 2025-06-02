@@ -102,10 +102,10 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
                             Object.entries(info)
                               .slice(0, 5)
                               .map(([key, value]) => (
-                                <InfoPanel.Item key={key} label={key}>
+                                <InfoPanel.Item key={key} label={key === "homepage" ? "" : key}>
                                   <div className="inline">
                                     {String(value).startsWith("https://") || String(value).startsWith("https://") ? (
-                                      <a href={value?.toString()} rel="nofollow" className="text-link" target="_blank">
+                                      <a href={value?.toString()} rel="noopener" className="text-link" target="_blank">
                                         {value}
                                       </a>
                                     ) : (

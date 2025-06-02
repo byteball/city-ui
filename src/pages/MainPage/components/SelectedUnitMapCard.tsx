@@ -268,7 +268,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                           >
                             <SocialIcon type={a.name} />{" "}
                             {url ? (
-                              <a href={url} target="_blank" className="text-link">
+                              <a href={url} target="_blank" rel="noopener" className="text-link">
                                 {a.value}
                               </a>
                             ) : (
@@ -293,10 +293,10 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                     Object.entries(selectedMapUnit.info)
                       .slice(0, 5)
                       .map(([key, value]) => (
-                        <InfoPanel.Item key={key} label={key}>
+                        <InfoPanel.Item key={key} label={key === "homepage" ? "" : key}>
                           <div className="inline">
                             {String(value).startsWith("https://") || String(value).startsWith("https://") ? (
-                              <a href={value?.toString()} rel="nofollow" className="text-link" target="_blank">
+                              <a href={value?.toString()} rel="noopener" className="text-link" target="_blank">
                                 {value}
                               </a>
                             ) : (

@@ -199,7 +199,7 @@ const ClaimRedirectPage = () => {
                   <InfoPanel.Item loading={!plot1AttestationLoaded || !plot2AttestationLoaded} label="Discord">
                     <span className="text-white">
                       {discordAttestation1Url ? (
-                        <a href={discordAttestation1Url} target="_blank" className="text-link">
+                        <a href={discordAttestation1Url} target="_blank" rel="noopener" className="text-link">
                           {discordAttestation1?.value ?? "Not attested"}
                         </a>
                       ) : (
@@ -207,7 +207,7 @@ const ClaimRedirectPage = () => {
                       )}{" "}
                       and{" "}
                       {discordAttestation2Url ? (
-                        <a href={discordAttestation2Url} target="_blank" className="text-link">
+                        <a href={discordAttestation2Url} target="_blank" rel="noopener" className="text-link">
                           {discordAttestation2?.value ?? "Not attested"}
                         </a>
                       ) : (
@@ -219,7 +219,7 @@ const ClaimRedirectPage = () => {
                   <InfoPanel.Item loading={!plot1AttestationLoaded || !plot2AttestationLoaded} label="Telegram">
                     <span className="text-white">
                       {telegramAttestation1Url ? (
-                        <a href={telegramAttestation1Url} target="_blank" className="text-link">
+                        <a href={telegramAttestation1Url} target="_blank" rel="noopener" className="text-link">
                           {tgAttestation1?.value ?? "?"}
                         </a>
                       ) : (
@@ -227,7 +227,7 @@ const ClaimRedirectPage = () => {
                       )}{" "}
                       and{" "}
                       {telegramAttestation2Url ? (
-                        <a href={telegramAttestation2Url} target="_blank" className="text-link">
+                        <a href={telegramAttestation2Url} target="_blank" rel="noopener" className="text-link">
                           {tgAttestation2?.value ?? "?"}
                         </a>
                       ) : (
@@ -274,7 +274,7 @@ const ClaimRedirectPage = () => {
                             >
                               <SocialIcon type={a.name} />{" "}
                               {url ? (
-                                <a href={url} target="_blank" className="text-link">
+                                <a href={url} target="_blank" rel="noopener"  className="text-link">
                                   {a.value}
                                 </a>
                               ) : (
@@ -325,7 +325,7 @@ const ClaimRedirectPage = () => {
                             >
                               <SocialIcon type={a.name} />{" "}
                               {url ? (
-                                <a href={url} target="_blank" className="text-link">
+                                <a href={url} target="_blank" rel="noopener" className="text-link">
                                   {a.value}
                                 </a>
                               ) : (
