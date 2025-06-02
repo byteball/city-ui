@@ -76,44 +76,44 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
   const addresses =
     selectedMapUnit?.x !== undefined && selectedMapUnit?.y !== undefined
       ? getAddressFromNearestRoad(
-          roads,
-          {
-            x: selectedMapUnit.x,
-            y: selectedMapUnit.y,
-          },
-          selectedMapUnit?.type === "house" ? selectedMapUnit?.house_num ?? 0 : selectedMapUnit?.plot_num ?? 0
-        )
+        roads,
+        {
+          x: selectedMapUnit.x,
+          y: selectedMapUnit.y,
+        },
+        selectedMapUnit?.type === "house" ? selectedMapUnit?.house_num ?? 0 : selectedMapUnit?.plot_num ?? 0
+      )
       : [];
 
   const p2pBuyLink =
     selectedMapUnit?.type === "plot" && selectedMapUnit.sale_price
       ? generateLink({
-          aa: appConfig.AA_ADDRESS,
-          amount: selectedMapUnit?.sale_price || 0,
-          data: {
-            p2p_buy: 1,
-            plot_num: selectedMapUnit?.plot_num,
-          },
-          asset: asset as string,
-          from_address: walletAddress!,
-          is_single: true,
-        })
+        aa: appConfig.AA_ADDRESS,
+        amount: selectedMapUnit?.sale_price || 0,
+        data: {
+          p2p_buy: 1,
+          plot_num: selectedMapUnit?.plot_num,
+        },
+        asset: asset as string,
+        from_address: walletAddress!,
+        is_single: true,
+      })
       : null;
 
   const p2pWithdrawFromSale =
     selectedMapUnit?.type === "plot" && selectedMapUnit.sale_price
       ? generateLink({
-          aa: appConfig.AA_ADDRESS,
-          amount: selectedMapUnit?.sale_price!,
-          data: {
-            sell: 1,
-            plot_num: selectedMapUnit?.plot_num,
-            sale_price: 0,
-          },
-          asset: asset!,
-          from_address: walletAddress!,
-          is_single: true,
-        })
+        aa: appConfig.AA_ADDRESS,
+        amount: selectedMapUnit?.sale_price!,
+        data: {
+          sell: 1,
+          plot_num: selectedMapUnit?.plot_num,
+          sale_price: 0,
+        },
+        asset: asset!,
+        from_address: walletAddress!,
+        is_single: true,
+      })
       : null;
 
   const title = `Obyte City — ${addresses.length ? addresses[0] : "A community engagement space for Obyte"}`;
@@ -146,9 +146,8 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
           <>
             <meta
               property="og:image"
-              content={`${appConfig.OG_IMAGE_URL}/og/unit?${selectedMapUnit.type}=${
-                selectedMapUnit.type === "house" ? selectedMapUnit.house_num : selectedMapUnit.plot_num
-              }`}
+              content={`${appConfig.OG_IMAGE_URL}/og/unit?${selectedMapUnit.type}=${selectedMapUnit.type === "house" ? selectedMapUnit.house_num : selectedMapUnit.plot_num
+                }`}
             />
           </>
         ) : (
@@ -290,7 +289,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                   {typeof selectedMapUnit.info === "string" ? (
                     <InfoPanel.Item label="Information">{selectedMapUnit.info}</InfoPanel.Item>
                   ) : (
-                    Object.entries(selectedMapUnit.info)
+                    Object.entries(selectedMapUnit.info).sort(([keyA], [keyB]) => keyA === "name" ? -1 : keyB === "name" ? 1 : 0)
                       .slice(0, 5)
                       .map(([key, value]) => (
                         <InfoPanel.Item key={key} label={key === "homepage" ? "" : key}>

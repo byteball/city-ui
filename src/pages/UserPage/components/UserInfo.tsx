@@ -195,7 +195,7 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
               <div>{parsedUserInfo}</div>
             ) : (
               <>
-                {Object.entries(parsedUserInfo).map(([key, value]) => {
+                {Object.entries(parsedUserInfo).sort(([keyA], [keyB]) => keyA === "name" ? -1 : keyB === "name" ? 1 : 0).map(([key, value]) => {
                   return (
                     <InfoPanel.Item key={key} label={key === "homepage" ? "" : key} loading={!loaded}>
                       {value}

@@ -101,6 +101,7 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
                           ) : (
                             Object.entries(info)
                               .slice(0, 5)
+                              .sort(([keyA], [keyB]) => keyA === "name" ? -1 : keyB === "name" ? 1 : 0)
                               .map(([key, value]) => (
                                 <InfoPanel.Item key={key} label={key === "homepage" ? "" : key}>
                                   <div className="inline">

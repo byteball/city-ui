@@ -16,7 +16,7 @@ import { House } from "./House";
 
 import appConfig from "@/appConfig";
 
-export const ROAD_THICKNESS = 80;
+export const ROAD_THICKNESS = 60;
 
 export class Map {
   private scene: Phaser.Scene;
@@ -161,13 +161,13 @@ export class Map {
       const [address] =
         unitData?.x !== undefined && unitData?.y !== undefined
           ? getAddressFromNearestRoad(
-              this.roadsData,
-              {
-                x: unitData.x,
-                y: unitData.y,
-              },
-              unitData.type === "house" ? unitData.house_num ?? 0 : unitData.plot_num ?? 0
-            )
+            this.roadsData,
+            {
+              x: unitData.x,
+              y: unitData.y,
+            },
+            unitData.type === "house" ? unitData.house_num ?? 0 : unitData.plot_num ?? 0
+          )
           : [];
 
       if (type === "house") {
@@ -197,7 +197,7 @@ export class Map {
           plotSize,
           address,
           this.gameOptions?.claimNeighborPlotNumbers?.[1] &&
-          this.gameOptions?.claimNeighborPlotNumbers?.[1] === unitData.plot_num
+            this.gameOptions?.claimNeighborPlotNumbers?.[1] === unitData.plot_num
             ? "plus"
             : "plot"
         );
