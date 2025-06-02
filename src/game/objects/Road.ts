@@ -67,6 +67,8 @@ export class Road {
     }
 
     this.scene.events.on("update", this.updateLabels, this);
+    // Initial clip to hide labels outside the initial camera view
+    this.updateLabels();
   }
 
   private updateLabels() {
@@ -90,6 +92,14 @@ export class Road {
 
       this.previousZoom = currentZoom;
     }
+
+    // Show labels only when they are fully inside the camera view
+    const viewRect = this.scene.cameras.main.worldView;
+    this.labels.forEach(label => {
+      const b = label.getBounds();
+      const fullyVisible = viewRect.contains(b.left, b.top) && viewRect.contains(b.right, b.bottom);
+      label.setVisible(fullyVisible);
+    });
   }
 }
 
