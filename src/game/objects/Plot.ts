@@ -30,7 +30,7 @@ export class Plot {
     if (this.view === "plus") {
       this.plotImage = this.scene.add.image(x, y, "plus");
       this.plotImage.setDisplaySize(PLUS_SIZE, PLUS_SIZE);
-      this.plotImage.setDepth(this.plotImage.depth + 20);
+      this.plotImage.setDepth(20);
 
       // const redDot = this.scene.add.graphics();
       // redDot.fillStyle(0xff0000, 1);

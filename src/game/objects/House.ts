@@ -30,6 +30,7 @@ export class House {
     this.isMayorHouse = amount === 0;
 
     this.houseImage = this.scene.add.image(x, y, this.isMayorHouse ? "mayor-house" : "house");
+    this.houseImage.setDepth(35);
 
     if (this.isMayorHouse) {
       this.houseImage.setDisplaySize(Math.min(this.plotSize, 400), Math.min(this.plotSize * 1.293, 400 * 1.293));
