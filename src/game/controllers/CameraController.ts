@@ -2,6 +2,8 @@ import appConfig from "@/appConfig";
 import { Decimal } from "decimal.js";
 import Phaser from "phaser";
 
+const OVERFLOW = 50; // Extra space around the map to prevent camera from going out of bounds
+
 export default class CameraController {
   private scene: Phaser.Scene;
   private camera: Phaser.Cameras.Scene2D.Camera;
@@ -13,7 +15,9 @@ export default class CameraController {
 
     this.BASE_MAP_SIZE = Decimal(1_000_000).mul(appConfig.MAP_SCALE);
 
-    this.camera.setBounds(0, 0, this.BASE_MAP_SIZE.toNumber(), this.BASE_MAP_SIZE.toNumber());
+    this.camera.setBounds(-OVERFLOW, -OVERFLOW,
+      this.BASE_MAP_SIZE.toNumber() + OVERFLOW * 2,
+      this.BASE_MAP_SIZE.toNumber() + OVERFLOW * 2);
 
     this.camera.centerOn(this.BASE_MAP_SIZE.div(2).toNumber(), this.BASE_MAP_SIZE.div(2).toNumber());
 
@@ -31,8 +35,8 @@ export default class CameraController {
   }
 
   private initZoom(): void {
-    const zoomX = this.camera.width / this.BASE_MAP_SIZE.toNumber();
-    const zoomY = this.camera.height / this.BASE_MAP_SIZE.toNumber();
+    const zoomX = this.camera.width / (this.BASE_MAP_SIZE.toNumber() + OVERFLOW * 2);
+    const zoomY = this.camera.height / (this.BASE_MAP_SIZE.toNumber() + OVERFLOW * 2);
     const minZoom = Math.min(zoomX, zoomY);
     const maxZoom = 1.5;
 

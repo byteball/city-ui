@@ -59,7 +59,6 @@ export class Map {
     const MAP_WIDTH = BASE_MAP_SIZE.plus(totalVerticalThickness).toNumber();
     const MAP_HEIGHT = BASE_MAP_SIZE.plus(totalHorizontalThickness).toNumber();
 
-    this.scene.cameras.main.setBounds(0, 0, MAP_WIDTH, MAP_HEIGHT);
 
     // 3) Pass them to the functions that create roads and plots
     this.createRoads(MAP_WIDTH, MAP_HEIGHT);
