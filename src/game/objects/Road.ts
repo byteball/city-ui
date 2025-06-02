@@ -3,7 +3,7 @@ import Phaser from "phaser";
 import { IRoad } from "@/global";
 import { ROAD_THICKNESS } from "./Map";
 
-const BASE_LABEL_STEP = 1200;
+const BASE_LABEL_STEP = 900;
 
 export class Road {
   private scene: Phaser.Scene;
