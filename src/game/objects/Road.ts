@@ -38,7 +38,7 @@ export class Road {
         roadText.setOrigin(0);
         roadText.setAngle(-90);
         roadText.setDepth(26);
-        roadText.setAlpha(0.5);
+        roadText.setAlpha(0.3);
 
         this.labels.push(roadText);
       }
@@ -58,7 +58,7 @@ export class Road {
         roadText.setOrigin(0);
         roadText.setAngle(0);
         roadText.setDepth(26);
-        roadText.setAlpha(0.5);
+        roadText.setAlpha(0.3);
 
         this.labels.push(roadText);
       }
