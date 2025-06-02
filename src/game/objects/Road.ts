@@ -29,7 +29,7 @@ export class Road {
         .setDepth(25)
         .setAlpha(0.4);
       for (let posY = 0; posY < this.mapHeight; posY += BASE_LABEL_STEP) {
-        const roadText = this.scene.add.text(x + thickness / 2 + thickness + 10, posY, name, {
+        const roadText = this.scene.add.text(x + thickness / 3 + thickness + 10, posY, name, {
           fontSize: "26px",
           color: "#fff",
           fontFamily: "Inter",
@@ -49,7 +49,7 @@ export class Road {
         .setAlpha(0.4);
 
       for (let posX = 0; posX < this.mapWidth; posX += BASE_LABEL_STEP) {
-        const roadText = this.scene.add.text(posX, y + thickness / 2 + thickness + 10, name, {
+        const roadText = this.scene.add.text(posX, y + thickness / 3 + thickness + 10, name, {
           fontSize: "26px",
           fontFamily: "Inter",
           color: "#fff",
@@ -79,7 +79,7 @@ export class Road {
 
       this.labels.forEach((label, index) => {
         const baseFontSize = 32;
-        const newFontSize = baseFontSize / (currentZoom * 1.1);
+        const newFontSize = baseFontSize / (currentZoom * 1.07);
 
         label.setFontSize(newFontSize);
 
