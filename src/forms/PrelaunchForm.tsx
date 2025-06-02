@@ -148,7 +148,7 @@ export const PrelaunchForm: FC = memo(() => {
                 ) : null}
               </>
             )}
-            as your referrer, which gives you a higher chance of becoming their neighbor.
+            {" "}as your referrer, which gives you a higher chance of becoming their neighbor.
           </p>
         </div>
       ) : null}
