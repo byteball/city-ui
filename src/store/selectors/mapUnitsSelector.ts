@@ -3,17 +3,16 @@ import { createSelector } from "reselect";
 
 import { IHouse, IMapUnit, IPlot, IUnitUniqData } from "@/global";
 import { asNonNegativeNumber } from "@/lib";
-import { AaStoreState, ICityAaState } from "../aa-store";
+import { AaStoreState, defaultAaParams, ICityAaState } from "../aa-store";
 
 const getAaState = (state: AaStoreState) => state.state;
-
 // uniq -> type + x + y
 export const mapUnitsSelector = createSelector([getAaState], (aaState: ICityAaState): IMapUnit[] => {
   if (!aaState) return [];
 
   return Object.entries(aaState)
     .filter(
-      ([key, unit]) => (key.startsWith("plot_") || key.startsWith("house_")) && typeof unit === "object" && "x" in unit
+      ([key, unit]) => (key.startsWith("plot_") || key.startsWith("house_")) && typeof unit === "object" && "x" in unit && "y" in unit
     )
     .map(([key, unit]) => {
       const [type, idStr] = key.split("_");
@@ -67,9 +66,16 @@ export const mapUnitsByUniqDataSelector = createSelector(
 );
 
 export const mapUnitsByOwnerAddressSelector = createSelector(
-  [mapUnitsSelector, (_state: AaStoreState, ownerAddress: string | null) => ownerAddress],
-  (units: IMapUnit[], ownerAddress: string | null) => {
+  [mapUnitsSelector, (state: AaStoreState, ownerAddress: string | null) => ({
+    ownerAddress,
+    mayor: state.state.city_city?.mayor ?? defaultAaParams.mayor
+  })],
+  (units: IMapUnit[], { ownerAddress, mayor }) => {
     if (!ownerAddress) return [];
+
+    if (ownerAddress === mayor) {
+      return units.filter((unit) => !("owner" in unit) || unit.owner === mayor);
+    }
 
     if (!obyte.utils.isValidAddress(ownerAddress)) throw new Error("Invalid address");
 
