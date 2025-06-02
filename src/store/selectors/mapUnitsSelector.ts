@@ -74,7 +74,7 @@ export const mapUnitsByOwnerAddressSelector = createSelector(
     if (!ownerAddress) return [];
 
     if (ownerAddress === mayor) {
-      return units.filter((unit) => !("owner" in unit) || unit.owner === mayor);
+      return units.filter((unit) => unit.amount === 0);
     }
 
     if (!obyte.utils.isValidAddress(ownerAddress)) throw new Error("Invalid address");
