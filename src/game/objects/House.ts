@@ -32,7 +32,7 @@ export class House {
     this.houseImage = this.scene.add.image(x, y, this.isMayorHouse ? "mayor-house" : "house");
 
     if (this.isMayorHouse) {
-      this.houseImage.setDisplaySize(this.plotSize, this.plotSize * 1.293);
+      this.houseImage.setDisplaySize(Math.min(this.plotSize, 400), Math.min(this.plotSize * 1.293, 400 * 1.293));
     } else {
       this.houseImage.setDisplaySize(this.plotSize, this.plotSize);
     }
