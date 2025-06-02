@@ -62,7 +62,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
   const rented_amount = selectedMapUnit?.type === "plot" ? selectedMapUnit.rented_amount ?? 0 : 0;
   const formattedAmount = toLocalString((selectedMapUnit?.amount ?? 0) / decimalsPow);
   const formattedRentedAmount = rented_amount ? toLocalString(rented_amount / decimalsPow) : "";
-  const isOwner = owner === walletAddress;
+  const isOwner = owner === walletAddress || walletAddress === cityStats?.mayor && selectedMapUnit?.amount === 0;
 
   const leaveUrl = generateLink({
     amount: 1e4,
@@ -178,7 +178,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
         {selectedMapUnitUniqData ? (
           <CardContent className="text-sm">
             <InfoPanel>
-              {selectedMapUnit?.type === "house" && !selectedMapUnit.owner ? (
+              {selectedMapUnit?.type === "house" && selectedMapUnit.amount === 0 ? (
                 <InfoPanel.Item textClamp loading={loading}>
                   Mayor house{" "}
                   <TooltipProvider>
