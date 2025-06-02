@@ -41,6 +41,7 @@ export class Plot {
       this.plotImage.setDepth(this.plotImage.depth + (this.view === "plot" ? 0 : 20));
       this.plotImage.setDisplaySize(this.plotSize, this.plotSize);
       this.plotImage.setInteractive();
+      this.plotImage.setDepth(20);
     }
 
     // Use DOM-based block tooltip

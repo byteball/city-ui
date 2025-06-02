@@ -24,7 +24,10 @@ export class Road {
     const thickness = ROAD_THICKNESS;
 
     if (orientation === "vertical") {
-      this.scene.add.tileSprite(x, 0, thickness, this.mapHeight, "road-vertical").setOrigin(0, 0).setDepth(25);
+      this.scene.add.tileSprite(x, 0, thickness, this.mapHeight, "road-vertical")
+        .setOrigin(0, 0)
+        .setDepth(25)
+        .setAlpha(0.4);
       for (let posY = 0; posY < this.mapHeight; posY += BASE_LABEL_STEP) {
         const roadText = this.scene.add.text(x + thickness / 2 + thickness + 10, posY, name, {
           fontSize: "26px",
@@ -35,12 +38,15 @@ export class Road {
         roadText.setOrigin(0);
         roadText.setAngle(-90);
         roadText.setDepth(26);
-        roadText.setAlpha(0.6);
+        roadText.setAlpha(0.5);
 
         this.labels.push(roadText);
       }
     } else if (orientation === "horizontal") {
-      this.scene.add.tileSprite(0, y, this.mapWidth, thickness, "road-horizontal").setOrigin(0, 0).setDepth(25);
+      this.scene.add.tileSprite(0, y, this.mapWidth, thickness, "road-horizontal")
+        .setOrigin(0, 0)
+        .setDepth(25)
+        .setAlpha(0.4);
 
       for (let posX = 0; posX < this.mapWidth; posX += BASE_LABEL_STEP) {
         const roadText = this.scene.add.text(posX, y + thickness / 2 + thickness + 10, name, {
@@ -52,7 +58,7 @@ export class Road {
         roadText.setOrigin(0);
         roadText.setAngle(0);
         roadText.setDepth(26);
-        roadText.setAlpha(0.6);
+        roadText.setAlpha(0.5);
 
         this.labels.push(roadText);
       }
