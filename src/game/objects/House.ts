@@ -35,7 +35,7 @@ export class House {
     if (this.isMayorHouse) {
       this.houseImage.setDisplaySize(Math.min(this.plotSize, 400), Math.min(this.plotSize * 1.293, 400 * 1.293));
     } else {
-      this.houseImage.setDisplaySize(this.plotSize, this.plotSize);
+      this.houseImage.setDisplaySize(400, 400);
     }
 
     this.houseImage.setInteractive();
