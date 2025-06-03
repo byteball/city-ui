@@ -254,7 +254,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
               ) : null}
 
               {owner || loading ? (
-                <InfoPanel.Item label="Contacts" loading={loading || !owner || ownerUsernameIsLoading}>
+                <InfoPanel.Item label="Contacts" loading={loading || !owner || ownerUsernameIsLoading || !loaded}>
                   {attestations.length ? (
                     <div className="flex gap-4">
                       {attestations.map((a) => {
