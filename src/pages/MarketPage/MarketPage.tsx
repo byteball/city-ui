@@ -43,7 +43,7 @@ export default () => {
                 {!shownSkeleton ? (
                   <PhaserMapEngine engineOptions={{ displayMode: "market", params }} />
                 ) : (
-                  <div className="game-container-placeholder">
+                  <div className="engine-container-placeholder">
                     <Skeleton className="w-full h-[80vh] rounded-xl" />
                   </div>
                 )}

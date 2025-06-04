@@ -26,7 +26,7 @@ export const MapEngineCard = memo(() => {
         {!shownSkeleton ? (
           <PhaserMapEngine ref={phaserRef} engineOptions={engineOptions} />
         ) : (
-          <div className="game-container-placeholder">
+          <div className="engine-container-placeholder">
             <Skeleton className="w-full h-[80vh] rounded-xl" />
           </div>
         )}
