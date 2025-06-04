@@ -1,6 +1,6 @@
 import { forwardRef, memo, useEffect, useLayoutEffect, useRef } from "react";
 
-import { IGameOptions } from "@/global";
+import { IEngineOptions } from "@/global";
 import { EventBus } from "./EventBus";
 import StartMapEngine from "./main";
 
@@ -11,7 +11,7 @@ export interface IRefPhaserMapEngine {
 
 interface IProps {
   currentActiveScene?: (scene_instance: Phaser.Scene) => void;
-  engineOptions?: IGameOptions;
+  engineOptions?: IEngineOptions;
 }
 
 export const PhaserMapEngine = memo(

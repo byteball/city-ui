@@ -263,7 +263,7 @@ export interface ITokenInfo {
   decimals: number;
 }
 
-export interface IGameOptions {
+export interface IEngineOptions {
   displayMode?: "main" | "market" | "claim";
   params?: IAaParams;
   claimNeighborPlotNumbers?: [number, number];

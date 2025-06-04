@@ -3,7 +3,7 @@
 import { Decimal } from "decimal.js";
 import Phaser from "phaser";
 
-import { IGameOptions, IMapUnit, IRoad } from "@/global";
+import { IEngineOptions, IMapUnit, IRoad } from "@/global";
 import { asNonNegativeNumber, getAddressFromNearestRoad } from "@/lib";
 import { useSettingsStore } from "@/store/settings-store";
 
@@ -25,7 +25,7 @@ export class Map {
   private totalSize: number;
   private selectedMapUnit: House | Plot | null = null;
   private MapUnits: (Plot | House)[] = [];
-  private engineOptions: IGameOptions | null = null;
+  private engineOptions: IEngineOptions | null = null;
 
   constructor(scene: Phaser.Scene, roadsData: IRoad[], unitsData: IMapUnit[]) {
     this.scene = scene;
@@ -39,7 +39,7 @@ export class Map {
     }
   }
 
-  public createMap(options: IGameOptions) {
+  public createMap(options: IEngineOptions) {
     this.engineOptions = options;
     // 1) Calculate the total thickness of vertical and horizontal roads
     let totalVerticalThickness = 0;
@@ -96,7 +96,7 @@ export class Map {
     });
   }
 
-  private createMapUnits(MAP_WIDTH: number, MAP_HEIGHT: number, sceneType: IGameOptions["displayMode"]) {
+  private createMapUnits(MAP_WIDTH: number, MAP_HEIGHT: number, sceneType: IEngineOptions["displayMode"]) {
     const thickness = asNonNegativeNumber(ROAD_THICKNESS);
 
     this.unitsData.forEach((unitData) => {

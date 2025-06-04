@@ -1,7 +1,7 @@
 import { Game } from "phaser";
 import MapScene from "./scenes/MainScene";
 
-import { IGameOptions } from "@/global";
+import { IEngineOptions } from "@/global";
 
 import appConfig from "@/appConfig";
 
@@ -27,7 +27,7 @@ const config: Phaser.Types.Core.GameConfig = {
   },
 };
 
-const StartMapEngine = (parent: string, options: IGameOptions = {}) => {
+const StartMapEngine = (parent: string, options: IEngineOptions = {}) => {
   if (!options.params) {
     throw new Error("Missing required 'params' in options. Unable to start the game.");
   }

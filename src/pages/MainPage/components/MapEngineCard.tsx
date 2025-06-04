@@ -3,7 +3,7 @@ import { memo, useMemo, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { IRefPhaserMapEngine, PhaserMapEngine } from "@/game/PhaserMapEngine";
-import { IGameOptions } from "@/global";
+import { IEngineOptions } from "@/global";
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
@@ -15,7 +15,7 @@ export const MapEngineCard = memo(() => {
 
   const shownSkeleton = loading || !!error || !settingsInited || !loaded;
 
-  const engineOptions = useMemo<IGameOptions>(() => ({ displayMode: "main", params }), [params]);
+  const engineOptions = useMemo<IEngineOptions>(() => ({ displayMode: "main", params }), [params]);
 
   return (
     <Card>
