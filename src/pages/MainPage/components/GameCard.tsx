@@ -2,7 +2,7 @@ import { memo, useMemo, useRef } from "react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { IRefPhaserGame, PhaserGame } from "@/game/PhaserGame";
+import { IRefPhaserGame, PhaserMapEngine } from "@/game/PhaserMapEngine";
 import { IGameOptions } from "@/global";
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
@@ -24,7 +24,7 @@ export const GameCard = memo(() => {
       </CardHeader>
       <CardContent>
         {!shownSkeleton ? (
-          <PhaserGame ref={phaserRef} gameOptions={gameOptions} />
+          <PhaserMapEngine ref={phaserRef} gameOptions={gameOptions} />
         ) : (
           <div className="game-container-placeholder">
             <Skeleton className="w-full h-[80vh] rounded-xl" />

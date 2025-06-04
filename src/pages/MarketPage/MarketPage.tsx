@@ -8,7 +8,7 @@ import { ShortcodesOnSaleList } from "./components/ShortcodesOnSaleList";
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
-import { PhaserGame } from "@/game/PhaserGame";
+import { PhaserMapEngine } from "@/game/PhaserMapEngine";
 import { SelectedPlotOnSale } from "./components/SelectedPlotOnSale";
 
 export default () => {
@@ -41,7 +41,7 @@ export default () => {
             <CardContent>
               <div ref={gameColumnRef}>
                 {!shownSkeleton ? (
-                  <PhaserGame gameOptions={{ displayMode: "market", params }} />
+                  <PhaserMapEngine gameOptions={{ displayMode: "market", params }} />
                 ) : (
                   <div className="game-container-placeholder">
                     <Skeleton className="w-full h-[80vh] rounded-xl" />

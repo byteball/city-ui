@@ -13,7 +13,7 @@ import { mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { IRefPhaserGame, PhaserGame } from "@/game/PhaserGame";
+import { IRefPhaserGame, PhaserMapEngine } from "@/game/PhaserMapEngine";
 
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { QRButton } from "@/components/ui/_qr-button";
@@ -161,7 +161,7 @@ const ClaimRedirectPage = () => {
             <CardContent>
               <div ref={gameColumnRef}>
                 {!shownSkeleton ? (
-                  <PhaserGame
+                  <PhaserMapEngine
                     ref={phaserRef}
                     gameOptions={{
                       displayMode: "claim",
@@ -274,7 +274,7 @@ const ClaimRedirectPage = () => {
                             >
                               <SocialIcon type={a.name} />{" "}
                               {url ? (
-                                <a href={url} target="_blank" rel="noopener"  className="text-link">
+                                <a href={url} target="_blank" rel="noopener" className="text-link">
                                   {a.value}
                                 </a>
                               ) : (

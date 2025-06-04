@@ -40,7 +40,7 @@ We have provided a default project structure to get you started. This is as foll
 - `src/main.tsx` - The main **React** entry point. This bootstraps the React application.
 - `src/vite-env.d.ts` - Global TypeScript declarations, provide types information.
 - `src/App.tsx` - The main React component.
-- `src/game/PhaserGame.tsx` - The React component that initializes the Phaser Game and serve like a bridge between React and Phaser.
+- `src/game/PhaserMapEngine.tsx` - The React component that initializes the Phaser Game and serve like a bridge between React and Phaser.
 - `src/game/EventBus.ts` - A simple event bus to communicate between React and Phaser.
 - `src/game` - Contains the game source code.
 - `src/game/main.tsx` - The main **game** entry point. This contains the game configuration and start the game.
@@ -50,7 +50,7 @@ We have provided a default project structure to get you started. This is as foll
 
 ## React Bridge
 
-The `PhaserGame.tsx` component is the bridge between React and Phaser. It initializes the Phaser game and passes events between the two.
+The `PhaserMapEngine.tsx` component is the bridge between React and Phaser. It initializes the Phaser game and passes events between the two.
 
 To communicate between React and Phaser, you can use the **EventBus.js** file. This is a simple event bus that allows you to emit and listen for events from both React and Phaser.
 
@@ -68,7 +68,7 @@ EventBus.on('event-name', (data) => {
 });
 ```
 
-In addition to this, the `PhaserGame` component exposes the Phaser game instance along with the most recently active Phaser Scene using React forwardRef.
+In addition to this, the `PhaserMapEngine` component exposes the Phaser game instance along with the most recently active Phaser Scene using React forwardRef.
 
 Once exposed, you can access them like any regular react reference.
 
@@ -107,7 +107,7 @@ Here's an example of how to access Phaser data for use in a React Component:
 
 ```ts
 import { useRef } from 'react';
-import { IRefPhaserGame } from "./game/PhaserGame";
+import { IRefPhaserGame } from "./game/PhaserMapEngine";
 
 // In a parent component
 const ReactComponent = () => {
@@ -122,14 +122,14 @@ const ReactComponent = () => {
 
     return (
         ...
-        <PhaserGame ref={phaserRef} currentActiveScene={onCurrentActiveScene} />
+        <PhaserMapEngine ref={phaserRef} currentActiveScene={onCurrentActiveScene} />
         ...
     );
 
 }
 ```
 
-In the code above, you can get a reference to the current Phaser Game instance and the current Scene by creating a reference with `useRef()` and assign to PhaserGame component.
+In the code above, you can get a reference to the current Phaser Game instance and the current Scene by creating a reference with `useRef()` and assign to PhaserMapEngine component.
 
 From this state reference, the game instance is available via `phaserRef.current.game` and the most recently active Scene via `phaserRef.current.scene`.
 

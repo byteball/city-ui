@@ -2,7 +2,7 @@ import { forwardRef, memo, useEffect, useLayoutEffect, useRef } from "react";
 
 import { IGameOptions } from "@/global";
 import { EventBus } from "./EventBus";
-import StartGame from "./main";
+import StartMapEngine from "./main";
 
 export interface IRefPhaserGame {
   game: Phaser.Game | null;
@@ -14,13 +14,13 @@ interface IProps {
   gameOptions?: IGameOptions;
 }
 
-export const PhaserGame = memo(
-  forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ currentActiveScene, gameOptions }, ref) {
+export const PhaserMapEngine = memo(
+  forwardRef<IRefPhaserGame, IProps>(function PhaserMapEngine({ currentActiveScene, gameOptions }, ref) {
     const game = useRef<Phaser.Game | null>(null!);
 
     useLayoutEffect(() => {
       if (game.current === null) {
-        game.current = StartGame("game-container", gameOptions);
+        game.current = StartMapEngine("game-container", gameOptions);
 
         if (typeof ref === "function") {
           ref({ game: game.current, scene: null });
@@ -66,5 +66,4 @@ export const PhaserGame = memo(
   })
 );
 
-PhaserGame.displayName = "PhaserGame";
-
+PhaserMapEngine.displayName = "PhaserMapEngine";

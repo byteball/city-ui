@@ -5,7 +5,7 @@ import { IGameOptions } from "@/global";
 
 import appConfig from "@/appConfig";
 
-//  Find out more information about the Game Config at:
+//  Find out more information about the Map Engine Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -27,7 +27,7 @@ const config: Phaser.Types.Core.GameConfig = {
   },
 };
 
-const StartGame = (parent: string, options: IGameOptions = {}) => {
+const StartMapEngine = (parent: string, options: IGameOptions = {}) => {
   if (!options.params) {
     throw new Error("Missing required 'params' in options. Unable to start the game.");
   }
@@ -36,13 +36,13 @@ const StartGame = (parent: string, options: IGameOptions = {}) => {
   // Remove scene from the initial config
 
   // Create the game instance without the scene initially
-  const game = new Game({ ...dynamicConfig });
+  const mapEngine = new Game({ ...dynamicConfig });
 
   // Add the scene manually and pass options data. The 'true' flag auto-starts the scene.
-  game.scene.add("MapScene", MapScene, true, options);
+  mapEngine.scene.add("MapScene", MapScene, true, options);
 
-  return game;
+  return mapEngine;
 };
 
-export default StartGame;
+export default StartMapEngine;
 
