@@ -163,7 +163,7 @@ const ClaimRedirectPage = () => {
                 {!shownSkeleton ? (
                   <PhaserMapEngine
                     ref={phaserRef}
-                    gameOptions={{
+                    engineOptions={{
                       displayMode: "claim",
                       params,
                       claimNeighborPlotNumbers: [plot1_num, plot2_num],

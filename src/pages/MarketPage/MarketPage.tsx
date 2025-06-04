@@ -41,7 +41,7 @@ export default () => {
             <CardContent>
               <div ref={gameColumnRef}>
                 {!shownSkeleton ? (
-                  <PhaserMapEngine gameOptions={{ displayMode: "market", params }} />
+                  <PhaserMapEngine engineOptions={{ displayMode: "market", params }} />
                 ) : (
                   <div className="game-container-placeholder">
                     <Skeleton className="w-full h-[80vh] rounded-xl" />

@@ -15,7 +15,7 @@ export const GameCard = memo(() => {
 
   const shownSkeleton = loading || !!error || !settingsInited || !loaded;
 
-  const gameOptions = useMemo<IGameOptions>(() => ({ displayMode: "main", params }), [params]);
+  const engineOptions = useMemo<IGameOptions>(() => ({ displayMode: "main", params }), [params]);
 
   return (
     <Card>
@@ -24,7 +24,7 @@ export const GameCard = memo(() => {
       </CardHeader>
       <CardContent>
         {!shownSkeleton ? (
-          <PhaserMapEngine ref={phaserRef} gameOptions={gameOptions} />
+          <PhaserMapEngine ref={phaserRef} engineOptions={engineOptions} />
         ) : (
           <div className="game-container-placeholder">
             <Skeleton className="w-full h-[80vh] rounded-xl" />

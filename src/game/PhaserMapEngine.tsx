@@ -11,16 +11,16 @@ export interface IRefPhaserGame {
 
 interface IProps {
   currentActiveScene?: (scene_instance: Phaser.Scene) => void;
-  gameOptions?: IGameOptions;
+  engineOptions?: IGameOptions;
 }
 
 export const PhaserMapEngine = memo(
-  forwardRef<IRefPhaserGame, IProps>(function PhaserMapEngine({ currentActiveScene, gameOptions }, ref) {
+  forwardRef<IRefPhaserGame, IProps>(function PhaserMapEngine({ currentActiveScene, engineOptions }, ref) {
     const game = useRef<Phaser.Game | null>(null!);
 
     useLayoutEffect(() => {
       if (game.current === null) {
-        game.current = StartMapEngine("game-container", gameOptions);
+        game.current = StartMapEngine("game-container", engineOptions);
 
         if (typeof ref === "function") {
           ref({ game: game.current, scene: null });
@@ -37,7 +37,7 @@ export const PhaserMapEngine = memo(
           }
         }
       };
-    }, [ref, gameOptions]);
+    }, [ref, engineOptions]);
 
     useEffect(() => {
       EventBus.on("current-scene-ready", (scene_instance: Phaser.Scene) => {
@@ -58,9 +58,9 @@ export const PhaserMapEngine = memo(
 
     useEffect(() => {
       if (game.current) {
-        EventBus.emit("update-game-options", gameOptions);
+        EventBus.emit("update-game-options", engineOptions);
       }
-    }, [gameOptions]);
+    }, [engineOptions]);
 
     return <div id="game-container"></div>;
   })

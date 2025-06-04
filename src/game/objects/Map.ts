@@ -25,7 +25,7 @@ export class Map {
   private totalSize: number;
   private selectedMapUnit: House | Plot | null = null;
   private MapUnits: (Plot | House)[] = [];
-  private gameOptions: IGameOptions | null = null;
+  private engineOptions: IGameOptions | null = null;
 
   constructor(scene: Phaser.Scene, roadsData: IRoad[], unitsData: IMapUnit[]) {
     this.scene = scene;
@@ -40,7 +40,7 @@ export class Map {
   }
 
   public createMap(options: IGameOptions) {
-    this.gameOptions = options;
+    this.engineOptions = options;
     // 1) Calculate the total thickness of vertical and horizontal roads
     let totalVerticalThickness = 0;
     let totalHorizontalThickness = 0;
@@ -68,15 +68,15 @@ export class Map {
     // Add click handler to clear selection when clicking on empty space
     this.scene.input.on(
       "pointerdown",
-      (_pointer: Phaser.Input.Pointer, gameObjects: Phaser.GameObjects.GameObject[]) => {
-        if (!gameObjects || gameObjects.length === 0) {
+      (_pointer: Phaser.Input.Pointer, engineOptions: Phaser.GameObjects.GameObject[]) => {
+        if (!engineOptions || engineOptions.length === 0) {
           if (this.selectedMapUnit) {
             this.selectedMapUnit.setSelected(false);
             this.selectedMapUnit = null;
           }
-          if (this.gameOptions?.displayMode === "main") {
+          if (this.engineOptions?.displayMode === "main") {
             useSettingsStore.getState().setSelectedMapUnit(null);
-          } else if (this.gameOptions?.displayMode === "market") {
+          } else if (this.engineOptions?.displayMode === "market") {
             useSettingsStore.getState().setSelectedMarketPlot(null);
           }
         }
@@ -101,10 +101,10 @@ export class Map {
 
     this.unitsData.forEach((unitData) => {
       if (unitData.type === "plot" && unitData.status === "pending") return;
-      if (unitData.type === "house" && this.gameOptions?.displayMode !== "main") return;
+      if (unitData.type === "house" && this.engineOptions?.displayMode !== "main") return;
 
-      if (this.gameOptions?.displayMode === "claim") {
-        if (unitData.type === "plot" && !this.gameOptions.claimNeighborPlotNumbers?.includes(unitData.plot_num)) return;
+      if (this.engineOptions?.displayMode === "claim") {
+        if (unitData.type === "plot" && !this.engineOptions.claimNeighborPlotNumbers?.includes(unitData.plot_num)) return;
       }
 
       if (sceneType === "market" && !(unitData.type === "plot" ? unitData.sale_price : true)) return; // Only plots with sale price
@@ -171,7 +171,7 @@ export class Map {
           : [];
 
       if (type === "house") {
-        const houseFraction = ((this.gameOptions?.params?.plot_price ?? 0) / this.totalSize) * 0.3;
+        const houseFraction = ((this.engineOptions?.params?.plot_price ?? 0) / this.totalSize) * 0.3;
         const houseArea = houseFraction * MAP_WIDTH * MAP_HEIGHT;
         const houseSize = Math.sqrt(houseArea);
 
@@ -179,16 +179,16 @@ export class Map {
           this.scene,
           { ...unitData, x: finalX, y: finalY },
           houseSize,
-          this.gameOptions?.displayMode && ["market", "claim"].includes(this.gameOptions?.displayMode),
+          this.engineOptions?.displayMode && ["market", "claim"].includes(this.engineOptions?.displayMode),
           address
         );
       } else if (type === "plot") {
-        if (this.gameOptions?.isReferral) {
+        if (this.engineOptions?.isReferral) {
           if (
-            this.gameOptions?.claimNeighborPlotNumbers?.[1] !== unitData.plot_num &&
-            this.gameOptions?.params?.referral_boost
+            this.engineOptions?.claimNeighborPlotNumbers?.[1] !== unitData.plot_num &&
+            this.engineOptions?.params?.referral_boost
           ) {
-            plotSize *= 1 + this.gameOptions?.params?.referral_boost;
+            plotSize *= 1 + this.engineOptions?.params?.referral_boost;
           }
         }
         unit = new Plot(
@@ -196,8 +196,8 @@ export class Map {
           { ...unitData, x: finalX, y: finalY },
           plotSize,
           address,
-          this.gameOptions?.claimNeighborPlotNumbers?.[1] &&
-            this.gameOptions?.claimNeighborPlotNumbers?.[1] === unitData.plot_num
+          this.engineOptions?.claimNeighborPlotNumbers?.[1] &&
+            this.engineOptions?.claimNeighborPlotNumbers?.[1] === unitData.plot_num
             ? "plus"
             : "plot"
         );
@@ -208,8 +208,8 @@ export class Map {
       this.MapUnits.push(unit);
 
       if (
-        (this.gameOptions?.displayMode === "market" && type === "house") ||
-        this.gameOptions?.displayMode === "claim"
+        (this.engineOptions?.displayMode === "market" && type === "house") ||
+        this.engineOptions?.displayMode === "claim"
       ) {
         return;
       }
@@ -229,14 +229,14 @@ export class Map {
 
         const { type } = unitData;
 
-        if (this.gameOptions?.displayMode === "main") {
+        if (this.engineOptions?.displayMode === "main") {
           useSettingsStore.getState().setSelectedMapUnit({
             num: asNonNegativeNumber(
               type === "plot" ? unitData.plot_num : (unitData.type === "house" && unitData.house_num) || 0
             ),
             type,
           });
-        } else if (this.gameOptions?.displayMode === "market" && unitData.type === "plot") {
+        } else if (this.engineOptions?.displayMode === "market" && unitData.type === "plot") {
           useSettingsStore.getState().setSelectedMarketPlot({
             num: asNonNegativeNumber(unitData.plot_num || 0),
             type,
@@ -258,7 +258,7 @@ export class Map {
     const settingsState = useSettingsStore.getState();
 
     const storeSelected =
-      this.gameOptions?.displayMode === "market" ? settingsState.selectedMarketPlot : settingsState.selectedMapUnit;
+      this.engineOptions?.displayMode === "market" ? settingsState.selectedMarketPlot : settingsState.selectedMapUnit;
 
     if (!storeSelected) {
       // Reset selection if nothing is selected
