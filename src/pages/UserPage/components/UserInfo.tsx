@@ -198,7 +198,13 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
                 {Object.entries(parsedUserInfo).sort(([keyA], [keyB]) => keyA === "name" ? -1 : keyB === "name" ? 1 : 0).map(([key, value]) => {
                   return (
                     <InfoPanel.Item key={key} label={key === "homepage" ? "" : key} loading={!loaded}>
-                      {value}
+                      {String(value).startsWith("https://") || String(value).startsWith("https://") ? (
+                        <a href={value?.toString()} rel="noopener" className="text-link" target="_blank">
+                          {value}
+                        </a>
+                      ) : (
+                        value ?? ""
+                      )}
                     </InfoPanel.Item>
                   );
                 })}
