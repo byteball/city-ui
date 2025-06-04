@@ -1,14 +1,14 @@
 import { FC } from "react";
 import { Link, NavLink } from "react-router";
 
-import { EventBus } from "@/game/EventBus";
+import { EventBus } from "@/engine/EventBus";
 import { useSettingsStore } from "@/store/settings-store";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { AddWalletAddress } from "../dialogs/AddWalletAddress";
 import { Button } from "../ui/button";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 
-interface IHeaderProps {}
+interface IHeaderProps { }
 
 const navigation = [
   { name: "Home", href: "/" },

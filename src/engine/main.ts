@@ -29,7 +29,7 @@ const config: Phaser.Types.Core.GameConfig = {
 
 const StartMapEngine = (parent: string, options: IEngineOptions = {}) => {
   if (!options.params) {
-    throw new Error("Missing required 'params' in options. Unable to start the game.");
+    throw new Error("Missing required 'params' in options. Unable to start the engine.");
   }
 
   const dynamicConfig = { ...config, parent };

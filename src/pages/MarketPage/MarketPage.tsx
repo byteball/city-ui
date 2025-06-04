@@ -8,7 +8,7 @@ import { ShortcodesOnSaleList } from "./components/ShortcodesOnSaleList";
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
-import { PhaserMapEngine } from "@/game/PhaserMapEngine";
+import { PhaserMapEngine } from "@/engine/PhaserMapEngine";
 import { SelectedPlotOnSale } from "./components/SelectedPlotOnSale";
 
 export default () => {

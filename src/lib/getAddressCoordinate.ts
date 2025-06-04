@@ -1,5 +1,5 @@
 import appConfig from "@/appConfig";
-import { getNearestRoads } from "@/game/utils/getNearestRoads";
+import { getNearestRoads } from "@/engine/utils/getNearestRoads";
 import { ICoordinates, IRoad } from "@/global";
 
 type RoadType = "street" | "avenue";

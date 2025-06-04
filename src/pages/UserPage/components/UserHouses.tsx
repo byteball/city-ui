@@ -10,7 +10,7 @@ import { useAaStore } from "@/store/aa-store";
 import { mapUnitsByOwnerAddressSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 
-import { getRoads } from "@/game/utils/getRoads";
+import { getRoads } from "@/engine/utils/getRoads";
 import { ICity } from "@/global";
 import { asNonNegativeNumber, mapUnitsSortFunc, toLocalString } from "@/lib";
 import { getAddressFromNearestRoad } from "@/lib/getAddressCoordinate";

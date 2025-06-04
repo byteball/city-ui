@@ -6,14 +6,14 @@ import { Link, useNavigate, useParams } from "react-router";
 import { generateLink, getAddressFromNearestRoad, toLocalString } from "@/lib";
 import { useSettingsStore } from "@/store/settings-store";
 
-import { getRoads } from "@/game/utils/getRoads";
+import { getRoads } from "@/engine/utils/getRoads";
 import { useAttestations } from "@/hooks/useAttestations";
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { IRefPhaserMapEngine, PhaserMapEngine } from "@/game/PhaserMapEngine";
+import { IRefPhaserMapEngine, PhaserMapEngine } from "@/engine/PhaserMapEngine";
 
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { QRButton } from "@/components/ui/_qr-button";

@@ -12,7 +12,7 @@ import { useSettingsStore } from "@/store/settings-store";
 
 import { generateLink, getAddressFromNearestRoad, getExplorerUrl, toLocalString } from "@/lib";
 
-import { getRoads } from "@/game/utils/getRoads";
+import { getRoads } from "@/engine/utils/getRoads";
 import { IRefData } from "@/global";
 
 import { mapUnitsByUniqDataSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";

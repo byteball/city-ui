@@ -20,7 +20,7 @@ import { useAaStore } from "@/store/aa-store";
 import { mapUnitsByUniqDataSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 
-import { getRoads } from "@/game/utils/getRoads";
+import { getRoads } from "@/engine/utils/getRoads";
 import { ICity } from "@/global";
 import { useAttestations } from "@/hooks/useAttestations";
 import { generateLink, toLocalString } from "@/lib";

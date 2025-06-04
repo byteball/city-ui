@@ -2,7 +2,7 @@ import { memo, useMemo, useRef } from "react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { IRefPhaserMapEngine, PhaserMapEngine } from "@/game/PhaserMapEngine";
+import { IRefPhaserMapEngine, PhaserMapEngine } from "@/engine/PhaserMapEngine";
 import { IEngineOptions } from "@/global";
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
