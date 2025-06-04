@@ -7,7 +7,7 @@ import { IGameOptions } from "@/global";
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
-export const GameCard = memo(() => {
+export const MapEngineCard = memo(() => {
   const phaserRef = useRef<IRefPhaserGame | null>(null);
   const { loading, error, loaded } = useAaStore((state) => state);
   const settingsInited = useSettingsStore((state) => state.inited);
@@ -35,5 +35,5 @@ export const GameCard = memo(() => {
   );
 });
 
-GameCard.displayName = "GameCard";
+MapEngineCard.displayName = "MapEngineCard";
 

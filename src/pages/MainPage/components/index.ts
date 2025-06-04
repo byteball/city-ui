@@ -1,4 +1,4 @@
 export { BuyNewPlotCard } from "./BuyNewPlotCard";
-export { GameCard } from "./GameCard";
+export { MapEngineCard } from "./MapEngineCard";
 export { SelectedUnitMapCard } from "./SelectedUnitMapCard";
 
