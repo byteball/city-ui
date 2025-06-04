@@ -107,12 +107,12 @@ Here's an example of how to access Phaser data for use in a React Component:
 
 ```ts
 import { useRef } from 'react';
-import { IRefPhaserGame } from "./game/PhaserMapEngine";
+import { IRefPhaserMapEngine } from "./game/IRefPhaserMapEngine";
 
 // In a parent component
 const ReactComponent = () => {
 
-    const phaserRef = useRef<IRefPhaserGame>(); // you can access to this ref from phaserRef.current
+    const phaserRef = useRef<IRefPhaserMapEngine>(); // you can access to this ref from phaserRef.current
 
     const onCurrentActiveScene = (scene: Phaser.Scene) => {
     

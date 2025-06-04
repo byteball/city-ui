@@ -2,13 +2,13 @@ import { memo, useMemo, useRef } from "react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { IRefPhaserGame, PhaserMapEngine } from "@/game/PhaserMapEngine";
+import { IRefPhaserMapEngine, PhaserMapEngine } from "@/game/PhaserMapEngine";
 import { IGameOptions } from "@/global";
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
 export const MapEngineCard = memo(() => {
-  const phaserRef = useRef<IRefPhaserGame | null>(null);
+  const phaserRef = useRef<IRefPhaserMapEngine | null>(null);
   const { loading, error, loaded } = useAaStore((state) => state);
   const settingsInited = useSettingsStore((state) => state.inited);
   const params = useAaParams();

@@ -13,7 +13,7 @@ import { mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { IRefPhaserGame, PhaserMapEngine } from "@/game/PhaserMapEngine";
+import { IRefPhaserMapEngine, PhaserMapEngine } from "@/game/PhaserMapEngine";
 
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { QRButton } from "@/components/ui/_qr-button";
@@ -30,7 +30,7 @@ const ClaimRedirectPage = () => {
   const { nums } = useParams<{ nums: string }>();
   const mapUnits = mapUnitsSelector(aaState);
   const gameColumnRef = useRef<HTMLDivElement>(null);
-  const phaserRef = useRef<IRefPhaserGame | null>(null);
+  const phaserRef = useRef<IRefPhaserMapEngine | null>(null);
   const params = useAaParams();
   const navigation = useNavigate();
 
