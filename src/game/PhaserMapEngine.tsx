@@ -4,8 +4,8 @@ import { IGameOptions } from "@/global";
 import { EventBus } from "./EventBus";
 import StartMapEngine from "./main";
 
-export interface IRefPhaserGame {
-  game: Phaser.Game | null;
+export interface IRefPhaserMapEngine {
+  engine: Phaser.Game | null;
   scene: Phaser.Scene | null;
 }
 
@@ -15,25 +15,25 @@ interface IProps {
 }
 
 export const PhaserMapEngine = memo(
-  forwardRef<IRefPhaserGame, IProps>(function PhaserMapEngine({ currentActiveScene, engineOptions }, ref) {
-    const game = useRef<Phaser.Game | null>(null!);
+  forwardRef<IRefPhaserMapEngine, IProps>(function PhaserMapEngine({ currentActiveScene, engineOptions }, ref) {
+    const engine = useRef<Phaser.Game | null>(null!);
 
     useLayoutEffect(() => {
-      if (game.current === null) {
-        game.current = StartMapEngine("game-container", engineOptions);
+      if (engine.current === null) {
+        engine.current = StartMapEngine("engine-container", engineOptions);
 
         if (typeof ref === "function") {
-          ref({ game: game.current, scene: null });
+          ref({ engine: engine.current, scene: null });
         } else if (ref) {
-          ref.current = { game: game.current, scene: null };
+          ref.current = { engine: engine.current, scene: null };
         }
       }
 
       return () => {
-        if (game.current) {
-          game.current.destroy(true);
-          if (game.current !== null) {
-            game.current = null;
+        if (engine.current) {
+          engine.current.destroy(true);
+          if (engine.current !== null) {
+            engine.current = null;
           }
         }
       };
@@ -46,9 +46,9 @@ export const PhaserMapEngine = memo(
         }
 
         if (typeof ref === "function") {
-          ref({ game: game.current, scene: scene_instance });
+          ref({ engine: engine.current, scene: scene_instance });
         } else if (ref) {
-          ref.current = { game: game.current, scene: scene_instance };
+          ref.current = { engine: engine.current, scene: scene_instance };
         }
       });
       return () => {
@@ -57,12 +57,12 @@ export const PhaserMapEngine = memo(
     }, [currentActiveScene, ref]);
 
     useEffect(() => {
-      if (game.current) {
-        EventBus.emit("update-game-options", engineOptions);
+      if (engine.current) {
+        EventBus.emit("update-engine-options", engineOptions);
       }
     }, [engineOptions]);
 
-    return <div id="game-container"></div>;
+    return <div id="engine-container"></div>;
   })
 );
 
