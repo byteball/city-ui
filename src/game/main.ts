@@ -35,7 +35,7 @@ const StartMapEngine = (parent: string, options: IEngineOptions = {}) => {
   const dynamicConfig = { ...config, parent };
   // Remove scene from the initial config
 
-  // Create the game instance without the scene initially
+  // Create the engine instance without the scene initially
   const mapEngine = new Game({ ...dynamicConfig });
 
   // Add the scene manually and pass options data. The 'true' flag auto-starts the scene.

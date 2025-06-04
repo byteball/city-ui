@@ -29,7 +29,7 @@ const ClaimRedirectPage = () => {
   const aaState = useAaStore((state) => state);
   const { nums } = useParams<{ nums: string }>();
   const mapUnits = mapUnitsSelector(aaState);
-  const gameColumnRef = useRef<HTMLDivElement>(null);
+  const engineColumnRef = useRef<HTMLDivElement>(null);
   const phaserRef = useRef<IRefPhaserMapEngine | null>(null);
   const params = useAaParams();
   const navigation = useNavigate();
@@ -132,9 +132,8 @@ const ClaimRedirectPage = () => {
     tgAttestation2?.userId
   );
 
-  const seoTitle = `Obyte City — You are neighbors: ${
-    infoName1 || tgAttestation1?.value || discordAttestation1?.value
-  } and ${infoName2 || tgAttestation2?.value || discordAttestation2?.value}`;
+  const seoTitle = `Obyte City — You are neighbors: ${infoName1 || tgAttestation1?.value || discordAttestation1?.value
+    } and ${infoName2 || tgAttestation2?.value || discordAttestation2?.value}`;
 
   const shownSkeleton = loading || !loaded || !inited;
 
@@ -159,7 +158,7 @@ const ClaimRedirectPage = () => {
               <h2 className="text-xl font-semibold">You became neighbors!</h2>
             </CardHeader>
             <CardContent>
-              <div ref={gameColumnRef}>
+              <div ref={engineColumnRef}>
                 {!shownSkeleton ? (
                   <PhaserMapEngine
                     ref={phaserRef}

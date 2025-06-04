@@ -14,7 +14,7 @@ import { SelectedPlotOnSale } from "./components/SelectedPlotOnSale";
 export default () => {
   const { loading, error, loaded } = useAaStore((state) => state);
   const settingsInited = useSettingsStore((state) => state.inited);
-  const gameColumnRef = useRef<HTMLDivElement>(null);
+  const engineColumnRef = useRef<HTMLDivElement>(null);
   const params = useAaParams();
 
   const shownSkeleton = loading || !!error || !settingsInited || !loaded;
@@ -39,7 +39,7 @@ export default () => {
               <CardDescription>Click the plot you want to purchase.</CardDescription>
             </CardHeader>
             <CardContent>
-              <div ref={gameColumnRef}>
+              <div ref={engineColumnRef}>
                 {!shownSkeleton ? (
                   <PhaserMapEngine engineOptions={{ displayMode: "market", params }} />
                 ) : (
