@@ -20,12 +20,12 @@ export const GovernanceProfile: FC<IGovernanceProfileProps> = () => {
       {walletAddress ? (
         <ul>
           <li>
-            Your voting address is{" "}
+            Your voting address: {" "}
             <a target="_blank" className="text-link" href={getExplorerUrl(walletAddress, "address")} rel="noopener">
               {String(walletAddress).slice(0, 5)}...{String(walletAddress).slice(-5, String(walletAddress).length)}
             </a>
           </li>
-          <li>Locked balance: {formattedBalance}</li>
+          <li>Your voting balance: {formattedBalance}</li>
         </ul>
       ) : (
         <div className="font-medium">
@@ -33,7 +33,7 @@ export const GovernanceProfile: FC<IGovernanceProfileProps> = () => {
           <AddWalletAddress>
             <button className="underline">add your wallet address</button>
           </AddWalletAddress>
-          , to see voting balance
+          to see voting balance
         </div>
       )}
     </div>
