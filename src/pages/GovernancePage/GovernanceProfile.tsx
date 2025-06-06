@@ -8,7 +8,7 @@ import { useSettingsStore } from "@/store/settings-store";
 
 import { getExplorerUrl, toLocalString } from "@/lib";
 
-interface IGovernanceProfileProps {}
+interface IGovernanceProfileProps { }
 
 export const GovernanceProfile: FC<IGovernanceProfileProps> = () => {
   const { symbol, decimals, walletAddress } = useSettingsStore((state) => state);
@@ -33,7 +33,7 @@ export const GovernanceProfile: FC<IGovernanceProfileProps> = () => {
           <AddWalletAddress>
             <button className="underline">add your wallet address</button>
           </AddWalletAddress>
-          , to see balance
+          , to see voting balance
         </div>
       )}
     </div>
