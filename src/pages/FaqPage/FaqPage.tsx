@@ -213,7 +213,7 @@ export default () => {
             <FaqContent scrollId="what-is-the-fee-when-buying-a-plot">
               <p>
                 The current fee is {toLocalString((fee * 100).toFixed(2))}%. It depends on the matching probability
-                (currently 10%) and on the referral boost (currently{" "}
+                (currently {toLocalString((matching_probability * 100).toFixed(2))}%) and on the referral boost (currently{" "}
                 {toLocalString((referral_boost * 100).toFixed(2))}%), which are both set by{" "}
                 <Link to="/governance">governance</Link>. The fee is burned and decreases the total supply of{" "}
                 {` ${symbol}`}. Its size is to make sure that the same amount of {` ${symbol} `} is burned (on average)
