@@ -8,7 +8,7 @@ import { Link } from "react-router";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./card";
 
 import { NonNegativeNumber, paramName } from "@/global";
-import { beautifyParamName, beautifyParamValue, generateLink, toLocalString } from "@/lib";
+import { beautifyParamName, beautifyParamValue, formatPeriod, generateLink, toLocalString } from "@/lib";
 
 import { paramDescriptions } from "@/pages/GovernancePage/descriptions";
 import { defaultAaParams, useAaStore } from "@/store/aa-store";
@@ -40,6 +40,10 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
     (state) => state.governanceState
   );
 
+  const { [`choice_${walletAddress}_${name}`]: userChoice = null } = useAaStore(
+    (state) => state.governanceState
+  );
+
   const tokenInfo = { symbol: symbol!, decimals: decimals! };
   const commitUrl = generateLink({
     amount: 1e4,
@@ -54,9 +58,7 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
 
   const commitAllowed = !challengingPeriodStartAt || moment.utc().isAfter(moment.unix(challengingPeriodEndTs));
 
-  const timeUntilCommit = commitAllowed
-    ? "Now"
-    : moment.duration(moment.unix(challengingPeriodEndTs).diff(moment.utc())).humanize();
+  const timeUntilCommit = !commitAllowed ? formatPeriod(challengingPeriodEndTs) : null;
 
   const commitDisabled = currentValue === leader || !commitAllowed;
 
@@ -93,13 +95,18 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
           <div className="flex flex-col space-y-2 md:space-y-0 md:space-x-4 md:items-center md:justify-between md:flex-row">
             <div>Leader: {beautifyParamValue(name, leader, tokenInfo)}</div>
             <div>
-              <QRButton href={commitUrl} disabled={commitDisabled} variant="link" className="p-0 text-link">
+              {commitAllowed ? <QRButton href={commitUrl} disabled={commitDisabled} variant="link" className="p-0 text-link">
                 commit
-              </QRButton>
-              {!commitAllowed ? <small className="text-yellow-600">Time to unlock: {timeUntilCommit}</small> : null}
+              </QRButton> : <small className="text-yellow-600">Challenging period expires in {timeUntilCommit}</small>}
             </div>
           </div>
         ) : null}
+
+        {userChoice && typeof userChoice !== "object" ? <div>
+          My choice:{" "}<span>
+            {beautifyParamValue(name, userChoice, tokenInfo)}
+          </span>
+        </div> : null}
 
         {Object.entries(votes).length ? (
           <Table>
