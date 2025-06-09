@@ -3,11 +3,12 @@ import cn from "classnames";
 import { Info } from "lucide-react";
 import moment from "moment";
 import { FC } from "react";
+import { Link } from "react-router";
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./card";
 
 import { NonNegativeNumber, paramName } from "@/global";
-import { beautifyParamName, beautifyParamValue, generateLink, getExplorerUrl, toLocalString } from "@/lib";
+import { beautifyParamName, beautifyParamValue, generateLink, toLocalString } from "@/lib";
 
 import { paramDescriptions } from "@/pages/GovernancePage/descriptions";
 import { defaultAaParams, useAaStore } from "@/store/aa-store";
@@ -152,14 +153,12 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
                             {votesForValue.map(({ address, balance }) => (
                               <TableRow key={address}>
                                 <TableCell>
-                                  <a
-                                    href={getExplorerUrl(address, "address")}
-                                    target="_blank"
+                                  <Link
+                                    to={`/user/${address}`}
                                     className="text-link"
-                                    rel="noopener"
                                   >
                                     {String(address).slice(0, 5)}...{String(address).slice(-5, String(address).length)}
-                                  </a>
+                                  </Link>
                                   <div className="mt-2 md:hidden">
                                     {toLocalString(balance / 10 ** decimals!)} {symbol}
                                   </div>
