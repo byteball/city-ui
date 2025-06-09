@@ -1,6 +1,7 @@
 export { asNonNegativeNumber } from "./asNonNegativeNumber";
 export { beautifyParamName } from "./beautifyParamName";
 export { beautifyParamValue } from "./beautifyParamValue";
+export { formatPeriod } from "./formatPeriod";
 export { generateLink } from "./generateLink";
 export { getAddressFromNearestRoad } from "./getAddressCoordinate";
 export { getCountOfDecimals } from "./getCountOfDecimals";
@@ -10,4 +11,3 @@ export { getRefDataFromSearch } from "./getRefDataFromSearch";
 export { mapUnitsSortFunc } from "./mapUnitsSortFunc";
 export { toLocalString } from "./toLocalString";
 export { numericInputParamNames, percentInputParamNames, validateParam } from "./validateParam";
-
