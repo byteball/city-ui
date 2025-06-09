@@ -33,7 +33,7 @@ export const GovernanceProfile: FC<IGovernanceProfileProps> = () => {
           <AddWalletAddress>
             <button className="underline">add your wallet address</button>
           </AddWalletAddress>
-          to see voting balance
+          {" "}to see voting balance
         </div>
       )}
     </div>
