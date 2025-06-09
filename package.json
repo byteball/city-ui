@@ -1,18 +1,18 @@
 {
-    "name": "obyte-ui",
-    "description": "interface for City on Obyte",
+    "name": "city-ui",
+    "description": "User interface for Obyte City",
     "version": "1.0.3",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/byteball/city-game-ui.git"
+        "url": "git+https://github.com/byteball/city-ui.git"
     },
-    "author": "Obyte Foundation (https://obyte.org/)",
+    "author": "Obyte developers",
     "license": "MIT",
     "licenseUrl": "http://www.opensource.org/licenses/mit-license.php",
     "bugs": {
-        "url": "https://github.com/byteball/city-game-ui/issues"
+        "url": "https://github.com/byteball/city-ui/issues"
     },
-    "homepage": "https://github.com/byteball/city-game-ui#readme",
+    "homepage": "https://github.com/byteball/city-ui#readme",
     "keywords": [
         "obyte",
         "deFi",

@@ -1,0 +1,15 @@
+{
+	"version": "1.0",
+	"description": "Obyte City Governance",
+	"homepage_url": "https://city.obyte.org/governance",
+	"source_url": "https://github.com/byteball/city-aa",
+	"field_descriptions": {
+		"name": "Name of the parameter to vote for",
+		"value": "Value of the parameter to vote for",
+		"commit": "Commit a new value after voting has ended",
+		"mayor": "Mayor address in the new city",
+		"city": "City whose parameter is being voted for, global param if empty",
+		"update_user_balance": "Update user balance if it has changed",
+		"address": "User address"
+	}
+}
