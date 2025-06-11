@@ -67,7 +67,10 @@ export const useAttestations = (address?: string): IAttestationsState => {
             }
           });
 
-          saveAttestationsInCache(address, userAttestations);
+          if (userAttestations.length) {
+            saveAttestationsInCache(address, userAttestations);
+          }
+
           setAttestations({ data: userAttestations, loaded: true });
         } catch (error) {
           console.error("Error fetching attestations:", error);

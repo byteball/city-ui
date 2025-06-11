@@ -27,7 +27,7 @@ const storeCreator: StateCreator<ICacheState> = (set, get) => ({
   inited: false,
   attestations: {},
   setAttestationsForAddress: (address, attestations) => {
-    if (obyte.utils.isValidAddress(address) && !Array.isArray(attestations)) {
+    if (!obyte.utils.isValidAddress(address) || !Array.isArray(attestations)) {
       throw new Error("Invalid address or attestations");
     }
 
@@ -59,7 +59,7 @@ const storeCreator: StateCreator<ICacheState> = (set, get) => ({
       return null;
     }
 
-    let isExpired: boolean = true;
+    let isExpired = true;
 
     const hasDiscord = entry.attestations.find(a => a.name === 'discord') !== undefined;
     const hasTelegram = entry.attestations.find(a => a.name === 'telegram') !== undefined;
@@ -98,7 +98,7 @@ export const useCacheStore = create<ICacheState>()(
           return {
             inited: false,
             attestations: {}
-          } as any;
+          } as ICacheState;
         }
 
         return persistedState as ICacheState;
