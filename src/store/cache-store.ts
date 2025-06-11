@@ -49,12 +49,12 @@ const storeCreator: StateCreator<ICacheState> = (set, get) => ({
 
     const entry = get().attestations[address];
 
-    if (!entry && (appConfig.TESTNET)) {
+    if (!entry && appConfig.TESTNET) {
       console.log(`log(getUserAttestations): No cached attestations found for address: ${address}`);
       return null;
     }
 
-    const isExpired = Date.now() - entry.ts >= ATTESTATION_CACHE_LIFETIME;
+    const isExpired = Date.now() - (entry?.ts || 0) >= ATTESTATION_CACHE_LIFETIME;
 
     if (appConfig.TESTNET) {
       if (isExpired) {
