@@ -8,7 +8,7 @@ import { IAttestation } from '@/hooks/useAttestations';
 const LOCAL_STORAGE_KEY = "cache-store";
 const STORAGE_VERSION = 1; // change this to invalidate old persisted data
 
-const ATTESTATION_CACHE_LIFETIME = 30 * 60 * 1000; // 30 minutes
+const ATTESTATION_SHORT_CACHE_LIFETIME = 30 * 60 * 1000; // 30 minutes
 const ATTESTATION_LONG_CACHE_LIFETIME = 24 * 60 * 60 * 1000; // 24 hours
 
 interface ICacheState {
@@ -51,8 +51,11 @@ const storeCreator: StateCreator<ICacheState> = (set, get) => ({
 
     const entry = get().attestations[address];
 
-    if (!entry && appConfig.TESTNET) {
-      console.log(`log(getUserAttestations): No cached attestations found for address: ${address}`);
+    if (!entry) {
+      if (appConfig.TESTNET) {
+        console.log(`log(getUserAttestations): No cached attestations found for address: ${address}`);
+      }
+
       return null;
     }
 
@@ -62,9 +65,9 @@ const storeCreator: StateCreator<ICacheState> = (set, get) => ({
     const hasTelegram = entry.attestations.find(a => a.name === 'telegram') !== undefined;
 
     if (!hasDiscord || !hasTelegram) {
-      isExpired = Date.now() - (entry?.ts || 0) >= ATTESTATION_LONG_CACHE_LIFETIME;
+      isExpired = Date.now() - (entry?.ts || 0) >= ATTESTATION_SHORT_CACHE_LIFETIME;
     } else {
-      isExpired = Date.now() - (entry?.ts || 0) >= ATTESTATION_CACHE_LIFETIME;
+      isExpired = Date.now() - (entry?.ts || 0) >= ATTESTATION_LONG_CACHE_LIFETIME;
     }
 
     if (appConfig.TESTNET) {

@@ -1,8 +1,10 @@
-import appConfig from "@/appConfig";
+import { useEffect, useState } from "react";
+
 import client from "@/services/obyteWsClient";
 import { useAaParams } from "@/store/aa-store";
 import { useCacheStore } from "@/store/cache-store";
-import { useEffect, useState } from "react";
+
+import appConfig from "@/appConfig";
 
 export interface IAttestation {
   name: string;
@@ -33,7 +35,8 @@ export const useAttestations = (address?: string): IAttestationsState => {
 
       if (!cachedAttestations) {
         try {
-          const attestations = await client.api.getAttestations({ address });
+          const attestations = await client.api.getAttestations({ address }).then((res) => res.reverse());
+
           if (appConfig.TESTNET) {
             console.log(`log(useAttestations): Fetched ${attestations.length} attestations for address: ${address}`);
           }
@@ -52,7 +55,8 @@ export const useAttestations = (address?: string): IAttestationsState => {
                 const userId = profile.userId;
                 const resource = allowedAttestors.find((v) => v[1] === attestation.attestor_address)?.[0];
 
-                if (username && resource) {
+                if (username && resource && !userAttestations.some((a) => a.name === resource)) {
+                  // exclude duplicates, use the newest attestation
                   userAttestations.push({
                     name: resource,
                     value: username,
