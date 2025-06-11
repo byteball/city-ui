@@ -1,5 +1,5 @@
 import obyte from "obyte";
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { Navigate, useParams } from "react-router";
 
 import { PageLayout } from "@/components/layout/page-layout";
@@ -25,7 +25,13 @@ const UserPage: FC<UserPageProps> = () => {
 
   const { data, loaded: attestationsLoaded } = useAttestations(address);
   const loading = !inited || !stateLoaded || !attestationsLoaded;
-  const shortestAttestation = data?.sort((a, b) => a.value.length - b.value.length)[0]?.value;
+
+  const shortestAttestation = useMemo(() => {
+    if (!data?.length) return undefined;
+    return [...data].reduce((acc, cur) =>
+      cur.value.length < acc.value.length ? cur : acc
+    ).value;
+  }, [data]);
 
   let title = `${String(address).slice(0, 5)}...${String(address).slice(-5, String(address).length)}'s profile`;
 
