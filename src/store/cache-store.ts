@@ -7,7 +7,9 @@ import { IAttestation } from '@/hooks/useAttestations';
 
 const LOCAL_STORAGE_KEY = "cache-store";
 const STORAGE_VERSION = 1; // change this to invalidate old persisted data
+
 const ATTESTATION_CACHE_LIFETIME = 30 * 60 * 1000; // 30 minutes
+const ATTESTATION_LONG_CACHE_LIFETIME = 24 * 60 * 60 * 1000; // 24 hours
 
 interface ICacheState {
   inited: boolean;
@@ -54,7 +56,16 @@ const storeCreator: StateCreator<ICacheState> = (set, get) => ({
       return null;
     }
 
-    const isExpired = Date.now() - (entry?.ts || 0) >= ATTESTATION_CACHE_LIFETIME;
+    let isExpired: boolean = true;
+
+    const hasDiscord = entry.attestations.find(a => a.name === 'discord') !== undefined;
+    const hasTelegram = entry.attestations.find(a => a.name === 'telegram') !== undefined;
+
+    if (!hasDiscord || !hasTelegram) {
+      isExpired = Date.now() - (entry?.ts || 0) >= ATTESTATION_LONG_CACHE_LIFETIME;
+    } else {
+      isExpired = Date.now() - (entry?.ts || 0) >= ATTESTATION_CACHE_LIFETIME;
+    }
 
     if (appConfig.TESTNET) {
       if (isExpired) {
