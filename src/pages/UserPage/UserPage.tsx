@@ -6,10 +6,13 @@ import { PageLayout } from "@/components/layout/page-layout";
 import { useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
+import { useAttestations } from "@/hooks/useAttestations";
 import { UserHouses, UserPlots, UserStats } from "./components";
 import { UserInfo } from "./components/UserInfo";
 
-interface UserPageProps {}
+const ATTESTATION_MAX_LENGTH = 14; // max length of attestation to display in title
+
+interface UserPageProps { }
 
 const UserPage: FC<UserPageProps> = () => {
   const { address } = useParams<{ address: string }>();
@@ -20,11 +23,19 @@ const UserPage: FC<UserPageProps> = () => {
     return <Navigate to="/not-found" replace />;
   }
 
-  const loading = !inited || !stateLoaded;
+  const { data, loaded: attestationsLoaded } = useAttestations(address);
+  const loading = !inited || !stateLoaded || !attestationsLoaded;
+  const shortestAttestation = data?.sort((a, b) => a.value.length - b.value.length)[0]?.value;
+
+  let title = `${String(address).slice(0, 5)}...${String(address).slice(-5, String(address).length)}'s profile`;
+
+  if (attestationsLoaded && shortestAttestation) {
+    title = `${(shortestAttestation).slice(0, ATTESTATION_MAX_LENGTH)}'s profile`;
+  }
 
   return (
     // Helmet in UserInfo component
-    <PageLayout title="User page" loading={loading}>
+    <PageLayout title={attestationsLoaded ? title : ''} loading={loading}>
       <UserInfo address={address} />
       <UserStats address={address} />
       <UserPlots address={address} />
