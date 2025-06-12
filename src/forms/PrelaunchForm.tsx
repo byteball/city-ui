@@ -125,6 +125,10 @@ export const PrelaunchForm: FC = memo(() => {
         </InfoPanel.Item>
       </InfoPanel>
 
+      <p className="mb-4 text-muted-foreground">
+        During the initial sale, while buying a plot, you also buy {symbol} at the fixed rate 1 GBYTE = 1000 {symbol} for 10% of the plot price.
+      </p>
+
       {!isEmpty(refData) && (selectedMapUnit?.owner !== walletAddress || !walletAddress) ? (
         <div>
           <p className="mb-4 text-muted-foreground">
