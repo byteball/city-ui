@@ -20,7 +20,7 @@ export const MapEngineCard = memo(() => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Your space in the decentralized future</CardTitle>
+        <CardTitle>Your neighbors in the decentralized future</CardTitle>
       </CardHeader>
       <CardContent>
         {!shownSkeleton ? (
