@@ -11,7 +11,7 @@ import { useAaParams, useAaStore } from "@/store/aa-store";
 import { mapUnitsByUniqDataSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 
-import { generateLink, getExplorerUrl, toLocalString } from "@/lib";
+import { generateLink, toLocalString } from "@/lib";
 
 import { IRefData } from "@/global";
 
@@ -96,7 +96,7 @@ export const PrelaunchForm: FC = memo(() => {
 
   return (
     <div className="text-sm">
-      <InfoPanel className="mb-4">
+      <InfoPanel compact className="mb-4">
         <InfoPanel.Item label="Price" loading={isLoading}>
           {formattedValues.price} {reserveSymbol}
         </InfoPanel.Item>
@@ -125,26 +125,28 @@ export const PrelaunchForm: FC = memo(() => {
         </InfoPanel.Item>
       </InfoPanel>
 
+      <p className="mb-4 text-muted-foreground">
+        During the initial sale, while buying a plot, you also buy {symbol} at the fixed rate 1 GBYTE = 1000 {symbol} for 10% of the plot price.
+      </p>
+
       {!isEmpty(refData) && (selectedMapUnit?.owner !== walletAddress || !walletAddress) ? (
         <div>
           <p className="mb-4 text-muted-foreground">
             You’re using{" "}
             {refData.ref ? (
-              <a href={getExplorerUrl(refData.ref, "address")} target="_blank" rel="noopener" className="text-link">
+              <Link to={`/user/${refData.ref}`} className="text-link">
                 {refData.ref!.slice(0, 5)}...{refData.ref!.slice(-5, refData.ref!.length)}
-              </a>
+              </Link>
             ) : (
               <>
                 a plot belonging to{" "}
                 {selectedMapUnit?.owner ? (
-                  <a
-                    href={getExplorerUrl(selectedMapUnit.owner, "address")}
-                    target="_blank"
-                    rel="noopener"
+                  <Link
+                    to={`/user/${selectedMapUnit.owner}`}
                     className="text-link"
                   >
                     {selectedMapUnit.owner}
-                  </a>
+                  </Link>
                 ) : null}
               </>
             )}
