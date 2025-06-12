@@ -11,7 +11,7 @@ import { useAaParams, useAaStore } from "@/store/aa-store";
 import { mapUnitsByUniqDataSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 
-import { generateLink, getExplorerUrl, toLocalString } from "@/lib";
+import { generateLink, toLocalString } from "@/lib";
 
 import { IRefData } from "@/global";
 
@@ -134,21 +134,19 @@ export const PrelaunchForm: FC = memo(() => {
           <p className="mb-4 text-muted-foreground">
             You’re using{" "}
             {refData.ref ? (
-              <a href={getExplorerUrl(refData.ref, "address")} target="_blank" rel="noopener" className="text-link">
+              <Link to={`/user/${refData.ref}`} className="text-link">
                 {refData.ref!.slice(0, 5)}...{refData.ref!.slice(-5, refData.ref!.length)}
-              </a>
+              </Link>
             ) : (
               <>
                 a plot belonging to{" "}
                 {selectedMapUnit?.owner ? (
-                  <a
-                    href={getExplorerUrl(selectedMapUnit.owner, "address")}
-                    target="_blank"
-                    rel="noopener"
+                  <Link
+                    to={`/user/${selectedMapUnit.owner}`}
                     className="text-link"
                   >
                     {selectedMapUnit.owner}
-                  </a>
+                  </Link>
                 ) : null}
               </>
             )}
