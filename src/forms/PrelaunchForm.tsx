@@ -96,7 +96,7 @@ export const PrelaunchForm: FC = memo(() => {
 
   return (
     <div className="text-sm">
-      <InfoPanel className="gap-0 mb-4">
+      <InfoPanel compact className="mb-4">
         <InfoPanel.Item label="Price" loading={isLoading}>
           {formattedValues.price} {reserveSymbol}
         </InfoPanel.Item>

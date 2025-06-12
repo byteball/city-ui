@@ -10,12 +10,14 @@ interface InfoPanelProps {
   children: ReactNode;
   className?: string;
   labelAnimated?: boolean;
+  compact?: boolean;
 }
 
 const InfoPanel: FC<InfoPanelProps> & { Item: typeof InfoPanelItem } = ({
   children,
   className = "",
   labelAnimated = false,
+  compact = false
 }) => {
   const enhancedChildren = Children.map(children, (child) => {
     if (isValidElement<{ labelAnimated?: boolean }>(child)) {
@@ -25,7 +27,7 @@ const InfoPanel: FC<InfoPanelProps> & { Item: typeof InfoPanelItem } = ({
     return child;
   });
 
-  return <div className={cn("grid gap-1", className)}>{enhancedChildren}</div>;
+  return <div className={cn("grid", compact ? "gap-0" : "gap-1", className)}>{enhancedChildren}</div>;
 };
 
 interface InfoPanelItemProps {
