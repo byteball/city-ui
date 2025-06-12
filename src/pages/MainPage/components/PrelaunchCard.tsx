@@ -1,19 +1,29 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { PrelaunchForm } from "@/forms/PrelaunchForm";
+import { useAaParams } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
+
+import { toLocalString } from "@/lib";
 
 import appConfig from "@/appConfig";
 
 export const PrelaunchCard = () => {
-  const { symbol } = useSettingsStore((state) => state);
+  const { symbol, decimals } = useSettingsStore((state) => state);
+  const { plot_price } = useAaParams();
 
   return (
     <Card highlight>
       <CardHeader>
         <CardTitle>Buy a new plot (Initial sale)</CardTitle>
-        <CardDescription>
-          During the initial sale, while buying a plot, you also buy {symbol} at the fixed rate 1 GBYTE = 1000 {symbol}{" "}
-          for 10% of the plot price.
+        <CardDescription className="space-y-1.5">
+          <p>
+            During the initial sale, while buying a plot, you also buy {symbol} at the fixed rate 1 GBYTE = 1000 {symbol} for 10% of the plot price.
+          </p>
+
+          <p>
+            It will be created at a random location. If it becomes a neighbor of another plot, you receive 2 new plots
+            worth {toLocalString(plot_price / 10 ** decimals!)} {symbol} each. You also get introduced to the neighbor and receive a house on your plot.
+          </p>
         </CardDescription>
       </CardHeader>
 
