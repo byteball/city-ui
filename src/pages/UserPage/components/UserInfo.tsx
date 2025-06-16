@@ -14,7 +14,7 @@ import { getExplorerUrl } from "@/lib";
 import { getContactUrlByUsername } from "@/lib/getContactUrlByUsername";
 import { getReferralUrl } from "@/lib/getReferralUrl";
 import { SocialIcon } from "@/pages/MainPage/components/SocialIcon";
-import { useAaStore } from "@/store/aa-store";
+import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 import cn from "classnames";
 import { Helmet } from "react-helmet-async";
@@ -44,7 +44,7 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
   const { data: attestations, loaded } = useAttestations(address);
   const parsedUserInfo = useMemo(() => getParsedUserInfo(userInfo), [userInfo]);
   const userMainPlotNum = useAaStore((state) => state.state[`user_main_plot_city_${address}`]) as number | undefined;
-
+  const { referral_boost } = useAaParams();
   const [copied, setCopied] = useState(false);
 
   const referralUrl = getReferralUrl(userMainPlotNum || null);
@@ -166,7 +166,7 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
               </div>
             </CopyToClipboard>
           ) : walletAddress === address ? (
-            <SetUserMainPlotDialog plotNum={userMainPlotNum}>
+            <SetUserMainPlotDialog referralBoost={referral_boost} plotNum={userMainPlotNum}>
               <Button variant="link" className="h-auto p-0 rounded-xl">
                 Please set up your main plot first
               </Button>
