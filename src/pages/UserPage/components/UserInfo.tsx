@@ -71,7 +71,7 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
     const infoName = typeof parsedUserInfo === "object" ? parsedUserInfo?.name : "";
     const name = infoName || tgAttestation || discordAttestation;
 
-    title = `Obyte City — User ${name}, ${walletAddress}`;
+    title = `Obyte City — ${name}'s profile`;
     description = `Personal page of citizen  ${name}, ${walletAddress} in Obyte City, a community engagement space for Obyte`;
   }
 

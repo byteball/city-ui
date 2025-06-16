@@ -13,6 +13,7 @@ interface IPageLayoutProps {
   ogImageKey?: string; // for og:image
   seoTitle?: string; // for SEO title
   seoDescription?: string; // for SEO description
+  ignoreSeo?: boolean; // if true, do not render SEO tags
 }
 
 export const PageLayout: FC<IPageLayoutProps> = ({
@@ -23,10 +24,11 @@ export const PageLayout: FC<IPageLayoutProps> = ({
   description,
   seoDescription,
   ogImageKey,
+  ignoreSeo = false, // if true, do not render SEO tags
 }) => {
   return (
     <>
-      <Helmet>
+      {!ignoreSeo ? <Helmet>
         <title>Obyte City — {seoTitle || title}</title>
         <meta name="og:title" content={`Obyte City — ${seoTitle || title}`} />
         <meta name="twitter:title" content={`Obyte City — ${seoTitle || title}`} />
@@ -37,7 +39,7 @@ export const PageLayout: FC<IPageLayoutProps> = ({
 
         {ogImageKey && <meta name="twitter:image" content={`${appConfig.OG_IMAGE_URL}/og/${ogImageKey}`} />}
         {ogImageKey && <meta property="og:image" content={`${appConfig.OG_IMAGE_URL}/og/${ogImageKey}`} />}
-      </Helmet>
+      </Helmet> : null}
 
       <div className="min-h-[80vh] px-4 md:px-0">
         <div className="mb-8">
