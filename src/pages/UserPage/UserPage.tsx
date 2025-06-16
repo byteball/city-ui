@@ -41,7 +41,7 @@ const UserPage: FC<UserPageProps> = () => {
 
   return (
     // Helmet in UserInfo component
-    <PageLayout title={attestationsLoaded ? title : ''} loading={loading}>
+    <PageLayout ignoreSeo title={attestationsLoaded ? title : ''} loading={loading}>
       <UserInfo address={address} />
       <UserStats address={address} />
       <UserPlots address={address} />
