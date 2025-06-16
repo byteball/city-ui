@@ -6,7 +6,7 @@ import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
 import { getRoads } from "@/engine/utils/getRoads";
 import { IMapUnit, IPlot } from "@/global";
 import { getAddressFromNearestRoad } from "@/lib";
-import { useAaStore } from "@/store/aa-store";
+import { useAaParams, useAaStore } from "@/store/aa-store";
 import { mapUnitsByOwnerAddressSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 
@@ -40,6 +40,7 @@ export const UserMainPlot: FC<IUserMainPlotProps> = ({ address }) => {
   const userUnits = useAaStore((state) => mapUnitsByOwnerAddressSelector(state, walletAddress));
   const mapUnits = useAaStore(mapUnitsSelector);
   const mayor = useAaStore((state) => state.state.city_city?.mayor);
+  const { referral_boost } = useAaParams()
 
   const userMainPlot = userMainPlotNum
     ? ((userUnits.length ? userUnits : mapUnits).find(
@@ -56,7 +57,7 @@ export const UserMainPlot: FC<IUserMainPlotProps> = ({ address }) => {
       )}
 
       {address === walletAddress ? (
-        <SetUserMainPlotDialog plotNum={userMainPlotNum}>
+        <SetUserMainPlotDialog referralBoost={referral_boost} plotNum={userMainPlotNum}>
           <ButtonWithTooltip tooltipText="Set up the main plot" variant="link" className="h-auto py-0 rounded-xl">
             <UserPenIcon className="w-4 h-4" />
           </ButtonWithTooltip>
