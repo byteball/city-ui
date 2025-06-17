@@ -28,6 +28,7 @@ export default class MapScene extends Phaser.Scene {
     this.load.svg("road-vertical", "/assets/road-vertical.svg", { width: 180, height: 180 });
     this.load.svg("road-horizontal", "/assets/road-horizontal.svg", { width: 180, height: 180 });
     this.load.svg("mayor-house", "/assets/mayor-house.svg", { width: 215, height: 260 });
+    this.load.svg("golden-plot", "/assets/golden-plot.svg", { width: 150, height: 150 });
   }
 
   create() {
