@@ -1,6 +1,6 @@
 export default {
   AA_ADDRESS: import.meta.env.VITE_AA_ADDRESS,
-  GOLDEN_PLOTS: [128],
+  GOLDEN_PLOTS: [183],
   TESTNET: import.meta.env.VITE_TESTNET,
   LAUNCH_DATE: import.meta.env.VITE_LAUNCH_DATE, // YYYY-MM-DD
   MAP_SCALE: 0.01, // 1:100, please do not change this value
