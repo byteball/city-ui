@@ -1,5 +1,7 @@
 // src/objects/Plot.ts
+import appConfig from "@/appConfig";
 import { IMapUnit } from "@/global";
+import { asNonNegativeNumber } from "@/lib";
 import Phaser from "phaser";
 
 const PLUS_SIZE = 150;
@@ -9,6 +11,7 @@ export class Plot {
   private plotSize: number;
   private address: string;
   private view?: string;
+  private isGolden: boolean = false;
 
   private plotImage: Phaser.GameObjects.Image;
   private outline?: Phaser.GameObjects.Graphics;
@@ -20,6 +23,7 @@ export class Plot {
     this.plotSize = plotSize;
     this.address = address;
     this.view = view;
+    this.isGolden = appConfig.GOLDEN_PLOTS.map(asNonNegativeNumber).includes(data.plot_num);
 
     this.createPlot();
   }
@@ -37,7 +41,12 @@ export class Plot {
       // redDot.fillCircle(x, y, 10);
       // redDot.setDepth(this.plotImage.depth + 30);
     } else {
-      this.plotImage = this.scene.add.image(x, y, this.view ?? "plot");
+      if (this.isGolden) {
+        this.plotImage = this.scene.add.image(x, y, "golden-plot");
+      } else {
+        this.plotImage = this.scene.add.image(x, y, this.view ?? "plot");
+      }
+
       this.plotImage.setDepth(this.plotImage.depth + (this.view === "plot" ? 0 : 20));
       this.plotImage.setDisplaySize(this.plotSize, this.plotSize);
       this.plotImage.setInteractive();

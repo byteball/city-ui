@@ -1,7 +1,7 @@
 import cn from "classnames";
 import { DollarSignIcon, DoorOpenIcon, ImageUpscaleIcon, PencilIcon, ShoppingBagIcon } from "lucide-react";
 import moment from "moment";
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { Link } from "react-router";
 
 import { LeaveUnbuiltPlotDialog } from "@/components/dialogs/LeaveUnbuiltPlotDialog";
@@ -12,7 +12,7 @@ import { ShortCodeSellDialog } from "@/components/dialogs/ShortCodeSellDialog";
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { QRButton } from "@/components/ui/_qr-button";
 import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -23,7 +23,7 @@ import { useSettingsStore } from "@/store/settings-store";
 import { getRoads } from "@/engine/utils/getRoads";
 import { ICity } from "@/global";
 import { useAttestations } from "@/hooks/useAttestations";
-import { generateLink, toLocalString } from "@/lib";
+import { asNonNegativeNumber, generateLink, toLocalString } from "@/lib";
 import { getAddressFromNearestRoad } from "@/lib/getAddressCoordinate";
 
 import appConfig from "@/appConfig";
@@ -131,6 +131,10 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
     description = `Plot/House at ${addresses[0]} owned by ${name || walletAddress} in Obyte City`;
   }
 
+  const isGoldenPlot = useMemo(() => {
+    return selectedMapUnit?.type === "plot" && appConfig.GOLDEN_PLOTS.map(asNonNegativeNumber).includes(selectedMapUnit.plot_num);
+  }, [selectedMapUnit]);
+
   return (
     <>
       <Helmet>
@@ -160,7 +164,10 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
       <Card>
         <CardHeader>
           {selectedMapUnit ? (
-            <CardTitle>Selected {selectedMapUnit.type}</CardTitle>
+            <>
+              <CardTitle>Selected {selectedMapUnit.type}</CardTitle>
+              {isGoldenPlot ? <CardDescription className="text-[#FFD700]">Golden neighbor — if you become their neighbor, you get additional 25 GBYTE from the Obyte team.</CardDescription> : null}
+            </>
           ) : (
             <CardTitle>
               {stateLoaded ? (
