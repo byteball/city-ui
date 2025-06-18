@@ -41,6 +41,7 @@ export class House {
     this.houseImage.setInteractive();
 
     this.houseImage.on("pointerover", (pointer: Phaser.Input.Pointer) => {
+      if ((window as any).isDialogOpen) return;
       if (this.tooltipDom || !this.address) return;
       const div = document.createElement("div");
 
@@ -82,6 +83,15 @@ export class House {
     });
 
     this.houseImage.on("pointerout", () => {
+      if (this.tooltipDom) {
+        document.body.removeChild(this.tooltipDom);
+        this.tooltipDom = undefined;
+      }
+    });
+
+
+    // Remove tooltip when mouse leaves the canvas
+    this.scene.game.canvas.addEventListener("mouseleave", () => {
       if (this.tooltipDom) {
         document.body.removeChild(this.tooltipDom);
         this.tooltipDom = undefined;
