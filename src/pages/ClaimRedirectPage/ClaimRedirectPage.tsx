@@ -199,18 +199,18 @@ const ClaimRedirectPage = () => {
                     <span className="text-white">
                       {discordAttestation1Url ? (
                         <a href={discordAttestation1Url} target="_blank" rel="noopener" className="text-link">
-                          {discordAttestation1?.value ?? "Not attested"}
+                          {discordAttestation1?.value ?? "?"}
                         </a>
                       ) : (
-                        <span>{discordAttestation1?.value ?? "Not attested"}</span>
+                        <span>{discordAttestation1?.value ?? "?"}</span>
                       )}{" "}
                       and{" "}
                       {discordAttestation2Url ? (
                         <a href={discordAttestation2Url} target="_blank" rel="noopener" className="text-link">
-                          {discordAttestation2?.value ?? "Not attested"}
+                          {discordAttestation2?.value ?? "?"}
                         </a>
                       ) : (
-                        <span>{discordAttestation2?.value ?? "Not attested"}</span>
+                        <span>{discordAttestation2?.value ?? "?"}</span>
                       )}
                     </span>
                   </InfoPanel.Item>
