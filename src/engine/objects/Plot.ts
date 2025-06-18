@@ -35,11 +35,6 @@ export class Plot {
       this.plotImage = this.scene.add.image(x, y, "plus");
       this.plotImage.setDisplaySize(PLUS_SIZE, PLUS_SIZE);
       this.plotImage.setDepth(20);
-
-      // const redDot = this.scene.add.graphics();
-      // redDot.fillStyle(0xff0000, 1);
-      // redDot.fillCircle(x, y, 10);
-      // redDot.setDepth(this.plotImage.depth + 30);
     } else {
       if (this.isGolden) {
         this.plotImage = this.scene.add.image(x, y, "golden-plot");
@@ -59,6 +54,7 @@ export class Plot {
       if ((window as any).isDialogOpen) return;
       if (this.tooltipDom || !this.address) return;
       const div = document.createElement("div");
+
       let name = "";
 
       if (this.data.info && typeof this.data.info === "object") {

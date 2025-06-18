@@ -1,5 +1,5 @@
 import obyte from "obyte";
-import { ChangeEvent, FC, KeyboardEvent, useCallback, useRef, useState } from "react";
+import { ChangeEvent, FC, KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 
 import { QRButton } from "@/components/ui/_qr-button";
 import { Input } from "@/components/ui/input";
@@ -24,19 +24,23 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
   const [shortcode, setShortcode] = useState<string>(currentShortcode);
   const { plot_price } = useAaParams();
   const walletAddress = useSettingsStore((state) => state.walletAddress);
-  const [address, setAddress] = useState<string | null>(walletAddress);
+  const [address, setAddress] = useState<string | null>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
   const existingShortcodes = useAaStore((state) => shortcodesSelector(state.state));
 
   const mayorHouse = unitData.amount < 0;
   const isTooCheap = unitData.amount < plot_price;
   const shortcodeMoreThan20Characters = shortcode.length > 20;
-  const isTaken = shortcode in existingShortcodes && existingShortcodes[shortcode] !== walletAddress;
+  const isTaken = (shortcode in existingShortcodes) && currentShortcode !== shortcode;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^A-Za-z0-9_.-]/g, "").toLowerCase();
     setShortcode(value);
   };
+
+  useEffect(() => {
+    setAddress(existingShortcodes[shortcode] || null);
+  }, [existingShortcodes]);
 
   let to;
   const newShortcodeAddressIsValid = address && obyte.utils.isValidAddress(address);
@@ -63,7 +67,7 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
   });
 
   const disabled =
-    shortcodeMoreThan20Characters || mayorHouse || isTooCheap || isTaken || (address && !newShortcodeAddressIsValid);
+    shortcodeMoreThan20Characters || mayorHouse || isTooCheap || isTaken || (address && (!newShortcodeAddressIsValid || unitData.owner === address)) || address === existingShortcodes[shortcode];
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
@@ -111,9 +115,9 @@ export const ShortcodeForm: FC<IShortcodeFormProps> = ({ unitData }) => {
             error={
               shortcodeMoreThan20Characters
                 ? "Please enter a shortcode with 20 characters or fewer"
-                : isTaken
-                ? "This shortcode is already taken"
-                : ""
+                : (isTaken && currentShortcode !== shortcode)
+                  ? "This shortcode is already taken"
+                  : ""
             }
             value={shortcode}
             onChange={handleChange}
