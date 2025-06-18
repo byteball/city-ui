@@ -1,7 +1,8 @@
 import cn from "classnames";
 import { DollarSignIcon, DoorOpenIcon, ImageUpscaleIcon, PencilIcon, ShoppingBagIcon } from "lucide-react";
 import moment from "moment";
-import { FC, useMemo } from "react";
+import { FC, useCallback, useMemo } from "react";
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router";
 
 import { LeaveUnbuiltPlotDialog } from "@/components/dialogs/LeaveUnbuiltPlotDialog";
@@ -25,11 +26,13 @@ import { ICity } from "@/global";
 import { useAttestations } from "@/hooks/useAttestations";
 import { asNonNegativeNumber, generateLink, toLocalString } from "@/lib";
 import { getAddressFromNearestRoad } from "@/lib/getAddressCoordinate";
+import { getContactUrlByUsername } from "@/lib/getContactUrlByUsername";
+import { getMatches } from "@/lib/getMatches";
+import { SocialIcon } from "./SocialIcon";
+
+import { EventBus } from "@/engine/EventBus";
 
 import appConfig from "@/appConfig";
-import { getContactUrlByUsername } from "@/lib/getContactUrlByUsername";
-import { Helmet } from "react-helmet-async";
-import { SocialIcon } from "./SocialIcon";
 
 interface ISelectedUnitMapCardProps {
   sceneType: "main" | "market";
@@ -50,12 +53,16 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
 
   const ownerUsernameIsLoading = selectedMapUnit?.type === "house" && !loaded;
 
-  const { symbol, asset, decimals, inited, walletAddress } = useSettingsStore((state) => state);
+  const { symbol, asset, decimals, inited, walletAddress, setSelectedMapUnit } = useSettingsStore((state) => state);
 
   const loading = !inited || !stateLoaded || !asset || decimals === null;
 
   const cityStats = aaState.state.city_city as ICity;
-  const mapUnits = mapUnitsSelector(aaState);
+  const mapUnits = useMemo(() => mapUnitsSelector(aaState), [aaState]);
+  const neighborPlotNum = useMemo(() => getMatches(aaState).get(selectedMapUnit?.plot_num || -1)?.neighbor_plot ?? null, [aaState, selectedMapUnit]);
+
+  const neighborHouse = useMemo(() => mapUnits.find(unit => unit.type === "house" && unit.plot_num === neighborPlotNum), [mapUnits, neighborPlotNum]);
+
   const roads = getRoads(mapUnits, String(cityStats?.mayor));
 
   const decimalsPow = 10 ** (decimals ?? 0);
@@ -82,6 +89,18 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
           y: selectedMapUnit.y,
         },
         selectedMapUnit?.type === "house" ? selectedMapUnit?.house_num ?? 0 : selectedMapUnit?.plot_num ?? 0
+      )
+      : [];
+
+  const neighborAddress =
+    neighborHouse?.x !== undefined && neighborHouse?.y !== undefined
+      ? getAddressFromNearestRoad(
+        roads,
+        {
+          x: neighborHouse.x,
+          y: neighborHouse.y,
+        },
+        neighborHouse?.type === "house" ? neighborHouse?.house_num ?? 0 : neighborHouse?.plot_num ?? 0
       )
       : [];
 
@@ -134,6 +153,13 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
   const isGoldenPlot = useMemo(() => {
     return selectedMapUnit?.type === "plot" && appConfig.GOLDEN_PLOTS.map(asNonNegativeNumber).includes(selectedMapUnit.plot_num);
   }, [selectedMapUnit]);
+
+  const selectNeighbor = useCallback(() => {
+    if (!neighborHouse || neighborHouse.type !== "house") return;
+
+    setSelectedMapUnit({ num: neighborHouse.house_num, type: "house" });
+    EventBus.emit("reset-selection");
+  }, [neighborHouse]);
 
   return (
     <>
@@ -214,6 +240,15 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
               >
                 {formattedAmount} {symbol} {rented_amount ? `(Plus ${formattedRentedAmount} rented ${symbol})` : ""}
               </InfoPanel.Item>
+              {neighborPlotNum && neighborHouse?.type === "house" ? <InfoPanel.Item
+                textClamp
+                label="Neighbor"
+                loading={loading}
+              >
+                <Link className="truncate text-link" to={`/?house=${neighborHouse.house_num}`} onClick={selectNeighbor}>
+                  {neighborAddress[0] ?? "Unknown address"}
+                </Link>
+              </InfoPanel.Item> : null}
               <InfoPanel.Item textClamp label="Coordinates" loading={loading}>
                 <TooltipProvider>
                   <Tooltip>
