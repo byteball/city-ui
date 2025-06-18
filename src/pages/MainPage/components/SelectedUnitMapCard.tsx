@@ -240,15 +240,6 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
               >
                 {formattedAmount} {symbol} {rented_amount ? `(Plus ${formattedRentedAmount} rented ${symbol})` : ""}
               </InfoPanel.Item>
-              {neighborPlotNum && neighborHouse?.type === "house" ? <InfoPanel.Item
-                textClamp
-                label="Neighbor"
-                loading={loading}
-              >
-                <Link className="truncate text-link" to={`/?house=${neighborHouse.house_num}`} onClick={selectNeighbor}>
-                  {neighborAddress[0] ?? "Unknown address"}
-                </Link>
-              </InfoPanel.Item> : null}
               <InfoPanel.Item textClamp label="Coordinates" loading={loading}>
                 <TooltipProvider>
                   <Tooltip>
@@ -349,6 +340,19 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                   )}
                 </div>
               ) : null}
+
+              {neighborPlotNum && neighborHouse?.type === "house" ? <div className="mt-2">
+                <InfoPanel.Item
+                  textClamp
+                  label="Neighbor"
+                  loading={loading}
+                >
+                  <Link className="truncate text-link" to={`/?house=${neighborHouse.house_num}`} onClick={selectNeighbor}>
+                    {neighborAddress[0] ?? "Unknown address"}
+                  </Link>
+                </InfoPanel.Item>
+              </div> : null}
+
               {sceneType === "market" && selectedMapUnit?.type === "plot" ? (
                 <div className="mt-4 space-y-2">
                   {isOwner ? (
