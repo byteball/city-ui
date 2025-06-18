@@ -341,7 +341,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                 </div>
               ) : null}
 
-              {neighborPlotNum && neighborHouse?.type === "house" ? <div className="mt-2">
+              {neighborPlotNum && neighborHouse?.type === "house" ? <div className="mt-3">
                 <InfoPanel.Item
                   textClamp
                   label="Neighbor"
