@@ -304,7 +304,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                               {a.displayName ? <HoverCardContent align="center" className="text-white" side="top">
                                 <div>Username: {a.value}</div>
                               </HoverCardContent> : null}
-                              <HoverCardTrigger className={cn({ "underline underline-offset-4": !!a.displayName })}>
+                              <HoverCardTrigger>
                                 {url ? (
                                   <a href={url} target="_blank" rel="noopener" className="text-link">
                                     {a.displayName ?? a.value}

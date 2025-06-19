@@ -1,4 +1,3 @@
-import cn from "classnames";
 import { CircleXIcon, Loader } from "lucide-react";
 import { useRef } from "react";
 import { Helmet } from "react-helmet-async";
@@ -204,7 +203,7 @@ const ClaimRedirectPage = () => {
                         {discordAttestation1?.displayName ? <HoverCardContent align="center" className="text-white" side="top">
                           <div>Username: {discordAttestation1.value}</div>
                         </HoverCardContent> : null}
-                        <HoverCardTrigger className={cn({ "underline underline-offset-4": !!discordAttestation1?.displayName })}>
+                        <HoverCardTrigger>
                           {discordAttestation1Url ? (
                             <a href={discordAttestation1Url} target="_blank" rel="noopener" className="text-link">
                               {discordAttestation1?.value ?? "?"}
@@ -219,7 +218,7 @@ const ClaimRedirectPage = () => {
                         {discordAttestation2?.displayName ? <HoverCardContent align="center" className="text-white" side="top">
                           <div>Username: {discordAttestation2.value}</div>
                         </HoverCardContent> : null}
-                        <HoverCardTrigger className={cn({ "underline underline-offset-4": !!discordAttestation2?.displayName })}>
+                        <HoverCardTrigger>
                           {discordAttestation2Url ? (
                             <a href={discordAttestation2Url} target="_blank" rel="noopener" className="text-link">
                               {discordAttestation2?.value ?? "?"}
@@ -238,7 +237,7 @@ const ClaimRedirectPage = () => {
                         {tgAttestation1?.displayName ? <HoverCardContent align="center" className="text-white" side="top">
                           <div>Username: {tgAttestation1.value}</div>
                         </HoverCardContent> : null}
-                        <HoverCardTrigger className={cn({ "underline underline-offset-4": !!tgAttestation1?.displayName })}>
+                        <HoverCardTrigger>
                           {telegramAttestation1Url ? (
                             <a href={telegramAttestation1Url} target="_blank" rel="noopener" className="text-link">
                               {tgAttestation1?.value ?? "?"}
@@ -253,7 +252,7 @@ const ClaimRedirectPage = () => {
                         {tgAttestation2?.displayName ? <HoverCardContent align="center" className="text-white" side="top">
                           <div>Username: {tgAttestation2.value}</div>
                         </HoverCardContent> : null}
-                        <HoverCardTrigger className={cn({ "underline underline-offset-4": !!tgAttestation2?.displayName })}>
+                        <HoverCardTrigger>
                           {telegramAttestation2Url ? (
                             <a href={telegramAttestation2Url} target="_blank" rel="noopener" className="text-link">
                               {tgAttestation2?.value ?? "?"}
@@ -307,7 +306,7 @@ const ClaimRedirectPage = () => {
                                 {a.displayName ? <HoverCardContent align="center" className="text-white" side="top">
                                   <div>Username: {a.value}</div>
                                 </HoverCardContent> : null}
-                                <HoverCardTrigger className={cn({ "underline underline-offset-4": !!a.displayName })}>
+                                <HoverCardTrigger>
                                   {url ? (
                                     <a href={url} target="_blank" rel="noopener" className="text-link">
                                       {a.displayName ?? a.value}
@@ -365,7 +364,7 @@ const ClaimRedirectPage = () => {
                                 {a.displayName ? <HoverCardContent align="center" className="text-white" side="top">
                                   <div>Username: {a.value}</div>
                                 </HoverCardContent> : null}
-                                <HoverCardTrigger className={cn({ "underline underline-offset-4": !!a.displayName })}>
+                                <HoverCardTrigger>
                                   {url ? (
                                     <a href={url} target="_blank" rel="noopener" className="text-link">
                                       {a.displayName ?? a.value}
