@@ -10,6 +10,7 @@ export interface IAttestation {
   name: string;
   value: string;
   userId?: string;
+  displayName?: string; // optional
 }
 
 interface IAttestationsState {
@@ -68,6 +69,18 @@ export const useAttestations = (address?: string): IAttestationsState => {
           });
 
           if (userAttestations.length) {
+            const discordAttestation = userAttestations.find((a) => a.name === "discord");
+
+            if (discordAttestation && discordAttestation.userId) {
+              const displayName = await fetch(`${appConfig.NOTIFICATION_BACKEND_URL}/display_name/${discordAttestation.userId}`).then((res) => res.json())
+                .then((data) => data.displayName)
+                .catch(() => undefined);
+
+              if (displayName && displayName !== discordAttestation.value) {
+                discordAttestation.displayName = displayName;
+              }
+            }
+
             saveAttestationsInCache(address, userAttestations);
           }
 

@@ -8,6 +8,7 @@ import { SetUserMainPlotDialog } from "@/components/dialogs/SetUserMainPlotDialo
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { Button } from "@/components/ui/button";
 import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { IMapUnitInfo } from "@/global";
 import { useAttestations } from "@/hooks/useAttestations";
 import { getExplorerUrl } from "@/lib";
@@ -116,13 +117,20 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
                 return (
                   <div className="flex items-center justify-between gap-1" key={a.name + "-" + a.value + "-" + address}>
                     <SocialIcon type={a.name} />{" "}
-                    {url ? (
-                      <a href={url} target="_blank" rel="noopener" className="text-link">
-                        {a.value}
-                      </a>
-                    ) : (
-                      <div>{a.value}</div>
-                    )}
+                    <HoverCard>
+                      {a.displayName ? <HoverCardContent align="center" className="text-white" side="top">
+                        <div>Username: {a.value}</div>
+                      </HoverCardContent> : null}
+                      <HoverCardTrigger className={cn({ "underline underline-offset-4": !!a.displayName })}>
+                        {url ? (
+                          <a href={url} target="_blank" rel="noopener" className="text-link">
+                            {a.displayName ?? a.value}
+                          </a>
+                        ) : (
+                          <div>{a.displayName ?? a.value}</div>
+                        )}
+                      </HoverCardTrigger>
+                    </HoverCard>
                   </div>
                 );
               })}

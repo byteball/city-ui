@@ -14,6 +14,7 @@ import { InfoPanel } from "@/components/ui/_info-panel";
 import { QRButton } from "@/components/ui/_qr-button";
 import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -299,13 +300,20 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
                             key={a.name + "-" + a.value + "-" + owner}
                           >
                             <SocialIcon type={a.name} />{" "}
-                            {url ? (
-                              <a href={url} target="_blank" rel="noopener" className="text-link">
-                                {a.value}
-                              </a>
-                            ) : (
-                              <div>{a.value}</div>
-                            )}
+                            <HoverCard>
+                              {a.displayName ? <HoverCardContent align="center" className="text-white" side="top">
+                                <div>Username: {a.value}</div>
+                              </HoverCardContent> : null}
+                              <HoverCardTrigger className={cn({ "underline underline-offset-4": !!a.displayName })}>
+                                {url ? (
+                                  <a href={url} target="_blank" rel="noopener" className="text-link">
+                                    {a.displayName ?? a.value}
+                                  </a>
+                                ) : (
+                                  <div>{a.displayName ?? a.value}</div>
+                                )}
+                              </HoverCardTrigger>
+                            </HoverCard>
                           </div>
                         );
                       })}
