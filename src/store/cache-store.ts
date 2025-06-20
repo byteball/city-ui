@@ -21,6 +21,7 @@ interface ICacheState {
   };
   setAttestationsForAddress: (address: string, attestations: IAttestation[]) => void;
   getUserAttestations: (address: string) => IAttestation[] | null;
+  saveDisplayName: (address: string, attestationName: string, displayName: string) => void;
 }
 
 const storeCreator: StateCreator<ICacheState> = (set, get) => ({
@@ -41,7 +42,30 @@ const storeCreator: StateCreator<ICacheState> = (set, get) => ({
       }
     }));
   },
-  getUserAttestations: (address) => {
+  saveDisplayName: (address: string, attestationName: string, displayName: string) => {
+    if (!address || !obyte.utils.isValidAddress(address) || typeof attestationName !== "string") {
+      throw new Error("Invalid address or name");
+    }
+
+    const userAttestations = get().getUserAttestations(address);
+    const currentAttestationId = userAttestations?.findIndex(a => a.name === attestationName) ?? -1;
+
+    if (userAttestations && displayName && currentAttestationId >= 0) {
+
+      userAttestations[currentAttestationId].displayName = displayName;
+
+      set((state) => ({
+        attestations: {
+          ...state.attestations,
+          [address]: {
+            attestations: userAttestations,
+            ts: state.attestations[address].ts
+          }
+        }
+      }));
+    }
+  },
+  getUserAttestations: (address: string | null) => {
     if (!address) return null;
 
     if (!obyte.utils.isValidAddress(address)) {

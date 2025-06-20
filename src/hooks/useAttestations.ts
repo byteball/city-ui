@@ -10,6 +10,7 @@ export interface IAttestation {
   name: string;
   value: string;
   userId?: string;
+  displayName?: string; // optional
 }
 
 interface IAttestationsState {
@@ -22,7 +23,7 @@ const allowedAttestors = Object.entries(appConfig.ATTESTORS);
 export const useAttestations = (address?: string): IAttestationsState => {
   const [attestations, setAttestations] = useState<IAttestationsState>({ data: [], loaded: false });
   const { attestors } = useAaParams();
-  const { getUserAttestations, setAttestationsForAddress: saveAttestationsInCache } = useCacheStore()
+  const { getUserAttestations, setAttestationsForAddress: saveAttestationsInCache, saveDisplayName } = useCacheStore()
   const currentCityAttestors = attestors.split(":").map((attestor) => attestor.trim());
 
   useEffect(() => {
@@ -68,6 +69,20 @@ export const useAttestations = (address?: string): IAttestationsState => {
           });
 
           if (userAttestations.length) {
+            const discordAttestation = userAttestations.find((a) => a.name === "discord");
+
+            if (discordAttestation && discordAttestation.userId) {
+              fetch(`${appConfig.NOTIFICATION_BACKEND_URL}/display_name/${discordAttestation.userId}`).then((res) => res.json())
+                .then((data) => {
+                  const { displayName } = data;
+
+                  if (displayName && displayName !== discordAttestation.value) {
+                    saveDisplayName(address, "discord", displayName);
+                  }
+                })
+                .catch(() => undefined);
+            }
+
             saveAttestationsInCache(address, userAttestations);
           }
 

@@ -11,6 +11,7 @@ import { useAttestations } from "@/hooks/useAttestations";
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 
+import { ContactField } from "@/components/ui/_contact-field";
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { IRefPhaserMapEngine, PhaserMapEngine } from "@/engine/PhaserMapEngine";
@@ -18,10 +19,11 @@ import { IRefPhaserMapEngine, PhaserMapEngine } from "@/engine/PhaserMapEngine";
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { QRButton } from "@/components/ui/_qr-button";
 
-import appConfig from "@/appConfig";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { IPlot } from "@/global";
 import { getContactUrlByUsername } from "@/lib/getContactUrlByUsername";
-import { SocialIcon } from "../MainPage/components/SocialIcon";
+
+import appConfig from "@/appConfig";
 
 const ClaimRedirectPage = () => {
   const { walletAddress, inited, decimals, symbol } = useSettingsStore((state) => state);
@@ -197,41 +199,69 @@ const ClaimRedirectPage = () => {
                 <InfoPanel>
                   <InfoPanel.Item loading={!plot1AttestationLoaded || !plot2AttestationLoaded} label="Discord">
                     <span className="text-white">
-                      {discordAttestation1Url ? (
-                        <a href={discordAttestation1Url} target="_blank" rel="noopener" className="text-link">
-                          {discordAttestation1?.value ?? "?"}
-                        </a>
-                      ) : (
-                        <span>{discordAttestation1?.value ?? "?"}</span>
-                      )}{" "}
-                      and{" "}
-                      {discordAttestation2Url ? (
-                        <a href={discordAttestation2Url} target="_blank" rel="noopener" className="text-link">
-                          {discordAttestation2?.value ?? "?"}
-                        </a>
-                      ) : (
-                        <span>{discordAttestation2?.value ?? "?"}</span>
-                      )}
+                      <HoverCard>
+                        {discordAttestation1?.displayName ? <HoverCardContent align="center" className="text-white" side="top">
+                          <div>Username: {discordAttestation1.value}</div>
+                        </HoverCardContent> : null}
+                        <HoverCardTrigger>
+                          {discordAttestation1Url ? (
+                            <a href={discordAttestation1Url} target="_blank" rel="noopener" className="text-link">
+                              {discordAttestation1?.value ?? "?"}
+                            </a>
+                          ) : (
+                            <span>{discordAttestation1?.value ?? "?"}</span>
+                          )}
+                        </HoverCardTrigger>
+                      </HoverCard>
+                      {" "}and{" "}
+                      <HoverCard>
+                        {discordAttestation2?.displayName ? <HoverCardContent align="center" className="text-white" side="top">
+                          <div>Username: {discordAttestation2.value}</div>
+                        </HoverCardContent> : null}
+                        <HoverCardTrigger>
+                          {discordAttestation2Url ? (
+                            <a href={discordAttestation2Url} target="_blank" rel="noopener" className="text-link">
+                              {discordAttestation2?.value ?? "?"}
+                            </a>
+                          ) : (
+                            <span>{discordAttestation2?.value ?? "?"}</span>
+                          )}
+                        </HoverCardTrigger>
+                      </HoverCard>
                     </span>
                   </InfoPanel.Item>
 
                   <InfoPanel.Item loading={!plot1AttestationLoaded || !plot2AttestationLoaded} label="Telegram">
                     <span className="text-white">
-                      {telegramAttestation1Url ? (
-                        <a href={telegramAttestation1Url} target="_blank" rel="noopener" className="text-link">
-                          {tgAttestation1?.value ?? "?"}
-                        </a>
-                      ) : (
-                        <span>{tgAttestation1?.value ?? "?"}</span>
-                      )}{" "}
-                      and{" "}
-                      {telegramAttestation2Url ? (
-                        <a href={telegramAttestation2Url} target="_blank" rel="noopener" className="text-link">
-                          {tgAttestation2?.value ?? "?"}
-                        </a>
-                      ) : (
-                        <span>{tgAttestation2?.value ?? "?"}</span>
-                      )}
+                      <HoverCard>
+                        {tgAttestation1?.displayName ? <HoverCardContent align="center" className="text-white" side="top">
+                          <div>Username: {tgAttestation1.value}</div>
+                        </HoverCardContent> : null}
+                        <HoverCardTrigger>
+                          {telegramAttestation1Url ? (
+                            <a href={telegramAttestation1Url} target="_blank" rel="noopener" className="text-link">
+                              {tgAttestation1?.value ?? "?"}
+                            </a>
+                          ) : (
+                            <span>{tgAttestation1?.value ?? "?"}</span>
+                          )}
+                        </HoverCardTrigger>
+                      </HoverCard>
+                      {" "}and{" "}
+                      <HoverCard>
+                        {tgAttestation2?.displayName ? <HoverCardContent align="center" className="text-white" side="top">
+                          <div>Username: {tgAttestation2.value}</div>
+                        </HoverCardContent> : null}
+                        <HoverCardTrigger>
+                          {telegramAttestation2Url ? (
+                            <a href={telegramAttestation2Url} target="_blank" rel="noopener" className="text-link">
+                              {tgAttestation2?.value ?? "?"}
+                            </a>
+                          ) : (
+                            <span>{tgAttestation2?.value ?? "?"}</span>
+                          )}
+                        </HoverCardTrigger>
+                      </HoverCard>
                     </span>
                   </InfoPanel.Item>
                 </InfoPanel>
@@ -261,31 +291,7 @@ const ClaimRedirectPage = () => {
                   </InfoPanel.Item>
 
                   <InfoPanel.Item label="Contacts" loading={loading || !plot1AttestationLoaded}>
-                    {attestations1.length ? (
-                      <div className="flex gap-4">
-                        {attestations1.map((a) => {
-                          const url = getContactUrlByUsername(a.value, a.name, a.userId);
-
-                          return (
-                            <div
-                              className="flex items-center justify-between gap-1"
-                              key={a.name + "-" + a.value + "-" + plot1.owner}
-                            >
-                              <SocialIcon type={a.name} />{" "}
-                              {url ? (
-                                <a href={url} target="_blank" rel="noopener" className="text-link">
-                                  {a.value}
-                                </a>
-                              ) : (
-                                <div>{a.value}</div>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ) : (
-                      <span>No attested contacts</span>
-                    )}
+                    <ContactField attestations={attestations1} />
                   </InfoPanel.Item>
                 </InfoPanel>
               </CardContent>
@@ -312,31 +318,7 @@ const ClaimRedirectPage = () => {
                   </InfoPanel.Item>
 
                   <InfoPanel.Item label="Contacts" loading={loading || !plot2AttestationLoaded}>
-                    {attestations2.length ? (
-                      <div className="flex gap-4">
-                        {attestations2.map((a) => {
-                          const url = getContactUrlByUsername(a.value, a.name, a.userId);
-
-                          return (
-                            <div
-                              className="flex items-center justify-between gap-1"
-                              key={a.name + "-" + a.value + "-" + plot2.owner}
-                            >
-                              <SocialIcon type={a.name} />{" "}
-                              {url ? (
-                                <a href={url} target="_blank" rel="noopener" className="text-link">
-                                  {a.value}
-                                </a>
-                              ) : (
-                                <div>{a.value}</div>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ) : (
-                      <span>No attested contacts</span>
-                    )}
+                    <ContactField attestations={attestations2} />
                   </InfoPanel.Item>
                 </InfoPanel>
               </CardContent>
