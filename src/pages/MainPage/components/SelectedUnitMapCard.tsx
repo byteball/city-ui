@@ -10,11 +10,11 @@ import { RentPlotDialog } from "@/components/dialogs/RentPlotDialog";
 import { SellPlotDialog } from "@/components/dialogs/SellPlotDialog";
 import { SettingsDialog } from "@/components/dialogs/SettingsDialog";
 import { ShortCodeSellDialog } from "@/components/dialogs/ShortCodeSellDialog";
+import { ContactField } from "@/components/ui/_contact-field";
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { QRButton } from "@/components/ui/_qr-button";
 import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -27,9 +27,7 @@ import { ICity } from "@/global";
 import { useAttestations } from "@/hooks/useAttestations";
 import { asNonNegativeNumber, generateLink, toLocalString } from "@/lib";
 import { getAddressFromNearestRoad } from "@/lib/getAddressCoordinate";
-import { getContactUrlByUsername } from "@/lib/getContactUrlByUsername";
 import { getMatches } from "@/lib/getMatches";
-import { SocialIcon } from "./SocialIcon";
 
 import { EventBus } from "@/engine/EventBus";
 
@@ -289,38 +287,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
 
               {owner || loading ? (
                 <InfoPanel.Item label="Contacts" loading={loading || !owner || ownerUsernameIsLoading || !loaded}>
-                  {attestations.length ? (
-                    <div className="flex gap-4">
-                      {attestations.map((a) => {
-                        const url = getContactUrlByUsername(a.value, a.name, a.userId);
-
-                        return (
-                          <div
-                            className="flex items-center justify-between gap-1"
-                            key={a.name + "-" + a.value + "-" + owner}
-                          >
-                            <SocialIcon type={a.name} />{" "}
-                            <HoverCard>
-                              {a.displayName ? <HoverCardContent align="center" className="text-white" side="top">
-                                <div>Username: {a.value}</div>
-                              </HoverCardContent> : null}
-                              <HoverCardTrigger>
-                                {url ? (
-                                  <a href={url} target="_blank" rel="noopener" className="text-link">
-                                    {a.displayName ?? a.value}
-                                  </a>
-                                ) : (
-                                  <div>{a.displayName ?? a.value}</div>
-                                )}
-                              </HoverCardTrigger>
-                            </HoverCard>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <span>No attested contacts</span>
-                  )}
+                  <ContactField attestations={attestations} />
                 </InfoPanel.Item>
               ) : null}
 

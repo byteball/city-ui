@@ -5,16 +5,14 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import appConfig from "@/appConfig";
 import { EditUserInfoDialog } from "@/components/dialogs/EditUserInfoDialog";
 import { SetUserMainPlotDialog } from "@/components/dialogs/SetUserMainPlotDialog";
+import { ContactField } from "@/components/ui/_contact-field";
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { Button } from "@/components/ui/button";
 import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { IMapUnitInfo } from "@/global";
 import { useAttestations } from "@/hooks/useAttestations";
 import { getExplorerUrl } from "@/lib";
-import { getContactUrlByUsername } from "@/lib/getContactUrlByUsername";
 import { getReferralUrl } from "@/lib/getReferralUrl";
-import { SocialIcon } from "@/pages/MainPage/components/SocialIcon";
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 import cn from "classnames";
@@ -109,53 +107,11 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
           tooltipText="Use attestation bots to link your telegram and discord accounts to your Obyte address and receive notifications when you get a neighbor."
           loading={!loaded}
         >
-          {attestations.length || walletAddress === address ? (
-            <div className="flex gap-4">
-              {attestations.map((a) => {
-                const url = getContactUrlByUsername(a.value, a.name, a.userId);
-
-                return (
-                  <div className="flex items-center justify-between gap-1" key={a.name + "-" + a.value + "-" + address}>
-                    <SocialIcon type={a.name} />{" "}
-                    <HoverCard>
-                      {a.displayName ? <HoverCardContent align="center" className="text-white" side="top">
-                        <div>Username: {a.value}</div>
-                      </HoverCardContent> : null}
-                      <HoverCardTrigger>
-                        {url ? (
-                          <a href={url} target="_blank" rel="noopener" className="text-link">
-                            {a.displayName ?? a.value}
-                          </a>
-                        ) : (
-                          <div>{a.displayName ?? a.value}</div>
-                        )}
-                      </HoverCardTrigger>
-                    </HoverCard>
-                  </div>
-                );
-              })}
-
-              {!discordAttestation && walletAddress === address ? (
-                <div className="flex items-center justify-between gap-1">
-                  <SocialIcon type="discord" />{" "}
-                  <a href={appConfig.DISCORD_BOT_URL} className="text-link">
-                    Set up
-                  </a>
-                </div>
-              ) : null}
-
-              {!tgAttestation && walletAddress === address ? (
-                <div className="flex items-center justify-between gap-1">
-                  <SocialIcon type="telegram" />{" "}
-                  <a href={appConfig.TELEGRAM_BOT_URL} className="text-link">
-                    Set up
-                  </a>
-                </div>
-              ) : null}
-            </div>
-          ) : (
-            <span>No attested contacts</span>
-          )}
+          <ContactField
+            attestations={attestations}
+            showDiscordLink={walletAddress === address && !discordAttestation}
+            showTgLink={walletAddress === address && !tgAttestation}
+          />
         </InfoPanel.Item>
 
         <InfoPanel.Item label="Main plot">
