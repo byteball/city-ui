@@ -308,7 +308,7 @@ export default () => {
                 can change their code. Even the Obyte team, which created them. Their code is{" "}
                 <a href="https://github.com/byteball/city-aa" target="_blank" rel="noopener">
                   available on github
-                </a>{" "}
+                </a>
                 , so anyone can see what rules the agents actually follow and compare with what we describe here.
               </p>
             </FaqContent>
