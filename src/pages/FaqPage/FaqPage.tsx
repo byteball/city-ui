@@ -26,10 +26,11 @@ export default () => {
     }
   }, [location.hash]);
 
-  const { symbol } = useSettingsStore((state) => state);
+  const { symbol, decimals } = useSettingsStore((state) => state);
   const params = useAaParams();
-  const { matching_probability, referral_boost, followup_reward_share, p2p_sale_fee, shortcode_sale_fee } = params;
+  const { matching_probability, referral_boost, followup_reward_share, p2p_sale_fee, shortcode_sale_fee, plot_price } = params;
   const { fee } = getPlotPrice(params);
+  const plotPriceView = toLocalString(plot_price / 10 ** decimals!);
 
   return (
     <PageLayout
@@ -68,7 +69,7 @@ export default () => {
             <FaqTitle scrollId="what-am-i-supposed-to-do-here">What am I supposed to do here?</FaqTitle>
             <FaqContent scrollId="what-am-i-supposed-to-do-here">
               <p>
-                First, you buy a plot of land for 1000 {` ${symbol} `} plus a fee (see below). Initially, it is an empty
+                First, you buy a plot of land for {plotPriceView} {` ${symbol} `} plus a fee (see below). Initially, it is an empty
                 plot without a house.{" "}
               </p>
               <p>In a few minutes after you buy a new plot, it gets assigned random coordinates in the City.</p>
@@ -78,25 +79,25 @@ export default () => {
               </p>
               <ul>
                 <li>houses on your and your neighbor’s plots, turning your unbuilt plots into built ones;</li>
-                <li>two new empty plots for you and two new empty plots for your neighbor at new random locations. Each new plot has 1000 {` ${symbol} `} on it.</li>
+                <li>two new empty plots for you and two new empty plots for your neighbor at new random locations. Each new plot has {plotPriceView} {` ${symbol} `} on it.</li>
               </ul>
 
               <p>Those new plots can happen to be neighbors of someone else and trigger another round of rewards.</p>
               <p>
-                For every unbuilt plot you own, you can leave it at any time and get 1000 {` ${symbol} `} (or whatever
+                For every unbuilt plot you own, you can leave it at any time and get {plotPriceView} {` ${symbol} `} (or whatever
                 the plot price was) back. This applies to both the plots you bought and those you received as rewards.
               </p>
               <p>
                 If your newly bought plot immediately becomes a neighbor of another plot, you make a profit thanks to
                 the reward plots. Otherwise, your plot remains in the City and can become a neighbor with some new plot
                 later, triggering the same rewards for you and your new neighbor. If you don’t want to wait, you can
-                leave the plot and take your 1000 {` ${symbol} `} back, but you’ll lose the fee paid when buying the
+                leave the plot and take your {plotPriceView} {` ${symbol} `} back, but you’ll lose the fee paid when buying the
                 plot. The fee is burned and reduces the total supply of {` ${symbol}`}.
               </p>
               <p>While your plot is still unbuilt, you can also sell or transfer it to anyone.</p>
               <p>
                 Once a house is built on your plot, there are no {` ${symbol} `} tokens associated with it anymore. You
-                get two new plots instead, each valued at 1000 {` ${symbol}`}. The house has no monetary value, cannot
+                get two new plots instead, each valued at {plotPriceView} {` ${symbol}`}. The house has no monetary value, cannot
                 be sold or transferred, and this place in the City is forever yours.
               </p>
               <p>
@@ -307,7 +308,7 @@ export default () => {
                 can change their code. Even the Obyte team, which created them. Their code is{" "}
                 <a href="https://github.com/byteball/city-aa" target="_blank" rel="noopener">
                   available on github
-                </a>{" "}
+                </a>
                 , so anyone can see what rules the agents actually follow and compare with what we describe here.
               </p>
             </FaqContent>
