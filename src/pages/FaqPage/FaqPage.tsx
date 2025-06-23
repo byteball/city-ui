@@ -78,7 +78,7 @@ export default () => {
               </p>
               <ul>
                 <li>houses on your and your neighbor’s plots, turning your unbuilt plots into built ones;</li>
-                <li>two new empty plots for you and two new empty plots for your neighbor at new random locations.</li>
+                <li>two new empty plots for you and two new empty plots for your neighbor at new random locations. Each plot has 1000 {` ${symbol} `} on it.</li>
               </ul>
 
               <p>Those new plots can happen to be neighbors of someone else and trigger another round of rewards.</p>
@@ -91,12 +91,12 @@ export default () => {
                 the reward plots. Otherwise, your plot remains in the City and can become a neighbor with some new plot
                 later, triggering the same rewards for you and your new neighbor. If you don’t want to wait, you can
                 leave the plot and take your 1000 {` ${symbol} `} back, but you’ll lose the fee paid when buying the
-                plot. The fee is burned and reduces the total supply of {` ${symbol} `}.
+                plot. The fee is burned and reduces the total supply of {` ${symbol}`}.
               </p>
               <p>While your plot is still unbuilt, you can also sell or transfer it to anyone.</p>
               <p>
                 Once a house is built on your plot, there are no {` ${symbol} `} tokens associated with it anymore. You
-                get two new plots instead, each valued at 1000 {` ${symbol} `}. The house has no monetary value, cannot
+                get two new plots instead, each valued at 1000 {` ${symbol}`}. The house has no monetary value, cannot
                 be sold or transferred, and this place in the City is forever yours.
               </p>
               <p>
@@ -332,7 +332,7 @@ export default () => {
                   Rent additional land around your plot. This temporarily, for 1 year, extends the matching area around
                   your plot and increases the probability that a new plot gets into this area and becomes your neighbor.
                   So, you are casting a wider net to catch incoming new plots. The rental fee that you pay is burned and
-                  decreases the total supply of {` ${symbol} `}.
+                  decreases the total supply of {` ${symbol}`}.
                 </li>
                 <li>
                   Use someone’s referral link to buy plots. This increases the probability of finding a neighbor by{" "}
@@ -515,7 +515,7 @@ export default () => {
                   <li>Follow-up rewards.</li>
                   <li>
                     {` ${symbol} `} bought during the initial sale period at the fixed rate 1 GBYTE = 1000{" "}
-                    {` ${symbol} `}.
+                    {` ${symbol}`}.
                   </li>
                 </ol>
               </p>
@@ -559,21 +559,21 @@ export default () => {
             <FaqContent scrollId="what-is-the-initial-sale-period">
               <p>
                 It’s an initial period when {` ${symbol} `} tokens can be bought at a fixed rate 1 GBYTE = 1000{" "}
-                {` ${symbol} `}. During this period, {` ${symbol} `} tokens are minted. Thereafter, they can only be
+                {` ${symbol}`}. During this period, {` ${symbol} `} tokens are minted. Thereafter, they can only be
                 bought from other users or earned as rewards.
               </p>
               <p>
                 To buy {` ${symbol} `} tokens during the initial sale period one needs to buy a plot. Plots are paid in
                 GBYTE instead of {` ${symbol} `} during this period, and the price in GBYTE is determined using the
-                fixed exchange rate 1 GBYTE = 1000 {` ${symbol} `}. When paying for a plot, you add 10% of the plot
+                fixed exchange rate 1 GBYTE = 1000 {` ${symbol}`}. When paying for a plot, you add 10% of the plot
                 price (in GBYTE) and receive {` ${symbol} `}
                 tokens in exchange, along with the plot. So, you’ll need to buy $100 worth of plots in order to buy $10
-                worth of {` ${symbol} `}.
+                worth of {` ${symbol}`}.
               </p>
 
               <p>
                 If you leave this plot (before or after the initial sale ends), you get the plot price in{" "}
-                {` ${symbol} `}.
+                {` ${symbol}`}.
               </p>
             </FaqContent>
           </FaqItem>
