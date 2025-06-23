@@ -255,10 +255,10 @@ const ClaimRedirectPage = () => {
                         <HoverCardTrigger>
                           {telegramAttestation2Url ? (
                             <a href={telegramAttestation2Url} target="_blank" rel="noopener" className="text-link">
-                              {tgAttestation2?.value ?? "?"}
+                              {tgAttestation2?.displayName ?? tgAttestation2?.value ?? "?"}
                             </a>
                           ) : (
-                            <span>{tgAttestation2?.value ?? "?"}</span>
+                            <span>{tgAttestation2?.displayName ?? tgAttestation2?.value ?? "?"}</span>
                           )}
                         </HoverCardTrigger>
                       </HoverCard>
