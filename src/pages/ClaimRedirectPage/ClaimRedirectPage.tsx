@@ -206,10 +206,10 @@ const ClaimRedirectPage = () => {
                         <HoverCardTrigger>
                           {discordAttestation1Url ? (
                             <a href={discordAttestation1Url} target="_blank" rel="noopener" className="text-link">
-                              {discordAttestation1?.value ?? "?"}
+                              {discordAttestation1?.displayName ?? discordAttestation1?.value ?? "?"}
                             </a>
                           ) : (
-                            <span>{discordAttestation1?.value ?? "?"}</span>
+                            <span>{discordAttestation1?.displayName ?? discordAttestation1?.value ?? "?"}</span>
                           )}
                         </HoverCardTrigger>
                       </HoverCard>
@@ -221,10 +221,10 @@ const ClaimRedirectPage = () => {
                         <HoverCardTrigger>
                           {discordAttestation2Url ? (
                             <a href={discordAttestation2Url} target="_blank" rel="noopener" className="text-link">
-                              {discordAttestation2?.value ?? "?"}
+                              {discordAttestation2?.displayName ?? discordAttestation2?.value ?? "?"}
                             </a>
                           ) : (
-                            <span>{discordAttestation2?.value ?? "?"}</span>
+                            <span>{discordAttestation2?.displayName ?? discordAttestation2?.value ?? "?"}</span>
                           )}
                         </HoverCardTrigger>
                       </HoverCard>
@@ -240,10 +240,10 @@ const ClaimRedirectPage = () => {
                         <HoverCardTrigger>
                           {telegramAttestation1Url ? (
                             <a href={telegramAttestation1Url} target="_blank" rel="noopener" className="text-link">
-                              {tgAttestation1?.value ?? "?"}
+                              {tgAttestation1?.displayName ?? tgAttestation1?.value ?? "?"}
                             </a>
                           ) : (
-                            <span>{tgAttestation1?.value ?? "?"}</span>
+                            <span>{tgAttestation1?.displayName ?? tgAttestation1?.value ?? "?"}</span>
                           )}
                         </HoverCardTrigger>
                       </HoverCard>
@@ -255,10 +255,10 @@ const ClaimRedirectPage = () => {
                         <HoverCardTrigger>
                           {telegramAttestation2Url ? (
                             <a href={telegramAttestation2Url} target="_blank" rel="noopener" className="text-link">
-                              {tgAttestation2?.value ?? "?"}
+                              {tgAttestation2?.displayName ?? tgAttestation2?.value ?? "?"}
                             </a>
                           ) : (
-                            <span>{tgAttestation2?.value ?? "?"}</span>
+                            <span>{tgAttestation2?.displayName ?? tgAttestation2?.value ?? "?"}</span>
                           )}
                         </HoverCardTrigger>
                       </HoverCard>
