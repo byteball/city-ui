@@ -60,6 +60,7 @@ export default () => {
                   tokens (worth two plots) in exchange, or wait for a new neighbor to appear.
                 </li>
               </ul>
+              <p>To claim these rewards, the owners need to connect on telegram or discord, thus establishing a closer connection with one another.</p>
             </FaqContent>
           </FaqItem>
 
