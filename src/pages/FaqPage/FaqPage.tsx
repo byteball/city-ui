@@ -78,7 +78,7 @@ export default () => {
               </p>
               <ul>
                 <li>houses on your and your neighbor’s plots, turning your unbuilt plots into built ones;</li>
-                <li>two new empty plots for you and two new empty plots for your neighbor at new random locations. Each plot has 1000 {` ${symbol} `} on it.</li>
+                <li>two new empty plots for you and two new empty plots for your neighbor at new random locations. Each new plot has 1000 {` ${symbol} `} on it.</li>
               </ul>
 
               <p>Those new plots can happen to be neighbors of someone else and trigger another round of rewards.</p>
