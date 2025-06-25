@@ -35,6 +35,17 @@ export class Plot {
       this.plotImage = this.scene.add.image(x, y, "plus");
       this.plotImage.setDisplaySize(PLUS_SIZE, PLUS_SIZE);
       this.plotImage.setDepth(20);
+      // Apply appropriate pipeline: use PlusPipeline for "plus" view
+      const renderer = this.scene.game.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
+      if (renderer.pipelines) {
+        if (renderer.pipelines.get('PlusPipeline')) {
+          this.plotImage.setPipeline('PlusPipeline');
+        } else if (this.isGolden && renderer.pipelines.get('GoldenPlotPipeline')) {
+          this.plotImage.setPipeline('GoldenPlotPipeline');
+        } else if (renderer.pipelines.get('PlotPipeline')) {
+          this.plotImage.setPipeline('PlotPipeline');
+        }
+      }
     } else {
       if (this.isGolden) {
         this.plotImage = this.scene.add.image(x, y, "golden-plot");
@@ -45,7 +56,15 @@ export class Plot {
       this.plotImage.setDepth(this.plotImage.depth + (this.view === "plot" ? 0 : 20));
       this.plotImage.setDisplaySize(this.plotSize, this.plotSize);
       this.plotImage.setInteractive();
-      this.plotImage.setDepth(20);
+      // Apply appropriate pipeline
+      const renderer = this.scene.game.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
+      if (renderer.pipelines) {
+        if (this.isGolden && renderer.pipelines.get('GoldenPlotPipeline')) {
+          this.plotImage.setPipeline('GoldenPlotPipeline');
+        } else if (renderer.pipelines.get('PlotPipeline')) {
+          this.plotImage.setPipeline('PlotPipeline');
+        }
+      }
     }
 
     // Use DOM-based block tooltip
@@ -78,13 +97,16 @@ export class Plot {
       });
       document.body.appendChild(div);
       this.tooltipDom = div;
-      div.style.left = pointer.event.clientX + "px";
-      div.style.top = pointer.event.clientY + "px";
+      // position tooltip using MouseEvent
+      const evt = pointer.event as MouseEvent;
+      div.style.left = evt.clientX + "px";
+      div.style.top = evt.clientY + "px";
     });
     this.plotImage.on("pointermove", (pointer: Phaser.Input.Pointer) => {
       if (this.tooltipDom) {
-        this.tooltipDom.style.left = pointer.event.clientX + "px";
-        this.tooltipDom.style.top = pointer.event.clientY + "px";
+        const evtMove = pointer.event as MouseEvent;
+        this.tooltipDom.style.left = evtMove.clientX + "px";
+        this.tooltipDom.style.top = evtMove.clientY + "px";
       }
     });
     this.plotImage.on("pointerout", () => {

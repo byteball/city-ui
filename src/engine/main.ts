@@ -8,7 +8,7 @@ import appConfig from "@/appConfig";
 //  Find out more information about the Map Engine Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config: Phaser.Types.Core.GameConfig = {
-  type: Phaser.AUTO,
+  type: Phaser.WEBGL,
   width: 1800,
   height: 1800,
   banner: !!appConfig.TESTNET,

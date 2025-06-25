@@ -39,6 +39,15 @@ export class House {
     }
 
     this.houseImage.setInteractive();
+    // Apply appropriate pipeline: mayor's house or default house pipeline
+    const renderer = this.scene.game.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
+    if (renderer.pipelines) {
+      if (this.isMayorHouse && renderer.pipelines.get('MayorHousePipeline')) {
+        this.houseImage.setPipeline('MayorHousePipeline');
+      } else if (renderer.pipelines.get('HousePipeline')) {
+        this.houseImage.setPipeline('HousePipeline');
+      }
+    }
 
     this.houseImage.on("pointerover", (pointer: Phaser.Input.Pointer) => {
       if ((window as any).isDialogOpen) return;
@@ -71,14 +80,16 @@ export class House {
 
       document.body.appendChild(div);
       this.tooltipDom = div;
-      div.style.left = pointer.event.clientX + "px";
-      div.style.top = pointer.event.clientY + "px";
+      const evt = pointer.event as MouseEvent;
+      div.style.left = evt.clientX + "px";
+      div.style.top = evt.clientY + "px";
     });
 
     this.houseImage.on("pointermove", (pointer: Phaser.Input.Pointer) => {
       if (this.tooltipDom) {
-        this.tooltipDom.style.left = pointer.event.clientX + "px";
-        this.tooltipDom.style.top = pointer.event.clientY + "px";
+        const evtMove = pointer.event as MouseEvent;
+        this.tooltipDom.style.left = evtMove.clientX + "px";
+        this.tooltipDom.style.top = evtMove.clientY + "px";
       }
     });
 
