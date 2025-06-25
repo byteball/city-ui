@@ -12,6 +12,7 @@ import { mapUnitsByUniqDataSelector, mapUnitsSelector } from "@/store/selectors/
 import { useSettingsStore } from "@/store/settings-store";
 
 import { generateLink, toLocalString } from "@/lib";
+import { trackEvent } from "@/services/analytics";
 
 import { IRefData } from "@/global";
 
@@ -94,6 +95,11 @@ export const PrelaunchForm: FC = memo(() => {
     is_single: true,
   });
 
+  const trackBuying = () => {
+    console.log("Buying plot");
+    trackEvent("buy_plot", { walletAddress });
+  }
+
   return (
     <div className="text-sm">
       <InfoPanel compact className="mb-4">
@@ -155,7 +161,7 @@ export const PrelaunchForm: FC = memo(() => {
         </div>
       ) : null}
 
-      <QRButton href={buyUrl} disabled={isLoading} variant="secondary">
+      <QRButton href={buyUrl} disabled={isLoading} onClick={trackBuying} variant="secondary">
         Buy
       </QRButton>
     </div>

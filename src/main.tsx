@@ -9,11 +9,14 @@ import { AppRouter } from "./AppRouter";
 
 import checkAppConfig from "./lib/checkAppConfig";
 
+import { initGA } from "./services/analytics";
 import "./services/obyteWsClient"; // obyte client
 
 import "./globals.css";
 
 checkAppConfig();
+
+initGA();
 
 // the precision is slightly less than that of IEEE754 double
 // the range is slightly wider (9e308 is still ok here but Infinity in double) to make sure numeric data feeds can be safely read.  When written, overflowing datafeeds will be saved as strings only
