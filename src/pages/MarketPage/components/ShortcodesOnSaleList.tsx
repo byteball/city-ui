@@ -14,7 +14,7 @@ import { generateLink, toLocalString } from "@/lib";
 
 import appConfig from "@/appConfig";
 
-interface IShortcodesOnSaleListProps {}
+interface IShortcodesOnSaleListProps { }
 
 export const ShortcodesOnSaleList: FC<IShortcodesOnSaleListProps> = () => {
   const walletAddress = useSettingsStore((state) => state.walletAddress);
@@ -46,7 +46,7 @@ export const ShortcodesOnSaleList: FC<IShortcodesOnSaleListProps> = () => {
         <TabsContent value="all">
           <div>
             {sellOrders.map(({ name, price, houseNum, owner }) => (
-              <div key={name} className="flex items-center justify-between p-4 border rounded-md">
+              <div key={name} className="flex items-center justify-between p-4 mb-2 border rounded-md">
                 <div className="font-bold">{name}</div>
                 <BuyShortcodeDialog sellerHouseNum={houseNum} shortcode={name} price={price}>
                   <Button disabled={!walletAddress || owner === walletAddress}>
@@ -62,7 +62,7 @@ export const ShortcodesOnSaleList: FC<IShortcodesOnSaleListProps> = () => {
           {mySellOrders.length ? (
             <div>
               {mySellOrders.map(({ name, houseNum }) => (
-                <div key={name + houseNum} className="flex items-center justify-between p-4 border rounded-md">
+                <div key={name + houseNum} className="flex items-center justify-between p-4 mb-2 border rounded-md">
                   <div className="font-bold">{name}</div>
                   <QRButton
                     href={generateLink({

@@ -6,10 +6,26 @@ import { mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import CameraController from "../controllers/CameraController";
 import { EventBus } from "../EventBus";
 import { Map as GameMap } from "../objects/Map";
+import { GoldenPlotPipeline } from "../pipelines/GoldenPlotPipeline";
+import { HorizontalRoadPipeline } from "../pipelines/HorizontalRoadPipeline";
+import { HousePipeline } from "../pipelines/HousePipeline";
+import { MayorHousePipeline } from "../pipelines/MayorHousePipeline";
+import { PlotPipeline } from "../pipelines/PlotPipeline";
+import { PlusPipeline } from "../pipelines/PlusPipeline";
+import { RoadPipeline } from "../pipelines/RoadPipeline";
+import { VerticalRoadPipeline } from "../pipelines/VerticalRoadPipeline";
 import { getRoads } from "../utils/getRoads";
 
 export default class MapScene extends Phaser.Scene {
   private map!: GameMap;
+  private roadPipeline!: RoadPipeline; // kept for backward compatibility (unused)
+  private plusPipeline!: PlusPipeline;
+  private verticalRoadPipeline!: VerticalRoadPipeline;
+  private horizontalRoadPipeline!: HorizontalRoadPipeline;
+  private plotPipeline!: PlotPipeline;
+  private housePipeline!: HousePipeline;
+  private goldenPlotPipeline!: GoldenPlotPipeline;
+  private mayorHousePipeline!: MayorHousePipeline;
   private options: IEngineOptions = { displayMode: "main" };
 
   constructor() {
@@ -32,6 +48,28 @@ export default class MapScene extends Phaser.Scene {
   }
 
   create() {
+    // register custom pipelines
+    const renderer = this.game.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
+    if (renderer.pipelines) {
+      this.plotPipeline = new PlotPipeline(this.game);
+      this.housePipeline = new HousePipeline(this.game);
+      this.goldenPlotPipeline = new GoldenPlotPipeline(this.game);
+      this.mayorHousePipeline = new MayorHousePipeline(this.game);
+      this.roadPipeline = new RoadPipeline(this.game); // unused generic pipeline
+      this.verticalRoadPipeline = new VerticalRoadPipeline(this.game);
+      this.horizontalRoadPipeline = new HorizontalRoadPipeline(this.game);
+      this.plusPipeline = new PlusPipeline(this.game);
+
+      renderer.pipelines.add('PlotPipeline', this.plotPipeline);
+      renderer.pipelines.add('HousePipeline', this.housePipeline);
+      renderer.pipelines.add('GoldenPlotPipeline', this.goldenPlotPipeline);
+      renderer.pipelines.add('MayorHousePipeline', this.mayorHousePipeline);
+      renderer.pipelines.add('RoadPipeline', this.roadPipeline);
+      renderer.pipelines.add('VerticalRoadPipeline', this.verticalRoadPipeline);
+      renderer.pipelines.add('HorizontalRoadPipeline', this.horizontalRoadPipeline);
+      renderer.pipelines.add('PlusPipeline', this.plusPipeline);
+    }
+
     const state = useAaStore.getState();
     const mapUnits = mapUnitsSelector(state);
     const cityStats = state.state.city_city as ICity;
