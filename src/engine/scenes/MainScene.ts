@@ -16,6 +16,8 @@ import { RoadPipeline } from "../pipelines/RoadPipeline";
 import { VerticalRoadPipeline } from "../pipelines/VerticalRoadPipeline";
 import { getRoads } from "../utils/getRoads";
 
+const ASSET_VERSION = "v1"; // Update this version when assets change
+
 export default class MapScene extends Phaser.Scene {
   private map!: GameMap;
   private roadPipeline!: RoadPipeline; // kept for backward compatibility (unused)
@@ -38,13 +40,13 @@ export default class MapScene extends Phaser.Scene {
 
   preload() {
     // Use absolute paths to correctly load assets regardless of current URL path
-    this.load.svg("plot", "/assets/plot.svg", { width: 150, height: 150 });
-    this.load.svg("plus", "/assets/plus.svg", { width: 150, height: 150 });
-    this.load.svg("house", "/assets/house.svg", { width: 150, height: 150 });
-    this.load.svg("road-vertical", "/assets/road-vertical.svg", { width: 180, height: 180 });
-    this.load.svg("road-horizontal", "/assets/road-horizontal.svg", { width: 180, height: 180 });
-    this.load.svg("mayor-house", "/assets/mayor-house.svg", { width: 215, height: 260 });
-    this.load.svg("golden-plot", "/assets/golden-plot.svg", { width: 150, height: 150 });
+    this.load.svg("plot", "/assets/plot.svg" + `?${ASSET_VERSION}`, { width: 150, height: 150 });
+    this.load.svg("plus", "/assets/plus.svg" + `?${ASSET_VERSION}`, { width: 150, height: 150 });
+    this.load.svg("house", "/assets/house.svg" + `?${ASSET_VERSION}`, { width: 150, height: 150 });
+    this.load.svg("road-vertical", "/assets/road-vertical.svg" + `?${ASSET_VERSION}`, { width: 180, height: 180 });
+    this.load.svg("road-horizontal", "/assets/road-horizontal.svg" + `?${ASSET_VERSION}`, { width: 180, height: 180 });
+    this.load.svg("mayor-house", "/assets/mayor-house.svg" + `?${ASSET_VERSION}`, { width: 215, height: 260 });
+    this.load.svg("golden-plot", "/assets/golden-plot.svg" + `?${ASSET_VERSION}`, { width: 150, height: 150 });
   }
 
   create() {

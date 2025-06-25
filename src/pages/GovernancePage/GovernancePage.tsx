@@ -3,6 +3,7 @@ import { GovernanceProfile } from "./GovernanceProfile";
 
 import { GovernanceParamItem } from "@/components/ui/_governance-param-item";
 import { NonNegativeNumber, paramName } from "@/global";
+import { getParamStateVarKey } from "@/lib/getParamStateVarKey";
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { votesSelector } from "@/store/selectors/votesSelector";
 import { useSettingsStore } from "@/store/settings-store";
@@ -43,9 +44,9 @@ export default () => {
             <GovernanceParamItem
               name={name}
               key={name}
-              votes={votesByValue?.[name] ?? {}}
+              votes={votesByValue?.[getParamStateVarKey(name, "city")] ?? {}}
               currentValue={currentParamValue[name]}
-              leader={governanceState[`leader_${name}`] as string | undefined | NonNegativeNumber}
+              leader={governanceState[`leader_${getParamStateVarKey(name, "city")}`] as string | undefined | NonNegativeNumber}
             />
           ))}
         </div>
