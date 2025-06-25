@@ -36,18 +36,21 @@ interface IGovernanceParamItemProps {
 export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leader, currentValue, votes = {} }) => {
   const { decimals, symbol, challengingPeriod, walletAddress } = useSettingsStore((state) => state);
   const governanceAA = useAaStore((state) => state.state.constants?.governance_aa);
-  const { [`challenging_period_start_ts_${name}`]: challengingPeriodStartAt } = useAaStore(
+
+  const cityLabel = name === "mayor" ? "|city" : "";
+
+  const { [`challenging_period_start_ts_${name}${cityLabel}`]: challengingPeriodStartAt } = useAaStore(
     (state) => state.governanceState
   );
 
-  const { [`choice_${walletAddress}_${name}`]: userChoice = null } = useAaStore(
+  const { [`choice_${walletAddress}_${name}${cityLabel}`]: userChoice = null } = useAaStore(
     (state) => state.governanceState
   );
 
   const tokenInfo = { symbol: symbol!, decimals: decimals! };
   const commitUrl = generateLink({
     amount: 1e4,
-    data: { name, commit: 1 },
+    data: { name, commit: 1, city: 'city' },
     asset: "base",
     aa: governanceAA!,
     is_single: true,

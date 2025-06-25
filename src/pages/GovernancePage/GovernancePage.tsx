@@ -43,7 +43,7 @@ export default () => {
             <GovernanceParamItem
               name={name}
               key={name}
-              votes={votesByValue?.[name] ?? {}}
+              votes={votesByValue?.[name + (name === "mayor" ? '|city' : '')] ?? {}}
               currentValue={currentParamValue[name]}
               leader={governanceState[`leader_${name}`] as string | undefined | NonNegativeNumber}
             />
