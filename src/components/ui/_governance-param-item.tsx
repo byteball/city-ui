@@ -14,6 +14,7 @@ import { paramDescriptions } from "@/pages/GovernancePage/descriptions";
 import { defaultAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
+import { getParamStateVarKey } from "@/lib/getParamStateVarKey";
 import { SuggestAnotherValueDialog } from "../dialogs/suggestAnotherValueDialog";
 import { QRButton } from "./_qr-button";
 import { Button } from "./button";
@@ -37,13 +38,11 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
   const { decimals, symbol, challengingPeriod, walletAddress } = useSettingsStore((state) => state);
   const governanceAA = useAaStore((state) => state.state.constants?.governance_aa);
 
-  const cityLabel = name === "mayor" ? "|city" : "";
-
-  const { [`challenging_period_start_ts_${name}${cityLabel}`]: challengingPeriodStartAt } = useAaStore(
+  const { [`challenging_period_start_ts_${getParamStateVarKey(name, "city")}`]: challengingPeriodStartAt } = useAaStore(
     (state) => state.governanceState
   );
 
-  const { [`choice_${walletAddress}_${name}${cityLabel}`]: userChoice = null } = useAaStore(
+  const { [`choice_${walletAddress}_${getParamStateVarKey(name, "city")}`]: userChoice = null } = useAaStore(
     (state) => state.governanceState
   );
 
@@ -65,6 +64,7 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
 
   const commitDisabled = currentValue === leader || !commitAllowed;
 
+  console.log('name', name, challengingPeriodStartAt)
   return (
     <Card>
       <CardHeader>
