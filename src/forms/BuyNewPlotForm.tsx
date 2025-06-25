@@ -11,6 +11,7 @@ import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
 import { generateLink, getAddressFromNearestRoad, getExplorerUrl, toLocalString } from "@/lib";
+import { trackEvent } from "@/services/analytics";
 
 import { getRoads } from "@/engine/utils/getRoads";
 import { IRefData } from "@/global";
@@ -108,6 +109,10 @@ export const BuyNewPlotForm: FC = memo(() => {
     is_single: true,
   });
 
+  const trackBuying = () => {
+    trackEvent("buy_plot", { walletAddress });
+  }
+
   return (
     <div className="text-sm">
       <InfoPanel compact className="mb-4">
@@ -164,7 +169,7 @@ export const BuyNewPlotForm: FC = memo(() => {
         </div>
       ) : null}
 
-      <QRButton href={buyUrl} disabled={isLoading} variant="secondary">
+      <QRButton href={buyUrl} disabled={isLoading} onClick={trackBuying} variant="secondary">
         Buy
       </QRButton>
     </div>

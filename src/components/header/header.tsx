@@ -21,7 +21,6 @@ export const Header: FC<IHeaderProps> = () => {
   const walletAddress = useSettingsStore((state) => state.walletAddress);
 
   const resetSelectedUnit = (href: string) => {
-    console.log("href", href);
     if (href === "/") {
       useSettingsStore.getState().setSelectedMapUnit(null);
       EventBus.emit("reset-selection");
