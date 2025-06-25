@@ -63,8 +63,6 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
   const timeUntilCommit = !commitAllowed ? formatPeriod(challengingPeriodEndTs) : null;
 
   const commitDisabled = currentValue === leader || !commitAllowed;
-
-  console.log('name', name, challengingPeriodStartAt)
   return (
     <Card>
       <CardHeader>
