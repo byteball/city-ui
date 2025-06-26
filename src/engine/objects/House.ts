@@ -10,6 +10,7 @@ export class House {
   private disabled: boolean;
   private address: string;
   private isMayorHouse: boolean = false;
+  private defaultDepth = 35; // Default depth for houses
 
   private houseImage: Phaser.GameObjects.Image;
   private outline?: Phaser.GameObjects.Graphics;
@@ -30,7 +31,7 @@ export class House {
     this.isMayorHouse = amount === 0;
 
     this.houseImage = this.scene.add.image(x, y, this.isMayorHouse ? "mayor-house" : "house");
-    this.houseImage.setDepth(35);
+    this.houseImage.setDepth(this.defaultDepth);
 
     if (this.isMayorHouse) {
       this.houseImage.setDisplaySize(Math.min(this.plotSize, 400), Math.min(this.plotSize * 1.293, 400 * 1.293));
@@ -114,14 +115,14 @@ export class House {
     if (this.disabled) return;
 
     if (selected) {
-      this.houseImage.setTint(0xffff00);
+      this.houseImage.setTint(0x58a7ff);
 
       if (!this.outline) {
         this.outline = this.scene.add.graphics();
       }
 
       this.outline.clear();
-      this.outline.lineStyle(4, 0xffff00);
+      this.outline.lineStyle(20, 0x58a7ff);
       this.outline.strokeRect(
         this.houseImage.x - this.houseImage.displayWidth / 2,
         this.houseImage.y - this.houseImage.displayHeight / 2,
@@ -129,10 +130,11 @@ export class House {
         this.houseImage.displayHeight
       );
 
-      this.outline.setDepth(this.houseImage.depth + 1);
+      this.outline.setDepth(this.defaultDepth + 2);
+      this.houseImage.setDepth(this.defaultDepth + 1);
     } else {
       this.houseImage.clearTint();
-
+      this.houseImage.setDepth(this.defaultDepth);
       if (this.outline) {
         this.outline.clear();
       }

@@ -12,7 +12,7 @@ export class Plot {
   private address: string;
   private view?: string;
   private isGolden: boolean = false;
-
+  private defaultDepth = 20; // Default depth for plots (higher than houses)
   private plotImage: Phaser.GameObjects.Image;
   private outline?: Phaser.GameObjects.Graphics;
   private tooltipDom?: HTMLDivElement;
@@ -34,7 +34,8 @@ export class Plot {
     if (this.view === "plus") {
       this.plotImage = this.scene.add.image(x, y, "plus");
       this.plotImage.setDisplaySize(PLUS_SIZE, PLUS_SIZE);
-      this.plotImage.setDepth(20);
+      this.plotImage.setDepth(40);
+
       // Apply appropriate pipeline: use PlusPipeline for "plus" view
       const renderer = this.scene.game.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
       if (renderer.pipelines) {
@@ -53,7 +54,7 @@ export class Plot {
         this.plotImage = this.scene.add.image(x, y, this.view ?? "plot");
       }
 
-      this.plotImage.setDepth(this.plotImage.depth + (this.view === "plot" ? 0 : 20));
+      this.plotImage.setDepth(this.defaultDepth);
       this.plotImage.setDisplaySize(this.plotSize, this.plotSize);
       this.plotImage.setInteractive();
       // Apply appropriate pipeline
@@ -131,6 +132,7 @@ export class Plot {
         this.outline = this.scene.add.graphics();
       }
 
+      this.plotImage.setTint(0x58a7ff);
       this.outline.clear();
       this.outline.lineStyle(20, 0x60a5fa);
       this.outline.strokeRect(
@@ -140,9 +142,20 @@ export class Plot {
         this.plotImage.displayHeight
       );
 
-      this.outline.setDepth(this.plotImage.depth);
+      // Set extremely high depth values to ensure it's always on top
+      this.plotImage.setDepth(this.defaultDepth + 100);
+      this.outline.setDepth(this.defaultDepth + 101);
+
+      // Force move to top of display list with a small delay to ensure it works
+      setTimeout(() => {
+        this.scene.children.bringToTop(this.plotImage);
+        if (this.outline) {
+          this.scene.children.bringToTop(this.outline);
+        }
+      }, 0);
     } else {
       this.plotImage.clearTint();
+      this.plotImage.setDepth(this.defaultDepth);
 
       if (this.outline) {
         this.outline.clear();
