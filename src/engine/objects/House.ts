@@ -115,14 +115,14 @@ export class House {
     if (this.disabled) return;
 
     if (selected) {
-      this.houseImage.setTint(0xffff00);
+      this.houseImage.setTint(0x58a7ff);
 
       if (!this.outline) {
         this.outline = this.scene.add.graphics();
       }
 
       this.outline.clear();
-      this.outline.lineStyle(4, 0xffff00);
+      this.outline.lineStyle(10, 0x58a7ff);
       this.outline.strokeRect(
         this.houseImage.x - this.houseImage.displayWidth / 2,
         this.houseImage.y - this.houseImage.displayHeight / 2,

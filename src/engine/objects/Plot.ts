@@ -132,8 +132,9 @@ export class Plot {
         this.outline = this.scene.add.graphics();
       }
 
+      this.plotImage.setTint(0x58a7ff);
       this.outline.clear();
-      this.outline.lineStyle(20, 0x60a5fa);
+      this.outline.lineStyle(10, 0x60a5fa);
       this.outline.strokeRect(
         this.plotImage.x - this.plotImage.displayWidth / 2,
         this.plotImage.y - this.plotImage.displayHeight / 2,
