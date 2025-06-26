@@ -122,7 +122,7 @@ export class House {
       }
 
       this.outline.clear();
-      this.outline.lineStyle(10, 0x58a7ff);
+      this.outline.lineStyle(15, 0x58a7ff);
       this.outline.strokeRect(
         this.houseImage.x - this.houseImage.displayWidth / 2,
         this.houseImage.y - this.houseImage.displayHeight / 2,
