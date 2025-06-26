@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
 import { IMapUnitInfo } from "@/global";
 import { useAttestations } from "@/hooks/useAttestations";
-import { getExplorerUrl } from "@/lib";
+import { getExplorerUrl, toLocalString } from "@/lib";
 import { getReferralUrl } from "@/lib/getReferralUrl";
 import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
@@ -120,7 +120,7 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
 
         <InfoPanel.Item
           label="Referral link"
-          tooltipText="When other users use your referral link to buy a new plot, your main plot’s matching area expands by 10% of the total matching area of all plots. This increases the probability that the new user will become your neighbor."
+          tooltipText={`When other users use your referral link to buy a new plot, your main plot’s matching area expands by ${toLocalString(referral_boost * 100)}% of the total matching area of all plots. This increases the probability that the new user will become your neighbor.`}
         >
           {referralUrl ? (
             <CopyToClipboard text={referralUrl} onCopy={copy}>
