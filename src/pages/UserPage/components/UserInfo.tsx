@@ -43,7 +43,7 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
   const { data: attestations, loaded } = useAttestations(address);
   const parsedUserInfo = useMemo(() => getParsedUserInfo(userInfo), [userInfo]);
   const userMainPlotNum = useAaStore((state) => state.state[`user_main_plot_city_${address}`]) as number | undefined;
-  const { referral_boost } = useAaParams();
+  const { referral_boost, matching_probability } = useAaParams();
   const [copied, setCopied] = useState(false);
 
   const referralUrl = getReferralUrl(userMainPlotNum || null);
@@ -120,7 +120,7 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
 
         <InfoPanel.Item
           label="Referral link"
-          tooltipText={`When other users use your referral link to buy a new plot, your main plot’s matching area expands by ${toLocalString(referral_boost * 100)}% of the total matching area of all plots. This increases the probability that the new user will become your neighbor and you'll earn rewards.`}
+          tooltipText={`When other users use your referral link to buy a new plot, your main plot’s matching area expands by ${toLocalString(referral_boost * 100)}% of the total matching area of all plots. This increases the probability that the new user will become your neighbor and you'll earn rewards. The probability becomes ${toLocalString(matching_probability * referral_boost * 100)}%, so you need ${Math.round(1 / matching_probability / referral_boost)} referrals on average to get a neighbor.`}
         >
           {referralUrl ? (
             <CopyToClipboard text={referralUrl} onCopy={copy}>
