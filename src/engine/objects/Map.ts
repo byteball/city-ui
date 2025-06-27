@@ -221,6 +221,7 @@ export class Map {
         // Reset the selected plot if it was already selected
         if (this.selectedMapUnit) {
           this.selectedMapUnit.setSelected(false);
+          this.selectedMapUnit = null;
         }
 
         this.selectedMapUnit = unit;
