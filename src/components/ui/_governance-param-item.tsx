@@ -49,7 +49,7 @@ export const GovernanceParamItem: FC<IGovernanceParamItemProps> = ({ name, leade
   const tokenInfo = { symbol: symbol!, decimals: decimals! };
   const commitUrl = generateLink({
     amount: 1e4,
-    data: { name, commit: 1, city: 'city' },
+    data: { name, commit: 1, city: name === "mayor" ? "city" : undefined },
     asset: "base",
     aa: governanceAA!,
     is_single: true,
