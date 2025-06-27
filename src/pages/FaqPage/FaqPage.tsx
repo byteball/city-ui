@@ -286,7 +286,7 @@ export default () => {
                 total matching area of all plots (not {toLocalString((referral_boost * 100).toFixed(2))}% of your plot’s
                 area). This makes it slightly (by {toLocalString((referral_boost * 100).toFixed(2))}%) more likely that
                 the new user finds a neighbor, thus benefiting them too, and if they do find a neighbor, it is far more
-                likely that it will be you. This {toLocalString((referral_boost * 100).toFixed(2))}% variable is called
+                likely that it will be you. On average, you need {Math.round(1 / matching_probability / referral_boost)} referrals to get a neighbor and earn rewards. This {toLocalString((referral_boost * 100).toFixed(2))}% variable is called
                 referral boost and can be changed by <Link to="/governance">governance</Link>.
               </p>
               <p>You can put a link to one of your plots on your social profiles to drive referral traffic.</p>
