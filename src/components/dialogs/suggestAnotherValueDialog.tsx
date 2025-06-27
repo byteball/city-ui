@@ -108,7 +108,7 @@ export const SuggestAnotherValueDialog: FC<ISuggestAnotherValueDialogProps> = ({
 
   const url = generateLink({
     amount: 1e4,
-    data: { name, value: transformValue(inputValue), city: "city" },
+    data: { name, value: transformValue(inputValue), city: name === "mayor" ? "city" : undefined },
     aa: governanceAA!,
     from_address: walletAddress || undefined,
     is_single: true,
