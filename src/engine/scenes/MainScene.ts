@@ -83,7 +83,7 @@ export default class MapScene extends Phaser.Scene {
     this.map = new GameMap(this, roads, mapUnits);
 
     this.map.createMap(this.options);
-    this.setHousesOnTop();
+
     // Clear selection when reset-selection event is emitted from React
     EventBus.on("reset-selection", () => {
       this.map.updateMapUnitSelection();
