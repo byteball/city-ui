@@ -31,13 +31,13 @@ export const ContactField: FC<IContractFieldProps> = ({ attestations, unknownPlu
             {a.displayName ? <HoverCardContent align="center" className="text-white" side="top">
               <div>Username: {a.value}</div>
             </HoverCardContent> : null}
-            <HoverCardTrigger>
+            <HoverCardTrigger asChild>
               {url ? (
                 <a href={url} target="_blank" rel="noopener" className="text-link">
                   {a.displayName ?? a.value ?? unknownPlug}
                 </a>
               ) : (
-                <div>{a.displayName ?? a.value ?? unknownPlug}</div>
+                <span className="cursor-default">{a.displayName ?? a.value ?? unknownPlug}</span>
               )}
             </HoverCardTrigger>
           </HoverCard>

@@ -13,23 +13,6 @@ interface InfoPanelProps {
   compact?: boolean;
 }
 
-const InfoPanel: FC<InfoPanelProps> & { Item: typeof InfoPanelItem } = ({
-  children,
-  className = "",
-  labelAnimated = false,
-  compact = false
-}) => {
-  const enhancedChildren = Children.map(children, (child) => {
-    if (isValidElement<{ labelAnimated?: boolean }>(child)) {
-      return cloneElement(child, { labelAnimated });
-    }
-
-    return child;
-  });
-
-  return <div className={cn("grid", compact ? "gap-0" : "gap-1", className)}>{enhancedChildren}</div>;
-};
-
 interface InfoPanelItemProps {
   label?: string;
   children: ReactNode;
@@ -80,8 +63,31 @@ const InfoPanelItem: FC<InfoPanelItemProps> = ({
 };
 
 InfoPanelItem.displayName = "InfoPanelItem";
-InfoPanel.displayName = "InfoPanel";
 
+const InfoPanel: FC<InfoPanelProps> & { Item: typeof InfoPanelItem } = ({
+  children,
+  className = "",
+  labelAnimated = false,
+  compact = false
+}) => {
+  const enhancedChildren = Children.map(children, (child) => {
+    if (isValidElement<{ labelAnimated?: boolean }>(child)) {
+      // Only pass labelAnimated to InfoPanel.Item components
+      const isInfoPanelItem = (child.type as any)?.displayName === 'InfoPanelItem' ||
+        child.type === InfoPanelItem;
+
+      if (isInfoPanelItem) {
+        return cloneElement(child, { labelAnimated });
+      }
+    }
+
+    return child;
+  });
+
+  return <div className={cn("grid", compact ? "gap-0" : "gap-1", className)}>{enhancedChildren}</div>;
+};
+
+InfoPanel.displayName = "InfoPanel";
 InfoPanel.Item = InfoPanelItem;
 
 export { InfoPanel };

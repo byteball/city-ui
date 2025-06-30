@@ -25,6 +25,7 @@ export class Map {
   private totalSize: number;
   private selectedMapUnit: House | Plot | null = null;
   private MapUnits: (Plot | House)[] = [];
+  private Roads: Road[] = [];
   private engineOptions: IEngineOptions | null = null;
 
   constructor(scene: Phaser.Scene, roadsData: IRoad[], unitsData: IMapUnit[]) {
@@ -97,7 +98,8 @@ export class Map {
         y: asNonNegativeNumber(Decimal(roadData.y).mul(appConfig.MAP_SCALE).toNumber()),
       };
 
-      new Road(this.scene, scaledData, mapWidth, mapHeight);
+      const road = new Road(this.scene, scaledData, mapWidth, mapHeight);
+      this.Roads.push(road);
     });
   }
 
@@ -299,27 +301,37 @@ export class Map {
   }
 
   public destroy() {
+    console.log("log: destroy whole map", new Date().toISOString());
+
     // Cleanup all map units
     this.MapUnits.forEach(unit => unit.destroy());
     this.MapUnits = [];
+
+    // Cleanup all roads
+    this.Roads.forEach(road => road.destroy());
+    this.Roads = [];
 
     // Remove input listeners
     this.scene.input.off("pointerdown");
   }
 
   updateRoads(roads: IRoad[]) {
-    // Force scene refresh to cleanup existing roads
-    this.scene.events.emit(Phaser.Scenes.Events.SHUTDOWN);
+    console.log("log: update roads", new Date().toISOString(), roads.length);
+    // Clean up existing roads
+    this.Roads.forEach(road => road.destroy());
+    this.Roads = [];
 
     this.roadsData = roads;
 
     if (this.engineOptions) {
-      // Recalculate map size and recreate everything
-      this.createMap(this.engineOptions);
+      // Recalculate map size and recreate roads
+      const { width: MAP_WIDTH, height: MAP_HEIGHT } = this.calculateMapDimensions();
+      this.createRoads(MAP_WIDTH, MAP_HEIGHT);
     }
   }
 
   updateMapUnits(unitData: IMapUnit[]) {
+    console.log("log: update map units", new Date().toISOString(), unitData.length);
     // Cleanup existing map units
     this.MapUnits.forEach(unit => unit.destroy());
     this.MapUnits = [];

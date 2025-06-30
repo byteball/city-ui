@@ -21,6 +21,10 @@ const config: Phaser.Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
+  audio: {
+    disableWebAudio: true,
+    noAudio: true,
+  },
   failIfMajorPerformanceCaveat: true,
   fps: {
     target: 60,

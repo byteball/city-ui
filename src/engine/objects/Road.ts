@@ -69,6 +69,7 @@ export class Road {
         .setOrigin(0, 0)
         .setDepth(25)
         .setAlpha(1);
+
       this.applyPipeline(orientation);
 
       // place cached label images
@@ -80,6 +81,7 @@ export class Road {
           .setAngle(-90)
           .setDepth(26)
           .setAlpha(0.3);
+
         this.labels.push(label);
       }
     } else if (orientation === "horizontal") {
@@ -89,6 +91,7 @@ export class Road {
         .setOrigin(0, 0)
         .setDepth(25)
         .setAlpha(1);
+
       this.applyPipeline(orientation);
 
       // place cached label images
@@ -100,6 +103,7 @@ export class Road {
           .setAngle(0)
           .setDepth(26)
           .setAlpha(0.3);
+
         this.labels.push(label);
       }
     } else {
