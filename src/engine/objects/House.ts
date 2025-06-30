@@ -114,13 +114,9 @@ export class House {
   }
 
   public destroy() {
-    this.scene.events.off(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
-
-    if (this.handleMouseLeave) {
-      this.scene.game.canvas.removeEventListener("mouseleave", this.handleMouseLeave);
-    }
-
+    // Reset pipeline first to clean up GPU resources
     if (this.houseImage) {
+      this.houseImage.resetPipeline();
       this.houseImage.destroy();
     }
 
@@ -131,6 +127,13 @@ export class House {
     if (this.tooltipDom) {
       this.tooltipDom.remove();
       this.tooltipDom = undefined;
+    }
+
+    // Remove event listeners
+    this.scene.events.off(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
+
+    if (this.handleMouseLeave) {
+      this.scene.game.canvas.removeEventListener("mouseleave", this.handleMouseLeave);
     }
   }
 

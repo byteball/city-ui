@@ -16,6 +16,7 @@ export class Plot {
   private plotImage: Phaser.GameObjects.Image;
   private outline?: Phaser.GameObjects.Graphics;
   private tooltipDom?: HTMLDivElement;
+  private handlePointerOut: () => void;
 
   constructor(scene: Phaser.Scene, data: IMapUnit, plotSize: number, address: string, view = "plot") {
     this.scene = scene;
@@ -24,6 +25,14 @@ export class Plot {
     this.address = address;
     this.view = view;
     this.isGolden = appConfig.GOLDEN_PLOTS.map(asNonNegativeNumber).includes(data.plot_num);
+
+    // Initialize handlePointerOut
+    this.handlePointerOut = () => {
+      if (this.tooltipDom) {
+        this.tooltipDom.remove();
+        this.tooltipDom = undefined;
+      }
+    };
 
     this.createPlot();
   }
@@ -64,14 +73,6 @@ export class Plot {
       this.applyPipeline();
     }
 
-    const handlePointerOut = () => {
-      if (this.tooltipDom) {
-        this.tooltipDom.remove();
-        this.tooltipDom = undefined;
-      }
-    };
-
-    // Use DOM-based block tooltip
     this.plotImage.on("pointerover", (pointer: Phaser.Input.Pointer) => {
       // do not show tooltip when a dialog is open
       if ((window as any).isDialogOpen) return;
@@ -113,15 +114,17 @@ export class Plot {
         this.tooltipDom.style.top = evtMove.clientY + "px";
       }
     });
-    this.plotImage.on("pointerout", handlePointerOut);
+    this.plotImage.on("pointerout", this.handlePointerOut);
 
     // Remove tooltip when mouse leaves the canvas
-    this.scene.game.canvas.addEventListener("mouseleave", handlePointerOut);
+    this.scene.game.canvas.addEventListener("mouseleave", this.handlePointerOut);
 
     this.scene.events.on(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
   }
 
   public destroy() {
+    // Reset pipeline first to clean up GPU resources
+    this.plotImage.resetPipeline();
     this.plotImage.destroy();
 
     if (this.outline) {
@@ -133,7 +136,14 @@ export class Plot {
       this.tooltipDom = undefined;
     }
 
+    // Remove event listeners
     this.scene.events.off(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
+
+    // Remove canvas mouseleave listener if it exists
+    const canvas = this.scene.game.canvas;
+    if (canvas) {
+      canvas.removeEventListener("mouseleave", this.handlePointerOut);
+    }
   }
 
   public setSelected(selected: boolean) {
