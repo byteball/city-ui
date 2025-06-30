@@ -13,7 +13,7 @@ export class Plot {
   private view?: string;
   private isGolden: boolean = false;
   private defaultDepth = 20; // Default depth for plots (higher than houses)
-  private plotImage: Phaser.GameObjects.Image;
+  private plotImage?: Phaser.GameObjects.Image;
   private outline?: Phaser.GameObjects.Graphics;
   private tooltipDom?: HTMLDivElement;
   private handlePointerOut: () => void;
@@ -38,6 +38,11 @@ export class Plot {
   }
 
   private applyPipeline() {
+    if (!this.plotImage) {
+      console.error('log: Plot image is not initialized, cannot apply pipeline');
+      return;
+    }
+
     const renderer = this.scene.game.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
     if (!renderer.pipelines) return;
 
@@ -52,6 +57,12 @@ export class Plot {
 
   private createPlot() {
     const { x, y } = this.data;
+
+    // Check if scene is valid and has add object
+    if (!this.scene || !this.scene.add) {
+      console.warn('Scene is not properly initialized or has been destroyed, skipping plot creation');
+      return;
+    }
 
     if (this.view === "plus") {
       this.plotImage = this.scene.add.image(x, y, "plus");
@@ -119,13 +130,18 @@ export class Plot {
     // Remove tooltip when mouse leaves the canvas
     this.scene.game.canvas.addEventListener("mouseleave", this.handlePointerOut);
 
-    this.scene.events.on(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
+    // Only add scene event listener if scene is valid
+    if (this.scene && this.scene.events) {
+      this.scene.events.on(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
+    }
   }
 
   public destroy() {
     // Reset pipeline first to clean up GPU resources
-    this.plotImage.resetPipeline();
-    this.plotImage.destroy();
+    if (this.plotImage) {
+      this.plotImage.resetPipeline();
+      this.plotImage.destroy();
+    }
 
     if (this.outline) {
       this.outline.destroy();
@@ -137,7 +153,9 @@ export class Plot {
     }
 
     // Remove event listeners
-    this.scene.events.off(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
+    if (this.scene && this.scene.events) {
+      this.scene.events.off(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
+    }
 
     const canvas = this.scene.game.canvas;
     if (canvas && this.handlePointerOut) {
@@ -146,28 +164,36 @@ export class Plot {
   }
 
   public setSelected(selected: boolean) {
+    if (!this.plotImage) return;
+
     if (selected) {
-      if (!this.outline) {
+      if (!this.outline && this.scene && this.scene.add) {
         this.outline = this.scene.add.graphics();
       }
 
       this.plotImage.setTint(0x58a7ff);
-      this.outline.clear();
-      this.outline.lineStyle(20, 0x60a5fa);
-      this.outline.strokeRect(
-        this.plotImage.x - this.plotImage.displayWidth / 2,
-        this.plotImage.y - this.plotImage.displayHeight / 2,
-        this.plotImage.displayWidth,
-        this.plotImage.displayHeight
-      );
 
-      // Set extremely high depth values to ensure it's always on top
+      if (this.outline) {
+        this.outline.clear();
+        this.outline.lineStyle(20, 0x60a5fa);
+        this.outline.strokeRect(
+          this.plotImage.x - this.plotImage.displayWidth / 2,
+          this.plotImage.y - this.plotImage.displayHeight / 2,
+          this.plotImage.displayWidth,
+          this.plotImage.displayHeight
+        );
+
+        // Set extremely high depth values to ensure it's always on top
+        this.outline.setDepth(this.defaultDepth + 101);
+      }
+
       this.plotImage.setDepth(this.defaultDepth + 100);
-      this.outline.setDepth(this.defaultDepth + 101);
 
       // Force move to top of display list with a small delay to ensure it works
       setTimeout(() => {
-        this.scene.children.bringToTop(this.plotImage);
+        if (this.plotImage) {
+          this.scene.children.bringToTop(this.plotImage);
+        }
         if (this.outline) {
           this.scene.children.bringToTop(this.outline);
         }

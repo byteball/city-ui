@@ -104,6 +104,12 @@ export class Map {
   }
 
   private createMapUnits(MAP_WIDTH: number, MAP_HEIGHT: number, sceneType: IEngineOptions["displayMode"]) {
+    // Check if scene is valid before creating units
+    if (!this.scene || !this.scene.add) {
+      console.warn('Scene is not properly initialized or has been destroyed, skipping map units creation');
+      return;
+    }
+
     const thickness = asNonNegativeNumber(ROAD_THICKNESS);
 
     this.unitsData.forEach((unitData) => {
@@ -222,6 +228,12 @@ export class Map {
       }
 
       const unitImage = unit.getMapUnitImage();
+      if (!unitImage) {
+        console.warn(`log: map unit image for type ${type} at (${finalX}, ${finalY}) was not created properly.`);
+        // Skip interaction setup if image wasn't created properly
+        return;
+      }
+
       unitImage.setInteractive({ cursor: "pointer" });
 
       unitImage.on("pointerdown", () => {
@@ -317,6 +329,13 @@ export class Map {
 
   updateRoads(roads: IRoad[]) {
     console.log("log: update roads", new Date().toISOString(), roads.length);
+
+    // Check if scene is still valid
+    if (!this.scene || !this.scene.add) {
+      console.warn('Scene is destroyed, skipping roads update');
+      return;
+    }
+
     // Clean up existing roads
     this.Roads.forEach(road => road.destroy());
     this.Roads = [];
@@ -332,6 +351,13 @@ export class Map {
 
   updateMapUnits(unitData: IMapUnit[]) {
     console.log("log: update map units", new Date().toISOString(), unitData.length);
+
+    // Check if scene is still valid
+    if (!this.scene || !this.scene.add) {
+      console.warn('Scene is destroyed, skipping map units update');
+      return;
+    }
+
     // Cleanup existing map units
     this.MapUnits.forEach(unit => unit.destroy());
     this.MapUnits = [];

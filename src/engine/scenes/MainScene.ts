@@ -29,6 +29,7 @@ export default class MapScene extends Phaser.Scene {
   private goldenPlotPipeline!: GoldenPlotPipeline;
   private mayorHousePipeline!: MayorHousePipeline;
   private options: IEngineOptions = { displayMode: "main" };
+  private isDestroyed: boolean = false;
 
   constructor() {
     super("MapScene");
@@ -86,25 +87,38 @@ export default class MapScene extends Phaser.Scene {
 
     // Clear selection when reset-selection event is emitted from React
     EventBus.on("reset-selection", () => {
-      this.map.updateMapUnitSelection();
+      if (!this.isDestroyed && this.map) {
+        this.map.updateMapUnitSelection();
+      }
     });
 
     const unsubscribe = useAaStore.subscribe((newState) => {
-      const mapUnits = mapUnitsSelector(newState);
+      // Skip updates if scene is destroyed or map doesn't exist
+      if (this.isDestroyed || !this.scene || !this.add || !this.map) {
+        return;
+      }
 
-      const cityStats = newState.state.city_city as ICity;
+      try {
+        const mapUnits = mapUnitsSelector(newState);
 
-      if (!cityStats || !cityStats.mayor) throw new Error("City mayor not found");
+        const cityStats = newState.state.city_city as ICity;
 
-      const roads = getRoads(mapUnits, String(cityStats.mayor));
+        if (!cityStats || !cityStats.mayor) throw new Error("City mayor not found");
 
-      this.map.updateMapUnits(mapUnits);
-      this.map.updateRoads(roads);
+        const roads = getRoads(mapUnits, String(cityStats.mayor));
 
-      this.setHousesOnTop();
+        this.map.updateMapUnits(mapUnits);
+        this.map.updateRoads(roads);
+
+      } catch (error) {
+        console.warn('Error updating map units, scene may be destroyed:', error);
+        // Unsubscribe if we're getting errors due to destroyed scene
+        unsubscribe();
+      }
     });
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.isDestroyed = true;
       unsubscribe();
       EventBus.off("reset-selection");
     });
@@ -113,6 +127,10 @@ export default class MapScene extends Phaser.Scene {
   }
 
   private setHousesOnTop(): void {
+    if (this.isDestroyed || !this.children) {
+      return;
+    }
+
     this.children.list
       .filter((obj) => obj instanceof Phaser.GameObjects.Image && obj.texture && obj.texture.key === "house")
       .forEach((house) => {

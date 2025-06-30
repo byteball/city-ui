@@ -12,7 +12,7 @@ export class House {
   private isMayorHouse: boolean = false;
   private defaultDepth = 35; // Default depth for houses
 
-  private houseImage: Phaser.GameObjects.Image;
+  private houseImage?: Phaser.GameObjects.Image;
   private outline?: Phaser.GameObjects.Graphics;
   private tooltipDom?: HTMLDivElement;
   private handleMouseLeave: () => void;
@@ -25,10 +25,20 @@ export class House {
     this.address = address;
 
     this.createHouse();
-    this.scene.events.on(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
+
+    // Only add scene event listener if scene is valid
+    if (this.scene && this.scene.events) {
+
+      this.scene.events.on(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
+    }
   }
 
   private applyPipeline() {
+    if (!this.houseImage) {
+      console.error('log: House image is not initialized, cannot apply pipeline');
+      return;
+    }
+
     const renderer = this.scene.game.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
     if (renderer.pipelines) {
       if (this.isMayorHouse && renderer.pipelines.get("MayorHousePipeline")) {
@@ -42,6 +52,12 @@ export class House {
   private createHouse() {
     const { x, y, amount } = this.data;
     this.isMayorHouse = amount === 0;
+
+    // Check if scene is valid and has add object
+    if (!this.scene || !this.scene.add) {
+      console.warn('Scene is not properly initialized or has been destroyed, skipping house creation');
+      return;
+    }
 
     this.houseImage = this.scene.add.image(x, y, this.isMayorHouse ? "mayor-house" : "house");
     this.houseImage.setDepth(this.defaultDepth);
@@ -130,7 +146,9 @@ export class House {
     }
 
     // Remove event listeners
-    this.scene.events.off(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
+    if (this.scene && this.scene.events) {
+      this.scene.events.off(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
+    }
 
     if (this.handleMouseLeave) {
       this.scene.game.canvas.removeEventListener("mouseleave", this.handleMouseLeave);
@@ -138,25 +156,27 @@ export class House {
   }
 
   public setSelected(selected: boolean) {
-    if (this.disabled) return;
+    if (this.disabled || !this.houseImage) return;
 
     if (selected) {
       this.houseImage.setTint(0x58a7ff);
 
-      if (!this.outline) {
+      if (!this.outline && this.scene && this.scene.add) {
         this.outline = this.scene.add.graphics();
       }
 
-      this.outline.clear();
-      this.outline.lineStyle(20, 0x58a7ff);
-      this.outline.strokeRect(
-        this.houseImage.x - this.houseImage.displayWidth / 2,
-        this.houseImage.y - this.houseImage.displayHeight / 2,
-        this.houseImage.displayWidth,
-        this.houseImage.displayHeight
-      );
+      if (this.outline) {
+        this.outline.clear();
+        this.outline.lineStyle(20, 0x58a7ff);
+        this.outline.strokeRect(
+          this.houseImage.x - this.houseImage.displayWidth / 2,
+          this.houseImage.y - this.houseImage.displayHeight / 2,
+          this.houseImage.displayWidth,
+          this.houseImage.displayHeight
+        );
 
-      this.outline.setDepth(this.defaultDepth + 2);
+        this.outline.setDepth(this.defaultDepth + 2);
+      }
       this.houseImage.setDepth(this.defaultDepth + 1);
     } else {
       this.houseImage.clearTint();
