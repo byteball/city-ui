@@ -8,15 +8,31 @@ const BASE_LABEL_STEP = 900;
 export class Road {
   private scene: Phaser.Scene;
   private data: IRoad;
+  private roadTile: Phaser.GameObjects.TileSprite;
   // use image labels for caching
   private labels: Phaser.GameObjects.Image[] = [];
   private previousZoom: number = 0;
+  private lastViewRect: Phaser.Geom.Rectangle;
 
   constructor(scene: Phaser.Scene, data: IRoad, private mapWidth: number, private mapHeight: number) {
     this.scene = scene;
     this.data = data;
 
     this.createRoad();
+    this.scene.events.on(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
+  }
+
+  private applyPipeline(orientation: "vertical" | "horizontal") {
+    const renderer = this.scene.game.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
+    if (!renderer.pipelines) return;
+
+    const pipelineName = orientation === "vertical" ? "VerticalRoadPipeline" : "HorizontalRoadPipeline";
+
+    if (renderer.pipelines.get(pipelineName)) {
+      this.roadTile.setPipeline(pipelineName);
+    } else if (renderer.pipelines.get("RoadPipeline")) {
+      this.roadTile.setPipeline("RoadPipeline");
+    }
   }
 
   private createRoad() {
@@ -48,18 +64,13 @@ export class Road {
 
     if (orientation === "vertical") {
       // add road tile and apply pipeline
-      const roadTile = this.scene.add.tileSprite(x, 0, thickness, this.mapHeight, "road-vertical")
+      this.roadTile = this.scene.add
+        .tileSprite(x, 0, thickness, this.mapHeight, "road-vertical")
         .setOrigin(0, 0)
         .setDepth(25)
         .setAlpha(1);
-      const renderer = this.scene.game.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
-      if (renderer.pipelines) {
-        if (renderer.pipelines.get('VerticalRoadPipeline')) {
-          roadTile.setPipeline('VerticalRoadPipeline');
-        } else if (renderer.pipelines.get('RoadPipeline')) {
-          roadTile.setPipeline('RoadPipeline');
-        }
-      }
+      this.applyPipeline(orientation);
+
       // place cached label images
       for (let idx = 0; idx * BASE_LABEL_STEP < this.mapHeight; idx++) {
         const posY = idx * BASE_LABEL_STEP;
@@ -73,18 +84,13 @@ export class Road {
       }
     } else if (orientation === "horizontal") {
       // add road tile and apply pipeline
-      const roadTile = this.scene.add.tileSprite(0, y, this.mapWidth, thickness, "road-horizontal")
+      this.roadTile = this.scene.add
+        .tileSprite(0, y, this.mapWidth, thickness, "road-horizontal")
         .setOrigin(0, 0)
         .setDepth(25)
         .setAlpha(1);
-      const renderer = this.scene.game.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
-      if (renderer.pipelines) {
-        if (renderer.pipelines.get('HorizontalRoadPipeline')) {
-          roadTile.setPipeline('HorizontalRoadPipeline');
-        } else if (renderer.pipelines.get('RoadPipeline')) {
-          roadTile.setPipeline('RoadPipeline');
-        }
-      }
+      this.applyPipeline(orientation);
+
       // place cached label images
       for (let idx = 0; idx * BASE_LABEL_STEP < this.mapWidth; idx++) {
         const posX = idx * BASE_LABEL_STEP;
@@ -105,8 +111,32 @@ export class Road {
     this.updateLabels();
   }
 
+  public destroy() {
+    this.scene.events.off(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
+    this.scene.events.off("update", this.updateLabels, this);
+
+    if (this.roadTile) {
+      this.roadTile.destroy();
+    }
+
+    this.labels.forEach((label) => label.destroy());
+    this.labels = [];
+  }
+
   private updateLabels() {
     const currentZoom = this.scene.cameras.main.zoom;
+    const viewRect = this.scene.cameras.main.worldView;
+
+    const viewChanged = !this.lastViewRect || !Phaser.Geom.Rectangle.Equals(this.lastViewRect, viewRect);
+
+    if (viewChanged) {
+      // Show labels only when they are fully inside the camera view
+      this.labels.forEach((label) => {
+        const b = label.getBounds();
+        const fullyVisible = viewRect.contains(b.left, b.top) && viewRect.contains(b.right, b.bottom);
+        label.setVisible(fullyVisible);
+      });
+    }
 
     if (!this.previousZoom || Math.abs(currentZoom - this.previousZoom) >= this.previousZoom * 0.5) {
       const dynamicStep = BASE_LABEL_STEP / currentZoom;
@@ -124,13 +154,9 @@ export class Road {
       this.previousZoom = currentZoom;
     }
 
-    // Show labels only when they are fully inside the camera view
-    const viewRect = this.scene.cameras.main.worldView;
-    this.labels.forEach(label => {
-      const b = label.getBounds();
-      const fullyVisible = viewRect.contains(b.left, b.top) && viewRect.contains(b.right, b.bottom);
-      label.setVisible(fullyVisible);
-    });
+    if (viewChanged) {
+      this.lastViewRect = Phaser.Geom.Rectangle.Clone(viewRect);
+    }
   }
 }
 

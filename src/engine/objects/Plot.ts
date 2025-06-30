@@ -28,6 +28,19 @@ export class Plot {
     this.createPlot();
   }
 
+  private applyPipeline() {
+    const renderer = this.scene.game.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
+    if (!renderer.pipelines) return;
+
+    if (this.view === "plus" && renderer.pipelines.get("PlusPipeline")) {
+      this.plotImage.setPipeline("PlusPipeline");
+    } else if (this.isGolden && renderer.pipelines.get("GoldenPlotPipeline")) {
+      this.plotImage.setPipeline("GoldenPlotPipeline");
+    } else if (renderer.pipelines.get("PlotPipeline")) {
+      this.plotImage.setPipeline("PlotPipeline");
+    }
+  }
+
   private createPlot() {
     const { x, y } = this.data;
 
@@ -36,17 +49,7 @@ export class Plot {
       this.plotImage.setDisplaySize(PLUS_SIZE, PLUS_SIZE);
       this.plotImage.setDepth(40);
 
-      // Apply appropriate pipeline: use PlusPipeline for "plus" view
-      const renderer = this.scene.game.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
-      if (renderer.pipelines) {
-        if (renderer.pipelines.get('PlusPipeline')) {
-          this.plotImage.setPipeline('PlusPipeline');
-        } else if (this.isGolden && renderer.pipelines.get('GoldenPlotPipeline')) {
-          this.plotImage.setPipeline('GoldenPlotPipeline');
-        } else if (renderer.pipelines.get('PlotPipeline')) {
-          this.plotImage.setPipeline('PlotPipeline');
-        }
-      }
+      this.applyPipeline();
     } else {
       if (this.isGolden) {
         this.plotImage = this.scene.add.image(x, y, "golden-plot");
@@ -57,16 +60,16 @@ export class Plot {
       this.plotImage.setDepth(this.defaultDepth);
       this.plotImage.setDisplaySize(this.plotSize, this.plotSize);
       this.plotImage.setInteractive();
-      // Apply appropriate pipeline
-      const renderer = this.scene.game.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
-      if (renderer.pipelines) {
-        if (this.isGolden && renderer.pipelines.get('GoldenPlotPipeline')) {
-          this.plotImage.setPipeline('GoldenPlotPipeline');
-        } else if (renderer.pipelines.get('PlotPipeline')) {
-          this.plotImage.setPipeline('PlotPipeline');
-        }
-      }
+
+      this.applyPipeline();
     }
+
+    const handlePointerOut = () => {
+      if (this.tooltipDom) {
+        this.tooltipDom.remove();
+        this.tooltipDom = undefined;
+      }
+    };
 
     // Use DOM-based block tooltip
     this.plotImage.on("pointerover", (pointer: Phaser.Input.Pointer) => {
@@ -110,20 +113,27 @@ export class Plot {
         this.tooltipDom.style.top = evtMove.clientY + "px";
       }
     });
-    this.plotImage.on("pointerout", () => {
-      if (this.tooltipDom) {
-        document.body.removeChild(this.tooltipDom);
-        this.tooltipDom = undefined;
-      }
-    });
+    this.plotImage.on("pointerout", handlePointerOut);
 
     // Remove tooltip when mouse leaves the canvas
-    this.scene.game.canvas.addEventListener("mouseleave", () => {
-      if (this.tooltipDom) {
-        document.body.removeChild(this.tooltipDom);
-        this.tooltipDom = undefined;
-      }
-    });
+    this.scene.game.canvas.addEventListener("mouseleave", handlePointerOut);
+
+    this.scene.events.on(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
+  }
+
+  public destroy() {
+    this.plotImage.destroy();
+
+    if (this.outline) {
+      this.outline.destroy();
+    }
+
+    if (this.tooltipDom) {
+      this.tooltipDom.remove();
+      this.tooltipDom = undefined;
+    }
+
+    this.scene.events.off(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
   }
 
   public setSelected(selected: boolean) {

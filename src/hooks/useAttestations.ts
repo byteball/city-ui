@@ -27,6 +27,7 @@ export const useAttestations = (address?: string): IAttestationsState => {
   const currentCityAttestors = attestors.split(":").map((attestor) => attestor.trim());
 
   useEffect(() => {
+    const abortController = new AbortController();
     (async () => {
       if (!address) return;
 
@@ -72,7 +73,8 @@ export const useAttestations = (address?: string): IAttestationsState => {
             const discordAttestation = userAttestations.find((a) => a.name === "discord");
 
             if (discordAttestation && discordAttestation.userId) {
-              fetch(`${appConfig.NOTIFICATION_BACKEND_URL}/display_name/${discordAttestation.userId}`).then((res) => res.json())
+              fetch(`${appConfig.NOTIFICATION_BACKEND_URL}/display_name/${discordAttestation.userId}`, { signal: abortController.signal })
+                .then((res) => res.json())
                 .then((data) => {
                   const { displayName } = data;
 
@@ -95,7 +97,11 @@ export const useAttestations = (address?: string): IAttestationsState => {
         setAttestations({ data: cachedAttestations, loaded: true });
       }
     })();
-  }, [address, attestors]);
+
+    return () => {
+      abortController.abort();
+    };
+  }, [address, attestors, getUserAttestations, saveAttestationsInCache, saveDisplayName]);
 
   return attestations;
 };

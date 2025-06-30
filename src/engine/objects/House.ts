@@ -15,6 +15,7 @@ export class House {
   private houseImage: Phaser.GameObjects.Image;
   private outline?: Phaser.GameObjects.Graphics;
   private tooltipDom?: HTMLDivElement;
+  private handleMouseLeave: () => void;
 
   constructor(scene: Phaser.Scene, data: IHouse, plotSize: number, disabled: boolean = false, address: string) {
     this.scene = scene;
@@ -24,6 +25,18 @@ export class House {
     this.address = address;
 
     this.createHouse();
+    this.scene.events.on(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
+  }
+
+  private applyPipeline() {
+    const renderer = this.scene.game.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
+    if (renderer.pipelines) {
+      if (this.isMayorHouse && renderer.pipelines.get("MayorHousePipeline")) {
+        this.houseImage.setPipeline("MayorHousePipeline");
+      } else if (renderer.pipelines.get("HousePipeline")) {
+        this.houseImage.setPipeline("HousePipeline");
+      }
+    }
   }
 
   private createHouse() {
@@ -40,15 +53,14 @@ export class House {
     }
 
     this.houseImage.setInteractive();
-    // Apply appropriate pipeline: mayor's house or default house pipeline
-    const renderer = this.scene.game.renderer as Phaser.Renderer.WebGL.WebGLRenderer;
-    if (renderer.pipelines) {
-      if (this.isMayorHouse && renderer.pipelines.get('MayorHousePipeline')) {
-        this.houseImage.setPipeline('MayorHousePipeline');
-      } else if (renderer.pipelines.get('HousePipeline')) {
-        this.houseImage.setPipeline('HousePipeline');
+    this.applyPipeline();
+
+    const handlePointerOut = () => {
+      if (this.tooltipDom) {
+        this.tooltipDom.remove();
+        this.tooltipDom = undefined;
       }
-    }
+    };
 
     this.houseImage.on("pointerover", (pointer: Phaser.Input.Pointer) => {
       if ((window as any).isDialogOpen) return;
@@ -94,21 +106,32 @@ export class House {
       }
     });
 
-    this.houseImage.on("pointerout", () => {
-      if (this.tooltipDom) {
-        document.body.removeChild(this.tooltipDom);
-        this.tooltipDom = undefined;
-      }
-    });
-
+    this.houseImage.on("pointerout", handlePointerOut);
 
     // Remove tooltip when mouse leaves the canvas
-    this.scene.game.canvas.addEventListener("mouseleave", () => {
-      if (this.tooltipDom) {
-        document.body.removeChild(this.tooltipDom);
-        this.tooltipDom = undefined;
-      }
-    });
+    this.handleMouseLeave = handlePointerOut;
+    this.scene.game.canvas.addEventListener("mouseleave", this.handleMouseLeave);
+  }
+
+  public destroy() {
+    this.scene.events.off(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
+
+    if (this.handleMouseLeave) {
+      this.scene.game.canvas.removeEventListener("mouseleave", this.handleMouseLeave);
+    }
+
+    if (this.houseImage) {
+      this.houseImage.destroy();
+    }
+
+    if (this.outline) {
+      this.outline.destroy();
+    }
+
+    if (this.tooltipDom) {
+      this.tooltipDom.remove();
+      this.tooltipDom = undefined;
+    }
   }
 
   public setSelected(selected: boolean) {

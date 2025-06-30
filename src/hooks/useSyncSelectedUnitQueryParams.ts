@@ -11,9 +11,8 @@ import appConfig from "@/appConfig";
 export const useSyncSelectedUnitQueryParams = () => {
   const [inited, setInited] = useState(false);
   const loaded = useAaStore((state) => state.loaded);
-  const aaState = useAaStore((state) => state);
+  const mapUnits = useAaStore(mapUnitsSelector);
   const selectedMapUnit = useSettingsStore((state) => state.selectedMapUnit);
-  const mapUnits = mapUnitsSelector(aaState);
 
   const [selectedPlot, setSelectedPlot] = useQueryState<number>("plot", parseAsInteger);
   const [selectedHouse, setSelectedHouse] = useQueryState<number>("house", parseAsInteger);
@@ -60,7 +59,7 @@ export const useSyncSelectedUnitQueryParams = () => {
     }
 
     setInited(true);
-  }, [selectedPlot, selectedHouse, loaded, inited, mapUnits]);
+  }, [selectedPlot, selectedHouse, loaded, inited, mapUnits, setSelectedPlot]);
 
   // Effect to update selectedUnit when selectedMapUnit changes
   useEffect(() => {

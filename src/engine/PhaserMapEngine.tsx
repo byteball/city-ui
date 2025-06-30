@@ -40,27 +40,24 @@ export const PhaserMapEngine = memo(
     }, [ref, engineOptions]);
 
     useEffect(() => {
-      EventBus.on("current-scene-ready", (scene_instance: Phaser.Scene) => {
-        if (currentActiveScene && typeof currentActiveScene === "function") {
-          currentActiveScene(scene_instance);
-        }
-
-        if (typeof ref === "function") {
-          ref({ engine: engine.current, scene: scene_instance });
-        } else if (ref) {
-          ref.current = { engine: engine.current, scene: scene_instance };
-        }
-      });
-      return () => {
-        EventBus.removeListener("current-scene-ready");
-      };
-    }, [currentActiveScene, ref]);
-
-    useEffect(() => {
       if (engine.current) {
         EventBus.emit("update-engine-options", engineOptions);
       }
     }, [engineOptions]);
+
+    useEffect(() => {
+      const callback = (scene: Phaser.Scene) => {
+        if (currentActiveScene) {
+          currentActiveScene(scene);
+        }
+      };
+
+      EventBus.on("current-scene-ready", callback);
+
+      return () => {
+        EventBus.off("current-scene-ready", callback);
+      };
+    }, [currentActiveScene]);
 
     return <div id="engine-container"></div>;
   })
