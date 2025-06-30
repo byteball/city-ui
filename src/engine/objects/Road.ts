@@ -108,7 +108,10 @@ export class Road {
 
     this.scene.events.on("update", this.updateLabels, this);
     // Initial clip to hide labels outside the initial camera view
-    this.updateLabels();
+    // Only call updateLabels if camera is ready and properly initialized
+    if (this.scene.cameras?.main && typeof this.scene.cameras.main.zoom !== 'undefined') {
+      this.updateLabels();
+    }
   }
 
   public destroy() {
@@ -130,8 +133,18 @@ export class Road {
   }
 
   private updateLabels() {
+    // Check if camera is available and properly initialized
+    if (!this.scene.cameras?.main || typeof this.scene.cameras.main.zoom === 'undefined') {
+      return;
+    }
+
     const currentZoom = this.scene.cameras.main.zoom;
     const viewRect = this.scene.cameras.main.worldView;
+
+    // Additional safety check for worldView
+    if (!viewRect) {
+      return;
+    }
 
     const viewChanged = !this.lastViewRect || !Phaser.Geom.Rectangle.Equals(this.lastViewRect, viewRect);
 
