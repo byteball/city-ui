@@ -41,24 +41,7 @@ export class Map {
 
   public createMap(options: IEngineOptions) {
     this.engineOptions = options;
-    // 1) Calculate the total thickness of vertical and horizontal roads
-    let totalVerticalThickness = 0;
-    let totalHorizontalThickness = 0;
-
-    this.roadsData.forEach((road) => {
-      if (road.orientation === "vertical") {
-        totalVerticalThickness += ROAD_THICKNESS;
-      } else {
-        totalHorizontalThickness += ROAD_THICKNESS;
-      }
-    });
-
-    const BASE_MAP_SIZE = Decimal(1_000_000).mul(appConfig.MAP_SCALE);
-
-    // 2) Base sizes 1,000,000 x 1,000,000
-    const MAP_WIDTH = BASE_MAP_SIZE.plus(totalVerticalThickness).toNumber();
-    const MAP_HEIGHT = BASE_MAP_SIZE.plus(totalHorizontalThickness).toNumber();
-
+    const { width: MAP_WIDTH, height: MAP_HEIGHT } = this.calculateMapDimensions();
 
     // 3) Pass them to the functions that create roads and plots
     this.createRoads(MAP_WIDTH, MAP_HEIGHT);
@@ -82,6 +65,28 @@ export class Map {
         }
       }
     );
+  }
+
+  private calculateMapDimensions(): { width: number; height: number } {
+    // 1) Calculate the total thickness of vertical and horizontal roads
+    let totalVerticalThickness = 0;
+    let totalHorizontalThickness = 0;
+
+    this.roadsData.forEach((road) => {
+      if (road.orientation === "vertical") {
+        totalVerticalThickness += ROAD_THICKNESS;
+      } else {
+        totalHorizontalThickness += ROAD_THICKNESS;
+      }
+    });
+
+    const BASE_MAP_SIZE = Decimal(1_000_000).mul(appConfig.MAP_SCALE);
+
+    // 2) Base sizes 1,000,000 x 1,000,000
+    const MAP_WIDTH = BASE_MAP_SIZE.plus(totalVerticalThickness).toNumber();
+    const MAP_HEIGHT = BASE_MAP_SIZE.plus(totalHorizontalThickness).toNumber();
+
+    return { width: MAP_WIDTH, height: MAP_HEIGHT };
   }
 
   private createRoads(mapWidth: number, mapHeight: number) {
@@ -293,12 +298,43 @@ export class Map {
     }
   }
 
+  public destroy() {
+    // Cleanup all map units
+    this.MapUnits.forEach(unit => unit.destroy());
+    this.MapUnits = [];
+
+    // Remove input listeners
+    this.scene.input.off("pointerdown");
+  }
+
   updateRoads(roads: IRoad[]) {
+    // Force scene refresh to cleanup existing roads
+    this.scene.events.emit(Phaser.Scenes.Events.SHUTDOWN);
+
     this.roadsData = roads;
+
+    if (this.engineOptions) {
+      // Recalculate map size and recreate everything
+      this.createMap(this.engineOptions);
+    }
   }
 
   updateMapUnits(unitData: IMapUnit[]) {
+    // Cleanup existing map units
+    this.MapUnits.forEach(unit => unit.destroy());
+    this.MapUnits = [];
+
+    // Update data
     this.unitsData = unitData;
+    this.totalSize = this.unitsData.length === 0 ? 1 : this.unitsData.reduce((sum, unit) => sum + getMapUnitSize(unit), 0);
+
+    if (this.engineOptions) {
+      // Recreate map units with new data using shared calculation method
+      const { width: MAP_WIDTH, height: MAP_HEIGHT } = this.calculateMapDimensions();
+
+      this.createMapUnits(MAP_WIDTH, MAP_HEIGHT, this.engineOptions.displayMode || "main");
+      this.updateMapUnitSelection();
+    }
   }
 }
 

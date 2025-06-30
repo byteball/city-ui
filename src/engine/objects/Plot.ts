@@ -139,9 +139,8 @@ export class Plot {
     // Remove event listeners
     this.scene.events.off(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
 
-    // Remove canvas mouseleave listener if it exists
     const canvas = this.scene.game.canvas;
-    if (canvas) {
+    if (canvas && this.handlePointerOut) {
       canvas.removeEventListener("mouseleave", this.handlePointerOut);
     }
   }
