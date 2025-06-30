@@ -120,7 +120,7 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
 
         <InfoPanel.Item
           label="Referral link"
-          tooltipText={`When other users use your referral link to buy a new plot, your main plot’s matching area expands by ${toLocalString(referral_boost * 100)}% of the total matching area of all plots. This increases the probability that the new user will become your neighbor and you'll earn rewards. The probability becomes ${toLocalString(matching_probability * referral_boost * 100)}%, so you need ${Math.round(1 / matching_probability / referral_boost)} referrals on average to get a neighbor.`}
+          tooltipText={`When other users use your referral link to buy a new plot, your main plot’s matching area expands by ${toLocalString(referral_boost * 100)}% of the total matching area of all plots. This increases the probability that the new user will become your neighbor and you'll earn rewards. The probability becomes ${toLocalString(matching_probability * referral_boost * 100)}%, so you earn, on average, ${toLocalString(matching_probability * referral_boost * 100)}% of what your referrals spend (without fees), and need, on average, ${Math.round(1 / matching_probability / referral_boost)} referrals to get a neighbor.`}
         >
           {referralUrl ? (
             <CopyToClipboard text={referralUrl} onCopy={copy}>
