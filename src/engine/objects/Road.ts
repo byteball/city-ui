@@ -112,14 +112,20 @@ export class Road {
   }
 
   public destroy() {
+    // Reset pipeline first to clean up GPU resources and remove event listeners
     this.scene.events.off(Phaser.Scenes.Events.SHUTDOWN, this.destroy, this);
     this.scene.events.off("update", this.updateLabels, this);
 
     if (this.roadTile) {
+      this.roadTile.resetPipeline();
       this.roadTile.destroy();
     }
 
-    this.labels.forEach((label) => label.destroy());
+    // Clean up and destroy all labels
+    this.labels.forEach((label) => {
+      label.resetPipeline();
+      label.destroy();
+    });
     this.labels = [];
   }
 
