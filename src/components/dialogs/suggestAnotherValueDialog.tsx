@@ -56,7 +56,11 @@ export const SuggestAnotherValueDialog: FC<ISuggestAnotherValueDialogProps> = ({
   let suffix = "";
   let maxAllowedValue = 100; // only for numeric params
 
-  if (percentInputParamNames.includes(name)) {
+  if (name === "referral_boost") {
+    maxAllowedValue = Infinity; // no limit for referral boost
+    suffix = "%";
+    maxInputDecimals = 4;
+  } else if (percentInputParamNames.includes(name)) {
     suffix = "%";
     maxInputDecimals = 4;
     maxAllowedValue = 100;
