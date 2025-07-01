@@ -46,7 +46,7 @@ export class NeighborLink {
     // Create a graphics object for the line
     this.link = this.scene.add.graphics();
     this.link.setDepth(60); // Set depth above houses
-    this.link.setAlpha(0.7);
+    this.link.setAlpha(0.8);
     // Configure line style - red, rounded
     this.link.lineStyle(this.lineWidth, this.lineColor, 1);
 

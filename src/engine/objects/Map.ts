@@ -324,7 +324,7 @@ export class Map {
       // Check that both houses exist and link is not yet created
       if (house1 && house2 && plotNum < match.neighbor_plot) {
         // Create link only once (check plotNum < match.neighbor_plot)
-        const link = new NeighborLink(this.scene, house1, house2, match, 14, 0xff0000);
+        const link = new NeighborLink(this.scene, house1, house2, match, 20, 0xff0000);
         this.neighborLinks.push(link);
       }
     });
