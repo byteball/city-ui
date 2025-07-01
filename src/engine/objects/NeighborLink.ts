@@ -66,30 +66,25 @@ export class NeighborLink {
       this.archType = 'high';
     }
 
-    // Configure arch parameters based on type
+    // Configure arch parameters for rainbow-like semicircle
     let archHeight: number;
-    let curveFactor: number;
 
     switch (this.archType) {
       case 'low':
-        archHeight = Math.min(distance * 0.45, 180);
-        curveFactor = 5;
+        // Perfect semicircle height = radius = distance/2
+        archHeight = Math.max(distance * 0.5, 120);
         break;
       case 'medium':
-        archHeight = Math.min(distance * 0.55, 220);
-        curveFactor = 4.2;
+        archHeight = Math.max(distance * 0.5, 150);
         break;
       case 'high':
-        archHeight = Math.min(distance * 0.65, 380);
-        curveFactor = 3.4;
+        archHeight = Math.max(distance * 0.5, 200);
         break;
     }
 
-    // Add slight horizontal offset for a more natural arch
-    const horizontalOffset = Math.sin((x2 - x1) / distance) * 15 * curveFactor;
-
-    const controlX = midX + horizontalOffset;
-    const controlY = midY - archHeight; // Move control point upward
+    // For perfect rainbow semicircle, control point should be directly above midpoint
+    const controlX = midX;
+    const controlY = midY - archHeight; // Move control point directly upward
 
     // Create a smooth curve using Path
     this.curve = new Phaser.Curves.QuadraticBezier(
