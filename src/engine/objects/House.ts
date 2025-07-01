@@ -3,10 +3,11 @@ import Phaser from "phaser";
 
 import { IHouse } from "@/global";
 
+const HOUSE_SIZE = 250; // Default house size
+
 export class House {
   private scene: Phaser.Scene;
   private data: IHouse;
-  private plotSize: number;
   private disabled: boolean;
   private address: string;
   private isMayorHouse: boolean = false;
@@ -16,10 +17,9 @@ export class House {
   private outline?: Phaser.GameObjects.Graphics;
   private tooltipDom?: HTMLDivElement;
 
-  constructor(scene: Phaser.Scene, data: IHouse, plotSize: number, disabled: boolean = false, address: string) {
+  constructor(scene: Phaser.Scene, data: IHouse, disabled: boolean = false, address: string) {
     this.scene = scene;
     this.data = data;
-    this.plotSize = plotSize;
     this.disabled = disabled;
     this.address = address;
 
@@ -34,9 +34,9 @@ export class House {
     this.houseImage.setDepth(this.defaultDepth);
 
     if (this.isMayorHouse) {
-      this.houseImage.setDisplaySize(Math.min(this.plotSize, 400), Math.min(this.plotSize * 1.293, 400 * 1.293));
+      this.houseImage.setDisplaySize(HOUSE_SIZE, HOUSE_SIZE * 1.293);
     } else {
-      this.houseImage.setDisplaySize(400, 400);
+      this.houseImage.setDisplaySize(HOUSE_SIZE, HOUSE_SIZE);
     }
 
     this.houseImage.setInteractive();
@@ -155,9 +155,9 @@ export class House {
     // Get house height
     let houseHeight;
     if (this.isMayorHouse) {
-      houseHeight = Math.min(this.plotSize * 1.293, 400 * 1.293);
+      houseHeight = HOUSE_SIZE * 1.293;
     } else {
-      houseHeight = 400;
+      houseHeight = HOUSE_SIZE;
     }
 
     // Return rooftop center coordinates (top point of the house)

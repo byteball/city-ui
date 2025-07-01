@@ -177,14 +177,9 @@ export class Map {
           : [];
 
       if (type === "house") {
-        const houseFraction = ((this.engineOptions?.params?.plot_price ?? 0) / this.totalSize) * 0.3;
-        const houseArea = houseFraction * MAP_WIDTH * MAP_HEIGHT;
-        const houseSize = Math.sqrt(houseArea);
-
         unit = new House(
           this.scene,
           { ...unitData, x: finalX, y: finalY },
-          houseSize,
           this.engineOptions?.displayMode && ["market", "claim"].includes(this.engineOptions?.displayMode),
           address
         );
