@@ -1,7 +1,7 @@
 
 import { AaStoreState } from "@/store/aa-store";
 
-interface IMatch {
+export interface IMatch {
   built_ts: number;
   first: string;
   ts: number;

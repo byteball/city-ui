@@ -7,6 +7,7 @@ import { IEngineOptions, IMapUnit, IRoad } from "@/global";
 import { asNonNegativeNumber, getAddressFromNearestRoad } from "@/lib";
 import { useSettingsStore } from "@/store/settings-store";
 
+import { NeighborLink } from "./NeighborLink";
 import { Plot } from "./Plot";
 import { Road } from "./Road";
 
@@ -15,6 +16,7 @@ import { toast } from "@/hooks/use-toast";
 import { House } from "./House";
 
 import appConfig from "@/appConfig";
+import { IMatch } from "@/lib/getMatches";
 
 export const ROAD_THICKNESS = 60;
 
@@ -25,12 +27,15 @@ export class Map {
   private totalSize: number;
   private selectedMapUnit: House | Plot | null = null;
   private MapUnits: (Plot | House)[] = [];
+  private neighborLinks: NeighborLink[] = [];
   private engineOptions: IEngineOptions | null = null;
+  private matches: globalThis.Map<number, IMatch>;
 
-  constructor(scene: Phaser.Scene, roadsData: IRoad[], unitsData: IMapUnit[]) {
+  constructor(scene: Phaser.Scene, roadsData: IRoad[], unitsData: IMapUnit[], matches: globalThis.Map<number, IMatch>) {
     this.scene = scene;
     this.roadsData = roadsData;
     this.unitsData = unitsData;
+    this.matches = matches;
 
     if (unitsData.length === 0) {
       this.totalSize = 1; // Or handle empty data explicitly
@@ -63,6 +68,7 @@ export class Map {
     // 3) Pass them to the functions that create roads and plots
     this.createRoads(MAP_WIDTH, MAP_HEIGHT);
     this.createMapUnits(MAP_WIDTH, MAP_HEIGHT, options.displayMode || "main");
+    this.createNeighborLinks();
     this.updateMapUnitSelection();
 
     // Add click handler to clear selection when clicking on empty space
@@ -293,12 +299,55 @@ export class Map {
     }
   }
 
+  private createNeighborLinks() {
+    // Clear existing links
+    this.neighborLinks.forEach(link => link.destroy());
+    this.neighborLinks = [];
+
+    // Create a map of houses by plot numbers for quick lookup
+    const housesByPlotNum = new globalThis.Map<number, House>();
+
+    this.MapUnits.forEach(unit => {
+      if (unit instanceof House) {
+        const houseData = unit.getData();
+        if (houseData.plot_num !== undefined) {
+          housesByPlotNum.set(houseData.plot_num, unit);
+        }
+      }
+    });
+
+    // Go through all matches and create links
+    this.matches.forEach((match, plotNum) => {
+      const house1 = housesByPlotNum.get(plotNum);
+      const house2 = housesByPlotNum.get(match.neighbor_plot);
+
+      // Check that both houses exist and link is not yet created
+      if (house1 && house2 && plotNum < match.neighbor_plot) {
+        // Create link only once (check plotNum < match.neighbor_plot)
+        const link = new NeighborLink(this.scene, house1, house2, match, 14, 0xff0000);
+        this.neighborLinks.push(link);
+      }
+    });
+  }
+
   updateRoads(roads: IRoad[]) {
     this.roadsData = roads;
   }
 
   updateMapUnits(unitData: IMapUnit[]) {
     this.unitsData = unitData;
+  }
+
+  updateMatches(matches: globalThis.Map<number, IMatch>) {
+    this.matches = matches;
+    // Recreate links when updating matches
+    if (this.engineOptions) {
+      this.createNeighborLinks();
+    }
+  }
+
+  public getNeighborLinks(): NeighborLink[] {
+    return this.neighborLinks;
   }
 }
 
