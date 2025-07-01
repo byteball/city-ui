@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 
 import { ICity, IEngineOptions } from "@/global";
+import { getMatches } from "@/lib/getMatches";
 import { useAaStore } from "@/store/aa-store";
 import { mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import CameraController from "../controllers/CameraController";
@@ -79,8 +80,9 @@ export default class MapScene extends Phaser.Scene {
     if (!cityStats || !cityStats.mayor) throw new Error("City mayor not found");
 
     const roads = getRoads(mapUnits, String(cityStats.mayor));
+    const matches = getMatches(state);
 
-    this.map = new GameMap(this, roads, mapUnits);
+    this.map = new GameMap(this, roads, mapUnits, matches);
 
     this.map.createMap(this.options);
 
@@ -97,9 +99,11 @@ export default class MapScene extends Phaser.Scene {
       if (!cityStats || !cityStats.mayor) throw new Error("City mayor not found");
 
       const roads = getRoads(mapUnits, String(cityStats.mayor));
+      const matches = getMatches(newState);
 
       this.map.updateMapUnits(mapUnits);
       this.map.updateRoads(roads);
+      this.map.updateMatches(matches);
 
       this.setHousesOnTop();
     });

@@ -148,5 +148,23 @@ export class House {
   public getMapUnitImage() {
     return this.houseImage;
   }
+
+  public getRooftopCoordinates() {
+    const { x, y } = this.data;
+
+    // Get house height
+    let houseHeight;
+    if (this.isMayorHouse) {
+      houseHeight = Math.min(this.plotSize * 1.293, 400 * 1.293);
+    } else {
+      houseHeight = 400;
+    }
+
+    // Return rooftop center coordinates (top point of the house)
+    return {
+      x,
+      y: y - houseHeight / 2 + 50 // Subtract half height to get the top
+    };
+  }
 }
 
