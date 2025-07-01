@@ -3,6 +3,8 @@ import Phaser from "phaser";
 
 import { IHouse } from "@/global";
 
+const HOUSE_SIZE = 250; // Default house size
+
 export class House {
   private scene: Phaser.Scene;
   private data: IHouse;
@@ -32,9 +34,9 @@ export class House {
     this.houseImage.setDepth(this.defaultDepth);
 
     if (this.isMayorHouse) {
-      this.houseImage.setDisplaySize(250, 250 * 1.293);
+      this.houseImage.setDisplaySize(HOUSE_SIZE, HOUSE_SIZE * 1.293);
     } else {
-      this.houseImage.setDisplaySize(250, 250);
+      this.houseImage.setDisplaySize(HOUSE_SIZE, HOUSE_SIZE);
     }
 
     this.houseImage.setInteractive();
@@ -153,9 +155,9 @@ export class House {
     // Get house height
     let houseHeight;
     if (this.isMayorHouse) {
-      houseHeight = 250 * 1.293;
+      houseHeight = HOUSE_SIZE * 1.293;
     } else {
-      houseHeight = 250;
+      houseHeight = HOUSE_SIZE;
     }
 
     // Return rooftop center coordinates (top point of the house)
