@@ -20,6 +20,8 @@ import { mapUnitsByUniqDataSelector, mapUnitsSelector } from "@/store/selectors/
 
 import appConfig from "@/appConfig";
 
+const OSWAP_SWAP_URL = "https://oswap.io/swap/6SLFEQMX4AJQYOEH5EUY6MFD5C6L6DKV"
+
 export const BuyNewPlotForm: FC = memo(() => {
   // Get AA parameters and calculate plot price details
   const params = useAaParams();
@@ -137,7 +139,7 @@ export const BuyNewPlotForm: FC = memo(() => {
         </InfoPanel.Item>
 
         <InfoPanel.Item label="Total price" loading={isLoading}>
-          {formattedValues.total} {symbol}
+          {formattedValues.total} {symbol} (buy {symbol} on <a href={OSWAP_SWAP_URL} target="_blank" rel="noopener" className="text-link">oswap</a>)
         </InfoPanel.Item>
       </InfoPanel>
 
