@@ -49,6 +49,15 @@ const ClaimRedirectPage = () => {
   const { data: attestations1, loaded: plot1AttestationLoaded } = useAttestations(plot1?.owner);
   const { data: attestations2, loaded: plot2AttestationLoaded } = useAttestations(plot2?.owner);
 
+  // Hooks for skeleton display and engine options must be at top level before any return
+  const shownSkeleton = loading || !loaded || !inited;
+  const engineOptions = useMemo(() => ({
+    displayMode: "claim" as const,
+    params,
+    claimNeighborPlotNumbers: [plot1_num, plot2_num] as [number, number],
+    isReferral: plot2?.ref_plot_num === plot1?.plot_num || plot2?.ref === plot1?.owner,
+  }), [params, plot1_num, plot2_num, plot2?.ref_plot_num, plot1?.plot_num, plot2?.ref, plot1?.owner]);
+
   if (loading || !loaded || !inited) {
     return (
       <div className="text-lg text-center min-h-[75vh] mt-10">
@@ -136,16 +145,6 @@ const ClaimRedirectPage = () => {
 
   const seoTitle = `Obyte City — You are neighbors: ${infoName1 || tgAttestation1?.value || discordAttestation1?.value
     } and ${infoName2 || tgAttestation2?.value || discordAttestation2?.value}`;
-
-  const shownSkeleton = loading || !loaded || !inited;
-
-  // Memoize engineOptions to prevent unnecessary re-creation and scene destruction
-  const engineOptions = useMemo(() => ({
-    displayMode: "claim" as const,
-    params,
-    claimNeighborPlotNumbers: [plot1_num, plot2_num] as [number, number],
-    isReferral: plot2.ref_plot_num === plot1.plot_num || plot2.ref == plot1.owner,
-  }), [params, plot1_num, plot2_num, plot2.ref_plot_num, plot1.plot_num, plot2.ref, plot1.owner]);
 
   return (
     <>
