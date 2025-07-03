@@ -54,7 +54,7 @@ export const PhaserMapEngine = memo(
         }
       });
       return () => {
-        EventBus.removeListener("current-scene-ready");
+        EventBus.off("current-scene-ready");
       };
     }, [currentActiveScene, ref]);
 
