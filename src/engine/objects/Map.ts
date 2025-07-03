@@ -31,6 +31,16 @@ export class Map {
   private engineOptions: IEngineOptions | null = null;
   private matches: globalThis.Map<number, IMatch>;
 
+  private isSceneValid(): boolean {
+    return !!(
+      this.scene &&
+      this.scene.add &&
+      this.scene.add !== null &&
+      this.scene.scene &&
+      this.scene.scene.isActive()
+    );
+  }
+
   constructor(scene: Phaser.Scene, roadsData: IRoad[], unitsData: IMapUnit[], matches: globalThis.Map<number, IMatch>) {
     this.scene = scene;
     this.roadsData = roadsData;
@@ -296,14 +306,18 @@ export class Map {
   }
 
   private createNeighborLinks() {
-    // Check if scene is still valid
-    if (!this.scene || !this.scene.add) {
-      console.warn('Map: Scene is not available, skipping neighbor links creation');
+    // Check if scene is still valid and not destroyed
+    if (!this.isSceneValid()) {
+      console.warn('Map: Scene is not valid, skipping neighbor links creation');
       return;
     }
 
     // Clear existing links
-    this.neighborLinks.forEach(link => link.destroy());
+    this.neighborLinks.forEach(link => {
+      if (link && typeof link.destroy === 'function') {
+        link.destroy();
+      }
+    });
     this.neighborLinks = [];
 
     // Create a map of houses by plot numbers for quick lookup
@@ -325,9 +339,13 @@ export class Map {
 
       // Check that both houses exist and link is not yet created
       if (house1 && house2 && plotNum < match.neighbor_plot) {
-        // Create link only once (check plotNum < match.neighbor_plot)
-        const link = new NeighborLink(this.scene, house1, house2, match, 20, 0xff0000);
-        this.neighborLinks.push(link);
+        try {
+          // Create link only once (check plotNum < match.neighbor_plot)
+          const link = new NeighborLink(this.scene, house1, house2, match, 20, 0xff0000);
+          this.neighborLinks.push(link);
+        } catch (error) {
+          console.warn('Map: Failed to create neighbor link:', error);
+        }
       }
     });
   }
@@ -342,14 +360,20 @@ export class Map {
 
   updateMatches(matches: globalThis.Map<number, IMatch>) {
     this.matches = matches;
-    // Recreate links when updating matches
-    if (this.engineOptions) {
+    // Recreate links when updating matches, but only if engine options exist and scene is valid
+    if (this.engineOptions && this.isSceneValid()) {
       this.createNeighborLinks();
+    } else {
+      console.warn('Map: Cannot update neighbor links - engine options missing or scene not valid');
     }
   }
 
   updateEngineOptions(newOptions: IEngineOptions) {
-    this.engineOptions = {};
+    // Check if scene is still valid before updating
+    if (!this.isSceneValid()) {
+      console.warn('Map: Cannot update engine options - scene is not valid');
+      return;
+    }
 
     this.destroyMapUnits();
     this.destroyNeighborLinks();

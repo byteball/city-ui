@@ -30,15 +30,17 @@ export class NeighborLink {
     this.lineWidth = lineWidth;
     this.lineColor = lineColor;
 
-    // Only create link if scene is valid
-    if (this.scene && this.scene.add) {
+    // Only create link if scene is valid and has add property
+    if (this.scene && this.scene.add && this.scene.add !== null) {
       this.createLink();
+    } else {
+      console.warn('NeighborLink: Scene is not available during construction, skipping link creation');
     }
   }
 
   private createLink() {
-    // Check if scene is still valid
-    if (!this.scene || !this.scene.add) {
+    // Check if scene is still valid and has the add property
+    if (!this.scene || !this.scene.add || this.scene.add === null) {
       console.warn('NeighborLink: Scene is not available, skipping link creation');
       return;
     }
@@ -52,8 +54,13 @@ export class NeighborLink {
     const x2 = roof2.x;
     const y2 = roof2.y;
 
-    // Create a graphics object for the line
-    this.link = this.scene.add.graphics();
+    try {
+      // Create a graphics object for the line
+      this.link = this.scene.add.graphics();
+    } catch (error) {
+      console.warn('NeighborLink: Failed to create graphics object, scene may be destroyed:', error);
+      return;
+    }
     this.link.setDepth(60); // Set depth above houses
     this.link.setAlpha(0.8);
     // Configure line style - red, rounded
@@ -114,8 +121,13 @@ export class NeighborLink {
   }
 
   public destroy() {
-    if (this.link) {
-      this.link.destroy();
+    try {
+      if (this.link && typeof this.link.destroy === 'function') {
+        this.link.destroy();
+      }
+    } catch (error) {
+      console.warn('NeighborLink: Error during link destruction:', error);
+    } finally {
       this.link = null as any; // Clear reference
     }
   }
