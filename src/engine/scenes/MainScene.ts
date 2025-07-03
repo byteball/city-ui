@@ -98,6 +98,11 @@ export default class MapScene extends Phaser.Scene {
     });
 
     const unsubscribe = useAaStore.subscribe((newState) => {
+      if (!this.sys.isActive()) {
+        console.warn("MapScene is not active, skipping state update");
+        return;
+      }
+
       const mapUnits = mapUnitsSelector(newState);
 
       const cityStats = newState.state.city_city as ICity;
