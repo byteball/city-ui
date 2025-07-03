@@ -17,10 +17,12 @@ interface IProps {
 export const PhaserMapEngine = memo(
   forwardRef<IRefPhaserMapEngine, IProps>(function PhaserMapEngine({ currentActiveScene, engineOptions }, ref) {
     const engine = useRef<Phaser.Game | null>(null!);
+    const previousEngineOptions = useRef<IEngineOptions | undefined>(undefined);
 
     useLayoutEffect(() => {
       if (engine.current === null) {
         engine.current = StartMapEngine("engine-container", engineOptions);
+        previousEngineOptions.current = engineOptions;
 
         if (typeof ref === "function") {
           ref({ engine: engine.current, scene: null });
@@ -37,7 +39,7 @@ export const PhaserMapEngine = memo(
           }
         }
       };
-    }, [ref, engineOptions]);
+    }, [ref]);
 
     useEffect(() => {
       EventBus.on("current-scene-ready", (scene_instance: Phaser.Scene) => {
@@ -52,13 +54,14 @@ export const PhaserMapEngine = memo(
         }
       });
       return () => {
-        EventBus.removeListener("current-scene-ready");
+        EventBus.off("current-scene-ready");
       };
     }, [currentActiveScene, ref]);
 
     useEffect(() => {
-      if (engine.current) {
+      if (engine.current && engineOptions !== previousEngineOptions.current) {
         EventBus.emit("update-engine-options", engineOptions);
+        previousEngineOptions.current = engineOptions;
       }
     }, [engineOptions]);
 

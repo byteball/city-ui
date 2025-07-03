@@ -25,6 +25,11 @@ const config: Phaser.Types.Core.GameConfig = {
   fps: {
     target: 60,
   },
+  audio: {
+    disableWebAudio: true,
+    noAudio: true,
+  },
+  scene: MapScene,
 };
 
 const StartMapEngine = (parent: string, options: IEngineOptions = {}) => {
@@ -32,14 +37,9 @@ const StartMapEngine = (parent: string, options: IEngineOptions = {}) => {
     throw new Error("Missing required 'params' in options. Unable to start the engine.");
   }
 
-  const dynamicConfig = { ...config, parent };
-  // Remove scene from the initial config
+  const mapEngine = new Game({ ...config, parent });
 
-  // Create the engine instance without the scene initially
-  const mapEngine = new Game({ ...dynamicConfig });
-
-  // Add the scene manually and pass options data. The 'true' flag auto-starts the scene.
-  mapEngine.scene.add("MapScene", MapScene, true, options);
+  mapEngine.scene.start("MapScene", options);
 
   return mapEngine;
 };

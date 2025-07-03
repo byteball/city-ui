@@ -91,7 +91,18 @@ export default class MapScene extends Phaser.Scene {
       this.map.updateMapUnitSelection();
     });
 
+    // Handle engine options updates
+    EventBus.on("update-engine-options", (newOptions: IEngineOptions) => {
+      this.options = { ...this.options, ...newOptions };
+      this.map.updateEngineOptions(this.options);
+    });
+
     const unsubscribe = useAaStore.subscribe((newState) => {
+      if (!this.sys.isActive()) {
+        console.warn("MapScene is not active, skipping state update");
+        return;
+      }
+
       const mapUnits = mapUnitsSelector(newState);
 
       const cityStats = newState.state.city_city as ICity;
@@ -111,6 +122,7 @@ export default class MapScene extends Phaser.Scene {
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       unsubscribe();
       EventBus.off("reset-selection");
+      EventBus.off("update-engine-options");
     });
 
     new CameraController(this, this.cameras.main);

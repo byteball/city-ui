@@ -1,5 +1,5 @@
 import { CircleXIcon, Loader } from "lucide-react";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate, useParams } from "react-router";
 
@@ -139,6 +139,14 @@ const ClaimRedirectPage = () => {
 
   const shownSkeleton = loading || !loaded || !inited;
 
+  // Memoize engineOptions to prevent unnecessary re-creation and scene destruction
+  const engineOptions = useMemo(() => ({
+    displayMode: "claim" as const,
+    params,
+    claimNeighborPlotNumbers: [plot1_num, plot2_num] as [number, number],
+    isReferral: plot2.ref_plot_num === plot1.plot_num || plot2.ref == plot1.owner,
+  }), [params, plot1_num, plot2_num, plot2.ref_plot_num, plot1.plot_num, plot2.ref, plot1.owner]);
+
   return (
     <>
       <Helmet>
@@ -164,12 +172,7 @@ const ClaimRedirectPage = () => {
                 {!shownSkeleton ? (
                   <PhaserMapEngine
                     ref={phaserRef}
-                    engineOptions={{
-                      displayMode: "claim",
-                      params,
-                      claimNeighborPlotNumbers: [plot1_num, plot2_num],
-                      isReferral: plot2.ref_plot_num === plot1.plot_num || plot2.ref == plot1.owner,
-                    }}
+                    engineOptions={engineOptions}
                   />
                 ) : (
                   <div className="engine-container-placeholder">
