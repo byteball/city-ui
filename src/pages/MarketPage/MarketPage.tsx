@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 import { PageLayout } from "@/components/layout/page-layout";
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
@@ -18,6 +18,15 @@ export default () => {
   const params = useAaParams();
 
   const shownSkeleton = loading || !!error || !settingsInited || !loaded;
+
+  // Memoize engineOptions to prevent unnecessary re-creation and scene destruction
+  const engineOptions = useMemo(
+    () => ({
+      displayMode: "market" as const,
+      params,
+    }),
+    [params]
+  );
 
   useEffect(() => {
     useSettingsStore.getState().setSelectedMarketPlot(null);
@@ -41,7 +50,7 @@ export default () => {
             <CardContent>
               <div ref={engineColumnRef}>
                 {!shownSkeleton ? (
-                  <PhaserMapEngine engineOptions={{ displayMode: "market", params }} />
+                  <PhaserMapEngine engineOptions={engineOptions} />
                 ) : (
                   <div className="engine-container-placeholder">
                     <Skeleton className="w-full h-[80vh] rounded-xl" />

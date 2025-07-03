@@ -25,6 +25,10 @@ const config: Phaser.Types.Core.GameConfig = {
   fps: {
     target: 60,
   },
+  audio: {
+    disableWebAudio: true,
+    noAudio: true,
+  },
 };
 
 const StartMapEngine = (parent: string, options: IEngineOptions = {}) => {

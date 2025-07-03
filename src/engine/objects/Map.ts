@@ -45,6 +45,7 @@ export class Map {
   }
 
   public createMap(options: IEngineOptions) {
+    console.log('log: create map with options:', options);
     this.engineOptions = options;
     // 1) Calculate the total thickness of vertical and horizontal roads
     let totalVerticalThickness = 0;
@@ -295,6 +296,12 @@ export class Map {
   }
 
   private createNeighborLinks() {
+    // Check if scene is still valid
+    if (!this.scene || !this.scene.add) {
+      console.warn('Map: Scene is not available, skipping neighbor links creation');
+      return;
+    }
+
     // Clear existing links
     this.neighborLinks.forEach(link => link.destroy());
     this.neighborLinks = [];
@@ -339,6 +346,38 @@ export class Map {
     if (this.engineOptions) {
       this.createNeighborLinks();
     }
+  }
+
+  updateEngineOptions(newOptions: IEngineOptions) {
+    this.engineOptions = {};
+
+    this.destroyMapUnits();
+    this.destroyNeighborLinks();
+
+    this.createMap(newOptions);
+  }
+
+  private destroyMapUnits() {
+    this.scene.children.list.forEach(child => {
+      if (child instanceof Phaser.GameObjects.Image) {
+        const texture = child.texture;
+        if (texture && ['plot', 'house', 'plus', 'golden-plot', 'mayor-house'].includes(texture.key)) {
+          child.destroy();
+        }
+      } else if (child instanceof Phaser.GameObjects.Graphics) {
+        child.destroy();
+      }
+    });
+    this.MapUnits = [];
+  }
+
+  private destroyNeighborLinks() {
+    this.neighborLinks.forEach(link => {
+      if (link && typeof link.destroy === 'function') {
+        link.destroy();
+      }
+    });
+    this.neighborLinks = [];
   }
 
   public getNeighborLinks(): NeighborLink[] {

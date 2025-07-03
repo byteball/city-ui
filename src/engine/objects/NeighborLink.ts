@@ -30,10 +30,19 @@ export class NeighborLink {
     this.lineWidth = lineWidth;
     this.lineColor = lineColor;
 
-    this.createLink();
+    // Only create link if scene is valid
+    if (this.scene && this.scene.add) {
+      this.createLink();
+    }
   }
 
   private createLink() {
+    // Check if scene is still valid
+    if (!this.scene || !this.scene.add) {
+      console.warn('NeighborLink: Scene is not available, skipping link creation');
+      return;
+    }
+
     // Get the coordinates of the rooftops of the houses
     const roof1 = this.house1.getRooftopCoordinates();
     const roof2 = this.house2.getRooftopCoordinates();
@@ -107,6 +116,7 @@ export class NeighborLink {
   public destroy() {
     if (this.link) {
       this.link.destroy();
+      this.link = null as any; // Clear reference
     }
   }
 
@@ -123,13 +133,13 @@ export class NeighborLink {
   }
 
   public setVisible(visible: boolean) {
-    if (this.link) {
+    if (this.isValid()) {
       this.link.setVisible(visible);
     }
   }
 
   public setAlpha(alpha: number) {
-    if (this.link) {
+    if (this.isValid()) {
       this.link.setAlpha(alpha);
     }
   }
@@ -146,5 +156,9 @@ export class NeighborLink {
       this.link.destroy();
       this.createLink();
     }
+  }
+
+  public isValid(): boolean {
+    return !!(this.scene && this.scene.add && this.link);
   }
 }
