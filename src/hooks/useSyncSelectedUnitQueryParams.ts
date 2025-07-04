@@ -26,7 +26,7 @@ export const useSyncSelectedUnitQueryParams = () => {
       console.log("log: selectedPlot, selectedHouse", selectedPlot, selectedHouse);
     }
 
-    let selectedUnitNum = null;
+    let selectedUnitNum: number | null = null;
     let selectedUnitType: "plot" | "house" | null = null;
 
     if (selectedHouse) {
@@ -44,13 +44,24 @@ export const useSyncSelectedUnitQueryParams = () => {
     }
 
     if (selectedUnitNum !== null && selectedUnitType !== null) {
-      const found = mapUnits.find((unit) =>
+      let foundUnit = mapUnits.find((unit) =>
         selectedUnitType === "plot"
           ? unit.type === "plot" && unit.plot_num === selectedUnitNum
           : unit.type === "house" && unit.house_num === selectedUnitNum
       );
 
-      if (found) {
+      if (!foundUnit) {
+        foundUnit = mapUnits.find((unit) =>
+          unit.type === "house" && unit.plot_num === selectedUnitNum
+        );
+
+        if (foundUnit && foundUnit.type === "house") {
+          selectedUnitType = "house";
+          selectedUnitNum = foundUnit.house_num;
+        }
+      }
+
+      if (foundUnit) {
         useSettingsStore
           .getState()
           .setSelectedMapUnit({ num: asNonNegativeNumber(selectedUnitNum), type: selectedUnitType });
