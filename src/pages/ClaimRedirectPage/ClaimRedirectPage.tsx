@@ -1,7 +1,7 @@
-import { CircleXIcon, Loader } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useMemo, useRef } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useParams } from "react-router";
 
 import { generateLink, getAddressFromNearestRoad, toLocalString } from "@/lib";
 import { useSettingsStore } from "@/store/settings-store";
@@ -12,18 +12,22 @@ import { useAaParams, useAaStore } from "@/store/aa-store";
 import { mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 
 import { ContactField } from "@/components/ui/_contact-field";
-import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { IRefPhaserMapEngine, PhaserMapEngine } from "@/engine/PhaserMapEngine";
-
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { QRButton } from "@/components/ui/_qr-button";
-
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { IRefPhaserMapEngine, PhaserMapEngine } from "@/engine/PhaserMapEngine";
+import { InvalidPlotAlert } from "./components/InvalidPlotAlert";
+import { AlreadyBuiltAlert } from "./components/alreadyBuiltAlrt";
+import { WaitingConfirmation } from "./components/waitingConfirmation";
+
 import { IPlot } from "@/global";
 import { getContactUrlByUsername } from "@/lib/getContactUrlByUsername";
+import { IMatch } from "@/lib/getMatches";
 
 import appConfig from "@/appConfig";
+import { NotFound } from "./components/NotFound";
 
 const ClaimRedirectPage = () => {
   const { walletAddress, inited, decimals, symbol } = useSettingsStore((state) => state);
@@ -34,51 +38,52 @@ const ClaimRedirectPage = () => {
   const engineColumnRef = useRef<HTMLDivElement>(null);
   const phaserRef = useRef<IRefPhaserMapEngine | null>(null);
   const params = useAaParams();
-  const navigation = useNavigate();
+  const lastPlotNum = aaState.state.state?.last_plot_num ?? null;
 
   const { loaded, loading } = aaState;
 
   const [plot1_num, plot2_num] = nums?.split("-").map(Number) || [];
 
   const isValidPlotNumbers =
-    nums && !isNaN(plot1_num) && !isNaN(plot2_num) && Number.isInteger(plot1_num) && Number.isInteger(plot2_num);
-
-  const plot1 = mapUnits.find((unit) => unit.type === "plot" && unit.plot_num === plot1_num) as IPlot;
-  const plot2 = mapUnits.find((unit) => unit.type === "plot" && unit.plot_num === plot2_num) as IPlot;
+    nums && !isNaN(plot1_num) && !isNaN(plot2_num) && Number.isInteger(plot1_num) && Number.isInteger(plot2_num) && plot2_num > plot1_num;
+  const plot1 = mapUnits.find((unit) => unit.type === "plot" && unit.plot_num === plot1_num) ?? null as IPlot | null;
+  const plot2 = mapUnits.find((unit) => unit.type === "plot" && unit.plot_num === plot2_num) ?? null as IPlot | null;
 
   const { data: attestations1, loaded: plot1AttestationLoaded } = useAttestations(plot1?.owner);
   const { data: attestations2, loaded: plot2AttestationLoaded } = useAttestations(plot2?.owner);
 
+  const match = aaState.state[`match_${plot1_num}_${plot2_num}`] as IMatch | undefined;
+  
   // Hooks for skeleton display and engine options must be at top level before any return
   const shownSkeleton = loading || !loaded || !inited;
+  const alreadyBuilt = match?.built_ts ? true : false;
+
   const engineOptions = useMemo(() => ({
     displayMode: "claim" as const,
     params,
     claimNeighborPlotNumbers: [plot1_num, plot2_num] as [number, number],
-    isReferral: plot2?.ref_plot_num === plot1?.plot_num || plot2?.ref === plot1?.owner,
+    isReferral: plot2?.ref_plot_num === plot1?.plot_num || plot2?.ref == plot1?.owner,
   }), [params, plot1_num, plot2_num, plot2?.ref_plot_num, plot1?.plot_num, plot2?.ref, plot1?.owner]);
 
-  if (loading || !loaded || !inited) {
+
+  if (loading || !loaded || !inited || lastPlotNum === null) {
     return (
       <div className="text-lg text-center min-h-[75vh] mt-10">
         <Loader className="mx-auto mb-5 w-14 h-14 animate-spin" />
       </div>
     );
-  }
-
-  if (inited && loaded && (plot1 === undefined || plot2 === undefined)) {
-    navigation("/");
-  }
-
-  if (!isValidPlotNumbers || plot1 === undefined || plot2 === undefined) {
-    return (
-      <div className="text-lg text-center min-h-[75vh] mt-10">
-        <CircleXIcon className="w-10 h-10 mx-auto mb-5" />
-        <h1 className="mb-5 text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl">Error</h1>
-
-        <div className="text-lg text-center">Invalid plot numbers</div>
-      </div>
-    );
+  } else if (!isValidPlotNumbers) {
+    return <InvalidPlotAlert />;
+  } else if (match && alreadyBuilt) {
+    return <AlreadyBuiltAlert
+      plot1_num={plot1_num}
+      plot2_num={plot2_num}
+      match={match}
+    />
+  } else if (!plot1 && plot1_num < lastPlotNum || !plot2 && plot2_num < lastPlotNum) {
+    return <NotFound />
+  } else if (!plot1 || !plot2 || !plot1.x || !plot2.x) {
+    return <WaitingConfirmation />
   }
 
   const mayor: string = aaState.state.city_city?.mayor!;
@@ -116,8 +121,10 @@ const ClaimRedirectPage = () => {
 
   const discordAttestation1 = attestations1.find((att) => att.name === "discord");
   const discordAttestation2 = attestations2.find((att) => att.name === "discord");
+
   const tgAttestation1 = attestations1.find((att) => att.name === "telegram");
   const tgAttestation2 = attestations2.find((att) => att.name === "telegram");
+
   const infoName1 = typeof plot1.info === "object" ? plot1.info?.name : "";
   const infoName2 = typeof plot2.info === "object" ? plot2.info?.name : "";
 
