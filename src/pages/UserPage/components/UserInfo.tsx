@@ -117,7 +117,9 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
           />
         </InfoPanel.Item>
 
-        <InfoPanel.Item label="Main plot">
+        <InfoPanel.Item
+          label="Main plot"
+          tooltipText="Users will be redirected to this plot when they click your referral link">
           <UserMainPlot address={address} />
         </InfoPanel.Item>
 
