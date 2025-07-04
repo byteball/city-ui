@@ -1,4 +1,5 @@
-import { parseAsInteger, useQueryState } from "nuqs";
+import { parseAsInteger, parseAsString, useQueryState } from "nuqs";
+import obyte from "obyte";
 import { useEffect, useState } from "react";
 
 import { asNonNegativeNumber } from "@/lib";
@@ -17,6 +18,7 @@ export const useSyncSelectedUnitQueryParams = () => {
 
   const [selectedPlot, setSelectedPlot] = useQueryState<number>("plot", parseAsInteger);
   const [selectedHouse, setSelectedHouse] = useQueryState<number>("house", parseAsInteger);
+  const [ref, setRef] = useQueryState<string>("ref", parseAsString);
 
   // initialization effect
   useEffect(() => {
@@ -36,9 +38,33 @@ export const useSyncSelectedUnitQueryParams = () => {
     } else if (selectedPlot) {
       selectedUnitNum = selectedPlot;
       selectedUnitType = "plot";
+    } else if (ref && obyte.utils.isValidAddress(ref)) {
+      const main_plot = aaState.state[`user_main_plot_city_${ref}`] as string | undefined;
+
+      if (main_plot) {
+        selectedUnitNum = parseInt(main_plot, 10);
+        selectedUnitType = "plot";
+      } else {
+        const anyRefPlot = mapUnits.find((unit) =>
+          unit.type === "plot" && unit.owner === ref && unit.status === "land");
+        if (anyRefPlot) {
+          selectedUnitNum = anyRefPlot.plot_num;
+          selectedUnitType = "plot";
+          setRef(null); // Clear ref after using it
+        } else {
+          console.log("user has no main any plots", ref);
+          setInited(true);
+          setRef(null);
+          useSettingsStore.getState().setSelectedMapUnit(null);
+          return; // Exit early if no selection is made
+        }
+      }
+
+
     } else {
       // If no plot or house is selected, clear the selected unit
       setInited(true);
+      setRef(null);
       useSettingsStore.getState().setSelectedMapUnit(null);
       return; // Exit early if no selection is made
     }
