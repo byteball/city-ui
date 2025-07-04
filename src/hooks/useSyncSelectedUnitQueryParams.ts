@@ -44,24 +44,24 @@ export const useSyncSelectedUnitQueryParams = () => {
     }
 
     if (selectedUnitNum !== null && selectedUnitType !== null) {
-      let foundedUnit = mapUnits.find((unit) =>
+      let foundUnit = mapUnits.find((unit) =>
         selectedUnitType === "plot"
           ? unit.type === "plot" && unit.plot_num === selectedUnitNum
           : unit.type === "house" && unit.house_num === selectedUnitNum
       );
 
-      if (!foundedUnit) {
-        foundedUnit = mapUnits.find((unit) =>
+      if (!foundUnit) {
+        foundUnit = mapUnits.find((unit) =>
           unit.type === "house" && unit.plot_num === selectedUnitNum
         );
 
-        if (foundedUnit && foundedUnit.type === "house") {
+        if (foundUnit && foundUnit.type === "house") {
           selectedUnitType = "house";
-          selectedUnitNum = foundedUnit.house_num;
+          selectedUnitNum = foundUnit.house_num;
         }
       }
 
-      if (foundedUnit) {
+      if (foundUnit) {
         useSettingsStore
           .getState()
           .setSelectedMapUnit({ num: asNonNegativeNumber(selectedUnitNum), type: selectedUnitType });
