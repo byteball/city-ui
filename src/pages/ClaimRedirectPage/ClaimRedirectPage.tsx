@@ -27,6 +27,7 @@ import { getContactUrlByUsername } from "@/lib/getContactUrlByUsername";
 import { IMatch } from "@/lib/getMatches";
 
 import appConfig from "@/appConfig";
+import { NotFound } from "./components/NotFound";
 
 const ClaimRedirectPage = () => {
   const { walletAddress, inited, decimals, symbol } = useSettingsStore((state) => state);
@@ -37,6 +38,7 @@ const ClaimRedirectPage = () => {
   const engineColumnRef = useRef<HTMLDivElement>(null);
   const phaserRef = useRef<IRefPhaserMapEngine | null>(null);
   const params = useAaParams();
+  const lastPlotNum = aaState.state.state?.last_plot_num ?? null;
 
   const { loaded, loading } = aaState;
 
@@ -62,7 +64,7 @@ const ClaimRedirectPage = () => {
   }), [params, plot1_num, plot2_num, plot2?.ref_plot_num, plot1?.plot_num, plot2?.ref, plot1?.owner]);
 
 
-  if (loading || !loaded || !inited) {
+  if (loading || !loaded || !inited || lastPlotNum === null) {
     return (
       <div className="text-lg text-center min-h-[75vh] mt-10">
         <Loader className="mx-auto mb-5 w-14 h-14 animate-spin" />
@@ -76,6 +78,8 @@ const ClaimRedirectPage = () => {
       plot2_num={plot2_num}
       match={match}
     />
+  } else if (!plot1 && plot1_num < lastPlotNum || !plot2 && plot2_num < lastPlotNum) {
+    return <NotFound />
   } else if (!plot1 || !plot2 || !plot1.x || !plot2.x) {
     return <WaitingConfirmation />
   }
