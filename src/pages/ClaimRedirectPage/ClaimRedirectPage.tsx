@@ -53,7 +53,9 @@ const ClaimRedirectPage = () => {
   const { data: attestations2, loaded: plot2AttestationLoaded } = useAttestations(plot2?.owner);
 
   const match = aaState.state[`match_${plot1_num}_${plot2_num}`] as IMatch | undefined;
-
+  
+  // Hooks for skeleton display and engine options must be at top level before any return
+  const shownSkeleton = loading || !loaded || !inited;
   const alreadyBuilt = match?.built_ts ? true : false;
 
   const engineOptions = useMemo(() => ({
@@ -150,8 +152,6 @@ const ClaimRedirectPage = () => {
 
   const seoTitle = `Obyte City — You are neighbors: ${infoName1 || tgAttestation1?.value || discordAttestation1?.value
     } and ${infoName2 || tgAttestation2?.value || discordAttestation2?.value}`;
-
-  const shownSkeleton = loading || !loaded || !inited;
 
   return (
     <>

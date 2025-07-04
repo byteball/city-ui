@@ -200,8 +200,8 @@ export default () => {
             </FaqTitle>
             <FaqContent scrollId="why-did-the-green-rectangle-around-my-plot-become-smaller-than-it-was-a-month-ago">
               <p>
-                Because new plots were bought in the City and the area of each plot was decreased so that their total
-                area is still 10% of the City area.
+                Because new plots were bought in the City and the matching area of each plot has decreased so that their total
+                area is still {toLocalString((matching_probability * 100).toFixed(2))}% of the City area.
               </p>
               <p>
                 That’s not necessarily bad news as the frequency of new plot purchases might have also grown, which
