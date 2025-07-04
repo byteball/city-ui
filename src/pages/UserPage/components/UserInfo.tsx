@@ -14,6 +14,7 @@ import { useAttestations } from "@/hooks/useAttestations";
 import { getExplorerUrl, toLocalString } from "@/lib";
 import { getReferralUrl } from "@/lib/getReferralUrl";
 import { useAaParams, useAaStore } from "@/store/aa-store";
+import { mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 import cn from "classnames";
 import { Helmet } from "react-helmet-async";
@@ -42,11 +43,13 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
   const walletAddress = useSettingsStore((state) => state.walletAddress);
   const { data: attestations, loaded } = useAttestations(address);
   const parsedUserInfo = useMemo(() => getParsedUserInfo(userInfo), [userInfo]);
+  const aaState = useAaStore((state) => state);
+  const userPlot = mapUnitsSelector(aaState).find((unit) => unit.owner === address && unit.type === "plot");
   const userMainPlotNum = useAaStore((state) => state.state[`user_main_plot_city_${address}`]) as number | undefined;
   const { referral_boost, matching_probability } = useAaParams();
   const [copied, setCopied] = useState(false);
 
-  const referralUrl = getReferralUrl(userMainPlotNum || null);
+  const referralUrl = (userMainPlotNum || userPlot) ? getReferralUrl(address || null) : null;
 
   const copy = () => {
     if (copied) return;
@@ -114,7 +117,9 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
           />
         </InfoPanel.Item>
 
-        <InfoPanel.Item label="Main plot">
+        <InfoPanel.Item
+          label="Main plot"
+          tooltipText="Users will be redirected to this plot when they click your referral link">
           <UserMainPlot address={address} />
         </InfoPanel.Item>
 
