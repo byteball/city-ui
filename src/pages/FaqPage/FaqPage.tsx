@@ -31,6 +31,9 @@ export default () => {
   const { matching_probability, referral_boost, followup_reward_share, p2p_sale_fee, shortcode_sale_fee, plot_price } = params;
   const { fee } = getPlotPrice(params);
   const plotPriceView = toLocalString(plot_price / 10 ** decimals!);
+  const area = Math.round(1e12 * matching_probability);
+  const sideLength = Math.round(Math.sqrt(1e12 * matching_probability));
+  const sideLength5 = Math.round(Math.sqrt(1e12 * matching_probability / 5));
 
   return (
     <PageLayout
@@ -137,15 +140,14 @@ export default () => {
                 Every plot has its coordinates in the City and an amount that was paid to buy the plot. Both horizontal
                 and vertical coordinates range from 0 to 1,000,000. Then, we draw a square area around the plot, with
                 the plot in its center and the square’s area proportional to the amount paid for the plot. This area is
-                called the matching area. The total area assigned to all plots is 10% of the City’s area. When a new
+                called the matching area. The total area assigned to all plots is {toLocalString((matching_probability * 100).toFixed(2))}% of the City’s area. When a new
                 plot is bought, it gets random coordinates in the City, and if these coordinates fall within any
                 existing plot’s matching area, these two plots are deemed neighbors.
               </p>
               <p>
-                For example, if there is only one plot, its matching area would be a square with side length equal to
-                316,228 points (so that its area is 316,228^2 = 100,000,000,000, which is 10% of the total City’s area
-                1,000,000,000,000). If there are 10 plots with equal amounts paid to buy them, each plot’s square has
-                side length 100,000.
+                For example, if there is only one plot, its matching area would be a square with side length equal to {toLocalString(sideLength)} points (so that its area is {toLocalString(sideLength)}^2 = {toLocalString(area)}, which is {toLocalString((matching_probability * 100).toFixed(2))}% of the total City’s area
+                1,000,000,000,000). If there are 5 plots with equal amounts paid to buy them, each plot’s square has
+                side length {toLocalString(sideLength5)}.
               </p>
               <p>
                 As more plots are bought in the City, each plot’s matching area decreases, and so decreases the
