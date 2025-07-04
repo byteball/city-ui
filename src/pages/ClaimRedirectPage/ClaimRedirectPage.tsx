@@ -43,8 +43,7 @@ const ClaimRedirectPage = () => {
   const [plot1_num, plot2_num] = nums?.split("-").map(Number) || [];
 
   const isValidPlotNumbers =
-    nums && !isNaN(plot1_num) && !isNaN(plot2_num) && Number.isInteger(plot1_num) && Number.isInteger(plot2_num) && plot1_num > plot1_num;
-
+    nums && !isNaN(plot1_num) && !isNaN(plot2_num) && Number.isInteger(plot1_num) && Number.isInteger(plot2_num) && plot2_num > plot1_num;
   const plot1 = mapUnits.find((unit) => unit.type === "plot" && unit.plot_num === plot1_num) ?? null as IPlot | null;
   const plot2 = mapUnits.find((unit) => unit.type === "plot" && unit.plot_num === plot2_num) ?? null as IPlot | null;
 
