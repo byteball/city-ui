@@ -497,7 +497,7 @@ export default () => {
             </FaqTitle>
             <FaqContent scrollId="what-is-the-initial-supply-of-tokens">
               <p>
-                The initial supply is 0. Tokens are minted at a fixed price 1000 {` ${symbol} `} for 1 GBYTE during the
+                The initial supply is 0. Tokens were minted at a fixed price 1000 {` ${symbol} `} for 1 GBYTE during the
                 initial sale period, and then they are burned and minted in response to user actions, with burns most
                 likely exceeding emissions.
               </p>
@@ -556,24 +556,24 @@ export default () => {
           </FaqItem>
 
           <FaqItem>
-            <FaqTitle scrollId="what-is-the-initial-sale-period">What is the initial sale period?</FaqTitle>
+            <FaqTitle scrollId="what-is-the-initial-sale-period">What was the initial sale period?</FaqTitle>
             <FaqContent scrollId="what-is-the-initial-sale-period">
               <p>
-                It’s an initial period when {` ${symbol} `} tokens can be bought at a fixed rate 1 GBYTE = 1000{" "}
-                {` ${symbol}`}. During this period, {` ${symbol} `} tokens are minted. Thereafter, they can only be
+                It was an initial period when {` ${symbol} `} tokens could be bought at a fixed rate 1 GBYTE = 1000{" "}
+                {` ${symbol}`}. During this period, {` ${symbol} `} tokens were minted. Thereafter, they can only be
                 bought from other users or earned as rewards.
               </p>
               <p>
-                To buy {` ${symbol} `} tokens during the initial sale period one needs to buy a plot. Plots are paid in
-                GBYTE instead of {` ${symbol} `} during this period, and the price in GBYTE is determined using the
-                fixed exchange rate 1 GBYTE = 1000 {` ${symbol}`}. When paying for a plot, you add 10% of the plot
-                price (in GBYTE) and receive {` ${symbol} `}
-                tokens in exchange, along with the plot. So, you’ll need to buy $100 worth of plots in order to buy $10
+                To buy {` ${symbol} `} tokens during the initial sale period one needed to buy a plot. Plots were paid in
+                GBYTE instead of {` ${symbol} `} during this period, and the price in GBYTE was determined using the
+                fixed exchange rate 1 GBYTE = 1000 {` ${symbol}`}. When paying for a plot, users added 10% of the plot
+                price (in GBYTE) and received {` ${symbol} `}
+                tokens in exchange, along with the plot. So, users needed to buy $100 worth of plots in order to buy $10
                 worth of {` ${symbol}`}.
               </p>
 
               <p>
-                If you leave this plot (before or after the initial sale ends), you get the plot price in{" "}
+                If one leaves this plot (before or after the initial sale ends), they get the plot price in{" "}
                 {` ${symbol}`}.
               </p>
             </FaqContent>
