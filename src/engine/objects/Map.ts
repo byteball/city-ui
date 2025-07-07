@@ -185,14 +185,6 @@ export class Map {
           address
         );
       } else if (type === "plot") {
-        if (this.engineOptions?.isReferral) {
-          if (
-            this.engineOptions?.claimNeighborPlotNumbers?.[1] !== unitData.plot_num &&
-            this.engineOptions?.params?.referral_boost
-          ) {
-            plotSize *= 1 + this.engineOptions?.params?.referral_boost;
-          }
-        }
         unit = new Plot(
           this.scene,
           { ...unitData, x: finalX, y: finalY },
