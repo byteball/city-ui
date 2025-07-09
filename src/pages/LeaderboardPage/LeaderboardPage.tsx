@@ -37,7 +37,7 @@ export default () => {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
           <CardTitle className="text-sm font-medium">
-            <div>Total {symbol}</div>
+            <div>Total {symbol} in plots</div>
           </CardTitle>
         </CardHeader>
         <CardContent>
