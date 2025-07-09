@@ -40,7 +40,7 @@ export const AdditionalInfo: FC<IAdditionalInfoProps> = ({ info, itemsType = 'di
   return <>
     {entries.slice(0, limit).map(([key, value]) => {
       const itemWrapperProps = itemsType === 'info-panel' ? { loading, className: "overflow-hidden", textClamp: true, label: key === "homepage" ? "" : key } : {};
-      const linkProps = { rel: "noopener", className: "text-link text-ellipsis overflow-hidden w-[100%] inline-block text-nowrap", target: "_blank" };
+      const linkProps = { rel: "nofollow", className: "text-link text-ellipsis overflow-hidden w-[100%] inline-block text-nowrap", target: "_blank" };
 
       const url = getSocialUrl(key, value?.toString());
       const haveUrl = !!url;
