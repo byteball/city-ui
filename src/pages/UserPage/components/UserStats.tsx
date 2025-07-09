@@ -2,7 +2,6 @@ import { FC, memo, useEffect, useState } from "react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TextScramble } from "@/components/ui/text-scramble";
 import { toLocalString } from "@/lib";
 import { calculateUserProbability } from "@/lib/calculateUserProbability";
 import { useAaParams, useAaStore } from "@/store/aa-store";
@@ -71,14 +70,14 @@ export const UserStats: FC<IUserStatsProps> = memo(({ address }) => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">
-              <TextScramble>Balance</TextScramble>
+              <div>Balance</div>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <TextScramble className="text-2xl font-bold">{`${balanceView} ${symbol}`}</TextScramble>
-            <TextScramble className="text-xs text-muted-foreground">
+            <div className="text-2xl font-bold">{`${balanceView} ${symbol}`}</div>
+            <div className="text-xs text-muted-foreground">
               {`Plus ${walletBalanceView} ${symbol!} in the wallet`}
-            </TextScramble>
+            </div>
           </CardContent>
         </Card>
       ) : (
@@ -88,12 +87,12 @@ export const UserStats: FC<IUserStatsProps> = memo(({ address }) => {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
           <CardTitle className="text-sm font-medium">
-            <TextScramble>Probability of matching</TextScramble>
+            <div>Probability of matching</div>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            <TextScramble>{toLocalString((overallProb * 100).toFixed(4)) + "%"}</TextScramble>
+            <div>{toLocalString((overallProb * 100).toFixed(4)) + "%"}</div>
           </div>
         </CardContent>
       </Card>

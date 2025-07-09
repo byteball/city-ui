@@ -1,33 +1,22 @@
 import cn from "classnames";
-import { Children, cloneElement, FC, isValidElement, ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 import { InfoIcon } from "lucide-react";
 import { Skeleton } from "./skeleton";
-import { TextScramble } from "./text-scramble";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 
 interface InfoPanelProps {
   children: ReactNode;
   className?: string;
-  labelAnimated?: boolean;
   compact?: boolean;
 }
 
 const InfoPanel: FC<InfoPanelProps> & { Item: typeof InfoPanelItem } = ({
   children,
   className = "",
-  labelAnimated = false,
   compact = false
 }) => {
-  const enhancedChildren = Children.map(children, (child) => {
-    if (isValidElement<{ labelAnimated?: boolean }>(child)) {
-      return cloneElement(child, { labelAnimated });
-    }
-
-    return child;
-  });
-
-  return <div className={cn("grid", compact ? "gap-0" : "gap-1", className)}>{enhancedChildren}</div>;
+  return <div className={cn("grid", compact ? "gap-0" : "gap-1", className)}>{children}</div>;
 };
 
 interface InfoPanelItemProps {
@@ -35,25 +24,21 @@ interface InfoPanelItemProps {
   children: ReactNode;
   tooltipText?: string | ReactNode;
   loading?: boolean;
-  labelAnimated?: boolean;
   textClamp?: boolean;
 }
 
 const InfoPanelItem: FC<InfoPanelItemProps> = ({
   label,
   children,
-  labelAnimated = false,
   loading = false,
   tooltipText,
   textClamp = false,
 }) => {
-  const LabelWrapper = labelAnimated ? TextScramble : "div";
-
   return (
     <div className="flex flex-col mb-2 last:mb-0 lg:mb-0 lg:space-x-2 lg:items-center lg:flex-row">
       {label ? (
         <div className="flex text-muted-foreground lg:text-white">
-          <LabelWrapper className="font-medium text-muted-foreground">{label}</LabelWrapper>
+          <div className="font-medium text-muted-foreground">{label}</div>
 
           {tooltipText ? (
             <TooltipProvider>

@@ -13,6 +13,7 @@ import { ShortCodeSellDialog } from "@/components/dialogs/ShortCodeSellDialog";
 import { ContactField } from "@/components/ui/_contact-field";
 import { InfoPanel } from "@/components/ui/_info-panel";
 import { QRButton } from "@/components/ui/_qr-button";
+import { AdditionalInfo } from "@/components/ui/additional_info";
 import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -292,27 +293,12 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
               ) : null}
 
               {selectedMapUnit?.info ? (
-                <div className="text-sm">
+                <div className="overflow-hidden text-sm">
                   <div className="mt-2 mb-1 font-semibold">Additional information</div>
-                  {typeof selectedMapUnit.info === "string" ? (
-                    <InfoPanel.Item label="Information">{selectedMapUnit.info}</InfoPanel.Item>
-                  ) : (
-                    Object.entries(selectedMapUnit.info).sort(([keyA], [keyB]) => keyA === "name" ? -1 : keyB === "name" ? 1 : 0)
-                      .slice(0, 5)
-                      .map(([key, value]) => (
-                        <InfoPanel.Item key={key} label={key === "homepage" ? "" : key}>
-                          <div className="inline">
-                            {String(value).startsWith("https://") || String(value).startsWith("https://") ? (
-                              <a href={value?.toString()} rel="noopener" className="text-link" target="_blank">
-                                {value}
-                              </a>
-                            ) : (
-                              value ?? ""
-                            )}
-                          </div>
-                        </InfoPanel.Item>
-                      ))
-                  )}
+                  <AdditionalInfo
+                    info={selectedMapUnit?.info}
+                    itemsType="info-panel"
+                  />
                 </div>
               ) : null}
 
