@@ -9,6 +9,7 @@ import { useAaStore } from "@/store/aa-store";
 import { mapUnitsByOwnerAddressSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 
+import { AdditionalInfo } from "@/components/ui/additional_info";
 import { getRoads } from "@/engine/utils/getRoads";
 import { ICity } from "@/global";
 import { asNonNegativeNumber, mapUnitsSortFunc, toLocalString } from "@/lib";
@@ -91,30 +92,9 @@ export const UserPlots: FC<IUserPlotsProps> = ({ address }) => {
                       </InfoPanel.Item>
 
                       {info ? (
-                        <div className="text-sm">
+                        <div className="overflow-hidden text-sm">
                           <div className="mt-4 mb-1 font-semibold">Additional information</div>
-                          {typeof info === "string" ? (
-                            <InfoPanel.Item label="Information">
-                              <div className="inline">{info}</div>
-                            </InfoPanel.Item>
-                          ) : (
-                            Object.entries(info)
-                              .slice(0, 5)
-                              .sort(([keyA], [keyB]) => keyA === "name" ? -1 : keyB === "name" ? 1 : 0)
-                              .map(([key, value]) => (
-                                <InfoPanel.Item key={key} label={key === "homepage" ? "" : key}>
-                                  <div className="inline">
-                                    {String(value).startsWith("https://") || String(value).startsWith("https://") ? (
-                                      <a href={value?.toString()} rel="noopener" className="text-link" target="_blank">
-                                        {value}
-                                      </a>
-                                    ) : (
-                                      value ?? ""
-                                    )}
-                                  </div>
-                                </InfoPanel.Item>
-                              ))
-                          )}
+                          <AdditionalInfo itemsType="info-panel" info={info} />
                         </div>
                       ) : null}
                     </InfoPanel>

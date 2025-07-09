@@ -7,6 +7,7 @@ import { EditUserInfoDialog } from "@/components/dialogs/EditUserInfoDialog";
 import { SetUserMainPlotDialog } from "@/components/dialogs/SetUserMainPlotDialog";
 import { ContactField } from "@/components/ui/_contact-field";
 import { InfoPanel } from "@/components/ui/_info-panel";
+import { AdditionalInfo } from "@/components/ui/additional_info";
 import { Button } from "@/components/ui/button";
 import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
 import { IMapUnitInfo } from "@/global";
@@ -159,27 +160,9 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
         </InfoPanel.Item>
 
         {userInfo ? (
-          <>
-            {typeof parsedUserInfo === "string" ? (
-              <div>{parsedUserInfo}</div>
-            ) : (
-              <>
-                {Object.entries(parsedUserInfo).sort(([keyA], [keyB]) => keyA === "name" ? -1 : keyB === "name" ? 1 : 0).map(([key, value]) => {
-                  return (
-                    <InfoPanel.Item key={key} label={key === "homepage" ? "" : key} loading={!loaded}>
-                      {String(value).startsWith("https://") || String(value).startsWith("https://") ? (
-                        <a href={value?.toString()} rel="noopener" className="text-link" target="_blank">
-                          {value}
-                        </a>
-                      ) : (
-                        value ?? ""
-                      )}
-                    </InfoPanel.Item>
-                  );
-                })}
-              </>
-            )}
-          </>
+          <div className="overflow-hidden">
+            <AdditionalInfo itemsType="info-panel" info={userInfo} />
+          </div>
         ) : (
           <div className="text-gray-500">No information provided</div>
         )}
