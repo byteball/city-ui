@@ -64,7 +64,7 @@ export const columns: ColumnDef<ILeaderboardEntry>[] = [
           className="px-0 hover:bg-transparent"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Plots count
+          Plots
           <ArrowUpDown className="w-4 h-4 ml-2" />
         </Button>
       )
@@ -79,7 +79,7 @@ export const columns: ColumnDef<ILeaderboardEntry>[] = [
           className="px-0 mr-2 hover:bg-transparent"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Houses count
+          Houses
           <ArrowUpDown className="w-4 h-4 ml-2" />
         </Button>
       )
