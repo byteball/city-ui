@@ -44,8 +44,8 @@ const UserPage: FC<UserPageProps> = () => {
     <PageLayout ignoreSeo title={attestationsLoaded ? title : ''} loading={loading}>
       <UserInfo address={address} />
       <UserStats address={address} />
-      <UserPlots address={address} />
       <UserHouses address={address} />
+      <UserPlots address={address} />
     </PageLayout>
   );
 };
