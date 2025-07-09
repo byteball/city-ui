@@ -146,26 +146,29 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
           )}
         </InfoPanel.Item>
 
-        <InfoPanel.Item>
-          <h2 className="mt-4 text-xl font-semibold">
-            Additional information{" "}
-            {address === walletAddress ? (
-              <EditUserInfoDialog address={address} info={parsedUserInfo}>
-                <ButtonWithTooltip tooltipText="Edit user" variant="link" className="rounded-xl">
-                  <UserPenIcon className="w-4 h-4" />
-                </ButtonWithTooltip>
-              </EditUserInfoDialog>
-            ) : null}
-          </h2>
-        </InfoPanel.Item>
+        {userInfo || address === walletAddress ? <>
+          <InfoPanel.Item>
+            <h2 className="mt-4 text-xl font-semibold">
+              Additional information{" "}
+              {address === walletAddress ? (
+                <EditUserInfoDialog address={address} info={parsedUserInfo}>
+                  <ButtonWithTooltip tooltipText="Edit user" variant="link" className="rounded-xl">
+                    <UserPenIcon className="w-4 h-4" />
+                  </ButtonWithTooltip>
+                </EditUserInfoDialog>
+              ) : null}
+            </h2>
+          </InfoPanel.Item>
 
-        {userInfo ? (
-          <div className="overflow-hidden">
-            <AdditionalInfo itemsType="info-panel" info={userInfo} />
-          </div>
-        ) : (
-          <div className="text-gray-500">No information provided</div>
-        )}
+          {userInfo ? (
+            <div className="overflow-hidden">
+              <AdditionalInfo itemsType="info-panel" info={userInfo} />
+            </div>
+          ) : (
+            <div className="text-gray-500">No information provided</div>
+          )}
+        </> : null}
+
       </InfoPanel>
     </div>
   );
