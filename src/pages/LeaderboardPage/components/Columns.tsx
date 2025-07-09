@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
+import { ArrowDown } from "lucide-react"
 import { Link } from "react-router"
 
 import { Button } from "@/components/ui/button"
@@ -62,10 +62,10 @@ export const columns: ColumnDef<ILeaderboardEntry>[] = [
         <Button
           variant="ghost"
           className="px-0 hover:bg-transparent"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(true)}
         >
           Plots
-          <ArrowUpDown className="w-4 h-4 ml-2" />
+          <ArrowDown className="w-4 h-4 ml-1" />
         </Button>
       )
     },
@@ -77,10 +77,10 @@ export const columns: ColumnDef<ILeaderboardEntry>[] = [
         <Button
           variant="ghost"
           className="px-0 mr-2 hover:bg-transparent"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(true)}
         >
           Houses
-          <ArrowUpDown className="w-4 h-4 ml-2" />
+          <ArrowDown className="w-4 h-4 ml-1" />
         </Button>
       )
     },
