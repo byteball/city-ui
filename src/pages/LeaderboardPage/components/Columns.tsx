@@ -15,14 +15,24 @@ const unknownPlug = "Unknown"
 
 export const columns: ColumnDef<ILeaderboardEntry>[] = [
   {
+    id: "rowNumber",
+    header: () => <div className="ml-2">#</div>,
+    cell: ({ row, table }) => {
+      const sortedRows = table.getSortedRowModel().rows;
+      const rowIndex = sortedRows.findIndex((sortedRow) => sortedRow.id === row.id);
+
+      return <div className="ml-2">{rowIndex + 1}</div>;
+    },
+  },
+  {
     accessorKey: "address",
-    header: () => <div className="ml-2">User</div>,
+    header: () => <div>User</div>,
     cell: ({ row }) => {
       const address = row.getValue("address") as string;
       const { data: attestations, loaded } = useAttestations(address);
 
       return (
-        <div className="flex flex-col gap-2 ml-2">
+        <div className="flex flex-col gap-2">
           <div>
             <Link to={`/user/${address}`} className="text-link">{address}</Link>
           </div>
