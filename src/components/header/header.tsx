@@ -5,6 +5,7 @@ import { EventBus } from "@/engine/EventBus";
 import { useSettingsStore } from "@/store/settings-store";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { AddWalletAddress } from "../dialogs/AddWalletAddress";
+import { NotificationPanel } from "../ui/_notification-panel";
 import { Button } from "../ui/button";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 
@@ -105,7 +106,11 @@ export const Header: FC<IHeaderProps> = () => {
           ))}
         </div>
         <div className="items-center hidden gap-4 lg:flex lg:flex-1 lg:justify-end">
-          {walletAddress ? <Link to={`/user/${walletAddress}`}>My profile</Link> : null}
+          {walletAddress ?
+            <>
+              <NotificationPanel />
+              <Link to={`/user/${walletAddress}`} className="select-none">My profile</Link></>
+            : null}
           <AddWalletAddress>
             <Button variant="default">Add wallet</Button>
           </AddWalletAddress>
