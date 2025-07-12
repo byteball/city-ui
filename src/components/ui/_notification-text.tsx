@@ -8,12 +8,19 @@ import { useSettingsStore } from "@/store/settings-store";
 import { getRoads } from "@/engine/utils/getRoads";
 import { ICity, INotification } from "@/global";
 import { asNonNegativeNumber, getAddressFromNearestRoad } from "@/lib";
+import { PopoverClose } from "@radix-ui/react-popover";
 
-export const NotificationText: FC<INotification> = ({ type, unitNumber }) => {
+interface NotificationTextProps extends INotification {
+  autoClose?: boolean
+}
+
+export const NotificationText: FC<NotificationTextProps> = ({ type, unitNumber, autoClose = false }) => {
   const walletAddress = useSettingsStore((state) => state.walletAddress);
   const aaState = useAaStore((state) => state);
   const mapUnits = mapUnitsSelector(aaState);
   const userUnits = useAaStore((state) => mapUnitsByOwnerAddressSelector(state, walletAddress));
+  const LinkWrapper = autoClose ? PopoverClose : 'span';
+  const linkWrapperProps = autoClose ? { asChild: true } : {};
 
   const changeMapUnit = () => {
     if (unitNumber) {
@@ -46,7 +53,9 @@ export const NotificationText: FC<INotification> = ({ type, unitNumber }) => {
 
       return (
         <div>
-          You've got a new {unitType} - <Link to={`/?${unitType}=${unitNumber}`} onClick={changeMapUnit} className="text-link">{address}</Link>
+          You've got a new {unitType} - <LinkWrapper {...linkWrapperProps}>
+            <Link to={`/?${unitType}=${unitNumber}`} onClick={changeMapUnit} className="text-link">{address}</Link>
+          </LinkWrapper>
         </div>
       )
     }
