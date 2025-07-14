@@ -50,6 +50,9 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
   const { referral_boost, matching_probability } = useAaParams();
   const [copied, setCopied] = useState(false);
 
+  const nCount = useSettingsStore((s) => s.notifications.length);
+  const countView = nCount > 0 ? `(${nCount}) ` : "";
+
   const referralUrl = (userMainPlotNum || userPlot) ? getReferralUrl(address || null) : null;
 
   const copy = () => {
@@ -78,13 +81,15 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
     description = `Personal page of citizen  ${name}, ${walletAddress} in Obyte City, a community engagement space for Obyte`;
   }
 
+  const titleWithNotifications = countView + title;
+
   return (
     <div>
       {/* for User page */}
       <Helmet>
         {title ? (
           <>
-            <title>{title}</title>
+            <title>{titleWithNotifications}</title>
             <meta name="og:title" content={title} />
             <meta name="twitter:title" content={title} />
           </>

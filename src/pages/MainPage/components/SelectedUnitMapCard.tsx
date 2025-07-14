@@ -42,6 +42,8 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
   const selectedMapUnitUniqData = useSettingsStore((state) =>
     sceneType === "market" ? state.selectedMarketPlot : state.selectedMapUnit
   );
+  const nCount = useSettingsStore((s) => s.notifications.length);
+  const countView = nCount > 0 ? `(${nCount}) ` : "";
 
   const stateLoaded = useAaStore((state) => state.loaded);
   const aaState = useAaStore((state) => state);
@@ -136,6 +138,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
       : null;
 
   const title = `Obyte City — ${addresses.length ? addresses[0] : "A community engagement space for Obyte"}`;
+  const titleWithNotifications = countView + title;
 
   const discordContact = attestations.find((a) => a.name === "discord")?.value;
   const telegramContact = attestations.find((a) => a.name === "telegram")?.value;
@@ -164,7 +167,7 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
   return (
     <>
       <Helmet>
-        <title>{title}</title>
+        <title>{titleWithNotifications}</title>
         <meta name="og:title" content={title} />
         <meta name="twitter:title" content={title} />
 
