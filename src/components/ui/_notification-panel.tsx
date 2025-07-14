@@ -41,7 +41,7 @@ export const NotificationPanel = memo(() => {
                 <Inbox className="w-8 h-8 mx-auto" />
               </div>
 
-              <div className="text-muted-foreground">You've seen all the notifications</div>
+              <div className="text-muted-foreground">You have no new notifications</div>
             </div> : <ScrollArea type="auto" className="h-[240px] pr-4">
               {notifications.sort((a, b) => b.ts - a.ts).map((n) => (
                 <div key={n.ts}
