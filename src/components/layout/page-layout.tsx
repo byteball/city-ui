@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { Helmet } from "react-helmet-async";
 
+import { useSettingsStore } from "@/store/settings-store";
 import { TextShimmerWave } from "../ui/text-shimmer-wave";
 
 import appConfig from "@/appConfig";
@@ -26,10 +27,13 @@ export const PageLayout: FC<IPageLayoutProps> = ({
   ogImageKey,
   ignoreSeo = false, // if true, do not render SEO tags
 }) => {
+  const nCount = useSettingsStore((s) => s.notifications.length);
+  const countView = nCount > 0 ? `(${nCount}) ` : "";
+
   return (
     <>
       {!ignoreSeo ? <Helmet>
-        <title>Obyte City — {seoTitle || title}</title>
+        <title>{countView}Obyte City — {seoTitle || title}</title>
         <meta name="og:title" content={`Obyte City — ${seoTitle || title}`} />
         <meta name="twitter:title" content={`Obyte City — ${seoTitle || title}`} />
 

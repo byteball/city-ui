@@ -39,6 +39,8 @@ const ClaimRedirectPage = () => {
   const phaserRef = useRef<IRefPhaserMapEngine | null>(null);
   const params = useAaParams();
   const lastPlotNum = aaState.state.state?.last_plot_num ?? null;
+  const nCount = useSettingsStore((s) => s.notifications.length);
+  const countView = nCount > 0 ? `(${nCount}) ` : "";
 
   const { loaded, loading } = aaState;
 
@@ -53,7 +55,7 @@ const ClaimRedirectPage = () => {
   const { data: attestations2, loaded: plot2AttestationLoaded } = useAttestations(plot2?.owner);
 
   const match = aaState.state[`match_${plot1_num}_${plot2_num}`] as IMatch | undefined;
-  
+
   // Hooks for skeleton display and engine options must be at top level before any return
   const shownSkeleton = loading || !loaded || !inited;
   const alreadyBuilt = match?.built_ts ? true : false;
@@ -152,11 +154,12 @@ const ClaimRedirectPage = () => {
 
   const seoTitle = `Obyte City — You are neighbors: ${infoName1 || tgAttestation1?.value || discordAttestation1?.value
     } and ${infoName2 || tgAttestation2?.value || discordAttestation2?.value}`;
+  const titleWithNotifications = countView + seoTitle;
 
   return (
     <>
       <Helmet>
-        <title>{seoTitle}</title>
+        <title>{titleWithNotifications}</title>
         <meta name="og:title" content={seoTitle} />
         <meta name="twitter:title" content={seoTitle} />
 
