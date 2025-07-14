@@ -3,7 +3,7 @@ import { Link } from "react-router";
 
 import { useAaStore } from "@/store/aa-store";
 import { mapUnitsByOwnerAddressSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
-import { useSettingsStore } from "@/store/settings-store";
+import { clearNotification, useSettingsStore } from "@/store/settings-store";
 
 import { getRoads } from "@/engine/utils/getRoads";
 import { ICity, INotification } from "@/global";
@@ -14,7 +14,7 @@ interface NotificationTextProps extends INotification {
   autoClose?: boolean
 }
 
-export const NotificationText: FC<NotificationTextProps> = ({ type, unitNumber, autoClose = false }) => {
+export const NotificationText: FC<NotificationTextProps> = ({ type, unitNumber, ts, autoClose = false }) => {
   const walletAddress = useSettingsStore((state) => state.walletAddress);
   const aaState = useAaStore((state) => state);
   const mapUnits = mapUnitsSelector(aaState);
@@ -25,6 +25,8 @@ export const NotificationText: FC<NotificationTextProps> = ({ type, unitNumber, 
   const changeMapUnit = () => {
     if (unitNumber) {
       useSettingsStore.getState().setSelectedMapUnit({ num: asNonNegativeNumber(unitNumber), type: type === "new_plot" ? "plot" : "house" });
+
+      clearNotification({ ts, type, unitNumber });
     }
   }
 
