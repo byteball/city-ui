@@ -1,13 +1,16 @@
+import moment from "moment";
 import obyte from "obyte";
 import { create, StateCreator } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
-import { IMapUnit, IRefData, IUnitUniqData } from "@/global";
+import { IMapUnit, INotification, IRefData, IUnitUniqData } from "@/global";
 import { toast } from "@/hooks/use-toast";
 import client from "@/services/obyteWsClient";
-import { ICityAaState } from "./aa-store";
+
+import { ICityAaState, useAaStore } from "./aa-store";
 
 import appConfig from "@/appConfig";
+import { mapUnitsByOwnerAddressSelector } from "./selectors/mapUnitsSelector";
 
 const LOCAL_STORAGE_KEY = "settings-store";
 const STORAGE_VERSION = 14; // change this to invalidate old persisted data
@@ -36,6 +39,12 @@ interface SettingsState {
   governanceAa: string | null;
   refData: IRefData | null;
   walletAddress: string | null;
+  notifications: INotification[];
+  addNotifications: (notifications: INotification[]) => void;
+  clearNotification: (notification: INotification) => void;
+  syncNotifications: () => void;
+  clearAllNotifications: () => void;
+  lastNotificationAddedAt: number;
   setWalletAddress: (walletAddress: string) => void;
   selectedMapUnit?: IUnitUniqData;
   selectedMarketPlot?: IUnitUniqData;
@@ -105,6 +114,46 @@ const storeCreator: StateCreator<SettingsState> = (set, get) => ({
       direction: "DESC",
     },
   },
+  notifications: [],
+  lastNotificationAddedAt: moment.utc().unix(),
+  addNotifications: (notifications: INotification[]) => {
+    set((state) => ({
+      notifications: [...state.notifications, ...notifications],
+      lastNotificationAddedAt: moment.utc().unix(),
+    }));
+  },
+  clearNotification: (notification: INotification) => {
+    set((state) => ({
+      notifications: state.notifications.filter((n) => n.ts !== notification.ts),
+    }));
+  },
+  clearAllNotifications: () => {
+    set({ notifications: [] });
+  },
+  syncNotifications: () => {
+    const walletAddress = get().walletAddress;
+    const lastNotificationAddedAt = get().lastNotificationAddedAt;
+    const notifications = get().notifications;
+
+    if (!walletAddress) {
+      console.log("log: syncNotifications called without wallet address");
+      return;
+    }
+
+    const state = useAaStore.getState();
+
+    const userUnits = mapUnitsByOwnerAddressSelector(state, walletAddress);
+
+    const newUnits = userUnits.filter((unit) => unit.ts > lastNotificationAddedAt);
+
+    const newNotifications: INotification[] = newUnits.map((u) => ({
+      ts: u.ts,
+      type: `new_${u.type}`,
+      unitNumber: u.type === "plot" ? u.plot_num : u.house_num,
+    }));
+
+    set({ notifications: [...notifications, ...newNotifications], lastNotificationAddedAt: moment.utc().unix() });
+  },
   setSelectedMapUnit: (unitUniqData) => {
     if (!unitUniqData) return set({ selectedMapUnit: undefined });
     set({ selectedMapUnit: unitUniqData });
@@ -118,7 +167,12 @@ const storeCreator: StateCreator<SettingsState> = (set, get) => ({
   setWalletAddress: (walletAddress: string) => {
     if (!obyte.utils.isValidAddress(walletAddress)) throw new Error("Invalid wallet address");
     console.log("log: set wallet address", walletAddress);
-    set({ walletAddress });
+
+    set({
+      walletAddress,
+      notifications: [],
+      lastNotificationAddedAt: moment.utc().unix(),
+    });
   },
   setMapUnitSortType: <T extends "house" | "plot">(
     unit: T,
@@ -188,3 +242,11 @@ export const setMapUnitSortType = (
 export const setMapUnitSortDirection = (unit: IMapUnit["type"], direction: SortDirectionType): void =>
   useSettingsStore.getState().setMapUnitSortDirection(unit, direction);
 
+export const addNotifications = (notifications: INotification[]): void => useSettingsStore.getState().addNotifications(notifications);
+
+export const clearNotification = (notification: INotification): void =>
+  useSettingsStore.getState().clearNotification(notification);
+
+export const clearAllNotifications = (): void => useSettingsStore.getState().clearAllNotifications();
+
+export const syncNotifications = (): void => useSettingsStore.getState().syncNotifications();

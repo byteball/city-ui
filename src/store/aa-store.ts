@@ -9,6 +9,7 @@ import { asNonNegativeNumber } from "@/lib";
 
 import appConfig from "@/appConfig";
 import { getAllStateVarsByAddress } from "@/lib/getAllStateVarsByAddress";
+import { syncNotifications } from "./settings-store";
 
 export const defaultAaParams: IAaParams = {
   matching_probability: appConfig.TESTNET ? asNonNegativeNumber(0.05) : asNonNegativeNumber(0.1),
@@ -34,7 +35,7 @@ export interface ICityAaState extends IAaStateVars {
   city_city?: ICity;
 }
 
-export interface IGovernanceAaStateVars extends IAaStateVars {}
+export interface IGovernanceAaStateVars extends IAaStateVars { }
 export interface AaStoreState {
   state: ICityAaState;
   governanceState: IGovernanceAaStateVars;
@@ -77,6 +78,7 @@ const storeCreator: StateCreator<AaStoreState> = (set, _get) => ({
 
       set({ state: aaState, governanceState, loading: false, loaded: true, error: null });
 
+      syncNotifications();
       console.log("log: loaded AA store", import.meta.env.DEV ? aaState : "");
     } catch (err) {
       console.log("log: error loading AA store", err);

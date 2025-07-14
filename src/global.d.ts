@@ -270,6 +270,12 @@ export interface IEngineOptions {
   isReferral?: boolean;
 }
 
+export interface INotification {
+  ts: number;
+  type: 'new_plot' | 'new_house',
+  unitNumber?: number;
+}
+
 declare global {
   interface Window {
     isDialogOpen?: boolean;
