@@ -125,10 +125,11 @@ const storeCreator: StateCreator<SettingsState> = (set, get) => ({
   clearNotification: (notification: INotification) => {
     set((state) => ({
       notifications: state.notifications.filter((n) => n.ts !== notification.ts),
+      lastNotificationAddedAt: moment.utc().unix()
     }));
   },
   clearAllNotifications: () => {
-    set({ notifications: [] });
+    set({ notifications: [], lastNotificationAddedAt: moment.utc().unix() });
   },
   syncNotifications: () => {
     const walletAddress = get().walletAddress;
