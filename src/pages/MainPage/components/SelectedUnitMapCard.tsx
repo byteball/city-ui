@@ -167,12 +167,11 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
 
   return (
     <>
-      {selectedMapUnit
-        ? <FamousBlockquote
-          plotNum={selectedMapUnit.plot_num}
-          name={nearestRoad.replaceAll(" Street", "").replaceAll(" Avenue", "")}
-        />
-        : null}
+      <FamousBlockquote
+        plotNum={selectedMapUnit?.plot_num}
+        name={nearestRoad?.replaceAll(" Street", "").replaceAll(" Avenue", "")}
+      />
+
       <Helmet>
         <title>{title}</title>
         <meta name="og:title" content={title} />

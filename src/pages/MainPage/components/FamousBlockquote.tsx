@@ -1,9 +1,10 @@
 import { Maximize2Icon, Minimize2Icon, QuoteIcon } from "lucide-react";
 import { MotionConfig, motion } from "motion/react";
-import { FC, useEffect, useState } from "react";
+import { FC, memo, useEffect, useState } from "react";
 
+import { useSettingsStore } from "@/store/settings-store";
+import moment from "moment";
 import { quotes } from "./quotes";
-
 
 const transition = {
   type: 'spring',
@@ -37,20 +38,36 @@ interface FamousBlockquoteProps {
   plotNum?: number;
 }
 
-export const FamousBlockquote: FC<FamousBlockquoteProps> = ({ name, plotNum }) => {
+export const FamousBlockquote: FC<FamousBlockquoteProps> = memo(({ name, plotNum }) => {
   const [isOpen, setIsOpen] = useState(true);
+  const inited = useSettingsStore((state) => state.inited);
+  const stateInited = useSettingsStore((state) => state.inited);
 
   useEffect(() => {
     setIsOpen(true);
   }, [plotNum]);
 
-  if (!name || plotNum === undefined) return null;
+  if (!inited || !stateInited) return null;
 
-  const plotQuotes = quotes.filter(quote => quote.author === name);
+  let availableQuotes;
 
-  if (plotQuotes.length === 0) return null;
+  if (!name || plotNum === undefined) {
+    availableQuotes = quotes;
+  } else {
+    availableQuotes = quotes.filter(quote => quote.author === name);
+  }
 
-  const currentQuote = plotQuotes[plotNum % plotQuotes.length];
+  if (availableQuotes.length === 0) return null;
+
+  let currentQuote;
+
+  if (plotNum !== undefined) {
+    currentQuote = availableQuotes[plotNum % availableQuotes.length];
+  } else {
+    currentQuote = availableQuotes[moment.utc().minutes() % availableQuotes.length];
+  }
+
+  if (!currentQuote) return null;
 
   return (<MotionConfig transition={transition}>
     <div className="absolute left-0 z-50 flex justify-end w-full p-4 text-black top-[100px] pointer-events-none">
@@ -70,7 +87,7 @@ export const FamousBlockquote: FC<FamousBlockquoteProps> = ({ name, plotNum }) =
           className="overflow-hidden text-sm rounded-b-xl"
         >
           <figure
-            className="p-4 pt-2 w-[260px]"
+            className="p-4 pt-1 w-[260px]"
           >
             <blockquote className="pl-4 text-gray-900 border-l-4 pointer-events-auto border-link/30">
               <p>
@@ -94,4 +111,4 @@ export const FamousBlockquote: FC<FamousBlockquoteProps> = ({ name, plotNum }) =
       </div>
     </div>
   </MotionConfig>)
-}
+});
