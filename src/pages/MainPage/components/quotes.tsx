@@ -1,6 +1,6 @@
 interface IQuote {
   author: "Hal Finney" | "Satoshi" | "Tim May" | "Nick Szabo" | "Adam Back" | "David Friedman" | "Wei Dai" | "Phil Zimmermann" | "Eric Hughes" | "John Gilmore",
-  text: string;
+  text: React.ReactNode;
   imageName?: string;
 }
 
@@ -53,7 +53,7 @@ export const quotes: IQuote[] = [
   },
   {
     author: "Tim May",
-    text: "There's a real possibility that all the noise about \"governance, \" \"regulation\" and \"blockchain\" will effectively create a surveillance state, a dossier society. I think Satoshi would barf.Or at least work on a replacement for bitcoin as he first described it in 2008-2009.",
+    text: <>There's a real possibility that all the noise about "governance", "regulation" and "blockchain" will effectively create a surveillance state, a dossier society. <br /><br />I think Satoshi would barf. Or at least work on a replacement for bitcoin as he first described it in 2008-2009.</>,
     imageName: "tim_may.jpg"
   },
   {
@@ -104,8 +104,6 @@ export const quotes: IQuote[] = [
     text: "I believe, as many say they believe, that everyone has the right to run his own life—to go to hell in his own fashion.",
     imageName: "david_friedman.jpg"
   },
-
-
   {
     author: "Wei Dai",
     text: "There has never been a government that didn't sooner or later try to reduce the freedom of its subjects and gain more control over them, and there probably will never be one. Therefore, instead of trying to convince our current government not to try, we’ll develop the technology that will make it impossible for the government to succeed.",
@@ -148,8 +146,6 @@ export const quotes: IQuote[] = [
     text: "If you hide your mail inside envelopes, does that mean you must be a subversive or a drug dealer, or maybe a paranoid nut?",
     imageName: "phil_zimmermann.jpg"
   },
-
-
   {
     author: "Eric Hughes",
     text: "Cypherpunks write code. We know that someone has to write software to defend privacy, and since we can't get privacy unless we all do, we're going to write it.",
