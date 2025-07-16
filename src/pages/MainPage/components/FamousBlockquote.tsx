@@ -1,6 +1,6 @@
 import { Maximize2Icon, Minimize2Icon, QuoteIcon } from "lucide-react";
 import { MotionConfig, motion } from "motion/react";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import { quotes } from "./quotes";
 
@@ -39,6 +39,10 @@ interface FamousBlockquoteProps {
 
 export const FamousBlockquote: FC<FamousBlockquoteProps> = ({ name, plotNum }) => {
   const [isOpen, setIsOpen] = useState(true);
+
+  useEffect(() => {
+    setIsOpen(true);
+  }, [plotNum]);
 
   if (!name || plotNum === undefined) return null;
 
