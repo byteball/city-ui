@@ -72,7 +72,7 @@ export const FamousBlockquote: FC<FamousBlockquoteProps> = ({ name, plotNum }) =
           <figure
             className="p-4 pt-2 w-[260px]"
           >
-            <blockquote className="pl-4 text-gray-900 border-l-4 select-none border-link/30">
+            <blockquote className="pl-4 text-gray-900 border-l-4 pointer-events-auto border-link/30">
               <p>
                 <q>
                   {currentQuote.text}
