@@ -101,7 +101,7 @@ export const FamousBlockquote: FC<FamousBlockquoteProps> = memo(({ name, plotNum
                 alt={currentQuote.author}
                 src={'/people/' + currentQuote.imageName}
                 className="flex-none w-6 h-6 rounded-full bg-gray-50"
-              /> : null}
+              /> : <div className="flex-none w-6 h-6 bg-gray-200 rounded-full" />}
               <div className="text-sm/6">
                 <strong className="font-semibold text-gray-900">{currentQuote.author}</strong>
               </div>

@@ -18,22 +18,18 @@ export const quotes: IQuote[] = [
   {
     author: "Satoshi",
     text: "The root problem with conventional currency is all the trust that’s required to make it work.",
-    imageName: "satoshi_nakamoto.jpg"
   },
   {
     author: "Satoshi",
     text: "What is needed is an electronic payment system based on cryptographic proof instead of trust, allowing any two willing parties to transact directly with each other without the need for a trusted third party.",
-    imageName: "satoshi_nakamoto.jpg"
   },
   {
     author: "Satoshi",
     text: "With e-currency based on cryptographic proof, without the need to trust a third party middleman, money can be secure and transactions effortless.",
-    imageName: "satoshi_nakamoto.jpg"
   },
   {
     author: "Satoshi",
     text: "Governments are good at cutting off the heads of a centrally controlled networks like Napster, but pure P2P networks like Gnutella and Tor seem to be holding their own.",
-    imageName: "satoshi_nakamoto.jpg"
   },
 
   {
@@ -106,13 +102,11 @@ export const quotes: IQuote[] = [
   },
   {
     author: "Wei Dai",
-    text: "There has never been a government that didn't sooner or later try to reduce the freedom of its subjects and gain more control over them, and there probably will never be one. Therefore, instead of trying to convince our current government not to try, we’ll develop the technology that will make it impossible for the government to succeed.",
-    imageName: "wei_dai.jpg"
+    text: "There has never been a government that didn't sooner or later try to reduce the freedom of its subjects and gain more control over them, and there probably will never be one. Therefore, instead of trying to convince our current government not to try, we’ll develop the technology that will make it impossible for the government to succeed."
   },
   {
     author: "Wei Dai",
-    text: "My motivation for b-money was to enable online economies that are purely voluntary… ones that couldn’t be taxed or regulated through the threat of force.",
-    imageName: "wei_dai.jpg"
+    text: "My motivation for b-money was to enable online economies that are purely voluntary… ones that couldn’t be taxed or regulated through the threat of force."
   },
 
 
