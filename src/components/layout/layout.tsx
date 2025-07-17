@@ -11,7 +11,7 @@ interface ILayoutProps {
 }
 
 export const Layout: FC<ILayoutProps> = () => (
-  <div className="w-full min-h-full overflow-hidden bg-background-dark">
+  <div className="relative w-full min-h-full overflow-hidden bg-background-dark">
     <Toaster />
     <ScrollToTop />
 

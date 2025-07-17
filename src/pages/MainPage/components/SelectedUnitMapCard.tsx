@@ -18,11 +18,13 @@ import { ButtonWithTooltip } from "@/components/ui/ButtonWithTooltip";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { FamousBlockquote } from "./FamousBlockquote";
 
 import { useAaStore } from "@/store/aa-store";
 import { mapUnitsByUniqDataSelector, mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 
+import { getNearestRoads } from "@/engine/utils/getNearestRoads";
 import { getRoads } from "@/engine/utils/getRoads";
 import { ICity } from "@/global";
 import { useAttestations } from "@/hooks/useAttestations";
@@ -164,6 +166,10 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
     EventBus.emit("reset-selection");
   }, [neighborHouse]);
 
+  const nearestRoad = getNearestRoads(roads, selectedMapUnit?.x ?? 0, selectedMapUnit?.y ?? 0, 1)[0]?.name;
+
+  const authorName = useMemo(() => nearestRoad?.replaceAll(" Street", "").replaceAll(" Avenue", ""), [nearestRoad]);
+
   return (
     <>
       <Helmet>
@@ -190,7 +196,12 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
         )}
       </Helmet>
 
-      <Card>
+      <Card className="relative md:static">
+        {sceneType === "main" ? <FamousBlockquote
+          plotNum={selectedMapUnit?.plot_num}
+          name={authorName}
+        /> : null}
+
         <CardHeader>
           {selectedMapUnit ? (
             <>
