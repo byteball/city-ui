@@ -165,11 +165,13 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
 
   const nearestRoad = getNearestRoads(roads, selectedMapUnit?.x ?? 0, selectedMapUnit?.y ?? 0, 1)[0]?.name;
 
+  const authorName = useMemo(() => nearestRoad?.replaceAll(" Street", "").replaceAll(" Avenue", ""), [nearestRoad]);
+
   return (
     <>
       <FamousBlockquote
         plotNum={selectedMapUnit?.plot_num}
-        name={nearestRoad?.replaceAll(" Street", "").replaceAll(" Avenue", "")}
+        name={authorName}
       />
 
       <Helmet>

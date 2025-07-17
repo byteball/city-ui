@@ -1,4 +1,4 @@
-interface IQuote {
+export interface IQuote {
   author: "Hal Finney" | "Satoshi" | "Tim May" | "Nick Szabo" | "Adam Back" | "David Friedman" | "Wei Dai" | "Phil Zimmermann" | "Eric Hughes" | "John Gilmore",
   text: React.ReactNode;
   imageName?: string;
