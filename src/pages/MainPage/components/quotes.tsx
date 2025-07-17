@@ -8,12 +8,12 @@ export const quotes: IQuote[] = [
   {
     author: "Hal Finney",
     text: "Here we are faced with the problems of loss of privacy, creeping computerization, massive databases, more centralization - and [David] Chaum offers a completely different direction to go in, one which puts power into the hands of individuals rather than governments and corporations. The computer can be used as a tool to liberate and protect people, rather than to control them.",
-    imageName: "hal_finney.jpg"
+    imageName: "hal_finney.jpg?v=2"
   },
   {
     author: "Hal Finney",
     text: "The computer can be used as a tool to liberate and protect people, rather than to control them.",
-    imageName: "hal_finney.jpg"
+    imageName: "hal_finney.jpg?v=2"
   },
   {
     author: "Satoshi",
