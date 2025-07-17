@@ -169,11 +169,6 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
 
   return (
     <>
-      {sceneType === "main" ? <FamousBlockquote
-        plotNum={selectedMapUnit?.plot_num}
-        name={authorName}
-      /> : null}
-
       <Helmet>
         <title>{title}</title>
         <meta name="og:title" content={title} />
@@ -198,7 +193,12 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
         )}
       </Helmet>
 
-      <Card>
+      <Card className="relative md:static">
+        {sceneType === "main" ? <FamousBlockquote
+          plotNum={selectedMapUnit?.plot_num}
+          name={authorName}
+        /> : null}
+
         <CardHeader>
           {selectedMapUnit ? (
             <>

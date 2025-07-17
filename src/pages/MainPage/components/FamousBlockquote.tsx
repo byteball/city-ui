@@ -52,7 +52,7 @@ export const FamousBlockquote: FC<FamousBlockquoteProps> = memo(({ name, plotNum
   if (!inited || !stateInited) return null;
 
   return (<MotionConfig transition={transition}>
-    <div className="absolute left-0 z-50 flex justify-end w-full p-4 text-black top-[40px] sm:top-[101px] pointer-events-none">
+    <div className="absolute left-0 z-50 flex justify-end w-full p-4 text-black top-0 md:top-[130px] lg:top-[101px] pointer-events-none">
       <div className="relative bg-white rounded-xl">
         <motion.div initial={false} animate={{ opacity: isOpen ? 1 : 0 }}>
           <QuoteIcon className="absolute w-16 h-16 bottom-6 right-6 stroke-muted-foreground/20" />
