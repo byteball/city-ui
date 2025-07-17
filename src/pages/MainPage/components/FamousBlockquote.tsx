@@ -57,8 +57,8 @@ export const FamousBlockquote: FC<FamousBlockquoteProps> = memo(({ name, plotNum
         <motion.div initial={false} animate={{ opacity: isOpen ? 1 : 0 }}>
           <QuoteIcon className="absolute w-16 h-16 bottom-6 right-6 stroke-muted-foreground/20" />
         </motion.div>
-        <div className="flex justify-end p-4 pointer-events-auto">
-          <button onClick={() => setIsOpen((v) => !v)} className="w-6 h-6 cursor-pointer stroke-muted-foreground">
+        <div className="flex justify-end p-2 pointer-events-auto md:p-4">
+          <button onClick={() => setIsOpen((v) => !v)} className="cursor-pointer md:w-6 md:h-6 stroke-muted-foreground">
             {isOpen ? <Minimize2Icon /> : <Maximize2Icon />}
           </button>
         </div>

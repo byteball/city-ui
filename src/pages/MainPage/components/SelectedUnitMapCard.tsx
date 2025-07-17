@@ -169,10 +169,10 @@ export const SelectedUnitMapCard: FC<ISelectedUnitMapCardProps> = ({ sceneType =
 
   return (
     <>
-      <FamousBlockquote
+      {sceneType === "main" ? <FamousBlockquote
         plotNum={selectedMapUnit?.plot_num}
         name={authorName}
-      />
+      /> : null}
 
       <Helmet>
         <title>{title}</title>
