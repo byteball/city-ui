@@ -193,7 +193,7 @@ const FollowUpPage = () => {
                 </h2>
                 <CardDescription>
                   {followupRewardStatus === 'NOT_STARTED' ? <div>
-                    You became neighbors only {daysSinceNeighboring} days ago. The 1st follow-up reward becomes available after 60 days. Please check back later to claim your reward.
+                    You became neighbors only {daysSinceNeighboring} days ago. The 1st follow-up reward becomes available after 60 days. Please check back in {60 - daysSinceNeighboring} days to claim your reward.
                   </div> : null}
 
                   {followupRewardStatus === 'ACTIVE' ? <div>
