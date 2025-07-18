@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router";
 
 import { Layout } from "./components/layout/layout";
 import { usePageTracking } from "./hooks/use-page-tracking";
-import { ClaimRedirectPage, FaqPage, GovernancePage, LeaderboardPage, MainPage, MarketPage, NotFound, UserPage } from "./pages";
+import { ClaimRedirectPage, FaqPage, FollowUpPage, GovernancePage, LeaderboardPage, MainPage, MarketPage, NotFound, UserPage } from "./pages";
 
 interface IAppRouterProps {
   children?: ReactElement;
@@ -22,6 +22,7 @@ export const AppRouter: FC<IAppRouterProps> = () => {
         <Route path="/market" element={<MarketPage />} />
         <Route path="/not-found" element={<NotFound />} />
         <Route path="/claim/:nums" element={<ClaimRedirectPage />} />
+        <Route path="/followup/:nums" element={<FollowUpPage />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route path="*" element={<NotFound />} />
       </Route>

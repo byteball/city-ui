@@ -17,6 +17,8 @@ import { House } from "./House";
 
 import appConfig from "@/appConfig";
 import { IMatch } from "@/lib/getMatches";
+import { shouldDisplayUnit } from "@/lib/shouldDisplayUnit";
+import { validateDisplayedUnits } from "@/lib/validateDisplayedUnits";
 
 export const ROAD_THICKNESS = 60;
 
@@ -28,7 +30,7 @@ export class Map {
   private selectedMapUnit: House | Plot | null = null;
   private MapUnits: (Plot | House)[] = [];
   private neighborLinks: NeighborLink[] = [];
-  private engineOptions: IEngineOptions | null = null;
+  private engineOptions: IEngineOptions;
   private matches: globalThis.Map<number, IMatch>;
 
   constructor(scene: Phaser.Scene, roadsData: IRoad[], unitsData: IMapUnit[], matches: globalThis.Map<number, IMatch>) {
@@ -106,15 +108,12 @@ export class Map {
   private createMapUnits(MAP_WIDTH: number, MAP_HEIGHT: number, sceneType: IEngineOptions["displayMode"]) {
     const thickness = asNonNegativeNumber(ROAD_THICKNESS);
 
+    if (!validateDisplayedUnits(this.engineOptions.displayedUnits, sceneType)) {
+      throw new Error("Invalid displayedUnits for the current display mode");
+    }
+
     this.unitsData.forEach((unitData) => {
-      if (unitData.type === "plot" && unitData.status === "pending") return;
-      if (unitData.type === "house" && this.engineOptions?.displayMode !== "main") return;
-
-      if (this.engineOptions?.displayMode === "claim") {
-        if (unitData.type === "plot" && !this.engineOptions.claimNeighborPlotNumbers?.includes(unitData.plot_num)) return;
-      }
-
-      if (sceneType === "market" && !(unitData.type === "plot" ? unitData.sale_price : true)) return; // Only plots with sale price
+      if (!shouldDisplayUnit(this.engineOptions, unitData)) return;
 
       const { x, y, type } = unitData;
 
@@ -202,8 +201,8 @@ export class Map {
       this.MapUnits.push(unit);
 
       if (
-        (this.engineOptions?.displayMode === "market" && type === "house") ||
-        this.engineOptions?.displayMode === "claim"
+        (sceneType === "market" && type === "house") ||
+        sceneType === "claim" || sceneType === "followup"
       ) {
         return;
       }
