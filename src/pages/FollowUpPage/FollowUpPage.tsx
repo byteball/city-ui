@@ -166,7 +166,7 @@ const FollowUpPage = () => {
         <div className="col-span-5 md:col-span-3">
           <Card>
             <CardHeader>
-              <h2 className="text-xl font-semibold">Claim yours followup rewards!</h2>
+              <h2 className="text-xl font-semibold">Claim your follow-up rewards!</h2>
             </CardHeader>
             <CardContent>
               <div ref={engineColumnRef}>
@@ -189,29 +189,29 @@ const FollowUpPage = () => {
             <Card>
               <CardHeader>
                 <h2 className="text-xl font-semibold">
-                  Claim your {followupRewardStatus === 'GOT_ALL' ? '' : `${rewardTier}st`} followup rewards
+                  Claim your {followupRewardStatus === 'GOT_ALL' ? '' : `${rewardTier}st`} follow-up rewards
                 </h2>
                 <CardDescription>
                   {followupRewardStatus === 'NOT_STARTED' ? <div>
-                    You became neighbors only {daysSinceNeighboring} days ago. The 1st followup reward becomes available after 60 days. Please check back later to claim your reward.
+                    You became neighbors only {daysSinceNeighboring} days ago. The 1st follow-up reward becomes available after 60 days. Please check back later to claim your reward.
                   </div> : null}
 
                   {followupRewardStatus === 'ACTIVE' ? <div>
-                    You became neighbors {daysSinceNeighboring} days ago and are now eligible for your {rewardTier}st followup reward, {toLocalString(forwardReward / 10 ** decimals!)} {symbol} to each of you. Please contact your neighbor over discord or telegram and send your claim requests within 10 minutes of each other.
+                    You became neighbors {daysSinceNeighboring} days ago and are now eligible for your {rewardTier}st follow-up reward, {toLocalString(forwardReward / 10 ** decimals!)} {symbol} to each of you. Please contact your neighbor over discord or telegram and send your claim requests within 10 minutes of each other.
                   </div> : null}
 
                   {followupRewardStatus === 'GOT' ? <div>
-                    You’ve already claimed your {rewardTier}st followup reward. No additional reward is available at this time.
+                    You’ve already claimed your {rewardTier}st follow-up reward. No additional reward is available at this time.
                   </div> : null}
 
                   {followupRewardStatus === 'GOT_ALL' ? <div>
-                    You’ve now completed the followup program.
+                    You’ve now completed the follow-up program.
                   </div> : null}
 
                   {followupRewardStatus === 'EXPIRED' ? <div>
-                    The {FOLLOWUP_CLAIM_TERM}-days window for sending claim requests has passed. Please wait for the next followup reward milestone.
+                    The {FOLLOWUP_CLAIM_TERM}-days window for sending claim requests has passed. Please wait for the next follow-up reward milestone.
 
-                    Next followup reward will be available after {FOLLOWUP_REWARD_DAYS[rewardTier!]} days.
+                    Next follow-up reward will be available after {FOLLOWUP_REWARD_DAYS[rewardTier!]} days.
                   </div> : null}
                 </CardDescription>
 
@@ -293,7 +293,7 @@ const FollowUpPage = () => {
             <Card>
               <CardHeader>
                 <h2 className="text-xl font-semibold">
-                  <Link to={`/?plot=${house1.plot_num}`} className="text-link">
+                  <Link to={`/?house=${house1.plot_num}`} className="text-link">
                     {address1}
                   </Link>
                 </h2>
@@ -319,7 +319,7 @@ const FollowUpPage = () => {
             <Card>
               <CardHeader>
                 <h2 className="text-xl font-semibold">
-                  <Link to={`/?plot=${house2.plot_num}`} className="text-link">
+                  <Link to={`/?house=${house2.plot_num}`} className="text-link">
                     {address2}
                   </Link>
                 </h2>
