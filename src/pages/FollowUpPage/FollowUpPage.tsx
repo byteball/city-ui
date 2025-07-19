@@ -65,7 +65,6 @@ const FollowUpPage = () => {
     displayedUnits: [{ type: "house", num: asNonNegativeNumber(house1_num) }, { type: "house", num: asNonNegativeNumber(house2_num) }] as IUnitUniqData[],
   } as IEngineOptions), [params, house1_num, house2_num, house1?.plot_num, house1?.owner]);
 
-
   if (loading || !loaded || !inited || lastPlotNum === null) {
     return (
       <div className="text-lg text-center min-h-[75vh] mt-10">
@@ -94,7 +93,7 @@ const FollowUpPage = () => {
       x: house1.x,
       y: house1.y,
     },
-    house1.plot_num
+    house1_num
   );
 
   const [address2] = getAddressFromNearestRoad(
@@ -103,7 +102,7 @@ const FollowUpPage = () => {
       x: house2.x,
       y: house2.y,
     },
-    house2.plot_num
+    house2_num
   );
 
   const url = generateLink({
@@ -293,7 +292,7 @@ const FollowUpPage = () => {
             <Card>
               <CardHeader>
                 <h2 className="text-xl font-semibold">
-                  <Link to={`/?house=${house1.plot_num}`} className="text-link">
+                  <Link to={`/?house=${house1_num}`} className="text-link">
                     {address1}
                   </Link>
                 </h2>
@@ -319,7 +318,7 @@ const FollowUpPage = () => {
             <Card>
               <CardHeader>
                 <h2 className="text-xl font-semibold">
-                  <Link to={`/?house=${house2.plot_num}`} className="text-link">
+                  <Link to={`/?house=${house2_num}`} className="text-link">
                     {address2}
                   </Link>
                 </h2>
