@@ -180,19 +180,23 @@ export class Map {
         unit = new House(
           this.scene,
           { ...unitData, x: finalX, y: finalY },
-          this.engineOptions?.displayMode && ["market", "claim"].includes(this.engineOptions?.displayMode),
+          this.engineOptions?.displayMode && ["market", "claim", "followup"].includes(this.engineOptions?.displayMode),
           address
         );
       } else if (type === "plot") {
+
+        let view = "plot";
+
+        if (sceneType === "claim" && this.engineOptions?.displayedUnits?.[1]?.num === unitData.plot_num) {
+          view = "plus";
+        }
+
         unit = new Plot(
           this.scene,
           { ...unitData, x: finalX, y: finalY },
           plotSize,
           address,
-          this.engineOptions?.claimNeighborPlotNumbers?.[1] &&
-            this.engineOptions?.claimNeighborPlotNumbers?.[1] === unitData.plot_num
-            ? "plus"
-            : "plot"
+          view
         );
       } else {
         throw new Error(`Unknown unit type: ${type}`);
@@ -250,6 +254,7 @@ export class Map {
 
   public updateMapUnitSelection() {
     const settingsState = useSettingsStore.getState();
+    if (this.engineOptions?.displayMode === "followup") return;
 
     const storeSelected =
       this.engineOptions?.displayMode === "market" ? settingsState.selectedMarketPlot : settingsState.selectedMapUnit;
