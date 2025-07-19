@@ -3,7 +3,7 @@ import { useMemo, useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router";
 
-import { generateLink, getAddressFromNearestRoad, toLocalString } from "@/lib";
+import { asNonNegativeNumber, generateLink, getAddressFromNearestRoad, toLocalString } from "@/lib";
 import { useSettingsStore } from "@/store/settings-store";
 
 import { getRoads } from "@/engine/utils/getRoads";
@@ -18,18 +18,18 @@ import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { IRefPhaserMapEngine, PhaserMapEngine } from "@/engine/PhaserMapEngine";
-import { InvalidPlotAlert } from "./components/InvalidPlotAlert";
-import { AlreadyBuiltAlert } from "./components/alreadyBuiltAlrt";
-import { WaitingConfirmation } from "./components/waitingConfirmation";
 
-import { IEngineOptions, IPlot, IUnitUniqData } from "@/global";
+import { IEngineOptions, IHouse, IUnitUniqData } from "@/global";
 import { getContactUrlByUsername } from "@/lib/getContactUrlByUsername";
 import { IMatch } from "@/lib/getMatches";
 
 import appConfig from "@/appConfig";
+import { getFollowUp } from "@/lib/getFollowUp";
+import { InvalidHouseAlert } from "./components/InvalidHouseAlert";
 import { NotFound } from "./components/NotFound";
+import { FOLLOWUP_CLAIM_TERM, FOLLOWUP_REWARD_DAYS, getDaysSinceNeighboring, getFollowupRewardNumber, getFollowupRewardStatus, TFollowUpRewardNumber } from "./utils";
 
-const ClaimRedirectPage = () => {
+const FollowUpPage = () => {
   const { walletAddress, inited, decimals, symbol } = useSettingsStore((state) => state);
 
   const aaState = useAaStore((state) => state);
@@ -44,29 +44,26 @@ const ClaimRedirectPage = () => {
 
   const { loaded, loading } = aaState;
 
-  const [plot1_num, plot2_num] = nums?.split("-").map(Number) || [];
+  const [house1_num, house2_num] = nums?.split("-").map(Number) || [];
 
   const isValidPlotNumbers =
-    nums && !isNaN(plot1_num) && !isNaN(plot2_num) && Number.isInteger(plot1_num) && Number.isInteger(plot2_num) && plot2_num > plot1_num;
-  const plot1 = mapUnits.find((unit) => unit.type === "plot" && unit.plot_num === plot1_num) ?? null as IPlot | null;
-  const plot2 = mapUnits.find((unit) => unit.type === "plot" && unit.plot_num === plot2_num) ?? null as IPlot | null;
+    nums && !isNaN(house1_num) && !isNaN(house2_num) && Number.isInteger(house1_num) && Number.isInteger(house2_num) && house2_num > house1_num;
+  const house1 = mapUnits.find((unit) => unit.type === "house" && unit.house_num === house1_num) ?? null as IHouse | null;
+  const house2 = mapUnits.find((unit) => unit.type === "house" && unit.house_num === house2_num) ?? null as IHouse | null;
 
-  const { data: attestations1, loaded: plot1AttestationLoaded } = useAttestations(plot1?.owner);
-  const { data: attestations2, loaded: plot2AttestationLoaded } = useAttestations(plot2?.owner);
+  const { data: attestations1, loaded: plot1AttestationLoaded } = useAttestations(house1?.owner);
+  const { data: attestations2, loaded: plot2AttestationLoaded } = useAttestations(house2?.owner);
 
-  const match = aaState.state[`match_${plot1_num}_${plot2_num}`] as IMatch | undefined;
+  const match = aaState.state[`match_${house1?.plot_num}_${house2?.plot_num}`] as IMatch | undefined;
 
   // Hooks for skeleton display and engine options must be at top level before any return
   const shownSkeleton = loading || !loaded || !inited;
-  const alreadyBuilt = match?.built_ts ? true : false;
 
   const engineOptions = useMemo(() => ({
-    displayMode: "claim" as const,
+    displayMode: "followup" as const,
     params,
-    displayedUnits: [{ type: "plot", num: plot1_num }, { type: "plot", num: plot2_num }] as IUnitUniqData[],
-    isReferral: plot2?.ref_plot_num === plot1?.plot_num || plot2?.ref == plot1?.owner,
-  } as IEngineOptions), [params, plot1_num, plot2_num, plot2?.ref_plot_num, plot1?.plot_num, plot2?.ref, plot1?.owner]);
-
+    displayedUnits: [{ type: "house", num: asNonNegativeNumber(house1_num) }, { type: "house", num: asNonNegativeNumber(house2_num) }] as IUnitUniqData[],
+  } as IEngineOptions), [params, house1_num, house2_num, house1?.plot_num, house1?.owner]);
 
   if (loading || !loaded || !inited || lastPlotNum === null) {
     return (
@@ -75,18 +72,16 @@ const ClaimRedirectPage = () => {
       </div>
     );
   } else if (!isValidPlotNumbers) {
-    return <InvalidPlotAlert />;
-  } else if (match && alreadyBuilt) {
-    return <AlreadyBuiltAlert
-      plot1_num={plot1_num}
-      plot2_num={plot2_num}
-      match={match}
-    />
-  } else if (!plot1 && plot1_num < lastPlotNum || !plot2 && plot2_num < lastPlotNum) {
+    return <InvalidHouseAlert />;
+  } else if (!house1 || !house2 || !match) {
     return <NotFound />
-  } else if (!plot1 || !plot2 || !plot1.x || !plot2.x) {
-    return <WaitingConfirmation />
   }
+
+  const followup = getFollowUp(aaState, house1_num, house2_num);
+  const daysSinceNeighboring = getDaysSinceNeighboring(match);
+  const rewardNumber: TFollowUpRewardNumber = getFollowupRewardNumber(daysSinceNeighboring);
+  const followupRewardStatus = getFollowupRewardStatus(match, followup);
+  const forwardReward = followup?.reward ?? params.followup_reward_share * house1.amount;
 
   const mayor: string = aaState.state.city_city?.mayor!;
 
@@ -95,40 +90,37 @@ const ClaimRedirectPage = () => {
   const [address1] = getAddressFromNearestRoad(
     roads,
     {
-      x: plot1.x,
-      y: plot1.y,
+      x: house1.x,
+      y: house1.y,
     },
-    plot1.plot_num
+    house1_num
   );
 
   const [address2] = getAddressFromNearestRoad(
     roads,
     {
-      x: plot2.x,
-      y: plot2.y,
+      x: house2.x,
+      y: house2.y,
     },
-    plot2.plot_num
+    house2_num
   );
 
   const url = generateLink({
     amount: 1e4,
     aa: appConfig.AA_ADDRESS!,
     is_single: true,
-    data: { build: 1, plot1_num, plot2_num },
+    data: { days: String(FOLLOWUP_REWARD_DAYS[rewardNumber! - 1]), house1_num, house2_num, followup: 1 },
     from_address: walletAddress || undefined,
   });
 
   const seoDescription =
-    "You became neighbors and can claim your reward house and plot — while getting to know your neighbor";
+    "Claim your follow-up rewards for being a good neighbor!";
 
   const discordAttestation1 = attestations1.find((att) => att.name === "discord");
   const discordAttestation2 = attestations2.find((att) => att.name === "discord");
 
   const tgAttestation1 = attestations1.find((att) => att.name === "telegram");
   const tgAttestation2 = attestations2.find((att) => att.name === "telegram");
-
-  const infoName1 = typeof plot1.info === "object" ? plot1.info?.name : "";
-  const infoName2 = typeof plot2.info === "object" ? plot2.info?.name : "";
 
   const discordAttestation1Url = getContactUrlByUsername(
     discordAttestation1?.value,
@@ -152,8 +144,7 @@ const ClaimRedirectPage = () => {
     tgAttestation2?.userId
   );
 
-  const seoTitle = `Obyte City — You are neighbors: ${infoName1 || tgAttestation1?.value || discordAttestation1?.value
-    } and ${infoName2 || tgAttestation2?.value || discordAttestation2?.value}`;
+  const seoTitle = `Obyte City — Follow-up rewards`;
   const titleWithNotifications = countView + seoTitle;
 
   return (
@@ -167,14 +158,14 @@ const ClaimRedirectPage = () => {
         <meta name="twitter:description" content={seoDescription} />
         <meta name="description" content={seoDescription} />
 
-        <meta property="og:image" content={`${appConfig.OG_IMAGE_URL}/og/claim`} />
+        <meta property="og:image" content={`${appConfig.OG_IMAGE_URL}/og/followup`} />
       </Helmet>
 
       <div className="grid grid-cols-5 gap-6 px-4 md:px-0">
         <div className="col-span-5 md:col-span-3">
           <Card>
             <CardHeader>
-              <h2 className="text-xl font-semibold">You became neighbors!</h2>
+              <h2 className="text-xl font-semibold">Claim your follow-up rewards!</h2>
             </CardHeader>
             <CardContent>
               <div ref={engineColumnRef}>
@@ -196,16 +187,31 @@ const ClaimRedirectPage = () => {
           <div className="grid grid-cols-1 gap-8">
             <Card>
               <CardHeader>
-                <h2 className="text-xl font-semibold">Claim your rewards</h2>
+                <h2 className="text-xl font-semibold">
+                  Claim your {followupRewardStatus === 'GOT_ALL' ? '' : `${rewardNumber}st`} follow-up rewards
+                </h2>
                 <CardDescription>
-                  <div>
-                    You and your neighbor receive houses on your plots and 2 new plots with{" "}
-                    <b>
-                      {toLocalString(Math.min(plot1.amount, plot2.amount) / 10 ** decimals!)} {symbol!}
-                    </b>{" "}
-                    on each of them. Please contact your neighbor over discord or telegram and send your claim requests
-                    within 10 minutes of each other.
-                  </div>
+                  {followupRewardStatus === 'NOT_STARTED' ? <div>
+                    You became neighbors only {daysSinceNeighboring} days ago. The 1st follow-up reward becomes available after 60 days. Please check back in {60 - daysSinceNeighboring} days to claim your reward.
+                  </div> : null}
+
+                  {followupRewardStatus === 'ACTIVE' ? <div>
+                    You became neighbors {daysSinceNeighboring} days ago and are now eligible for your {rewardNumber}st follow-up reward, {toLocalString(forwardReward / 10 ** decimals!)} {symbol} to each of you. Please contact your neighbor over discord or telegram and send your claim requests within 10 minutes of each other.
+                  </div> : null}
+
+                  {followupRewardStatus === 'GOT' ? <div>
+                    You’ve already claimed your {rewardNumber}st follow-up reward. No additional reward is available at this time.
+                  </div> : null}
+
+                  {followupRewardStatus === 'GOT_ALL' ? <div>
+                    You’ve now completed the follow-up program.
+                  </div> : null}
+
+                  {followupRewardStatus === 'EXPIRED' ? <div>
+                    The {FOLLOWUP_CLAIM_TERM}-days window for sending claim requests has passed. Please wait for the next follow-up reward milestone.
+
+                    Next follow-up reward will be available after {FOLLOWUP_REWARD_DAYS[rewardNumber!]} days.
+                  </div> : null}
                 </CardDescription>
 
                 <InfoPanel>
@@ -280,13 +286,13 @@ const ClaimRedirectPage = () => {
               </CardHeader>
 
               <CardContent>
-                <QRButton href={url}>Claim</QRButton>
+                <QRButton href={url} disabled={followupRewardStatus !== "ACTIVE"}>Claim</QRButton>
               </CardContent>
             </Card>
             <Card>
               <CardHeader>
                 <h2 className="text-xl font-semibold">
-                  <Link to={`/?plot=${plot1.plot_num}`} className="text-link">
+                  <Link to={`/?house=${house1_num}`} className="text-link">
                     {address1}
                   </Link>
                 </h2>
@@ -294,11 +300,11 @@ const ClaimRedirectPage = () => {
               <CardContent className="flex flex-col items-center">
                 <InfoPanel className="w-full">
                   <InfoPanel.Item label="Owner">
-                    <a href={`/user/${plot1.owner}`} className="text-link">
+                    <a href={`/user/${house1.owner}`} className="text-link">
                       <span className="inline-block xl:hidden">
-                        {plot1.owner!.slice(0, 5)}...{plot1.owner!.slice(-5, plot1.owner!.length)}
+                        {house1.owner!.slice(0, 5)}...{house1.owner!.slice(-5, house1.owner!.length)}
                       </span>
-                      <span className="hidden xl:inline-block">{plot1.owner}</span>
+                      <span className="hidden xl:inline-block">{house1.owner}</span>
                     </a>
                   </InfoPanel.Item>
 
@@ -312,7 +318,7 @@ const ClaimRedirectPage = () => {
             <Card>
               <CardHeader>
                 <h2 className="text-xl font-semibold">
-                  <Link to={`/?plot=${plot2.plot_num}`} className="text-link">
+                  <Link to={`/?house=${house2_num}`} className="text-link">
                     {address2}
                   </Link>
                 </h2>
@@ -321,11 +327,11 @@ const ClaimRedirectPage = () => {
               <CardContent className="flex flex-col items-center">
                 <InfoPanel className="w-full">
                   <InfoPanel.Item label="Owner">
-                    <a href={`/user/${plot2.owner}`} className="text-link">
+                    <a href={`/user/${house2.owner}`} className="text-link">
                       <span className="inline-block xl:hidden">
-                        {plot2.owner!.slice(0, 5)}...{plot2.owner!.slice(-5, plot2.owner!.length)}
+                        {house2.owner!.slice(0, 5)}...{house2.owner!.slice(-5, house2.owner!.length)}
                       </span>
-                      <span className="hidden xl:inline-block">{plot2.owner}</span>
+                      <span className="hidden xl:inline-block">{house2.owner}</span>
                     </a>
                   </InfoPanel.Item>
 
@@ -342,5 +348,4 @@ const ClaimRedirectPage = () => {
   );
 };
 
-export default ClaimRedirectPage;
-
+export default FollowUpPage;

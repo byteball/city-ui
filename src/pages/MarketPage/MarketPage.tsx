@@ -9,6 +9,7 @@ import { useAaParams, useAaStore } from "@/store/aa-store";
 import { useSettingsStore } from "@/store/settings-store";
 
 import { PhaserMapEngine } from "@/engine/PhaserMapEngine";
+import { IEngineOptions } from "@/global";
 import { SelectedPlotOnSale } from "./components/SelectedPlotOnSale";
 
 export default () => {
@@ -24,7 +25,7 @@ export default () => {
     () => ({
       displayMode: "market" as const,
       params,
-    }),
+    } as IEngineOptions),
     [params]
   );
 

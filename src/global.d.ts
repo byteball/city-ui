@@ -264,9 +264,9 @@ export interface ITokenInfo {
 }
 
 export interface IEngineOptions {
-  displayMode?: "main" | "market" | "claim";
+  displayMode?: "main" | "market" | "claim" | "followup";
   params?: IAaParams;
-  claimNeighborPlotNumbers?: [number, number];
+  displayedUnits?: IUnitUniqData[];
   isReferral?: boolean;
 }
 
