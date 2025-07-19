@@ -1,7 +1,7 @@
 
 import { AaStoreState } from "@/store/aa-store";
 
-interface ITierInfo {
+interface IRewardNumberInfo {
   first: string;
   ts: number;
   paid_ts?: number;
@@ -9,7 +9,7 @@ interface ITierInfo {
 
 export interface IFollowUp {
   reward: number;
-  [key: number]: ITierInfo;
+  [key: number]: IRewardNumberInfo;
 }
 
 export const getFollowUp = (state: AaStoreState, house1Num: number, house2Num: number): IFollowUp | null => {

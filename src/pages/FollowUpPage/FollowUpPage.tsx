@@ -27,7 +27,7 @@ import appConfig from "@/appConfig";
 import { getFollowUp } from "@/lib/getFollowUp";
 import { InvalidHouseAlert } from "./components/InvalidHouseAlert";
 import { NotFound } from "./components/NotFound";
-import { FOLLOWUP_CLAIM_TERM, FOLLOWUP_REWARD_DAYS, getDaysSinceNeighboring, getFollowupRewardStatus, getFollowupRewardTier, TFollowUpRewardTier } from "./utils";
+import { FOLLOWUP_CLAIM_TERM, FOLLOWUP_REWARD_DAYS, getDaysSinceNeighboring, getFollowupRewardNumber, getFollowupRewardStatus, TFollowUpRewardNumber } from "./utils";
 
 const FollowUpPage = () => {
   const { walletAddress, inited, decimals, symbol } = useSettingsStore((state) => state);
@@ -79,7 +79,7 @@ const FollowUpPage = () => {
 
   const followup = getFollowUp(aaState, house1_num, house2_num);
   const daysSinceNeighboring = getDaysSinceNeighboring(match);
-  const rewardTier: TFollowUpRewardTier = getFollowupRewardTier(daysSinceNeighboring);
+  const rewardNumber: TFollowUpRewardNumber = getFollowupRewardNumber(daysSinceNeighboring);
   const followupRewardStatus = getFollowupRewardStatus(match, followup);
   const forwardReward = followup?.reward ?? params.followup_reward_share * house1.amount;
 
@@ -109,7 +109,7 @@ const FollowUpPage = () => {
     amount: 1e4,
     aa: appConfig.AA_ADDRESS!,
     is_single: true,
-    data: { days: String(FOLLOWUP_REWARD_DAYS[rewardTier! - 1]), house1_num, house2_num, followup: 1 },
+    data: { days: String(FOLLOWUP_REWARD_DAYS[rewardNumber! - 1]), house1_num, house2_num, followup: 1 },
     from_address: walletAddress || undefined,
   });
 
@@ -188,7 +188,7 @@ const FollowUpPage = () => {
             <Card>
               <CardHeader>
                 <h2 className="text-xl font-semibold">
-                  Claim your {followupRewardStatus === 'GOT_ALL' ? '' : `${rewardTier}st`} follow-up rewards
+                  Claim your {followupRewardStatus === 'GOT_ALL' ? '' : `${rewardNumber}st`} follow-up rewards
                 </h2>
                 <CardDescription>
                   {followupRewardStatus === 'NOT_STARTED' ? <div>
@@ -196,11 +196,11 @@ const FollowUpPage = () => {
                   </div> : null}
 
                   {followupRewardStatus === 'ACTIVE' ? <div>
-                    You became neighbors {daysSinceNeighboring} days ago and are now eligible for your {rewardTier}st follow-up reward, {toLocalString(forwardReward / 10 ** decimals!)} {symbol} to each of you. Please contact your neighbor over discord or telegram and send your claim requests within 10 minutes of each other.
+                    You became neighbors {daysSinceNeighboring} days ago and are now eligible for your {rewardNumber}st follow-up reward, {toLocalString(forwardReward / 10 ** decimals!)} {symbol} to each of you. Please contact your neighbor over discord or telegram and send your claim requests within 10 minutes of each other.
                   </div> : null}
 
                   {followupRewardStatus === 'GOT' ? <div>
-                    You’ve already claimed your {rewardTier}st follow-up reward. No additional reward is available at this time.
+                    You’ve already claimed your {rewardNumber}st follow-up reward. No additional reward is available at this time.
                   </div> : null}
 
                   {followupRewardStatus === 'GOT_ALL' ? <div>
@@ -210,7 +210,7 @@ const FollowUpPage = () => {
                   {followupRewardStatus === 'EXPIRED' ? <div>
                     The {FOLLOWUP_CLAIM_TERM}-days window for sending claim requests has passed. Please wait for the next follow-up reward milestone.
 
-                    Next follow-up reward will be available after {FOLLOWUP_REWARD_DAYS[rewardTier!]} days.
+                    Next follow-up reward will be available after {FOLLOWUP_REWARD_DAYS[rewardNumber!]} days.
                   </div> : null}
                 </CardDescription>
 
