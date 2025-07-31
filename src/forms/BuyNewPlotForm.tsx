@@ -20,7 +20,7 @@ import { mapUnitsByUniqDataSelector, mapUnitsSelector } from "@/store/selectors/
 
 import appConfig from "@/appConfig";
 
-const OSWAP_SWAP_URL = "https://oswap.io/swap/6SLFEQMX4AJQYOEH5EUY6MFD5C6L6DKV"
+const OSWAP_SWAP_URL = "https://oswap.io/swap/6SLFEQMX4AJQYOEH5EUY6MFD5C6L6DKV?reverse=1"
 
 export const BuyNewPlotForm: FC = memo(() => {
   // Get AA parameters and calculate plot price details
