@@ -151,7 +151,7 @@ export const UserStats: FC<IUserStatsProps> = memo(({ address }) => {
             <QRButton href={buyFromBalanceUrl} disabled={address !== walletAddress} size="sm" variant="secondary">
               Buy a plot from this balance
             </QRButton>
-          </div> : <div className="mt-2 text-xs">Accumulate at least {toLocalString(totalPrice / 10 ** decimals!)} CITY to buy a plot from this balance</div>}
+          </div> : <div className="mt-2 text-xs text-muted-foreground">Accumulate at least {toLocalString(totalPrice / 10 ** decimals!)} CITY to buy a plot from this balance</div>}
         </CardContent>
       </Card>
     </div >
