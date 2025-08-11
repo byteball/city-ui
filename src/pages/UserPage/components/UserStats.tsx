@@ -81,7 +81,7 @@ export const UserStats: FC<IUserStatsProps> = memo(({ address }) => {
     };
   }, [address, asset]);
 
-  const canBuyFromBalance = totalPrice <= followUpBalance && address === walletAddress;
+  const canBuyFromBalance = totalPrice <= followUpBalance;
 
   const buyFromBalanceUrl = generateLink({
     amount: 1e4,
@@ -147,11 +147,11 @@ export const UserStats: FC<IUserStatsProps> = memo(({ address }) => {
             <div>{toLocalString((followUpBalance / 10 ** decimals!).toFixed(4))} {symbol}</div>
           </div>
 
-          {<div className="mt-2">
-            <QRButton href={buyFromBalanceUrl} disabled={!canBuyFromBalance} size="sm" variant="secondary">
+          {canBuyFromBalance ? <div className="mt-2">
+            <QRButton href={buyFromBalanceUrl} disabled={address !== walletAddress} size="sm" variant="secondary">
               Buy a plot from this balance
             </QRButton>
-          </div>}
+          </div> : <div className="mt-2 text-xs">Accumulate at least {toLocalString(totalPrice / 10 ** decimals!)} CITY to buy a plot from this balance</div>}
         </CardContent>
       </Card>
     </div >
