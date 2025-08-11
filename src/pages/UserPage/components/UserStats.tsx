@@ -33,7 +33,7 @@ export const UserStats: FC<IUserStatsProps> = memo(({ address }) => {
   const [walletBalance, setWalletBalance] = useState<IWalletBalance>({ amount: 0, loaded: false, loading: false });
   const { decimals, symbol, asset, walletAddress } = useSettingsStore((state) => state);
   const balance = useAaStore((state) => Number(state.state?.[`user_land_${address}`] ?? 0));
-  const followUpBalance = useAaStore((state) => Number(state.state?.[`balance_${address}`] ?? 0));
+  const rewardsBalance = useAaStore((state) => Number(state.state?.[`balance_${address}`] ?? 0));
   const city = useAaStore((state) => state.state.city_city)!;
 
   const params = useAaParams();
@@ -81,7 +81,7 @@ export const UserStats: FC<IUserStatsProps> = memo(({ address }) => {
     };
   }, [address, asset]);
 
-  const canBuyFromBalance = totalPrice <= followUpBalance;
+  const canBuyFromBalance = totalPrice <= rewardsBalance;
 
   const buyFromBalanceUrl = generateLink({
     amount: 1e4,
@@ -144,7 +144,7 @@ export const UserStats: FC<IUserStatsProps> = memo(({ address }) => {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            <div>{toLocalString((followUpBalance / 10 ** decimals!).toFixed(4))} {symbol}</div>
+            <div>{toLocalString((rewardsBalance / 10 ** decimals!).toFixed(4))} {symbol}</div>
           </div>
 
           {canBuyFromBalance ? <div className="mt-2">
