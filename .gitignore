@@ -1,5 +1,6 @@
 # Logs
 logs
+search_bot_assets
 *.log
 npm-debug.log*
 yarn-debug.log*

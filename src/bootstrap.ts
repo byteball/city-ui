@@ -10,6 +10,11 @@ export const bootstrap = async () => {
   await initializeStore();
   await initializeSettings();
 
+  if (!client) {
+    console.log("log: bootstrap done; Bot version without WebSocket");
+    return;
+  }
+
   client.subscribe((err, result) => {
     if (err) {
       console.error("WebSocket error:", err);

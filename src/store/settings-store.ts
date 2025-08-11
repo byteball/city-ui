@@ -5,6 +5,8 @@ import { devtools, persist } from "zustand/middleware";
 
 import { IMapUnit, INotification, IRefData, IUnitUniqData } from "@/global";
 import { toast } from "@/hooks/use-toast";
+
+import httpClient from "@/services/obyteHttpClient";
 import client from "@/services/obyteWsClient";
 
 import { ICityAaState, useAaStore } from "./aa-store";
@@ -14,6 +16,7 @@ import { mapUnitsByOwnerAddressSelector } from "./selectors/mapUnitsSelector";
 
 const LOCAL_STORAGE_KEY = "settings-store";
 const STORAGE_VERSION = 14; // change this to invalidate old persisted data
+const TOKENS_REGISTRY = "O6H6ZIFI57X3PLTYHOCVYPP5A553CYFQ"; // we need it for bots 
 
 export type SortDirectionType = "ASC" | "DESC";
 
@@ -70,10 +73,16 @@ interface SettingsState {
 const storeCreator: StateCreator<SettingsState> = (set, get) => ({
   firstInit: async () => {
     if (get().inited) return console.log("log: already initialized settings store");
-    const constantsState = (await client.api.getAaStateVars({
-      address: appConfig.AA_ADDRESS,
-      var_prefix: "constants",
-    })) as ICityAaState;
+    let constantsState: ICityAaState;
+
+    if (client) {
+      constantsState = (await client.api.getAaStateVars({
+        address: appConfig.AA_ADDRESS,
+        var_prefix: "constants",
+      })) as ICityAaState;
+    } else {
+      constantsState = await httpClient.getAaStateVars(appConfig.AA_ADDRESS, "constants");
+    }
 
     const asset = constantsState.constants?.asset;
     const governanceAa = constantsState.constants?.governance_aa;
@@ -83,13 +92,31 @@ const storeCreator: StateCreator<SettingsState> = (set, get) => ({
       throw new Error("Failed to initialize settings store");
     }
 
-    const tokenRegistry = client.api.getOfficialTokenRegistryAddress();
+    let tokenRegistry;
 
-    const [decimals, symbol, challengingPeriod] = await Promise.all([
-      client.api.getDecimalsBySymbolOrAsset(tokenRegistry, asset).catch(() => 0),
-      client.api.getSymbolByAsset(tokenRegistry, asset),
-      client.api.getDefinition(governanceAa).then((def) => def[1]?.params?.challenging_period || 3 * 24 * 3600),
-    ]);
+    if (client) {
+      tokenRegistry = client.api.getOfficialTokenRegistryAddress();
+    } else {
+      tokenRegistry = TOKENS_REGISTRY;
+    }
+
+    let decimals, symbol, challengingPeriod;
+
+    if (client) {
+      [decimals, symbol, challengingPeriod] = await Promise.all([
+        client.api.getDecimalsBySymbolOrAsset(tokenRegistry, asset).catch(() => 0),
+        client.api.getSymbolByAsset(tokenRegistry, asset),
+        client.api.getDefinition(governanceAa).then((def) => def[1]?.params?.challenging_period || 3 * 24 * 3600),
+      ]);
+    } else {
+      // for search bots only
+      [decimals, symbol, challengingPeriod] = [
+        9,
+        "CITY",
+        3 * 24 * 3600
+      ];
+    }
+
 
     set({ inited: true, asset, governanceAa, decimals: decimals || 0, symbol, challengingPeriod });
     console.log("log: initialized settings store");
