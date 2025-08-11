@@ -1,4 +1,6 @@
 import { IAaStateVars } from "@/global";
+
+import httpClient from "@/services/obyteHttpClient";
 import client from "@/services/obyteWsClient";
 
 const MAX_ITERATIONS = 100 as const; // Safety limit
@@ -17,11 +19,15 @@ export const getAllStateVarsByAddress = async (address: string) => {
 
       let chunkData: IAaStateVars = {};
 
-      chunkData = (await client.api.getAaStateVars({
-        address,
-        // @ts-expect-error
-        var_prefix_from: lastKey,
-      })) as IAaStateVars;
+      if (client) {
+        chunkData = (await client.api.getAaStateVars({
+          address,
+          // @ts-expect-error
+          var_prefix_from: lastKey,
+        })) as IAaStateVars;
+      } else {
+        chunkData = await httpClient.getAaStateVars(address, undefined, lastKey) as IAaStateVars;
+      }
 
       const keys = Object.keys(chunkData);
 

@@ -8,6 +8,7 @@ import { useAaParams, useAaStore } from "@/store/aa-store";
 import { mapUnitsByOwnerAddressSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 
+import httpClient from "@/services/obyteHttpClient";
 import client from "@/services/obyteWsClient";
 
 interface IUserStatsProps {
@@ -40,14 +41,17 @@ export const UserStats: FC<IUserStatsProps> = memo(({ address }) => {
   useEffect(() => {
     let cancelled = false;
     if (!address || !asset) return;
+
     setWalletBalance({ amount: 0, loaded: false, loading: true });
-    client.api
-      .getBalances([address])
-      .then((balances) => {
-        const typedBalances = balances as Record<string, Record<string, { total: number }>>;
-        const userBalance = typedBalances[address];
-        return userBalance?.[asset]?.total ?? 0;
-      })
+
+    const balanceRequest = client ? client.api
+      .getBalances([address]) : httpClient.getBalances([address]);
+
+    balanceRequest.then((balances) => {
+      const typedBalances = balances as Record<string, Record<string, { total: number }>>;
+      const userBalance = typedBalances[address];
+      return userBalance?.[asset]?.total ?? 0;
+    })
       .then((amount) => {
         if (!cancelled) {
           setWalletBalance({ amount, loaded: true, loading: false });

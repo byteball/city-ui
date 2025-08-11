@@ -7,9 +7,10 @@ import client from "@/services/obyteWsClient";
 
 import { asNonNegativeNumber } from "@/lib";
 
-import appConfig from "@/appConfig";
 import { getAllStateVarsByAddress } from "@/lib/getAllStateVarsByAddress";
 import { syncNotifications } from "./settings-store";
+
+import appConfig from "@/appConfig";
 
 export const defaultAaParams: IAaParams = {
   matching_probability: appConfig.TESTNET ? asNonNegativeNumber(0.05) : asNonNegativeNumber(0.1),
@@ -59,9 +60,11 @@ const storeCreator: StateCreator<AaStoreState> = (set, _get) => ({
     console.log("log: loading AA store, for address", appConfig.AA_ADDRESS);
 
     try {
-      await client.justsaying("light/new_aa_to_watch", {
-        aa: appConfig.AA_ADDRESS,
-      });
+      if (client) {
+        await client.justsaying("light/new_aa_to_watch", {
+          aa: appConfig.AA_ADDRESS,
+        });
+      }
 
       const aaState: IAaStateVars = await getAllStateVarsByAddress(appConfig.AA_ADDRESS);
 
@@ -70,9 +73,11 @@ const storeCreator: StateCreator<AaStoreState> = (set, _get) => ({
 
       if (!governanceAa) throw new Error("governance AA address not found");
 
-      await client.justsaying("light/new_aa_to_watch", {
-        aa: governanceAa,
-      });
+      if (client) {
+        await client.justsaying("light/new_aa_to_watch", {
+          aa: governanceAa,
+        });
+      }
 
       const governanceState: IAaStateVars = await getAllStateVarsByAddress(governanceAa);
 

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
+import httpClient from "@/services/obyteHttpClient";
 import client from "@/services/obyteWsClient";
+
 import { useAaParams } from "@/store/aa-store";
 import { useCacheStore } from "@/store/cache-store";
 
@@ -36,7 +38,13 @@ export const useAttestations = (address?: string): IAttestationsState => {
 
       if (!cachedAttestations) {
         try {
-          const attestations = await client.api.getAttestations({ address }).then((res) => res.reverse());
+          let attestations: any[] = [];
+
+          if (client) {
+            attestations = await client.api.getAttestations({ address }).then((res) => res.reverse());
+          } else {
+            attestations = await httpClient.getAttestations(address);
+          }
 
           if (appConfig.TESTNET) {
             console.log(`log(useAttestations): Fetched ${attestations.length} attestations for address: ${address}`);
