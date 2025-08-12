@@ -13,9 +13,11 @@ import appConfig from "@/appConfig";
 const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
 const BOT_ENV = !!ua && isbot(ua);
 
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
 const config: Phaser.Types.Core.GameConfig = {
   // In bot/headless environments force AUTO so Phaser can fall back to Canvas if WebGL fails.
-  type: BOT_ENV ? Phaser.AUTO : Phaser.WEBGL,
+  type: BOT_ENV ? Phaser.AUTO : (isIOS ? Phaser.CANVAS : Phaser.WEBGL),
   width: 1800,
   height: 1800,
   banner: !!appConfig.TESTNET,
