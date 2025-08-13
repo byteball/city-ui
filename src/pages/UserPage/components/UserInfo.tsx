@@ -102,7 +102,7 @@ export const UserInfo: FC<UserInfoProps> = ({ address }) => {
             <meta name="description" content={description} />
           </>
         ) : null}
-        <meta property="og:image" content={`${appConfig.OG_IMAGE_URL}/og/user`} />
+        <meta property="og:image" content={`${appConfig.OG_IMAGE_URL}/og/user?address=${address}`} />
       </Helmet>
       <InfoPanel>
         <InfoPanel.Item label="Address">
