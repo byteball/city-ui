@@ -58,7 +58,7 @@ const InfoPanelItem: FC<InfoPanelItemProps> = ({
       {loading ? (
         <Skeleton className="h-[1.125rem] w-[150px]" />
       ) : (
-        <div className={cn({ "line-clamp-1": textClamp })}>{children}</div>
+        <div className={cn({ "sm:line-clamp-1": textClamp })}>{children}</div>
       )}
     </div>
   );
