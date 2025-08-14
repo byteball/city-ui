@@ -234,8 +234,29 @@ export class Map {
       const unitImage = unit.getMapUnitImage();
       unitImage.setInteractive({ cursor: "pointer" });
 
-      unitImage.on("pointerdown", () => {
-        // Reset the selected plot if it was already selected
+      // Select on click (pointerup with small movement), not on drag
+      const selectionClickThreshold = 4; // px
+      let unitDownPos: { x: number; y: number } | null = null;
+      let unitPressed = false;
+
+      unitImage.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+        unitPressed = true;
+        unitDownPos = { x: pointer.x, y: pointer.y };
+      });
+
+      unitImage.on("pointerup", (pointer: Phaser.Input.Pointer) => {
+        if (!unitPressed) return;
+        unitPressed = false;
+        const movedEnough = (() => {
+          if (!unitDownPos) return false;
+          const dx = pointer.x - unitDownPos.x;
+          const dy = pointer.y - unitDownPos.y;
+          return (dx * dx + dy * dy) >= (selectionClickThreshold * selectionClickThreshold);
+        })();
+
+        if (movedEnough) return; // treat as drag, don't select
+
+        // Reset the previously selected unit if any
         if (this.selectedMapUnit) {
           this.selectedMapUnit.setSelected(false);
           this.selectedMapUnit = null;
@@ -260,6 +281,11 @@ export class Map {
             type,
           });
         }
+      });
+
+      unitImage.on("pointerupoutside", () => {
+        unitPressed = false;
+        unitDownPos = null;
       });
 
       unitImage.on("pointerover", () => {
