@@ -48,7 +48,7 @@ export default class CameraController {
           if (!this.isDragging && (dx * dx + dy * dy) >= (this.dragThreshold * this.dragThreshold)) {
             this.isDragging = true;
             // Set crosshair while dragging
-            this.scene.input.setDefaultCursor("crosshair");
+            this.scene.input.setDefaultCursor("move");
           }
         }
 
