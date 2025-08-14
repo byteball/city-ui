@@ -8,6 +8,9 @@ export default class CameraController {
   private scene: Phaser.Scene;
   private camera: Phaser.Cameras.Scene2D.Camera;
   private BASE_MAP_SIZE: Decimal;
+  private isDragging = false;
+  private dragStart: { x: number; y: number } | null = null;
+  private readonly dragThreshold = 4; // px
 
   constructor(scene: Phaser.Scene, camera: Phaser.Cameras.Scene2D.Camera) {
     this.scene = scene;
@@ -26,13 +29,52 @@ export default class CameraController {
   }
 
   private initDrag(): void {
+    // Track drag start position
+    this.scene.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      // Only consider single-finger/mouse for panning
+      if ((this as any)._activePointersCount === undefined || (this as any)._activePointersCount <= 1) {
+        this.dragStart = { x: pointer.x, y: pointer.y };
+        this.isDragging = false;
+      }
+    });
+
     this.scene.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
       // Skip drag when multi-touch (used for pinch zoom)
       if ((this as any)._activePointersCount === 1 && pointer.isDown) {
+        // Determine if we've started a drag
+        if (this.dragStart) {
+          const dx = pointer.x - this.dragStart.x;
+          const dy = pointer.y - this.dragStart.y;
+          if (!this.isDragging && (dx * dx + dy * dy) >= (this.dragThreshold * this.dragThreshold)) {
+            this.isDragging = true;
+            // Set crosshair while dragging
+            this.scene.input.setDefaultCursor("crosshair");
+          }
+        }
+
+        // Keep crosshair enforced during drag
+        if (this.isDragging) {
+          // Directly set canvas cursor to avoid overrides from interactive objects
+          if (this.scene.game && this.scene.game.canvas) {
+            this.scene.game.canvas.style.cursor = "crosshair";
+          }
+        }
+
         this.camera.scrollX -= (pointer.x - pointer.prevPosition.x) / this.camera.zoom;
         this.camera.scrollY -= (pointer.y - pointer.prevPosition.y) / this.camera.zoom;
       }
     });
+
+    const endDrag = () => {
+      if (this.isDragging) {
+        this.isDragging = false;
+        this.scene.input.setDefaultCursor("default");
+      }
+      this.dragStart = null;
+    };
+
+    this.scene.input.on("pointerup", endDrag);
+    this.scene.input.on("pointerupoutside", endDrag);
   }
 
   private initZoom(): void {

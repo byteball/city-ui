@@ -74,11 +74,28 @@ export class Map {
     this.createNeighborLinks();
     this.updateMapUnitSelection();
 
-    // Add click handler to clear selection when clicking on empty space
+    // Clear selection on true click on empty space (not a drag)
+    let downPos: { x: number; y: number } | null = null;
+    let downOnObject = false;
+    const clickThreshold = 4; // px
+
+    this.scene.input.on("pointerdown", (pointer: Phaser.Input.Pointer, gameObjects: Phaser.GameObjects.GameObject[]) => {
+      downPos = { x: pointer.x, y: pointer.y };
+      downOnObject = !!(gameObjects && gameObjects.length > 0);
+    });
+
     this.scene.input.on(
-      "pointerdown",
-      (_pointer: Phaser.Input.Pointer, engineOptions: Phaser.GameObjects.GameObject[]) => {
-        if (!engineOptions || engineOptions.length === 0) {
+      "pointerup",
+      (pointer: Phaser.Input.Pointer, gameObjects: Phaser.GameObjects.GameObject[]) => {
+        const movedEnough = (() => {
+          if (!downPos) return false;
+          const dx = pointer.x - downPos.x;
+          const dy = pointer.y - downPos.y;
+          return (dx * dx + dy * dy) >= (clickThreshold * clickThreshold);
+        })();
+
+        // Only clear if it's a click and no game objects under pointer
+        if (!downOnObject && !movedEnough && (!gameObjects || gameObjects.length === 0)) {
           if (this.selectedMapUnit) {
             this.selectedMapUnit.setSelected(false);
             this.selectedMapUnit = null;
@@ -89,6 +106,9 @@ export class Map {
             useSettingsStore.getState().setSelectedMarketPlot(null);
           }
         }
+
+        downPos = null;
+        downOnObject = false;
       }
     );
   }
