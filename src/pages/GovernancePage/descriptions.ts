@@ -9,7 +9,7 @@ export const paramDescriptions: IParamDescriptions = {
     "The bonus applied to the size of the referring user’s plot. It is a percentage of the total size of all plots combined.",
   randomness_aa:
     "Address of the Autonomous Agent that collects randomness from VRF oracles to determine coordinates of new plots.",
-  randomness_price: "",
+  randomness_price: "The price (as a share of plot price) paid to randomness providers for each plot.",
   p2p_sale_fee:
     "The fee charged from seller for facilitating a peer-to-peer sale of a plot of land; this fee is a percentage of the sale price.",
   shortcode_sale_fee: "The fee charged for selling shortcodes associated with houses;.",
