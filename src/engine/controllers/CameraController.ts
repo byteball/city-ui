@@ -56,7 +56,7 @@ export default class CameraController {
         if (this.isDragging) {
           // Directly set canvas cursor to avoid overrides from interactive objects
           if (this.scene.game && this.scene.game.canvas) {
-            this.scene.game.canvas.style.cursor = "crosshair";
+            this.scene.game.canvas.style.cursor = "move";
           }
         }
 
