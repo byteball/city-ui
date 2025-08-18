@@ -32,6 +32,9 @@ export class Map {
   private neighborLinks: NeighborLink[] = [];
   private engineOptions: IEngineOptions;
   private matches: globalThis.Map<number, IMatch>;
+  // Track touches to differentiate pinch-zoom from taps
+  private inputActivePointers: globalThis.Map<number, Phaser.Input.Pointer> = new globalThis.Map();
+  private hadMultiTouchGesture = false;
 
   constructor(scene: Phaser.Scene, roadsData: IRoad[], unitsData: IMapUnit[], matches: globalThis.Map<number, IMatch>) {
     this.scene = scene;
@@ -79,7 +82,13 @@ export class Map {
     let downOnObject = false;
     const clickThreshold = 4; // px
 
+    // Track active pointers to detect multi-touch (pinch zoom)
+    // and avoid misinterpreting pinch as a tap that clears selection.
+    const activePointers = this.inputActivePointers;
+
     this.scene.input.on("pointerdown", (pointer: Phaser.Input.Pointer, gameObjects: Phaser.GameObjects.GameObject[]) => {
+      activePointers.set(pointer.id, pointer);
+      if (activePointers.size > 1) this.hadMultiTouchGesture = true;
       downPos = { x: pointer.x, y: pointer.y };
       downOnObject = !!(gameObjects && gameObjects.length > 0);
     });
@@ -87,6 +96,8 @@ export class Map {
     this.scene.input.on(
       "pointerup",
       (pointer: Phaser.Input.Pointer, gameObjects: Phaser.GameObjects.GameObject[]) => {
+        // Maintain active pointers map
+        activePointers.delete(pointer.id);
         const movedEnough = (() => {
           if (!downPos) return false;
           const dx = pointer.x - downPos.x;
@@ -95,7 +106,8 @@ export class Map {
         })();
 
         // Only clear if it's a click and no game objects under pointer
-        if (!downOnObject && !movedEnough && (!gameObjects || gameObjects.length === 0)) {
+        // and it was NOT a multi-touch interaction (pinch zoom on mobile)
+        if (!this.hadMultiTouchGesture && !downOnObject && !movedEnough && (!gameObjects || gameObjects.length === 0)) {
           if (this.selectedMapUnit) {
             this.selectedMapUnit.setSelected(false);
             this.selectedMapUnit = null;
@@ -109,8 +121,18 @@ export class Map {
 
         downPos = null;
         downOnObject = false;
+        if (activePointers.size === 0) {
+          this.hadMultiTouchGesture = false; // reset when all touches end
+        }
       }
     );
+
+    this.scene.input.on("pointerupoutside", (pointer: Phaser.Input.Pointer) => {
+      activePointers.delete(pointer.id);
+      if (activePointers.size === 0) {
+        this.hadMultiTouchGesture = false;
+      }
+    });
   }
 
   private createRoads(mapWidth: number, mapHeight: number) {
@@ -254,7 +276,8 @@ export class Map {
           return (dx * dx + dy * dy) >= (selectionClickThreshold * selectionClickThreshold);
         })();
 
-        if (movedEnough) return; // treat as drag, don't select
+        // Ignore selection if it was a drag or part of a multi-touch gesture (pinch zoom)
+        if (movedEnough || this.hadMultiTouchGesture) return; // treat as drag or pinch, don't select
 
         // Reset the previously selected unit if any
         if (this.selectedMapUnit) {
