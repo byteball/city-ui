@@ -136,3 +136,5 @@ export const useCacheStore = create<ICacheState>()(
     { name: LOCAL_STORAGE_KEY }
   )
 );
+
+export const getUserAttestations = (address: string) => useCacheStore.getState().getUserAttestations(address);
