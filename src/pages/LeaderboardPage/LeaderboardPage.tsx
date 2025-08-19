@@ -6,7 +6,6 @@ import { columns } from "./components/Columns";
 import { LeaderboardTable } from "./components/LeaderboardTable";
 
 import { useAaStore } from "@/store/aa-store";
-import { mapUnitsSelector } from "@/store/selectors/mapUnitsSelector";
 import { useSettingsStore } from "@/store/settings-store";
 
 import { toLocalString } from "@/lib";
@@ -24,8 +23,7 @@ export default () => {
   const totalHouses = stats.count_houses ?? 0;
   const totalPlots = stats.count_plots ?? 0;
 
-  const mapUnits = mapUnitsSelector(aaState);
-  const leaderboardData: ILeaderboardData = useMemo(() => getLeaderboardData(mapUnits), [mapUnits]);
+  const leaderboardData: ILeaderboardData = useMemo(() => getLeaderboardData(aaState), [aaState]);
 
   return <PageLayout
     title="Leaderboard"
