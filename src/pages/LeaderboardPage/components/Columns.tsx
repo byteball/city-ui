@@ -86,10 +86,25 @@ export const columns: ColumnDef<ILeaderboardEntry>[] = [
       return (
         <Button
           variant="ghost"
-          className="px-0 mr-2 hover:bg-transparent"
+          className="px-0 hover:bg-transparent"
           onClick={() => column.toggleSorting(true)}
         >
           Houses
+          <ArrowDown className="w-4 h-4 ml-1" />
+        </Button>
+      )
+    },
+  },
+  {
+    accessorKey: "neighbors",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="px-0 mr-2 hover:bg-transparent"
+          onClick={() => column.toggleSorting(true)}
+        >
+          Neighbors
           <ArrowDown className="w-4 h-4 ml-1" />
         </Button>
       )
