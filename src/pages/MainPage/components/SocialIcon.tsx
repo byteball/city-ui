@@ -1,12 +1,14 @@
+import cn from "classnames";
 import { FC } from "react";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface SocialIconsProps {
   type: string;
+  className?: string;
 }
 
-const commonClassNames = "h-5 fill-muted-foreground/50";
+const commonClassNames = "h-5 fill-muted-foreground/50 w-full";
 
 const getIcon = (name: "telegram" | "discord") => {
   switch (name) {
@@ -27,14 +29,14 @@ const getIcon = (name: "telegram" | "discord") => {
   }
 };
 
-export const SocialIcon: FC<SocialIconsProps> = ({ type }) => {
+export const SocialIcon: FC<SocialIconsProps> = ({ type, className }) => {
   const iconElement = getIcon(type as "telegram" | "discord");
 
   return (
     <TooltipProvider>
       <Tooltip>
-        <TooltipTrigger className="cursor-default">
-          <div>{iconElement}</div>
+        <TooltipTrigger className={cn("cursor-default", className)}>
+          <div className="w-6">{iconElement}</div>
         </TooltipTrigger>
         <TooltipContent>{type}</TooltipContent>
       </Tooltip>

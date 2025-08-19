@@ -20,12 +20,12 @@ export const ContactField: FC<IContractFieldProps> = ({ attestations, unknownPlu
     return <span>No attested contacts</span>;
   }
 
-  return (<div className="flex gap-4">
+  return (<div className="flex flex-wrap">
     {attestations.map((a) => {
       const url = getContactUrlByUsername(a.value, a.name, a.userId);
 
       return (
-        <div className="flex items-center justify-between gap-1" key={a.name + "-" + a.value + "-"}>
+        <div className="flex items-center justify-between gap-2 mr-4" key={a.name + "-" + a.value + "-"}>
           <SocialIcon type={a.name} />{" "}
           <HoverCard>
             {a.displayName ? <HoverCardContent align="center" className="text-white" side="top">
