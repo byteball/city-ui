@@ -5,17 +5,26 @@ import { useSettingsStore } from "@/store/settings-store";
 const calculateTotalAmount = (unit: IPlot | IHouse): number => {
   if (unit.type === "plot") {
     return unit.amount + (unit.rented_amount ?? 0);
-  } else if (unit.type === "house") {
+  }
+  if (unit.type === "house") {
     return unit.amount;
   }
+  // Fallback for future-proofing; should never hit as union is exhaustive
+  return 0;
 };
 
-export const mapUnitsSortFunc = (a: IPlot | IHouse, b: IPlot | IHouse) => {
+export const mapUnitsSortFunc = (
+  a: IPlot | IHouse,
+  b: IPlot | IHouse,
+  useNeighborSorting: boolean = false
+) => {
   if (a.type !== b.type) {
     throw new Error(`Types are not equal: cannot compare ${a.type} with ${b.type}`);
   }
 
-  const { type: sortType, direction } = useSettingsStore.getState().mapUnitSortType[a.type];
+  const { type: sortType, direction } = useSettingsStore
+    .getState()
+    .mapUnitSortType[useNeighborSorting ? "neighbor" : a.type];
 
   let first = a;
   let second = b;

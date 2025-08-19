@@ -9,6 +9,7 @@ import { useSettingsStore } from "@/store/settings-store";
 import { useAttestations } from "@/hooks/useAttestations";
 import { UserHouses, UserPlots, UserStats } from "./components";
 import { UserInfo } from "./components/UserInfo";
+import { UserNeighbors } from "./components/UserNeighbors";
 
 const ATTESTATION_MAX_LENGTH = 14; // max length of attestation to display in title
 
@@ -45,6 +46,7 @@ const UserPage: FC<UserPageProps> = () => {
       <UserInfo address={address} />
       <UserStats address={address} />
       <UserHouses address={address} />
+      <UserNeighbors address={address} />
       <UserPlots address={address} />
     </PageLayout>
   );

@@ -8,12 +8,12 @@ import {
 } from "@/store/settings-store";
 
 interface IMapUnitsSortSelectProps {
-  type: "house" | "plot";
+  type: "house" | "plot" | "neighbor";
 }
 
 // Utility function to get sort type enum based on unit type
-const getSortTypeEnum = (type: "house" | "plot") => {
-  return type === "plot" ? IPlotSortTypeEnum : IHouseSortTypeEnum;
+const getSortTypeEnum = (sortType: "house" | "plot" | "neighbor") => {
+  return sortType === "plot" ? IPlotSortTypeEnum : IHouseSortTypeEnum; // house == neighbor
 };
 
 export const MapUnitsSortSelect: React.FC<IMapUnitsSortSelectProps> = ({ type }) => {

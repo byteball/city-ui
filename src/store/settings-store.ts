@@ -3,7 +3,7 @@ import obyte from "obyte";
 import { create, StateCreator } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
-import { IMapUnit, INotification, IRefData, IUnitUniqData } from "@/global";
+import { INotification, IRefData, IUnitUniqData } from "@/global";
 import { toast } from "@/hooks/use-toast";
 
 import httpClient from "@/services/obyteHttpClient";
@@ -15,7 +15,7 @@ import appConfig from "@/appConfig";
 import { mapUnitsByOwnerAddressSelector } from "./selectors/mapUnitsSelector";
 
 const LOCAL_STORAGE_KEY = "settings-store";
-const STORAGE_VERSION = 14; // change this to invalidate old persisted data
+const STORAGE_VERSION = 15; // change this to invalidate old persisted data
 const TOKENS_REGISTRY = "O6H6ZIFI57X3PLTYHOCVYPP5A553CYFQ"; // we need it for bots 
 
 export type SortDirectionType = "ASC" | "DESC";
@@ -53,11 +53,15 @@ interface SettingsState {
   selectedMarketPlot?: IUnitUniqData;
   setSelectedMapUnit: (unitUniqData: IUnitUniqData | null) => void;
   setSelectedMarketPlot: (unitUniqData: IUnitUniqData | null) => void;
-  setMapUnitSortType: <T extends "house" | "plot">(
+  setMapUnitSortType: <T extends "house" | "plot" | "neighbor">(
     unit: T,
-    sortType: T extends "house" ? keyof typeof IHouseSortTypeEnum : keyof typeof IPlotSortTypeEnum
+    sortType: T extends "plot" ? keyof typeof IPlotSortTypeEnum : keyof typeof IHouseSortTypeEnum
   ) => void;
   mapUnitSortType: {
+    neighbor: {
+      type: keyof typeof IHouseSortTypeEnum;
+      direction: SortDirectionType;
+    };
     house: {
       type: keyof typeof IHouseSortTypeEnum;
       direction: SortDirectionType;
@@ -67,7 +71,7 @@ interface SettingsState {
       direction: SortDirectionType;
     };
   };
-  setMapUnitSortDirection: (unit: IMapUnit["type"], direction: SortDirectionType) => void;
+  setMapUnitSortDirection: (sortUnit: "house" | "plot" | "neighbor", direction: SortDirectionType) => void;
 }
 
 const storeCreator: StateCreator<SettingsState> = (set, get) => ({
@@ -140,6 +144,10 @@ const storeCreator: StateCreator<SettingsState> = (set, get) => ({
       type: "CREATED_TS",
       direction: "DESC",
     },
+    neighbor: {
+      type: "CREATED_TS",
+      direction: "DESC",
+    },
   },
   notifications: [],
   lastNotificationAddedAt: moment.utc().unix(),
@@ -202,9 +210,9 @@ const storeCreator: StateCreator<SettingsState> = (set, get) => ({
       lastNotificationAddedAt: moment.utc().unix(),
     });
   },
-  setMapUnitSortType: <T extends "house" | "plot">(
+  setMapUnitSortType: <T extends "house" | "plot" | "neighbor">(
     unit: T,
-    sortType: T extends "house" ? keyof typeof IHouseSortTypeEnum : keyof typeof IPlotSortTypeEnum
+    sortType: T extends "plot" ? keyof typeof IPlotSortTypeEnum : keyof typeof IHouseSortTypeEnum
   ) => {
     set((state) => ({
       mapUnitSortType: {
@@ -216,12 +224,12 @@ const storeCreator: StateCreator<SettingsState> = (set, get) => ({
       },
     }));
   },
-  setMapUnitSortDirection: (unit: IMapUnit["type"], direction: SortDirectionType) => {
+  setMapUnitSortDirection: (sortUnit: "house" | "plot" | "neighbor", direction: SortDirectionType) => {
     set((state) => ({
       mapUnitSortType: {
         ...state.mapUnitSortType,
-        [unit]: {
-          type: state.mapUnitSortType[unit].type,
+        [sortUnit]: {
+          type: state.mapUnitSortType[sortUnit].type,
           direction,
         },
       },
@@ -263,12 +271,12 @@ export const setSelectedMapUnit = (unitUniqData: IUnitUniqData): void =>
 export const setWalletAddress = (address: string): void => useSettingsStore.getState().setWalletAddress(address);
 
 export const setMapUnitSortType = (
-  unit: IMapUnit["type"],
+  sortUnit: "house" | "plot" | "neighbor",
   sortType: keyof typeof IHouseSortTypeEnum | keyof typeof IPlotSortTypeEnum
-): void => useSettingsStore.getState().setMapUnitSortType(unit, sortType);
+): void => useSettingsStore.getState().setMapUnitSortType(sortUnit, sortType);
 
-export const setMapUnitSortDirection = (unit: IMapUnit["type"], direction: SortDirectionType): void =>
-  useSettingsStore.getState().setMapUnitSortDirection(unit, direction);
+export const setMapUnitSortDirection = (sortUnit: "house" | "plot" | "neighbor", direction: SortDirectionType): void =>
+  useSettingsStore.getState().setMapUnitSortDirection(sortUnit, direction);
 
 export const addNotifications = (notifications: INotification[]): void => useSettingsStore.getState().addNotifications(notifications);
 
