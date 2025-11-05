@@ -25,6 +25,7 @@ import { IMatch } from "@/lib/getMatches";
 
 import appConfig from "@/appConfig";
 import { getFollowUp } from "@/lib/getFollowUp";
+import { toOrdinal } from "@/lib/toOrdinal";
 import { InvalidHouseAlert } from "./components/InvalidHouseAlert";
 import { NotFound } from "./components/NotFound";
 import { FOLLOWUP_CLAIM_TERM, FOLLOWUP_REWARD_DAYS, getDaysSinceNeighboring, getFollowupRewardNumber, getFollowupRewardStatus, TFollowUpRewardNumber } from "./utils";
@@ -188,7 +189,7 @@ const FollowUpPage = () => {
             <Card>
               <CardHeader>
                 <h2 className="text-xl font-semibold">
-                  Claim your {followupRewardStatus === 'GOT_ALL' ? '' : `${rewardNumber}st`} follow-up rewards
+                  Claim your {followupRewardStatus === 'GOT_ALL' ? '' : `${toOrdinal(rewardNumber || 1)} follow-up rewards`}
                 </h2>
                 <CardDescription>
                   {followupRewardStatus === 'NOT_STARTED' ? <div>
@@ -196,11 +197,11 @@ const FollowUpPage = () => {
                   </div> : null}
 
                   {followupRewardStatus === 'ACTIVE' ? <div>
-                    You became neighbors {daysSinceNeighboring} days ago and are now eligible for your {rewardNumber}st follow-up reward, {toLocalString(forwardReward / 10 ** decimals!)} {symbol} to each of you. Please contact your neighbor over discord or telegram and send your claim requests within 10 minutes of each other.
+                    You became neighbors {daysSinceNeighboring} days ago and are now eligible for your {toOrdinal(rewardNumber || 1)} follow-up reward, {toLocalString(forwardReward / 10 ** decimals!)} {symbol} to each of you. Please contact your neighbor over discord or telegram and send your claim requests within 10 minutes of each other.
                   </div> : null}
 
                   {followupRewardStatus === 'GOT' ? <div>
-                    You’ve already claimed your {rewardNumber}st follow-up reward. No additional reward is available at this time.
+                    You’ve already claimed your {toOrdinal(rewardNumber || 1)} follow-up reward. No additional reward is available at this time.
                   </div> : null}
 
                   {followupRewardStatus === 'GOT_ALL' ? <div>
