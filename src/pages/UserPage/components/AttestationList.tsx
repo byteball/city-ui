@@ -1,3 +1,4 @@
+import { LinkButton } from "@/components/ui/_link-button";
 import { FC, useMemo } from "react";
 
 import { IAttestation } from "@/hooks/useAttestations";
@@ -36,9 +37,9 @@ export const AttestationList: FC<IAttestationProps> = ({ data, isOwner = false, 
       {!discordAttestation && isOwner ? (
         <Wrapper>
           discord:{" "}
-          <a className="text-link" href={appConfig.DISCORD_BOT_URL}>
+          <LinkButton className="text-link" href={appConfig.DISCORD_BOT_URL}>
             set up
-          </a>
+          </LinkButton>
         </Wrapper>
       ) : null}
 
