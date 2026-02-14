@@ -13,13 +13,66 @@ interface IQRButtonProps extends ButtonProps {
   href: string;
 }
 
+const isMobileSafari = () => {
+  const ua = window.navigator.userAgent;
+  const isIOS =
+    /iP(hone|ad|od)/i.test(ua) ||
+    (window.navigator.platform === "MacIntel" && window.navigator.maxTouchPoints > 1);
+  const isSafari = /Safari/i.test(ua) && !/(CriOS|FxiOS|EdgiOS|OPiOS|YaBrowser)/i.test(ua);
+
+  return isIOS && isSafari;
+};
+
 export const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(
   ({ children, href, variant, disabled = false, ...props }, ref) => {
     const [showPopover, setShowPopover] = useState(false);
 
+    const openInMobileSafari = useCallback(() => {
+      let appOpened = false;
+      let timeoutId = 0;
+
+      const cleanup = () => {
+        window.clearTimeout(timeoutId);
+        document.removeEventListener("visibilitychange", onVisibilityChange);
+        window.removeEventListener("pagehide", onPageHide);
+      };
+
+      const markOpened = () => {
+        appOpened = true;
+        cleanup();
+      };
+
+      const onVisibilityChange = () => {
+        if (document.visibilityState === "hidden") {
+          markOpened();
+        }
+      };
+
+      const onPageHide = () => {
+        markOpened();
+      };
+
+      document.addEventListener("visibilitychange", onVisibilityChange);
+      window.addEventListener("pagehide", onPageHide, { once: true });
+
+      timeoutId = window.setTimeout(() => {
+        cleanup();
+        if (!appOpened) {
+          setShowPopover(true);
+        }
+      }, 2000);
+
+      window.location.href = href;
+    }, [href]);
+
     const handleClick = useCallback(
       (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
+
+        if (isMobileSafari()) {
+          openInMobileSafari();
+          return;
+        }
 
         customProtocolCheck(
           href,
@@ -37,7 +90,7 @@ export const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(
           }
         );
       },
-      [href]
+      [href, openInMobileSafari]
     );
 
     return (
