@@ -15,7 +15,7 @@ export const WalletProtocolPopover = ({
   open,
   onOpenChange,
   triggerType = "link",
-  tooltipText = "This will open your Obyte wallet installed on this computer and send the transaction",
+  tooltipText = "This will open your Obyte wallet installed on this device and send the transaction",
   children,
 }: IWalletProtocolPopoverProps) => {
   return (
