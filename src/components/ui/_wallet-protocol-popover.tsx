@@ -28,7 +28,7 @@ export const WalletProtocolPopover = ({
   } else if (actionType === "transaction") {
     tooltipText = "This will open your Obyte wallet installed on this device to complete the transaction.";
   } else if (actionType === "chat") {
-    tooltipText = "This will open your Obyte wallet installed on this device to start a chat with a bot.";
+    tooltipText = "This will open your Obyte wallet installed on this device to start a chat with the bot.";
   } else {
     tooltipText = "This will open your Obyte wallet installed on this device.";
   }
