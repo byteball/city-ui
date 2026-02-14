@@ -1,4 +1,4 @@
-import { LinkButton } from "@/components/ui/_link-button";
+import { ObyteLink } from "@/components/ui/_obyte_link";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { PrelaunchForm } from "@/forms/PrelaunchForm";
@@ -29,14 +29,14 @@ export const PrelaunchCard = () => {
 
       <CardFooter className="block text-xs text-muted-foreground">
         Before buying, you need to link your Obyte address to your{" "}
-        <LinkButton href={appConfig.DISCORD_BOT_URL} className="text-link">
+        <ObyteLink href={appConfig.DISCORD_BOT_URL} className="text-link">
           discord
-        </LinkButton>{" "}
+        </ObyteLink>{" "}
         and/or{" "}
-        <LinkButton href={appConfig.TELEGRAM_BOT_URL} className="text-link">
+        <ObyteLink href={appConfig.TELEGRAM_BOT_URL} className="text-link">
           {" "}
           telegram
-        </LinkButton>{" "}
+        </ObyteLink>{" "}
         usernames. This is necessary to notify you when you get a neighbor and become eligible for rewards.
       </CardFooter>
     </Card>

@@ -3,16 +3,16 @@ import { forwardRef, useCallback, useState } from "react";
 
 import { openCustomProtocol } from "@/lib/openCustomProtocol";
 import cn from "classnames";
-import { buttonVariants } from "./button";
 import { WalletProtocolPopover } from "./_wallet-protocol-popover";
+import { buttonVariants } from "./button";
 
 interface ILinkButtonProps extends React.AnchorHTMLAttributes<HTMLAnchorElement>, VariantProps<typeof buttonVariants> {
   href: string;
   disabled?: boolean;
 }
 
-export const LinkButton = forwardRef<HTMLAnchorElement, ILinkButtonProps>(
-  ({ children, href, variant = "link", size, disabled = false, className, onClick, tabIndex, ...props }, ref) => {
+export const ObyteLink = forwardRef<HTMLAnchorElement, ILinkButtonProps>(
+  ({ children, href, disabled = false, className, onClick, tabIndex, ...props }, ref) => {
     const [showPopover, setShowPopover] = useState(false);
 
     const handleClick = useCallback(

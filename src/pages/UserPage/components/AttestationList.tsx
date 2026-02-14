@@ -1,4 +1,4 @@
-import { LinkButton } from "@/components/ui/_link-button";
+import { ObyteLink } from "@/components/ui/_obyte_link";
 import { FC, useMemo } from "react";
 
 import { IAttestation } from "@/hooks/useAttestations";
@@ -37,9 +37,9 @@ export const AttestationList: FC<IAttestationProps> = ({ data, isOwner = false, 
       {!discordAttestation && isOwner ? (
         <Wrapper>
           discord:{" "}
-          <LinkButton className="text-link" href={appConfig.DISCORD_BOT_URL}>
+          <ObyteLink className="text-link" href={appConfig.DISCORD_BOT_URL}>
             set up
-          </LinkButton>
+          </ObyteLink>
         </Wrapper>
       ) : null}
 
