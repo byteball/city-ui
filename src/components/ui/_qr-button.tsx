@@ -2,6 +2,7 @@ import { QrCode } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { forwardRef, useCallback, useState } from "react";
 
+import { walletActionType } from "@/global";
 import { openCustomProtocol } from "@/lib/openCustomProtocol";
 import cn from "classnames";
 import { WalletProtocolPopover } from "./_wallet-protocol-popover";
@@ -11,11 +12,15 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tool
 
 interface IQRButtonProps extends ButtonProps {
   href: string;
+  actionType?: walletActionType;
 }
 
 export const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(
-  ({ children, href, variant, disabled = false, ...props }, ref) => {
+  ({ children, href, variant, actionType = "transaction", disabled = false, ...props }, ref) => {
     const [showPopover, setShowPopover] = useState(false);
+
+    const qrTooltip = actionType === "chat" ? "Start a chat with the bot on your mobile phone" : "Send the transaction from your mobile phone";
+
 
     const handleClick = useCallback(
       (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -49,7 +54,7 @@ export const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(
                 </DialogTrigger>
               </TooltipTrigger>
               <TooltipContent className="max-w-[250px]">
-                <p>Send the transaction from your mobile phone</p>
+                <p>{qrTooltip}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -91,6 +96,7 @@ export const QRButton = forwardRef<HTMLButtonElement, IQRButtonProps>(
         </Dialog>
         <WalletProtocolPopover
           open={showPopover}
+          actionType={actionType}
           onOpenChange={setShowPopover}
           triggerType={variant === "link" ? "link" : "button"}
         >

@@ -282,3 +282,5 @@ declare global {
   }
 }
 
+
+type walletActionType = "transaction" | "chat";

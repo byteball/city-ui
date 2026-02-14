@@ -37,7 +37,10 @@ export const AttestationList: FC<IAttestationProps> = ({ data, isOwner = false, 
       {!discordAttestation && isOwner ? (
         <Wrapper>
           discord:{" "}
-          <ObyteLink className="text-link" href={appConfig.DISCORD_BOT_URL}>
+          <ObyteLink
+            actionType="chat"
+            className="text-link"
+            href={appConfig.DISCORD_BOT_URL}>
             set up
           </ObyteLink>
         </Wrapper>

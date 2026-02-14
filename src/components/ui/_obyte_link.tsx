@@ -1,6 +1,7 @@
 import { type VariantProps } from "class-variance-authority";
 import { forwardRef, useCallback, useState } from "react";
 
+import { walletActionType } from "@/global";
 import { openCustomProtocol } from "@/lib/openCustomProtocol";
 import cn from "classnames";
 import { WalletProtocolPopover } from "./_wallet-protocol-popover";
@@ -9,10 +10,11 @@ import { buttonVariants } from "./button";
 interface ILinkButtonProps extends React.AnchorHTMLAttributes<HTMLAnchorElement>, VariantProps<typeof buttonVariants> {
   href: string;
   disabled?: boolean;
+  actionType?: walletActionType;
 }
 
 export const ObyteLink = forwardRef<HTMLAnchorElement, ILinkButtonProps>(
-  ({ children, href, disabled = false, className, onClick, tabIndex, ...props }, ref) => {
+  ({ children, href, disabled = false, className, onClick, tabIndex, actionType, ...props }, ref) => {
     const [showPopover, setShowPopover] = useState(false);
 
     const handleClick = useCallback(
@@ -37,8 +39,13 @@ export const ObyteLink = forwardRef<HTMLAnchorElement, ILinkButtonProps>(
       [disabled, href, onClick]
     );
 
+
     return (
-      <WalletProtocolPopover open={showPopover} onOpenChange={setShowPopover} triggerType="link">
+      <WalletProtocolPopover
+        open={showPopover}
+        onOpenChange={setShowPopover}
+        actionType={actionType}
+        triggerType="link">
         <a
           {...props}
           href={href}
