@@ -1,5 +1,6 @@
 import { type ReactElement } from "react";
 
+import { walletActionType } from "@/global";
 import { Popover, PopoverArrow, PopoverContent, PopoverTrigger } from "./popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 
@@ -9,15 +10,29 @@ interface IWalletProtocolPopoverProps {
   triggerType?: "link" | "button";
   tooltipText?: string;
   children: ReactElement;
+  actionType?: walletActionType;
 }
 
 export const WalletProtocolPopover = ({
   open,
   onOpenChange,
   triggerType = "link",
-  tooltipText = "This will open your Obyte wallet installed on this device and send the transaction",
+  tooltipText: customTooltipText,
   children,
+  actionType = "transaction",
 }: IWalletProtocolPopoverProps) => {
+  let tooltipText = "";
+
+  if (customTooltipText) {
+    tooltipText = customTooltipText;
+  } else if (actionType === "transaction") {
+    tooltipText = "This will open your Obyte wallet installed on this device to complete the transaction.";
+  } else if (actionType === "chat") {
+    tooltipText = "This will open your Obyte wallet installed on this device to start a chat with a bot.";
+  } else {
+    tooltipText = "This will open your Obyte wallet installed on this device.";
+  }
+
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
       <TooltipProvider>
