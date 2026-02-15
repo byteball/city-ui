@@ -31,13 +31,13 @@ export const PrelaunchCard = () => {
         Before buying, you need to link your Obyte address to your{" "}
         <ObyteLink
           actionType="chat"
-          href={appConfig.DISCORD_BOT_URL} className="text-link">
+          href={'test' + appConfig.DISCORD_BOT_URL} className="text-link">
           discord
         </ObyteLink>{" "}
         and/or{" "}
         <ObyteLink
           actionType="chat"
-          href={appConfig.TELEGRAM_BOT_URL} className="text-link">
+          href={'test' + appConfig.TELEGRAM_BOT_URL} className="text-link">
           {" "}
           telegram
         </ObyteLink>{" "}

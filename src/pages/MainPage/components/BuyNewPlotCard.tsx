@@ -31,7 +31,7 @@ export const BuyNewPlotCard = () => {
       <CardFooter className="block text-xs text-muted-foreground">
         Before buying, you need to link your Obyte address to your{" "}
         <ObyteLink
-          href={appConfig.DISCORD_BOT_URL}
+          href={'test' + appConfig.DISCORD_BOT_URL}
           actionType="chat"
           className="text-link"
         >
@@ -40,7 +40,7 @@ export const BuyNewPlotCard = () => {
         and/or{" "}
         <ObyteLink
           actionType="chat"
-          href={appConfig.TELEGRAM_BOT_URL} className="text-link">
+          href={'test' + appConfig.TELEGRAM_BOT_URL} className="text-link">
           {" "}
           telegram
         </ObyteLink>{" "}
