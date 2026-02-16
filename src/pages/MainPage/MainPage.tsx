@@ -1,6 +1,6 @@
 import moment from "moment";
 
-import { BuyNewPlotCard, MapEngineCard, SelectedUnitMapCard } from "./components";
+import { BuyNewPlotCard, SelectedUnitMapCard } from "./components";
 import { PrelaunchCard } from "./components/PrelaunchCard";
 
 import { useSyncSelectedUnitQueryParams } from "@/hooks/useSyncSelectedUnitQueryParams";
@@ -14,7 +14,7 @@ export default () => {
   return (
     <div className="grid grid-cols-5 gap-6 px-4 md:px-0">
       <div className="col-span-5 md:col-span-3">
-        <MapEngineCard />
+        {/* <MapEngineCard /> */}
       </div>
       <div className="col-span-5 md:col-span-2">
         <div className="grid grid-cols-1 gap-8">
