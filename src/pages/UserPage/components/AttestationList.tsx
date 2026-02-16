@@ -40,7 +40,7 @@ export const AttestationList: FC<IAttestationProps> = ({ data, isOwner = false, 
           <ObyteLink
             actionType="chat"
             className="text-link"
-            href={appConfig.DISCORD_BOT_URL}>
+            href={'test' + appConfig.DISCORD_BOT_URL}>
             set up
           </ObyteLink>
         </Wrapper>

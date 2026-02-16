@@ -21,7 +21,7 @@ interface IGenerateLink {
 }
 
 export const generateLink = ({ amount, data, from_address, aa, asset = "base", is_single }: IGenerateLink): string => {
-  let link = `obyte${suffix}:${aa}?amount=${Math.round(amount)}&asset=${encodeURIComponent(asset)}`;
+  let link = `testobyte${suffix}:${aa}?amount=${Math.round(amount)}&asset=${encodeURIComponent(asset)}`;
   const encodedData = encodeData(data);
 
   if (data && encodedData !== null) link += "&base64data=" + encodeURIComponent(encodedData);
